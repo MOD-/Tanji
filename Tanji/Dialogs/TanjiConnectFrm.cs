@@ -80,14 +80,17 @@ namespace Tanji.Dialogs
                     StatusTxt.SetDotAnimation(Eavesdropper.IsRunning ?
                         "Overriding Client" : "Intercepting Connection");
 
-                    // TODO: Verify if the custom host/port pair is valid.
-                    await Main.Connection.ConnectAsync("", 0);
-                    // TODO: Close the connection setup, don't forget to reset some stuff too.
+                    bool connected = await Main.Connection.ConnectAsync(
+                        GameHostTxt.Text, int.Parse(GamePortTxt.Text));
+
                 }
                 else StatusTxt.SetDotAnimation("Extracting Host/Port");
             }
             else
             {
+                Eavesdropper.Terminate();
+                Main.Connection.Disconnect();
+
                 ConnectBtn.Text = "Connect";
                 StatusTxt.StopDotAnimation("Standing By...");
             }
@@ -110,12 +113,24 @@ namespace Tanji.Dialogs
 
                     Main.GameData = new HGameData(responseBody);
 
-                    // Should we even await this?
-                    await LoadModdedClientAsync()
-                        .ConfigureAwait(false);
+                    if (Main.Game == null) // Attempt to load from 'Modified Clients' since no custom one was given.
+                        await LoadModdedClientAsync().ConfigureAwait(false);
 
-                    // TODO: Modify flash client url to produce a non-cached version.
-                    // blah blah blah
+                    // If Main.Game is Null, no modified client was found nor given.
+                    // If IsRetro is TRUE, end the proxy so we don't modify the client.
+                    // If the proxy continues to run, it will attempt to replace the client.
+                    if (Main.Game == null && Main.IsRetro)
+                    {
+                        Eavesdropper.Terminate();
+                        StatusTxt.SetDotAnimation("Connecting({0})", Main.GameData.Port);
+                    }
+
+                    // Append random query to the flash client url, to force a 'new' client to be returned.
+                    // This will make the request 'unique', 
+                    responseBody = responseBody.Replace(Main.GameData.FlashClientUrl,
+                        Main.GameData.FlashClientUrl + "?" + DateTime.Now.Millisecond);
+
+                    e.Payload = Encoding.UTF8.GetBytes(responseBody);
                 }
             }
         }
