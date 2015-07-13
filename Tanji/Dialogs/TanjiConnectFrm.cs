@@ -125,10 +125,10 @@ namespace Tanji.Dialogs
                         StatusTxt.SetDotAnimation("Connecting({0})", Main.GameData.Port);
                     }
 
-                    // Append random query to the flash client url, to force a 'new' client to be returned.
-                    // This will make the request 'unique', 
-                    responseBody = responseBody.Replace(Main.GameData.FlashClientUrl,
-                        Main.GameData.FlashClientUrl + "?" + DateTime.Now.Millisecond);
+                    // Append random query to any instances of a .swf file being called.
+                    // This will make the request 'unique', so that a cached version won't be called.
+                    responseBody = responseBody.Replace(".swf",
+                        ".swf?" + DateTime.Now.Millisecond);
 
                     e.Payload = Encoding.UTF8.GetBytes(responseBody);
                 }
