@@ -1,3 +1,19 @@
+Icon: http://www.iconarchive.com/show/fs-icons-by-franksouza183/Apps-clementine-icon.html
+Artist: franksouza183 - http://www.iconarchive.com/artist/franksouza183.html
+Copyright (C) 2012 franksouza183
+
+GitHub(Source): https://GitHub.com/ArachisH/Eavesdrop
+Eavesdrop.dll - .NET library for manipulating intercepted HTTP(s) traffic.
+Copyright (C) 2015 ArachisH
+
+GitHub(Source): https://GitHub.com/ArachisH/Sulakore
+Sulakore.dll - .NET library for creating Habbo Hotel related desktop applications.
+Copyright (C) 2015 ArachisH
+
+GitHub(Source): https://GitHub.com/ArachisH/FlashInspect
+FlashInspect.dll - .NET library for (dis)assembling the tags in an AS3 Flash file, and modifying its bytecode.
+Copyright (C) 2015 ArachisH
+
                     GNU GENERAL PUBLIC LICENSE
                        Version 2, June 1991
 
