@@ -47,9 +47,6 @@ namespace Tanji
         public HGameData GameData { get; set; }
         public ShockwaveFlash Game { get; set; }
 
-        public HKeyExchange LocalExchange { get; set; }
-        public HKeyExchange RemoteExchange { get; set; }
-
         public Contractor Contractor { get; private set; }
         public HConnection Connection { get; private set; }
 
