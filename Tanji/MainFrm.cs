@@ -23,18 +23,15 @@
 */
 
 using System;
-using System.Text;
 using System.Windows.Forms;
 
 using Tanji.Dialogs;
+using Tanji.Managers;
 using Tanji.Applications;
 
 using Sulakore.Habbo.Web;
 using Sulakore.Extensions;
 using Sulakore.Communication;
-using Sulakore.Protocol.Encryption;
-
-using Eavesdrop;
 
 using FlashInspect;
 
@@ -52,20 +49,30 @@ namespace Tanji
         public TanjiConnectFrm TanjiConnect { get; private set; }
         public PacketLoggerFrm PacketLogger { get; private set; }
 
+        public HandshakeManager Handshaker { get; private set; }
+
         public MainFrm()
         {
             InitializeComponent();
 
             Connection = new HConnection();
             Contractor = new Contractor(Connection);
+            Handshaker = new HandshakeManager(this);
             TanjiConnect = new TanjiConnectFrm(this);
             PacketLogger = new PacketLoggerFrm(this);
+
+            Connection.DataIncoming += Connection_DataIncoming;
+            Connection.DataOutgoing += Connection_DataOutgoing;
         }
 
         private void MainFrm_Load(object sender, EventArgs e)
         {
             PromptConnect();
         }
+        private void Connection_DataIncoming(object sender, InterceptedEventArgs e)
+        { }
+        private void Connection_DataOutgoing(object sender, InterceptedEventArgs e)
+        { }
 
         private void PromptConnect()
         {
