@@ -30,7 +30,7 @@ using System.Threading.Tasks;
 
 using Sulakore;
 using Sulakore.Habbo.Web;
-using Sulakore.Protocol.Encryption;
+using Sulakore.Communication;
 
 using Eavesdrop;
 
@@ -40,13 +40,22 @@ namespace Tanji.Dialogs
 {
     public partial class TanjiConnectFrm : Form
     {
-        public MainFrm Main { get; private set; }
+        private readonly TaskScheduler _uiContext;
+
+        public bool IsManual
+        {
+            get { return ModePnl.IsManual; }
+        }
+        protected MainFrm Main { get; private set; }
         public bool IsConnecting { get; private set; }
 
         public TanjiConnectFrm(MainFrm main)
         {
             InitializeComponent();
             Main = main;
+
+            _uiContext =
+                TaskScheduler.FromCurrentSynchronizationContext();
 
             if (!Directory.Exists("Modified Clients"))
                 Directory.CreateDirectory("Modified Clients");
@@ -61,80 +70,126 @@ namespace Tanji.Dialogs
             GameHostTxt.Enabled =
                 GamePortTxt.Enabled = ModePnl.IsManual;
 
+            BrowseBtn.Enabled = !ModePnl.IsManual;
+
             Text = string.Format("Tanji ~ Connection Setup [{0}]",
                 ModePnl.IsManual ? "Manual" : "Automatic");
+        }
+        private async void BrowseBtn_Click(object sender, EventArgs e)
+        {
+            ChooseClientDlg.FileName = ChooseClientDlg.SafeFileName;
+            if (ChooseClientDlg.ShowDialog() != DialogResult.OK) return;
+
+            bool verifySuccess = await VerifyGameClientAsync(
+                ChooseClientDlg.FileName);
+
+            StatusTxt.StopDotAnimation("Standing By...");
+            if (!verifySuccess)
+            {
+                MessageBox.Show("Unable to dissassemble the Shockwave Flash(.swf) file.",
+                    "Tanji ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+
+            CustomClientTxt.Text = verifySuccess ?
+                Main.Game.Location : string.Empty;
         }
         private async void ConnectBtn_Click(object sender, EventArgs e)
         {
             IsConnecting = !IsConnecting;
-            ModePnl.Enabled = !ModePnl.Enabled;
-
             if (IsConnecting)
             {
-                ConnectBtn.Text = "Cancel";
-                if (!ModePnl.IsManual || Main.Game != null)
-                    Eavesdropper.Initiate(8080);
+                ModePnl.Enabled = GameHostTxt.Enabled =
+                    GamePortTxt.Enabled = false;
 
+                ConnectBtn.Text = "Cancel";
                 if (ModePnl.IsManual)
                 {
-                    StatusTxt.SetDotAnimation(Eavesdropper.IsRunning ?
-                        "Overriding Client" : "Intercepting Connection");
-
-                    bool connected = await Main.Connection.ConnectAsync(
-                        GameHostTxt.Text, int.Parse(GamePortTxt.Text));
-
+                    if (!(await OnManualConnectAsync()))
+                    {
+                        ResetInterface();
+                        MessageBox.Show("Something went wrong when attempting to intercept the connection.",
+                            "Tanji ~ Error!",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Error);
+                    }
+                    else Close();
                 }
-                else StatusTxt.SetDotAnimation("Extracting Host/Port");
+                else OnAutomaticConnect();
             }
-            else
+            else OnCancelConnect();
+        }
+        private void EavesdropperResponse(object sender, EavesdropperResponseEventArgs e)
+        {
+            if (e.Response.ContentType == "application/x-shockwave-flash" && e.Payload.Length > 3000000)
             {
                 Eavesdropper.Terminate();
-                Main.Connection.Disconnect();
+                StatusTxt.StopDotAnimation("Intercepting Connection");
 
-                ConnectBtn.Text = "Connect";
-                StatusTxt.StopDotAnimation("Standing By...");
-            }
-        }
-        private async void EavesdropperResponse(object sender, EavesdropperResponseEventArgs e)
-        {
-            if (e.Response.ContentLength < 1) return;
-            if (e.Response.ContentType == "application/x-shockwave-flash")
-            {
-                // TODO: Replace the client here, also replace keys if it needs to be done.
-                Eavesdropper.Terminate(); // No more http(s) interception is necessary.
+                Main.Connection.ConnectAsync(Main.GameData.Host, Main.GameData.Port)
+                    .ContinueWith(t => Close(), _uiContext);
             }
             else
             {
                 string responseBody = Encoding.UTF8.GetString(e.Payload);
                 if (responseBody.Contains("connection.info.host"))
                 {
-                    Main.IsRetro = (SKore.ToHotel(
-                        e.Response.ResponseUri.Host) == HHotel.Unknown);
-
                     Main.GameData = new HGameData(responseBody);
+                    Main.Contractor.Hotel = SKore.ToHotel(Main.GameData.Host);
+                    Main.IsRetro = (Main.Contractor.Hotel == HHotel.Unknown);
 
-                    if (Main.Game == null) // Attempt to load from 'Modified Clients' since no custom one was given.
-                        await LoadModdedClientAsync().ConfigureAwait(false);
+                    /* We do this check first since future builds may support 
+                     * caching of modded retro clients, when that happens, we 
+                     * simply remove the '!Main.IsRetro' condition. */
+                    if (Main.Game == null && !Main.IsRetro)
+                        LoadModdedClientAsync().Wait();
 
-                    // If Main.Game is Null, no modified client was found nor given.
-                    // If IsRetro is TRUE, end the proxy so we don't modify the client.
-                    // If the proxy continues to run, it will attempt to replace the client.
+                    /* Modded retro client caching is not supported yet, so let's 
+                     * terminate the proxy, and begin intercepting the connection. */
                     if (Main.Game == null && Main.IsRetro)
                     {
                         Eavesdropper.Terminate();
-                        StatusTxt.SetDotAnimation("Connecting({0})", Main.GameData.Port);
+                        StatusTxt.StopDotAnimation("Intercepting Connection");
+                    }
+                    else
+                    {
+                        StatusTxt.SetDotAnimation((Main.GameData == null ?
+                            "Intercepting" : "Overriding") + " Client");
                     }
 
-                    // Append random query to any instances of a .swf file being called.
-                    // This will make the request 'unique', so that a cached version won't be called.
-                    responseBody = responseBody.Replace(".swf",
-                        ".swf?" + DateTime.Now.Millisecond);
-
+                    responseBody = responseBody.Replace(".swf", ".swf?" + DateTime.Now.Millisecond);
                     e.Payload = Encoding.UTF8.GetBytes(responseBody);
                 }
             }
         }
 
+        protected virtual void OnCancelConnect()
+        {
+            ResetInterface();
+            Eavesdropper.Terminate();
+            Main.Connection.Disconnect();
+        }
+        protected virtual void OnAutomaticConnect()
+        {
+            Eavesdropper.Initiate(8080);
+            StatusTxt.SetDotAnimation("Extracting Host/Port");
+        }
+        protected virtual async Task<bool> OnManualConnectAsync()
+        {
+            StatusTxt.SetDotAnimation("Intercepting Connection");
+
+            await Main.Connection.ConnectAsync(
+                GameHostTxt.Text, int.Parse(GamePortTxt.Text));
+
+            return Main.Connection.IsConnected;
+        }
+
+        private void ResetInterface()
+        {
+            IsConnecting = false;
+            ConnectBtn.Text = "Connect";
+            StatusTxt.StopDotAnimation("Standing By...");
+            ModePnl.Enabled = GameHostTxt.Enabled = GamePortTxt.Enabled = true;
+        }
         private void CreateTrustedRootCertificate()
         {
             while (!Eavesdropper.CreateTrustedRootCertificate())
@@ -147,22 +202,21 @@ namespace Tanji.Dialogs
                     Environment.Exit(0);
             }
         }
-        private async Task LoadModdedClientAsync()
+        private async Task<bool> LoadModdedClientAsync()
         {
             string possibleClientPath = Path.Combine("Modified Clients",
                Main.GameData.FlashClientBuild + ".swf");
 
+            bool loadSuccess = false;
             if (File.Exists(possibleClientPath))
             {
-                bool verifySuccess = await VerifyGameClientAsync(
+                loadSuccess = await VerifyGameClientAsync(
                     possibleClientPath).ConfigureAwait(false);
 
-                if (!verifySuccess)
+                if (!loadSuccess)
                     File.Delete(possibleClientPath);
             }
-
-            StatusTxt.SetDotAnimation(Main.GameData == null ?
-                "Intercepting Client" : "Overriding Client");
+            return loadSuccess;
         }
         private async Task<bool> VerifyGameClientAsync(string path)
         {
@@ -172,8 +226,8 @@ namespace Tanji.Dialogs
                 if (Main.Game.IsCompressed)
                 {
                     StatusTxt.SetDotAnimation("Decompressing Client");
-                    if (await Main.Game
-                        .DecompressAsync().ConfigureAwait(false))
+                    if (await Main.Game.DecompressAsync()
+                        .ConfigureAwait(false))
                     {
                         StatusTxt.SetDotAnimation("Extracting Tags");
                         Main.Game.ExtractTags();
@@ -188,23 +242,19 @@ namespace Tanji.Dialogs
             }
         }
 
-        private async void BrowseBtn_Click(object sender, EventArgs e)
+        private void TanjiConnectFrm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ChooseClientDlg.FileName = ChooseClientDlg.SafeFileName;
-            if (ChooseClientDlg.ShowDialog() != DialogResult.OK) return;
-
-            bool verifySuccess =
-                await VerifyGameClientAsync(ChooseClientDlg.FileName);
-
-            StatusTxt.StopDotAnimation("Standing By...");
-            if (!verifySuccess)
+            try
             {
-                MessageBox.Show("Unable to dissassemble the flash file.",
-                    "Tanji ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                ResetInterface();
+                Eavesdropper.Terminate();
+                HConnection.RestoreHosts();
             }
-
-            CustomClientTxt.Text = verifySuccess ?
-                Main.Game.Location : string.Empty;
+            finally
+            {
+                if (!Main.Connection.IsConnected)
+                    Environment.Exit(0);
+            }
         }
     }
 }
