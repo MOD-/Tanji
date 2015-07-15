@@ -29,6 +29,8 @@ using System.ComponentModel;
 
 using Sulakore.Components;
 
+using Tanji.Utilities;
+
 namespace Tanji.Components
 {
     [DesignerCategory("Code")]
