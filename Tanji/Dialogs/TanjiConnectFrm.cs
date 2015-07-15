@@ -123,7 +123,7 @@ namespace Tanji.Dialogs
             if (e.Response.ContentType == "application/x-shockwave-flash" && e.Payload.Length > 3000000)
             {
                 Eavesdropper.Terminate();
-                StatusTxt.StopDotAnimation("Intercepting Connection");
+                StatusTxt.SetDotAnimation("Intercepting Connection");
 
                 Main.Connection.ConnectAsync(Main.GameData.Host, Main.GameData.Port)
                     .ContinueWith(t => Close(), _uiContext);
@@ -148,12 +148,15 @@ namespace Tanji.Dialogs
                     if (Main.Game == null && Main.IsRetro)
                     {
                         Eavesdropper.Terminate();
-                        StatusTxt.StopDotAnimation("Intercepting Connection");
+                        StatusTxt.SetDotAnimation("Intercepting Connection");
+
+                        Main.Connection.ConnectAsync(Main.GameData.Host, Main.GameData.Port)
+                            .ContinueWith(t => Close(), _uiContext);
                     }
                     else
                     {
                         StatusTxt.SetDotAnimation((Main.GameData == null ?
-                            "Intercepting" : "Overriding") + " Client");
+                            "Intercepting" : "Replacing") + " Client");
                     }
 
                     responseBody = responseBody.Replace(".swf", ".swf?" + DateTime.Now.Millisecond);
