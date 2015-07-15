@@ -38,7 +38,6 @@ using Eavesdrop;
 
 using FlashInspect;
 
-// TODO: Finish all the things.
 namespace Tanji
 {
     public partial class MainFrm : Form
@@ -58,6 +57,7 @@ namespace Tanji
             InitializeComponent();
 
             Connection = new HConnection();
+            Contractor = new Contractor(Connection);
             TanjiConnect = new TanjiConnectFrm(this);
             PacketLogger = new PacketLoggerFrm(this);
         }
