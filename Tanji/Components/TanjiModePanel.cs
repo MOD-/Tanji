@@ -98,7 +98,7 @@ namespace Tanji.Components
                 e.Graphics.FillRectangle(darkenColor, manualDrawRegion);
             }
 
-            Color foreColor = Color.FromArgb(Enabled ? 255 : 150, Color.Black);
+            Color foreColor = Color.Black;
             e.Graphics.DrawString("Manual", Font, foreColor, _manualRegion, StringAlignment.Center);
             e.Graphics.DrawString("Automatic", Font, foreColor, _automaticRegion, StringAlignment.Center);
 
