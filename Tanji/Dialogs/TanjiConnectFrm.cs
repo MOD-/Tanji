@@ -25,8 +25,12 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Linq;
 using System.Windows.Forms;
 using System.Threading.Tasks;
+using System.Collections.Generic;
+
+using Tanji.Managers;
 
 using Sulakore;
 using Sulakore.Habbo.Web;
@@ -35,6 +39,7 @@ using Sulakore.Communication;
 using Eavesdrop;
 
 using FlashInspect;
+using FlashInspect.Tags;
 
 namespace Tanji.Dialogs
 {
@@ -42,11 +47,7 @@ namespace Tanji.Dialogs
     {
         private readonly TaskScheduler _uiContext;
 
-        public bool IsManual
-        {
-            get { return ModePnl.IsManual; }
-        }
-        protected MainFrm Main { get; private set; }
+        public MainFrm Main { get; private set; }
         public bool IsConnecting { get; private set; }
 
         public TanjiConnectFrm(MainFrm main)
@@ -65,16 +66,6 @@ namespace Tanji.Dialogs
             Eavesdropper.EavesdropperResponse += EavesdropperResponse;
         }
 
-        private void ModeChanged(object sender, EventArgs e)
-        {
-            GameHostTxt.Enabled =
-                GamePortTxt.Enabled = ModePnl.IsManual;
-
-            BrowseBtn.Enabled = !ModePnl.IsManual;
-
-            Text = string.Format("Tanji ~ Connection Setup [{0}]",
-                ModePnl.IsManual ? "Manual" : "Automatic");
-        }
         private async void BrowseBtn_Click(object sender, EventArgs e)
         {
             ChooseClientDlg.FileName = ChooseClientDlg.SafeFileName;
@@ -98,13 +89,13 @@ namespace Tanji.Dialogs
             IsConnecting = !IsConnecting;
             if (IsConnecting)
             {
-                ModePnl.Enabled = GameHostTxt.Enabled =
-                    GamePortTxt.Enabled = false;
+                ModePnl.Enabled = !(GameHostTxt.ReadOnly =
+                    GamePortTxt.ReadOnly = ExponentTxt.ReadOnly = ModulusTxt.ReadOnly = true);
 
                 ConnectBtn.Text = "Cancel";
                 if (ModePnl.IsManual)
                 {
-                    if (!(await OnManualConnectAsync()))
+                    if (!(await DoManualConnectAsync()))
                     {
                         ResetInterface();
                         MessageBox.Show("Something went wrong when attempting to intercept the connection.",
@@ -114,14 +105,57 @@ namespace Tanji.Dialogs
                     }
                     else Close();
                 }
-                else OnAutomaticConnect();
+                else DoAutomaticConnect();
             }
-            else OnCancelConnect();
+            else DoCancelConnect();
+        }
+        private void TanjiConnectFrm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            try
+            {
+                ResetInterface();
+                Eavesdropper.Terminate();
+                HConnection.RestoreHosts();
+            }
+            finally
+            {
+                if (!Main.Connection.IsConnected)
+                    Environment.Exit(0);
+            }
+        }
+
+        private void ModeChanged(object sender, EventArgs e)
+        {
+            GameHostTxt.ReadOnly =
+                GamePortTxt.ReadOnly = !ModePnl.IsManual;
+
+            BrowseBtn.Enabled = !ModePnl.IsManual;
+
+            Text = string.Format("Tanji ~ Connection Setup [{0}]",
+                ModePnl.IsManual ? "Manual" : "Automatic");
         }
         private void EavesdropperResponse(object sender, EavesdropperResponseEventArgs e)
         {
             if (e.Response.ContentType == "application/x-shockwave-flash" && e.Payload.Length > 3000000)
             {
+                if (Main.Game == null)
+                {
+                    bool verifySuccess = VerifyGameClientAsync(
+                        new ShockwaveFlash(e.Payload)).Result;
+
+                    if (verifySuccess)
+                    {
+                        StatusTxt.SetDotAnimation("Extracting Tags");
+                        var binaryDataTags = Main.Game.ExtractTags()
+                            .OfType<DefineBinaryDataTag>();
+
+                        ReplaceRsaKeys(binaryDataTags);
+                        e.Payload = Main.Game.Rebuild();
+                    }
+                    Main.Game.Save("Modified Clients\\" + Main.GameData.FlashClientBuild + ".swf");
+                }
+                else e.Payload = Main.Game.Data;
+
                 Eavesdropper.Terminate();
                 StatusTxt.SetDotAnimation("Intercepting Connection");
 
@@ -137,14 +171,9 @@ namespace Tanji.Dialogs
                     Main.Contractor.Hotel = SKore.ToHotel(Main.GameData.Host);
                     Main.IsRetro = (Main.Contractor.Hotel == HHotel.Unknown);
 
-                    /* We do this check first since future builds may support 
-                     * caching of modded retro clients, when that happens, we 
-                     * simply remove the '!Main.IsRetro' condition. */
                     if (Main.Game == null && !Main.IsRetro)
-                        LoadModdedClientAsync().Wait();
+                        TryLoadModdedClientAsync().Wait();
 
-                    /* Modded retro client caching is not supported yet, so let's 
-                     * terminate the proxy, and begin intercepting the connection. */
                     if (Main.Game == null && Main.IsRetro)
                     {
                         Eavesdropper.Terminate();
@@ -165,18 +194,68 @@ namespace Tanji.Dialogs
             }
         }
 
-        protected virtual void OnCancelConnect()
+        private void ExtractRsaKeys(string base64RsaKeys)
+        {
+            byte[] rsaKeyData = Convert.FromBase64String(base64RsaKeys);
+            string mergedRsaKeys = Encoding.UTF8.GetString(rsaKeyData);
+
+            int modLength = mergedRsaKeys[0];
+            string modulus = mergedRsaKeys.Substring(1, modLength);
+
+            mergedRsaKeys = mergedRsaKeys.Substring(modLength);
+            int exponent = int.Parse(mergedRsaKeys.Substring(2));
+
+            if (string.IsNullOrWhiteSpace(Main.Handshaker.RealModulus))
+                Main.Handshaker.RealModulus = modulus;
+
+            if (Main.Handshaker.RealExponent == 0)
+                Main.Handshaker.RealExponent = exponent;
+        }
+        private string EncodeRsaKeys(int exponent, string modulus)
+        {
+            string mergedKeys = string.Format("{0}{1} {2}",
+                (char)modulus.Length, modulus, exponent);
+
+            byte[] data = Encoding.UTF8.GetBytes(mergedKeys);
+            return Convert.ToBase64String(data);
+        }
+        private void ReplaceRsaKeys(IEnumerable<DefineBinaryDataTag> binaryDataTags)
+        {
+            foreach (DefineBinaryDataTag binaryDataTag in binaryDataTags)
+            {
+                string binaryDataBody = Encoding.UTF8
+                    .GetString(binaryDataTag.BinaryData);
+
+                if (binaryDataBody.Contains("habbo_login_dialog"))
+                {
+                    string realRsaKeys = binaryDataBody
+                        .GetChild("name=\"dummy_field\" caption=\"", '"');
+
+                    ExtractRsaKeys(realRsaKeys);
+
+                    string fakeRsaKeys = EncodeRsaKeys(
+                        HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
+
+                    binaryDataTag.BinaryData = Encoding.UTF8.GetBytes(
+                        binaryDataBody.Replace(realRsaKeys, fakeRsaKeys));
+
+                    break;
+                }
+            }
+        }
+
+        private void DoCancelConnect()
         {
             ResetInterface();
             Eavesdropper.Terminate();
             Main.Connection.Disconnect();
         }
-        protected virtual void OnAutomaticConnect()
+        private void DoAutomaticConnect()
         {
             Eavesdropper.Initiate(8080);
             StatusTxt.SetDotAnimation("Extracting Host/Port");
         }
-        protected virtual async Task<bool> OnManualConnectAsync()
+        private async Task<bool> DoManualConnectAsync()
         {
             StatusTxt.SetDotAnimation("Intercepting Connection");
 
@@ -191,21 +270,22 @@ namespace Tanji.Dialogs
             IsConnecting = false;
             ConnectBtn.Text = "Connect";
             StatusTxt.StopDotAnimation("Standing By...");
-            ModePnl.Enabled = GameHostTxt.Enabled = GamePortTxt.Enabled = true;
+            GameHostTxt.ReadOnly = GamePortTxt.ReadOnly = !ModePnl.IsManual;
+            ModePnl.Enabled = !(ExponentTxt.ReadOnly = ModulusTxt.ReadOnly = false);
         }
         private void CreateTrustedRootCertificate()
         {
             while (!Eavesdropper.CreateTrustedRootCertificate())
             {
                 var result = MessageBox.Show(
-                    "Eavesdrop requires a self-signed certificate in the root store to decrypt HTTPS traffic.\r\n\r\nShutting Down...",
-                    "Tanji ~ Alert!", MessageBoxButtons.RetryCancel, MessageBoxIcon.Asterisk);
+                    "Eavesdrop requires a self-signed certificate in the root store to decrypt HTTPS traffic.\r\n\r\nWould you like to retry the process?\r\n\r\n",
+                    "Tanji ~ Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
 
-                if (result == DialogResult.Cancel)
+                if (result == DialogResult.No)
                     Environment.Exit(0);
             }
         }
-        private async Task<bool> LoadModdedClientAsync()
+        private async Task<bool> TryLoadModdedClientAsync()
         {
             string possibleClientPath = Path.Combine("Modified Clients",
                Main.GameData.FlashClientBuild + ".swf");
@@ -221,43 +301,24 @@ namespace Tanji.Dialogs
             }
             return loadSuccess;
         }
-        private async Task<bool> VerifyGameClientAsync(string path)
-        {
-            try
-            {
-                Main.Game = new ShockwaveFlash(path);
-                if (Main.Game.IsCompressed)
-                {
-                    StatusTxt.SetDotAnimation("Decompressing Client");
-                    if (await Main.Game.DecompressAsync()
-                        .ConfigureAwait(false))
-                    {
-                        StatusTxt.SetDotAnimation("Extracting Tags");
-                        Main.Game.ExtractTags();
-                    }
-                }
-                return !Main.Game.IsCompressed;
-            }
-            catch
-            {
-                Main.Game = null;
-                return false;
-            }
-        }
 
-        private void TanjiConnectFrm_FormClosing(object sender, FormClosingEventArgs e)
+        private Task<bool> VerifyGameClientAsync(string path)
         {
-            try
+            return VerifyGameClientAsync(new ShockwaveFlash(path));
+        }
+        private async Task<bool> VerifyGameClientAsync(ShockwaveFlash flash)
+        {
+            if (flash.IsCompressed)
             {
-                ResetInterface();
-                Eavesdropper.Terminate();
-                HConnection.RestoreHosts();
+                StatusTxt.SetDotAnimation("Decompressing Client");
+                bool decompressed = await flash.DecompressAsync()
+                    .ConfigureAwait(false);
             }
-            finally
-            {
-                if (!Main.Connection.IsConnected)
-                    Environment.Exit(0);
-            }
+
+            if (!flash.IsCompressed)
+                Main.Game = flash;
+
+            return Main.Game != null;
         }
     }
 }

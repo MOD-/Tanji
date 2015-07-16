@@ -192,18 +192,18 @@
             // 
             // GameHostTxt
             // 
-            this.GameHostTxt.Enabled = false;
             this.GameHostTxt.Location = new System.Drawing.Point(12, 57);
             this.GameHostTxt.Name = "GameHostTxt";
+            this.GameHostTxt.ReadOnly = true;
             this.GameHostTxt.Size = new System.Drawing.Size(150, 20);
             this.GameHostTxt.TabIndex = 77;
             this.GameHostTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // GamePortTxt
             // 
-            this.GamePortTxt.Enabled = false;
             this.GamePortTxt.Location = new System.Drawing.Point(168, 57);
             this.GamePortTxt.Name = "GamePortTxt";
+            this.GamePortTxt.ReadOnly = true;
             this.GamePortTxt.Size = new System.Drawing.Size(150, 20);
             this.GamePortTxt.TabIndex = 78;
             this.GamePortTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
