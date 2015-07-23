@@ -6,7 +6,7 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("Tanji")]
-[assembly: AssemblyDescription("PacketLogger for the online social networking game: Habbo Hotel")]
+[assembly: AssemblyDescription("Habbo Hotel Packet(Logger/Manipulator)")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ArachisH")]
 [assembly: AssemblyProduct("Tanji")]
