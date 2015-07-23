@@ -1,4 +1,6 @@
-﻿using Sulakore.Communication;
+﻿using System;
+
+using Sulakore.Communication;
 using Sulakore.Protocol.Encryption;
 
 namespace Tanji.Managers
@@ -30,11 +32,15 @@ namespace Tanji.Managers
         public HandshakeManager(MainFrm main)
         {
             _main = main;
+            _main.Connection.Connected += Connected;
+        }
 
+        // TODO: We need to check if the incoming data is GOING TO BE encrypted, lame, we gotta edit HNode a bit.
+        private void Connected(object sender, EventArgs e)
+        {
             _main.Connection.DataIncoming += DataIncoming;
             _main.Connection.DataOutgoing += DataOutgoing;
         }
-
         private void DataIncoming(object sender, InterceptedEventArgs e)
         {
             switch (e.Step)
@@ -53,6 +59,7 @@ namespace Tanji.Managers
                     Remote.Exchange.DoHandshake(e.Packet.ReadString(),
                         e.Packet.ReadString(e.Packet.Position));
 
+                    Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
                     e.Replacement.Replace<string>(0, Local.Exchange.GetSignedPrime());
                     e.Replacement.Replace<string>(e.Packet.Position, Local.Exchange.GetSignedGenerator());
                     break;
@@ -60,6 +67,8 @@ namespace Tanji.Managers
                 case 2:
                 {
                     _remoteKey = Remote.Exchange.GetSharedKey(e.Packet.ReadString());
+
+                    Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
                     e.Replacement.Replace<string>(0, Local.Exchange.GetPublicKey());
 
                     RealExponent = 0;
@@ -69,7 +78,7 @@ namespace Tanji.Managers
                     Remote.Exchange.Dispose();
 
                     Local.Decrypter = new Rc4(_localKey);
-                    Remote.Decrypter = new Rc4(_remoteKey);
+                    //Remote.Decrypter = new Rc4(_remoteKey);
 
                     _main.Connection.DataIncoming -= DataIncoming;
                     break;
@@ -83,12 +92,14 @@ namespace Tanji.Managers
                 case 3:
                 {
                     _localKey = Local.Exchange.GetSharedKey(e.Packet.ReadString());
+
+                    Remote.Exchange.Rsa.Padding = Local.Exchange.Rsa.Padding;
                     e.Replacement.Replace<string>(0, Remote.Exchange.GetPublicKey());
                     break;
                 }
                 case 4:
                 {
-                    Local.Encrypter = new Rc4(_localKey);
+                    //Local.Encrypter = new Rc4(_localKey);
                     Remote.Encrypter = new Rc4(_remoteKey);
 
                     _main.Connection.DataOutgoing -= DataOutgoing;
