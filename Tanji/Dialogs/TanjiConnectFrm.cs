@@ -24,12 +24,11 @@
 
 using System;
 using System.IO;
-using System.Net;
 using System.Text;
-using System.Linq;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 
 using Tanji.Managers;
 
@@ -41,16 +40,16 @@ using Eavesdrop;
 
 using FlashInspect;
 using FlashInspect.Tags;
-using FlashInspect.Bytecode;
 using FlashInspect.Bytecode.DataTypes;
 
 namespace Tanji.Dialogs
 {
     public partial class TanjiConnectFrm : Form
     {
+        private readonly Regex _ipMatcher;
         private readonly TaskScheduler _uiContext;
 
-        public MainFrm Main { get; private set; }
+        public MainFrm Main { get; }
         public bool IsConnecting { get; private set; }
 
         public TanjiConnectFrm(MainFrm main)
@@ -60,6 +59,9 @@ namespace Tanji.Dialogs
 
             _uiContext =
                 TaskScheduler.FromCurrentSynchronizationContext();
+
+            _ipMatcher = new Regex(
+                "^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
 
             if (!Directory.Exists("Modified Clients"))
                 Directory.CreateDirectory("Modified Clients");
@@ -159,6 +161,9 @@ namespace Tanji.Dialogs
                 else e.Payload = Main.Game.Data;
 
                 Eavesdropper.Terminate();
+                Main.Connection.ConnectAsync(Main.GameData.Host, Main.GameData.Port)
+                    .ContinueWith(t => Close(), _uiContext);
+
                 StatusTxt.SetDotAnimation("Intercepting Connection");
             }
             else if (Main.GameData == null)
@@ -179,16 +184,11 @@ namespace Tanji.Dialogs
                     if (Main.Game == null && !Main.IsRetro)
                         TryLoadModdedClientAsync().Wait();
 
-                    // TODO: Check if responseBody contains banner.url
-
                     StatusTxt.SetDotAnimation((Main.Game == null ?
                         "Intercepting" : "Replacing") + " Client");
 
-                    Main.Connection.ConnectAsync(Main.GameData.Host, Main.GameData.Port)
-                        .ContinueWith(t => Close(), _uiContext);
-
-                    responseBody = responseBody.Replace(".swf", ".swf?" +
-                        (Main.IsRetro ? DateTime.Now.Ticks.ToString() : Main.GameData.FlashClientBuild));
+                    responseBody = responseBody.Replace(".swf",
+                        ".swf?" + DateTime.Now.Ticks.ToString());
 
                     e.Payload = Encoding.UTF8.GetBytes(responseBody);
                 }
@@ -262,10 +262,11 @@ namespace Tanji.Dialogs
 
                         for (int i = 1; i < cPool.Strings.Length; i++)
                         {
+                            string cString = cPool.Strings[i];
                             if (cPool.Strings[i].Length == 256)
                             {
                                 foundModInABC = true;
-                                string possibleModulus = cPool.Strings[i];
+                                string possibleModulus = cString;
 
                                 if (Main.IsRetro || string.IsNullOrWhiteSpace(Main.Handshaker.RealModulus))
                                 {
@@ -273,14 +274,14 @@ namespace Tanji.Dialogs
                                     cPool.Strings[i] = HandshakeManager.FAKE_MODULUS;
                                 }
                             }
-                            else if (Main.IsRetro && cPool.Strings[i] == "10001")
+                            else if (Main.IsRetro && cString == "10001")
                             {
                                 containedDefaultExpInABC = true;
                                 cPool.Strings[i] = HandshakeManager.FAKE_EXPONENT.ToString();
                             }
-                            else if (Main.IsRetro &&
-                                cPool.Strings[i] == Main.GameData.Host)
+                            else if (Main.IsRetro && _ipMatcher.Match(cString).Success)
                             {
+                                Main.GameData.Host = cString;
                                 cPool.Strings[i] = "127.0.0.1";
                             }
                         }

@@ -45,8 +45,7 @@ namespace Tanji.Components
         public event EventHandler ModeChanged;
         protected virtual void OnModeChanged(EventArgs e)
         {
-            EventHandler handler = ModeChanged;
-            if (handler != null) ModeChanged(this, e);
+            ModeChanged?.Invoke(this, e);
         }
 
         private bool _isManual = false;
