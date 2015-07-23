@@ -34,6 +34,7 @@ using Sulakore.Extensions;
 using Sulakore.Communication;
 
 using FlashInspect;
+using System.Diagnostics;
 
 namespace Tanji
 {
@@ -70,9 +71,13 @@ namespace Tanji
             PromptConnect();
         }
         private void Connection_DataIncoming(object sender, InterceptedEventArgs e)
-        { }
+        {
+            Debug.WriteLine(e.Step + " < IN < " + e.Packet + "\n----------------");
+        }
         private void Connection_DataOutgoing(object sender, InterceptedEventArgs e)
-        { }
+        {
+            Debug.WriteLine(e.Step + " > OUT > " + e.Packet + "\n----------------");
+        }
 
         private void PromptConnect()
         {
