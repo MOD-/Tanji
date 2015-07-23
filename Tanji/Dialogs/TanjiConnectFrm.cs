@@ -24,6 +24,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Linq;
 using System.Windows.Forms;
@@ -40,6 +41,8 @@ using Eavesdrop;
 
 using FlashInspect;
 using FlashInspect.Tags;
+using FlashInspect.Bytecode;
+using FlashInspect.Bytecode.DataTypes;
 
 namespace Tanji.Dialogs
 {
@@ -77,7 +80,7 @@ namespace Tanji.Dialogs
             StatusTxt.StopDotAnimation("Standing By...");
             if (!verifySuccess)
             {
-                MessageBox.Show("Unable to dissassemble the Shockwave Flash(.swf) file.",
+                MessageBox.Show("Unable to disassemble the Shockwave Flash(.swf) file.",
                     "Tanji ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
@@ -146,10 +149,9 @@ namespace Tanji.Dialogs
                     if (verifySuccess)
                     {
                         StatusTxt.SetDotAnimation("Extracting Tags");
-                        var binaryDataTags = Main.Game.ExtractTags()
-                            .OfType<DefineBinaryDataTag>();
+                        var flashTags = Main.Game.ExtractTags();
 
-                        ReplaceRsaKeys(binaryDataTags);
+                        ReplaceRsaKeys(flashTags);
                         e.Payload = Main.Game.Rebuild();
                     }
                     Main.Game.Save("Modified Clients\\" + Main.GameData.FlashClientBuild + ".swf");
@@ -158,11 +160,8 @@ namespace Tanji.Dialogs
 
                 Eavesdropper.Terminate();
                 StatusTxt.SetDotAnimation("Intercepting Connection");
-
-                Main.Connection.ConnectAsync(Main.GameData.Host, Main.GameData.Port)
-                    .ContinueWith(t => Close(), _uiContext);
             }
-            else
+            else if (Main.GameData == null)
             {
                 string responseBody = Encoding.UTF8.GetString(e.Payload);
                 if (responseBody.Contains("connection.info.host"))
@@ -171,24 +170,26 @@ namespace Tanji.Dialogs
                     Main.Contractor.Hotel = SKore.ToHotel(Main.GameData.Host);
                     Main.IsRetro = (Main.Contractor.Hotel == HHotel.Unknown);
 
+                    if (Main.IsRetro)
+                    {
+                        responseBody = responseBody.Replace(
+                            Main.GameData.Host, "127.0.0.1");
+                    }
+
                     if (Main.Game == null && !Main.IsRetro)
                         TryLoadModdedClientAsync().Wait();
 
-                    if (Main.Game == null && Main.IsRetro)
-                    {
-                        Eavesdropper.Terminate();
-                        StatusTxt.SetDotAnimation("Intercepting Connection");
+                    // TODO: Check if responseBody contains banner.url
 
-                        Main.Connection.ConnectAsync(Main.GameData.Host, Main.GameData.Port)
-                            .ContinueWith(t => Close(), _uiContext);
-                    }
-                    else
-                    {
-                        StatusTxt.SetDotAnimation((Main.GameData == null ?
-                            "Intercepting" : "Replacing") + " Client");
-                    }
+                    StatusTxt.SetDotAnimation((Main.Game == null ?
+                        "Intercepting" : "Replacing") + " Client");
 
-                    responseBody = responseBody.Replace(".swf", ".swf?" + DateTime.Now.Millisecond);
+                    Main.Connection.ConnectAsync(Main.GameData.Host, Main.GameData.Port)
+                        .ContinueWith(t => Close(), _uiContext);
+
+                    responseBody = responseBody.Replace(".swf", ".swf?" +
+                        (Main.IsRetro ? DateTime.Now.Ticks.ToString() : Main.GameData.FlashClientBuild));
+
                     e.Payload = Encoding.UTF8.GetBytes(responseBody);
                 }
             }
@@ -219,28 +220,80 @@ namespace Tanji.Dialogs
             byte[] data = Encoding.UTF8.GetBytes(mergedKeys);
             return Convert.ToBase64String(data);
         }
-        private void ReplaceRsaKeys(IEnumerable<DefineBinaryDataTag> binaryDataTags)
+        private void ReplaceRsaKeys(IEnumerable<FlashTag> flashTags)
         {
-            foreach (DefineBinaryDataTag binaryDataTag in binaryDataTags)
+            bool foundModInABC = false;
+            bool containedDefaultExpInABC = false;
+            foreach (FlashTag flashTag in flashTags)
             {
-                string binaryDataBody = Encoding.UTF8
-                    .GetString(binaryDataTag.BinaryData);
-
-                if (binaryDataBody.Contains("habbo_login_dialog"))
+                #region Switch: flashTag.TagType
+                switch (flashTag.TagType)
                 {
-                    string realRsaKeys = binaryDataBody
-                        .GetChild("name=\"dummy_field\" caption=\"", '"');
+                    case FlashTagType.DefineBinaryData:
+                    {
+                        if (Main.IsRetro) break;
+                        var binaryTag = (DefineBinaryDataTag)flashTag;
+                        string binaryDataBody = Encoding.UTF8
+                            .GetString(binaryTag.BinaryData);
 
-                    ExtractRsaKeys(realRsaKeys);
+                        if (binaryDataBody.Contains("habbo_login_dialog"))
+                        {
+                            string realRsaKeys = binaryDataBody
+                                .GetChild("name=\"dummy_field\" caption=\"", '"');
 
-                    string fakeRsaKeys = EncodeRsaKeys(
-                        HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
+                            ExtractRsaKeys(realRsaKeys);
 
-                    binaryDataTag.BinaryData = Encoding.UTF8.GetBytes(
-                        binaryDataBody.Replace(realRsaKeys, fakeRsaKeys));
+                            string fakeRsaKeys = EncodeRsaKeys(
+                                HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
 
-                    break;
+                            binaryTag.BinaryData = Encoding.UTF8.GetBytes(
+                                binaryDataBody.Replace(realRsaKeys, fakeRsaKeys));
+
+                            break;
+                        }
+                        break;
+                    }
+
+                    case FlashTagType.DoABC:
+                    case FlashTagType.DoABC2:
+                    {
+                        var abcTag = (DoABCTag)flashTag;
+                        CPoolInfo cPool = abcTag.ABCData.ConstantPool;
+
+                        for (int i = 1; i < cPool.Strings.Length; i++)
+                        {
+                            if (cPool.Strings[i].Length == 256)
+                            {
+                                foundModInABC = true;
+                                string possibleModulus = cPool.Strings[i];
+
+                                if (Main.IsRetro || string.IsNullOrWhiteSpace(Main.Handshaker.RealModulus))
+                                {
+                                    Main.Handshaker.RealModulus = possibleModulus;
+                                    cPool.Strings[i] = HandshakeManager.FAKE_MODULUS;
+                                }
+                            }
+                            else if (Main.IsRetro && cPool.Strings[i] == "10001")
+                            {
+                                containedDefaultExpInABC = true;
+                                cPool.Strings[i] = HandshakeManager.FAKE_EXPONENT.ToString();
+                            }
+                            else if (Main.IsRetro &&
+                                cPool.Strings[i] == Main.GameData.Host)
+                            {
+                                cPool.Strings[i] = "127.0.0.1";
+                            }
+                        }
+                        break;
+                    }
                 }
+                #endregion
+            }
+
+            if (foundModInABC &&
+                !containedDefaultExpInABC && Main.IsRetro)
+            {
+                Main.Handshaker.RealExponent = 3;
             }
         }
 
