@@ -7,11 +7,11 @@ namespace Tanji.Managers
 {
     public class HandshakeManager
     {
-        private readonly MainFrm _main;
+        public MainFrm Main { get; }
         private byte[] _localKey, _remoteKey;
 
-        private HNode Local => _main.Connection.Local;
-        private HNode Remote => _main.Connection.Remote;
+        private HNode Local => Main.Connection.Local;
+        private HNode Remote => Main.Connection.Remote;
 
         public const int FAKE_EXPONENT = 3;
         public const string FAKE_MODULUS = "86851dd364d5c5cece3c883171cc6ddc5760779b992482bd1e20dd296888df91b33b936a7b93f06d29e8870f703a216257dec7c81de0058fea4cc5116f75e6efc4e9113513e45357dc3fd43d4efab5963ef178b78bd61e81a14c603b24c8bcce0a12230b320045498edc29282ff0603bc7b7dae8fc1b05b52b2f301a9dc783b7";
@@ -25,14 +25,20 @@ namespace Tanji.Managers
 
         public HandshakeManager(MainFrm main)
         {
-            _main = main;
-            _main.Connection.Connected += Connected;
+            Main = main;
+            Main.Connection.Connected += Connected;
+            Main.Connection.Disconnected += Disconnected;
         }
 
         private void Connected(object sender, EventArgs e)
         {
-            _main.Connection.DataIncoming += DataIncoming;
-            _main.Connection.DataOutgoing += DataOutgoing;
+            Main.Connection.DataIncoming += DataIncoming;
+            Main.Connection.DataOutgoing += DataOutgoing;
+        }
+        private void Disconnected(object sender, EventArgs e)
+        {
+            RealExponent = 0;
+            RealModulus = string.Empty;
         }
         private void DataIncoming(object sender, InterceptedEventArgs e)
         {
@@ -78,16 +84,19 @@ namespace Tanji.Managers
                 {
                     if (Remote.IsDecryptionRequired)
                         Local.Encrypter = new Rc4(_localKey);
-
-                    _main.Connection.DataIncoming -= DataIncoming;
                     break;
                 }
+                default: Main.Connection.DataIncoming -= DataIncoming; break;
             }
         }
         private void DataOutgoing(object sender, InterceptedEventArgs e)
         {
             switch (e.Step)
             {
+                case 1:
+                case 2: break;
+                default: Main.Connection.DataOutgoing -= DataOutgoing; break;
+
                 case 3:
                 {
                     _localKey = Local.Exchange.GetSharedKey(e.Packet.ReadString());
@@ -100,8 +109,6 @@ namespace Tanji.Managers
                 {
                     if (Local.IsDecryptionRequired)
                         Remote.Encrypter = new Rc4(_remoteKey);
-
-                    _main.Connection.DataOutgoing -= DataOutgoing;
                     break;
                 }
             }

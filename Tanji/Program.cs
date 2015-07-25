@@ -24,7 +24,6 @@
 
 using System;
 using System.Windows.Forms;
-using Tanji.Dialogs;
 
 namespace Tanji
 {

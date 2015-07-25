@@ -30,11 +30,9 @@ using Tanji.Managers;
 using Tanji.Applications;
 
 using Sulakore.Habbo.Web;
-using Sulakore.Extensions;
 using Sulakore.Communication;
 
 using FlashInspect;
-using System.Diagnostics;
 
 namespace Tanji
 {
@@ -44,39 +42,54 @@ namespace Tanji
         public HGameData GameData { get; set; }
         public ShockwaveFlash Game { get; set; }
 
-        public Contractor Contractor { get; private set; }
-        public HConnection Connection { get; private set; }
+        public HConnection Connection { get; }
+        public HandshakeManager HandshakeMngr { get; }
+        public ExtensionManager ExtensionMngr { get; }
 
-        public TanjiConnectFrm TanjiConnect { get; private set; }
-        public PacketLoggerFrm PacketLogger { get; private set; }
-
-        public HandshakeManager Handshaker { get; private set; }
+        public TanjiConnectFrm TanjiConnect { get; }
+        public PacketLoggerFrm PacketLogger { get; }
 
         public MainFrm()
         {
             InitializeComponent();
 
             Connection = new HConnection();
-            Contractor = new Contractor(Connection);
-            Handshaker = new HandshakeManager(this);
             TanjiConnect = new TanjiConnectFrm(this);
-            PacketLogger = new PacketLoggerFrm(this);
 
-            Connection.DataIncoming += Connection_DataIncoming;
-            Connection.DataOutgoing += Connection_DataOutgoing;
+            // Lazy restart.
+            Connection.Disconnected += Disconnected;
+            Connection.Connected += Connected;
+
+            // Data Priority - #1 | Notify Extensions
+            ExtensionMngr = new ExtensionManager(this);
+            // Data Priority - #2 | Process Handshake
+            HandshakeMngr = new HandshakeManager(this);
+            // Data Priority - #3 | Display Data
+            PacketLogger = new PacketLoggerFrm(this);
         }
 
+        protected override void OnShown(EventArgs e)
+        {
+            if (!PacketLogger.IsLoaded)
+            {
+                PacketLogger.Show();
+
+                PacketLogger.BringToFront();
+                BringToFront();
+            }
+        }
         private void MainFrm_Load(object sender, EventArgs e)
         {
             PromptConnect();
         }
-        private void Connection_DataIncoming(object sender, InterceptedEventArgs e)
+
+        private void Connected(object sender, EventArgs e)
         {
-            Debug.WriteLine(e.Step + " < IN < " + e.Packet + "\n----------------");
+            Invoke(new MethodInvoker(TanjiConnect.Close));
         }
-        private void Connection_DataOutgoing(object sender, InterceptedEventArgs e)
+        private void Disconnected(object sender, EventArgs e)
         {
-            Debug.WriteLine(e.Step + " > OUT > " + e.Packet + "\n----------------");
+            Application.Restart();
         }
 
         private void PromptConnect()

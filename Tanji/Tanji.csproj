@@ -70,6 +70,7 @@
     <Compile Include="Applications\PacketLoggerFrm.Designer.cs">
       <DependentUpon>PacketLoggerFrm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Managers\ExtensionManager.cs" />
     <Compile Include="Managers\HandshakeManager.cs" />
     <Compile Include="Utilities\Draw.cs" />
     <Compile Include="Components\TanjiModePanel.cs" />

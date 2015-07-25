@@ -245,7 +245,7 @@
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ Connection Setup [Automatic]";
             this.TopMost = true;
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.TanjiConnectFrm_FormClosing);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TanjiConnectFrm_FormClosed);
             this.ExponentGrpbx.ResumeLayout(false);
             this.ExponentGrpbx.PerformLayout();
             this.CustomClientGrpbx.ResumeLayout(false);

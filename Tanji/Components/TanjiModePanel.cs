@@ -27,8 +27,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.ComponentModel;
 
-using Sulakore.Components;
-
 using Tanji.Utilities;
 
 namespace Tanji.Components

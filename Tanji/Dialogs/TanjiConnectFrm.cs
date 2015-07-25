@@ -47,7 +47,6 @@ namespace Tanji.Dialogs
     public partial class TanjiConnectFrm : Form
     {
         private readonly Regex _ipMatcher;
-        private readonly TaskScheduler _uiContext;
 
         public MainFrm Main { get; }
         public bool IsConnecting { get; private set; }
@@ -56,9 +55,6 @@ namespace Tanji.Dialogs
         {
             InitializeComponent();
             Main = main;
-
-            _uiContext =
-                TaskScheduler.FromCurrentSynchronizationContext();
 
             _ipMatcher = new Regex(
                 "^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
@@ -69,6 +65,20 @@ namespace Tanji.Dialogs
             CreateTrustedRootCertificate();
             Eavesdropper.IsSslSupported = true;
             Eavesdropper.EavesdropperResponse += EavesdropperResponse;
+        }
+        private void TanjiConnectFrm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            try
+            {
+                ResetInterface();
+                Eavesdropper.Terminate();
+                HConnection.RestoreHosts();
+            }
+            finally
+            {
+                if (!Main.Connection.IsConnected)
+                    Environment.Exit(0);
+            }
         }
 
         private async void BrowseBtn_Click(object sender, EventArgs e)
@@ -114,20 +124,6 @@ namespace Tanji.Dialogs
             }
             else DoCancelConnect();
         }
-        private void TanjiConnectFrm_FormClosing(object sender, FormClosingEventArgs e)
-        {
-            try
-            {
-                ResetInterface();
-                Eavesdropper.Terminate();
-                HConnection.RestoreHosts();
-            }
-            finally
-            {
-                if (!Main.Connection.IsConnected)
-                    Environment.Exit(0);
-            }
-        }
 
         private void ModeChanged(object sender, EventArgs e)
         {
@@ -161,8 +157,7 @@ namespace Tanji.Dialogs
                 else e.Payload = Main.Game.Data;
 
                 Eavesdropper.Terminate();
-                Main.Connection.ConnectAsync(Main.GameData.Host, Main.GameData.Port)
-                    .ContinueWith(t => Close(), _uiContext);
+                Main.Connection.ConnectAsync(Main.GameData.Host, Main.GameData.Port);
 
                 StatusTxt.SetDotAnimation("Intercepting Connection");
             }
@@ -172,8 +167,8 @@ namespace Tanji.Dialogs
                 if (responseBody.Contains("connection.info.host"))
                 {
                     Main.GameData = new HGameData(responseBody);
-                    Main.Contractor.Hotel = SKore.ToHotel(Main.GameData.Host);
-                    Main.IsRetro = (Main.Contractor.Hotel == HHotel.Unknown);
+                    Main.ExtensionMngr.Hotel = SKore.ToHotel(Main.GameData.Host);
+                    Main.IsRetro = (Main.ExtensionMngr.Hotel == HHotel.Unknown);
 
                     if (Main.IsRetro)
                     {
@@ -206,11 +201,11 @@ namespace Tanji.Dialogs
             mergedRsaKeys = mergedRsaKeys.Substring(modLength);
             int exponent = int.Parse(mergedRsaKeys.Substring(2));
 
-            if (string.IsNullOrWhiteSpace(Main.Handshaker.RealModulus))
-                Main.Handshaker.RealModulus = modulus;
+            if (string.IsNullOrWhiteSpace(Main.HandshakeMngr.RealModulus))
+                Main.HandshakeMngr.RealModulus = modulus;
 
-            if (Main.Handshaker.RealExponent == 0)
-                Main.Handshaker.RealExponent = exponent;
+            if (Main.HandshakeMngr.RealExponent == 0)
+                Main.HandshakeMngr.RealExponent = exponent;
         }
         private string EncodeRsaKeys(int exponent, string modulus)
         {
@@ -268,9 +263,9 @@ namespace Tanji.Dialogs
                                 foundModInABC = true;
                                 string possibleModulus = cString;
 
-                                if (Main.IsRetro || string.IsNullOrWhiteSpace(Main.Handshaker.RealModulus))
+                                if (Main.IsRetro || string.IsNullOrWhiteSpace(Main.HandshakeMngr.RealModulus))
                                 {
-                                    Main.Handshaker.RealModulus = possibleModulus;
+                                    Main.HandshakeMngr.RealModulus = possibleModulus;
                                     cPool.Strings[i] = HandshakeManager.FAKE_MODULUS;
                                 }
                             }
@@ -294,7 +289,7 @@ namespace Tanji.Dialogs
             if (foundModInABC &&
                 !containedDefaultExpInABC && Main.IsRetro)
             {
-                Main.Handshaker.RealExponent = 3;
+                Main.HandshakeMngr.RealExponent = 3;
             }
         }
 
