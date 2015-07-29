@@ -120,6 +120,7 @@
             // 
             // SaveLogBtn
             // 
+            this.SaveLogBtn.Enabled = false;
             this.SaveLogBtn.Name = "SaveLogBtn";
             this.SaveLogBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.SaveLogBtn.Size = new System.Drawing.Size(196, 22);

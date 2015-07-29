@@ -1,6 +1,6 @@
 ﻿namespace Tanji.Dialogs
 {
-    partial class TanjiConnectFrm
+    partial class ConnectFrm
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(TanjiConnectFrm));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConnectFrm));
             this.MiddleGlowPnl = new System.Windows.Forms.Panel();
             this.GamePortLbl = new System.Windows.Forms.Label();
             this.GameHostLbl = new System.Windows.Forms.Label();
@@ -218,7 +218,7 @@
             this.ModePnl.TabIndex = 76;
             this.ModePnl.ModeChanged += new System.EventHandler(this.ModeChanged);
             // 
-            // TanjiConnectFrm
+            // ConnectFrm
             // 
             this.AcceptButton = this.ConnectBtn;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -241,11 +241,12 @@
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "TanjiConnectFrm";
+            this.Name = "ConnectFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ Connection Setup [Automatic]";
             this.TopMost = true;
-            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.TanjiConnectFrm_FormClosed);
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConnectFrm_FormClosed);
+            this.Shown += new System.EventHandler(this.ConnectFrm_Shown);
             this.ExponentGrpbx.ResumeLayout(false);
             this.ExponentGrpbx.PerformLayout();
             this.CustomClientGrpbx.ResumeLayout(false);

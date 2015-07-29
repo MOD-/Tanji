@@ -2,7 +2,7 @@
 
     GitHub(Source): https://GitHub.com/ArachisH/Tanji
 
-    .NET library for creating Habbo Hotel related desktop applications.
+    Habbo Hotel Packet(Logger/Manipulator)
     Copyright (C) 2015 ArachisH
 
     This program is free software; you can redistribute it and/or modify
@@ -36,6 +36,7 @@ namespace Tanji.Applications
 {
     public partial class PacketLoggerFrm : Form
     {
+        private Task _readQueueTask;
         private bool _isReadingQueue;
 
         private readonly WriteHighlightCallback _writeHighlight;
@@ -44,7 +45,7 @@ namespace Tanji.Applications
         private readonly WriteCallback _write;
         private delegate void WriteCallback(InterceptedEventArgs e);
 
-        public MainFrm Main { get; }
+        public MainFrm MainUI { get; }
         public bool IsLoaded { get; private set; }
         public bool IsHalted { get; private set; }
         public Queue<InterceptedEventArgs> Intercepted { get; }
@@ -64,14 +65,14 @@ namespace Tanji.Applications
         public PacketLoggerFrm(MainFrm main)
         {
             InitializeComponent();
-            Main = main;
+            MainUI = main;
 
             _write = Write;
             _writeHighlight = WriteHighlight;
             Intercepted = new Queue<InterceptedEventArgs>();
 
-            Main.Connection.DataIncoming += DataIncoming;
-            Main.Connection.DataOutgoing += DataOutgoing;
+            MainUI.Connection.DataIncoming += DataIncoming;
+            MainUI.Connection.DataOutgoing += DataOutgoing;
         }
 
         protected override void OnActivated(EventArgs e)
@@ -81,9 +82,14 @@ namespace Tanji.Applications
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            e.Cancel = true;
             IsLoaded = false;
+            e.Cancel = IsHalted = true;
             WindowState = FormWindowState.Minimized;
+            
+            Intercepted.Clear();
+            _readQueueTask?.Wait();
+
+            LoggerTxt.Clear();
         }
 
         private void ItemChecked(object sender, EventArgs e)
@@ -189,49 +195,46 @@ namespace Tanji.Applications
 
             if (!_isReadingQueue)
             {
-                Task.Factory.StartNew(RunDisplayQueueLoop,
-                    TaskCreationOptions.LongRunning);
+                _readQueueTask = Task.Factory.StartNew(
+                    RunDisplayQueueLoop, TaskCreationOptions.LongRunning);
             }
         }
 
         public void Write(InterceptedEventArgs e)
         {
-            if (InvokeRequired)
+            if (InvokeRequired) Invoke(_write, e);
+            else
             {
-                Invoke(_write, e);
-                return;
+                bool toServer = (e.Packet.Destination == HDestination.Server);
+
+                string directionArrow = (toServer ? "->" : "<-");
+                string packetType = (toServer ? "Outgoing" : "Incoming");
+                string dataLog = $"{packetType}({e.Replacement.Header}, {e.Replacement.Length}) {directionArrow} {e.Replacement}";
+
+                Color highlight = toServer ?
+                    OutgoingHighlight : IncomingHighlight;
+
+                if (e.IsBlocked) WriteHighlight("Blocked | ", BlockHighlight);
+                else if (e.WasReplaced) WriteHighlight("Replaced | ", ReplaceHighlight);
+
+                string splitter = (DisplaySplitter ? "\n--------------------\n" : "\n");
+                WriteHighlight(dataLog + splitter, highlight);
+                LoggerTxt.SelectionStart = LoggerTxt.TextLength;
+                LoggerTxt.ScrollToCaret();
+
+                Application.DoEvents();
             }
-
-            bool toServer = (e.Packet.Destination == HDestination.Server);
-
-            string directionArrow = (toServer ? "->" : "<-");
-            string packetType = (toServer ? "Outgoing" : "Incoming");
-            string dataLog = $"{packetType}({e.Replacement.Header}, {e.Replacement.Length}) {directionArrow} {e.Replacement}";
-
-            Color highlight = toServer ?
-                OutgoingHighlight : IncomingHighlight;
-
-            if (e.IsBlocked) WriteHighlight("Blocked | ", BlockHighlight);
-            else if (e.WasReplaced) WriteHighlight("Replaced | ", ReplaceHighlight);
-
-            string splitter = (DisplaySplitter ? "\n--------------------\n" : "\n");
-            WriteHighlight(dataLog + splitter, highlight);
-            LoggerTxt.SelectionStart = LoggerTxt.TextLength;
-            LoggerTxt.ScrollToCaret();
-
-            Application.DoEvents();
         }
         public void WriteHighlight(string value, Color highlight)
         {
-            if (InvokeRequired)
+            if (InvokeRequired) Invoke(_writeHighlight, value, highlight);
+            else
             {
-                Invoke(_writeHighlight, value, highlight);
-                return;
+                LoggerTxt.SelectionStart = LoggerTxt.TextLength;
+                LoggerTxt.SelectionLength = 0;
+                LoggerTxt.SelectionColor = highlight;
+                LoggerTxt.AppendText(value);
             }
-            LoggerTxt.SelectionStart = LoggerTxt.TextLength;
-            LoggerTxt.SelectionLength = 0;
-            LoggerTxt.SelectionColor = highlight;
-            LoggerTxt.AppendText(value);
         }
     }
 }

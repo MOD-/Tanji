@@ -2,7 +2,7 @@
 
     GitHub(Source): https://GitHub.com/ArachisH/Tanji
 
-    .NET library for creating Habbo Hotel related desktop applications.
+    Habbo Hotel Packet(Logger/Manipulator)
     Copyright (C) 2015 ArachisH
 
     This program is free software; you can redistribute it and/or modify
@@ -33,6 +33,7 @@ using Sulakore.Habbo.Web;
 using Sulakore.Communication;
 
 using FlashInspect;
+using System.Threading.Tasks;
 
 namespace Tanji
 {
@@ -46,55 +47,57 @@ namespace Tanji
         public HandshakeManager HandshakeMngr { get; }
         public ExtensionManager ExtensionMngr { get; }
 
-        public TanjiConnectFrm TanjiConnect { get; }
-        public PacketLoggerFrm PacketLogger { get; }
+        public UpdateFrm UpdateUI { get; }
+        public ConnectFrm ConnectUI { get; }
+        public PacketLoggerFrm PacketLoggerUI { get; }
+
+        public Task<bool> CheckForUpdatesTask { get; }
 
         public MainFrm()
         {
             InitializeComponent();
 
             Connection = new HConnection();
-            TanjiConnect = new TanjiConnectFrm(this);
 
-            // Lazy restart.
-            Connection.Disconnected += Disconnected;
+            UpdateUI = new UpdateFrm(this);
+            ConnectUI = new ConnectFrm(this);
+
             Connection.Connected += Connected;
+            Connection.Disconnected += Disconnected;
 
             // Data Priority - #1 | Notify Extensions
             ExtensionMngr = new ExtensionManager(this);
             // Data Priority - #2 | Process Handshake
             HandshakeMngr = new HandshakeManager(this);
             // Data Priority - #3 | Display Data
-            PacketLogger = new PacketLoggerFrm(this);
-        }
+            PacketLoggerUI = new PacketLoggerFrm(this);
 
-        protected override void OnShown(EventArgs e)
+            // Begin checking for updates asynchronously, await once ConnectUI is shown.
+            CheckForUpdatesTask = UpdateUI.CheckForUpdatesAsync();
+        }
+        private void Connected(object sender, EventArgs e)
         {
-            if (!PacketLogger.IsLoaded)
-            {
-                PacketLogger.Show();
-
-                PacketLogger.BringToFront();
-                BringToFront();
-            }
+            Invoke(new MethodInvoker(ConnectUI.Close));
         }
+        private void Disconnected(object sender, EventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void PromptConnect()
+        {
+            ConnectUI.ShowDialog();
+        }
+
         private void MainFrm_Load(object sender, EventArgs e)
         {
             PromptConnect();
         }
 
-        private void Connected(object sender, EventArgs e)
+        private void MainFrm_Shown(object sender, EventArgs e)
         {
-            Invoke(new MethodInvoker(TanjiConnect.Close));
-        }
-        private void Disconnected(object sender, EventArgs e)
-        {
-            Application.Restart();
-        }
-
-        private void PromptConnect()
-        {
-            TanjiConnect.ShowDialog();
+            if (!PacketLoggerUI.IsLoaded)
+                PacketLoggerUI.Show();
         }
     }
 }

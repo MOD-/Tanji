@@ -22,24 +22,11 @@
     See License.txt in the project root for license information.
 */
 
-using Sulakore.Extensions;
-using Sulakore.Communication;
-
 namespace Tanji.Managers
 {
-    public class ExtensionManager : Contractor
+    public class UpdateManager
     {
-        public MainFrm MainUI { get; }
-
-        public ExtensionManager(MainFrm main) :
-            base(main.Connection)
-        {
-            MainUI = main;
-            MainUI.Connection.DataIncoming += DataIncoming;
-            MainUI.Connection.DataOutgoing += DataOutgoing;
-        }
-
-        private void DataIncoming(object sender, InterceptedEventArgs e) => HandleIncoming(e);
-        private void DataOutgoing(object sender, InterceptedEventArgs e) => HandleOutgoing(e);
+        public UpdateManager()
+        { }
     }
 }

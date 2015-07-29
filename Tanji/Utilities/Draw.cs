@@ -1,4 +1,12 @@
-﻿using System.Drawing;
+﻿/* Credits
+
+    Creator: ArachisH(https://github.com/ArachisH)
+    GitHub Gist(Source): https://Gist.GitHub.com/ArachisH/14b106478dd63d1e7249
+
+    GDI+ extension methods.
+*/
+
+using System.Drawing;
 using System.Drawing.Drawing2D;
 
 namespace Tanji.Utilities

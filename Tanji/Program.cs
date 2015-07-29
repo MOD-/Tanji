@@ -2,7 +2,7 @@
 
     GitHub(Source): https://GitHub.com/ArachisH/Tanji
 
-    .NET library for creating Habbo Hotel related desktop applications.
+    Habbo Hotel Packet(Logger/Manipulator)
     Copyright (C) 2015 ArachisH
 
     This program is free software; you can redistribute it and/or modify

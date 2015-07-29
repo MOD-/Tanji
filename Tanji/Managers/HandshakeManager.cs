@@ -1,17 +1,47 @@
-﻿using System;
+﻿/* Copyright
+
+    GitHub(Source): https://GitHub.com/ArachisH/Tanji
+
+    Habbo Hotel Packet(Logger/Manipulator)
+    Copyright (C) 2015 ArachisH
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+    See License.txt in the project root for license information.
+*/
+
+using System.IO;
+using System.Drawing;
+
+using Eavesdrop;
 
 using Sulakore.Communication;
 using Sulakore.Protocol.Encryption;
+using Sulakore.Protocol;
 
 namespace Tanji.Managers
 {
     public class HandshakeManager
     {
-        public MainFrm Main { get; }
+        private Bitmap _banner;
+        private string _bannerToken;
         private byte[] _localKey, _remoteKey;
 
-        private HNode Local => Main.Connection.Local;
-        private HNode Remote => Main.Connection.Remote;
+        public MainFrm MainUI { get; }
+        private HNode Local => MainUI.Connection.Local;
+        private HNode Remote => MainUI.Connection.Remote;
 
         public const int FAKE_EXPONENT = 3;
         public const string FAKE_MODULUS = "86851dd364d5c5cece3c883171cc6ddc5760779b992482bd1e20dd296888df91b33b936a7b93f06d29e8870f703a216257dec7c81de0058fea4cc5116f75e6efc4e9113513e45357dc3fd43d4efab5963ef178b78bd61e81a14c603b24c8bcce0a12230b320045498edc29282ff0603bc7b7dae8fc1b05b52b2f301a9dc783b7";
@@ -25,21 +55,11 @@ namespace Tanji.Managers
 
         public HandshakeManager(MainFrm main)
         {
-            Main = main;
-            Main.Connection.Connected += Connected;
-            Main.Connection.Disconnected += Disconnected;
+            MainUI = main;
+            MainUI.Connection.DataIncoming += DataIncoming;
+            MainUI.Connection.DataOutgoing += DataOutgoing;
         }
 
-        private void Connected(object sender, EventArgs e)
-        {
-            Main.Connection.DataIncoming += DataIncoming;
-            Main.Connection.DataOutgoing += DataOutgoing;
-        }
-        private void Disconnected(object sender, EventArgs e)
-        {
-            RealExponent = 0;
-            RealModulus = string.Empty;
-        }
         private void DataIncoming(object sender, InterceptedEventArgs e)
         {
             switch (e.Step)
@@ -55,20 +75,33 @@ namespace Tanji.Managers
                     Remote.Exchange = new HKeyExchange(RealExponent, RealModulus);
                     Local.Exchange = new HKeyExchange(FAKE_EXPONENT, FAKE_MODULUS, FAKE_PRIVATE_EXPONENT);
 
-                    Remote.Exchange.DoHandshake(e.Packet.ReadString(),
-                        e.Packet.ReadString(e.Packet.Position));
+                    string possibleSignedPrime = e.Packet.ReadString();
+                    if (!e.Packet.CanRead<string>())
+                    {
+                        _bannerToken = possibleSignedPrime;
 
+                        Eavesdropper.EavesdropperResponse += EavesdropperResponse;
+                        Eavesdropper.Initiate(8080);
+                        return;
+                    }
+                    string signedGenerator = e.Packet.ReadString();
+
+                    Remote.Exchange.DoHandshake(possibleSignedPrime, signedGenerator);
                     Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
-                    e.Replacement.Replace<string>(0, Local.Exchange.GetSignedPrime());
-                    e.Replacement.Replace<string>(e.Packet.Position, Local.Exchange.GetSignedGenerator());
+
+                    e.Replacement = new HMessage(e.Packet.Header,
+                        Local.Exchange.GetSignedPrime(), Local.Exchange.GetSignedGenerator());
                     break;
                 }
                 case 2:
                 {
                     _remoteKey = Remote.Exchange.GetSharedKey(e.Packet.ReadString());
-
-                    Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
-                    e.Replacement.Replace<string>(0, Local.Exchange.GetPublicKey());
+                    if (_banner == null)
+                    {
+                        Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
+                        e.Replacement.Replace<string>(0, Local.Exchange.GetPublicKey());
+                    }
+                    else e.Replacement = new HMessage(e.Packet.Header, "1");
 
                     RealExponent = 0;
                     RealModulus = string.Empty;
@@ -84,22 +117,33 @@ namespace Tanji.Managers
                 {
                     if (Remote.IsDecryptionRequired)
                         Local.Encrypter = new Rc4(_localKey);
+
+                    MainUI.Connection.DataIncoming -= DataIncoming;
                     break;
                 }
-                default: Main.Connection.DataIncoming -= DataIncoming; break;
             }
         }
         private void DataOutgoing(object sender, InterceptedEventArgs e)
         {
             switch (e.Step)
             {
-                case 1:
-                case 2: break;
-                default: Main.Connection.DataOutgoing -= DataOutgoing; break;
-
                 case 3:
                 {
-                    _localKey = Local.Exchange.GetSharedKey(e.Packet.ReadString());
+                    if (!string.IsNullOrWhiteSpace(_bannerToken))
+                    {
+                        if (_banner == null)
+                        {
+                            MainUI.Connection.DataIncoming -= DataIncoming;
+                            MainUI.Connection.DataOutgoing -= DataOutgoing;
+
+                            Eavesdropper.Terminate();
+                            Eavesdropper.EavesdropperResponse -= EavesdropperResponse;
+
+                            return;
+                        }
+                        else _localKey = new byte[] { 1 };
+                    }
+                    else _localKey = Local.Exchange.GetSharedKey(e.Packet.ReadString());
 
                     Remote.Exchange.Rsa.Padding = Local.Exchange.Rsa.Padding;
                     e.Replacement.Replace<string>(0, Remote.Exchange.GetPublicKey());
@@ -109,8 +153,25 @@ namespace Tanji.Managers
                 {
                     if (Local.IsDecryptionRequired)
                         Remote.Encrypter = new Rc4(_remoteKey);
+
+                    MainUI.Connection.DataOutgoing -= DataOutgoing;
                     break;
                 }
+            }
+        }
+
+        private void EavesdropperResponse(object sender, EavesdropperResponseEventArgs e)
+        {
+            if (e.Response.ResponseUri.OriginalString.Contains(_bannerToken))
+            {
+                using (var bannerStream = new MemoryStream(e.Payload))
+                    _banner = new Bitmap(bannerStream);
+
+                Remote.Exchange.DoHandshake(_banner, _bannerToken);
+                Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
+
+                Eavesdropper.Terminate();
+                Eavesdropper.EavesdropperResponse -= EavesdropperResponse;
             }
         }
     }

@@ -2,7 +2,7 @@
 
     GitHub(Source): https://GitHub.com/ArachisH/Tanji
 
-    .NET library for creating Habbo Hotel related desktop applications.
+    Habbo Hotel Packet(Logger/Manipulator)
     Copyright (C) 2015 ArachisH
 
     This program is free software; you can redistribute it and/or modify
@@ -44,17 +44,18 @@ using FlashInspect.Bytecode.DataTypes;
 
 namespace Tanji.Dialogs
 {
-    public partial class TanjiConnectFrm : Form
+    public partial class ConnectFrm : Form
     {
+        private bool _hasCorrectPort;
         private readonly Regex _ipMatcher;
 
-        public MainFrm Main { get; }
+        public MainFrm MainUI { get; }
         public bool IsConnecting { get; private set; }
 
-        public TanjiConnectFrm(MainFrm main)
+        public ConnectFrm(MainFrm main)
         {
             InitializeComponent();
-            Main = main;
+            MainUI = main;
 
             _ipMatcher = new Regex(
                 "^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
@@ -66,17 +67,43 @@ namespace Tanji.Dialogs
             Eavesdropper.IsSslSupported = true;
             Eavesdropper.EavesdropperResponse += EavesdropperResponse;
         }
-        private void TanjiConnectFrm_FormClosed(object sender, FormClosedEventArgs e)
+
+        private async void ConnectFrm_Shown(object sender, EventArgs e)
+        {
+            if (!MainUI.CheckForUpdatesTask.IsCompleted)
+            {
+                BrowseBtn.Enabled =
+                    ConnectBtn.Enabled = ModePnl.Enabled = false;
+
+                StatusTxt.SetDotAnimation("Searching For Updates");
+                if (await MainUI.CheckForUpdatesTask)
+                {
+                    StatusTxt.StopDotAnimation("Update Found!");
+
+                    Hide();
+                    MainUI.UpdateUI.ShowDialog();
+                    Show();
+                }
+
+                BrowseBtn.Enabled =
+                    ConnectBtn.Enabled = ModePnl.Enabled = true;
+
+                StatusTxt.StopDotAnimation("Standing By...");
+            }
+        }
+        private void ConnectFrm_FormClosed(object sender, FormClosedEventArgs e)
         {
             try
             {
+                Eavesdropper.EavesdropperResponse -= EavesdropperResponse;
+
                 ResetInterface();
                 Eavesdropper.Terminate();
                 HConnection.RestoreHosts();
             }
             finally
             {
-                if (!Main.Connection.IsConnected)
+                if (!MainUI.Connection.IsConnected)
                     Environment.Exit(0);
             }
         }
@@ -97,7 +124,7 @@ namespace Tanji.Dialogs
             }
 
             CustomClientTxt.Text = verifySuccess ?
-                Main.Game.Location : string.Empty;
+                MainUI.Game.Location : string.Empty;
         }
         private async void ConnectBtn_Click(object sender, EventArgs e)
         {
@@ -137,9 +164,10 @@ namespace Tanji.Dialogs
         }
         private void EavesdropperResponse(object sender, EavesdropperResponseEventArgs e)
         {
-            if (e.Response.ContentType == "application/x-shockwave-flash" && e.Payload.Length > 3000000)
+            if (e.Payload.Length > 3000000 &&
+                e.Response.ContentType == "application/x-shockwave-flash")
             {
-                if (Main.Game == null)
+                if (MainUI.Game == null)
                 {
                     bool verifySuccess = VerifyGameClientAsync(
                         new ShockwaveFlash(e.Payload)).Result;
@@ -147,43 +175,54 @@ namespace Tanji.Dialogs
                     if (verifySuccess)
                     {
                         StatusTxt.SetDotAnimation("Extracting Tags");
-                        var flashTags = Main.Game.ExtractTags();
+                        var flashTags = MainUI.Game.ExtractTags();
 
-                        ReplaceRsaKeys(flashTags);
-                        e.Payload = Main.Game.Rebuild();
+                        ModifyClient(flashTags);
+                        e.Payload = MainUI.Game.Rebuild();
                     }
-                    Main.Game.Save("Modified Clients\\" + Main.GameData.FlashClientBuild + ".swf");
+
+                    string filename = MainUI.GameData.FlashClientBuild;
+                    if (string.IsNullOrWhiteSpace(filename))
+                    {
+                        // TODO: This, ha ha ha, seriously, this file needs a name.
+                    }
+                    filename += ".swf";
+
+                    MainUI.Game.Save(Path.Combine("Modified Clients",
+                        MainUI.IsRetro ? "Retro" : "Original", filename));
                 }
-                else e.Payload = Main.Game.Data;
+                else e.Payload = MainUI.Game.Data;
 
                 Eavesdropper.Terminate();
-                Main.Connection.ConnectAsync(Main.GameData.Host, Main.GameData.Port);
 
-                StatusTxt.SetDotAnimation("Intercepting Connection");
+                Task connectTask = MainUI.Connection
+                    .ConnectAsync(MainUI.GameData.Host, MainUI.GameData.Port);
+
+                StatusTxt.SetDotAnimation("Intercepting Connection({0})", MainUI.GameData.Port);
             }
-            else if (Main.GameData == null)
+            else if (MainUI.GameData == null)
             {
                 string responseBody = Encoding.UTF8.GetString(e.Payload);
                 if (responseBody.Contains("connection.info.host"))
                 {
-                    Main.GameData = new HGameData(responseBody);
-                    Main.ExtensionMngr.Hotel = SKore.ToHotel(Main.GameData.Host);
-                    Main.IsRetro = (Main.ExtensionMngr.Hotel == HHotel.Unknown);
+                    MainUI.GameData = new HGameData(responseBody);
+                    MainUI.ExtensionMngr.Hotel = SKore.ToHotel(MainUI.GameData.Host);
+                    MainUI.IsRetro = (MainUI.ExtensionMngr.Hotel == HHotel.Unknown);
 
-                    if (Main.IsRetro)
+                    if (MainUI.IsRetro)
                     {
                         responseBody = responseBody.Replace(
-                            Main.GameData.Host, "127.0.0.1");
+                            MainUI.GameData.Host, "127.0.0.1");
                     }
 
-                    if (Main.Game == null && !Main.IsRetro)
+                    if (MainUI.Game == null && !MainUI.IsRetro)
                         TryLoadModdedClientAsync().Wait();
 
-                    StatusTxt.SetDotAnimation((Main.Game == null ?
+                    StatusTxt.SetDotAnimation((MainUI.Game == null ?
                         "Intercepting" : "Replacing") + " Client");
 
-                    responseBody = responseBody.Replace(".swf",
-                        ".swf?" + DateTime.Now.Ticks.ToString());
+                    responseBody = responseBody.Replace(".swf?", ".swf")
+                        .Replace(".swf", ".swf?" + DateTime.Now.Ticks);
 
                     e.Payload = Encoding.UTF8.GetBytes(responseBody);
                 }
@@ -201,11 +240,11 @@ namespace Tanji.Dialogs
             mergedRsaKeys = mergedRsaKeys.Substring(modLength);
             int exponent = int.Parse(mergedRsaKeys.Substring(2));
 
-            if (string.IsNullOrWhiteSpace(Main.HandshakeMngr.RealModulus))
-                Main.HandshakeMngr.RealModulus = modulus;
+            if (string.IsNullOrWhiteSpace(MainUI.HandshakeMngr.RealModulus))
+                MainUI.HandshakeMngr.RealModulus = modulus;
 
-            if (Main.HandshakeMngr.RealExponent == 0)
-                Main.HandshakeMngr.RealExponent = exponent;
+            if (MainUI.HandshakeMngr.RealExponent == 0)
+                MainUI.HandshakeMngr.RealExponent = exponent;
         }
         private string EncodeRsaKeys(int exponent, string modulus)
         {
@@ -215,89 +254,154 @@ namespace Tanji.Dialogs
             byte[] data = Encoding.UTF8.GetBytes(mergedKeys);
             return Convert.ToBase64String(data);
         }
-        private void ReplaceRsaKeys(IEnumerable<FlashTag> flashTags)
+        private void ModifyClient(IEnumerable<FlashTag> flashTags)
         {
-            bool foundModInABC = false;
-            bool containedDefaultExpInABC = false;
             foreach (FlashTag flashTag in flashTags)
             {
-                #region Switch: flashTag.TagType
                 switch (flashTag.TagType)
                 {
                     case FlashTagType.DefineBinaryData:
                     {
-                        if (Main.IsRetro) break;
-                        var binaryTag = (DefineBinaryDataTag)flashTag;
-                        string binaryDataBody = Encoding.UTF8
-                            .GetString(binaryTag.BinaryData);
-
-                        if (binaryDataBody.Contains("habbo_login_dialog"))
-                        {
-                            string realRsaKeys = binaryDataBody
-                                .GetChild("name=\"dummy_field\" caption=\"", '"');
-
-                            ExtractRsaKeys(realRsaKeys);
-
-                            string fakeRsaKeys = EncodeRsaKeys(
-                                HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
-
-                            binaryTag.BinaryData = Encoding.UTF8.GetBytes(
-                                binaryDataBody.Replace(realRsaKeys, fakeRsaKeys));
-
-                            break;
-                        }
+                        ReplaceBIN((DefineBinaryDataTag)flashTag);
                         break;
                     }
 
                     case FlashTagType.DoABC:
                     case FlashTagType.DoABC2:
                     {
-                        var abcTag = (DoABCTag)flashTag;
-                        CPoolInfo cPool = abcTag.ABCData.ConstantPool;
-
-                        for (int i = 1; i < cPool.Strings.Length; i++)
-                        {
-                            string cString = cPool.Strings[i];
-                            if (cPool.Strings[i].Length == 256)
-                            {
-                                foundModInABC = true;
-                                string possibleModulus = cString;
-
-                                if (Main.IsRetro || string.IsNullOrWhiteSpace(Main.HandshakeMngr.RealModulus))
-                                {
-                                    Main.HandshakeMngr.RealModulus = possibleModulus;
-                                    cPool.Strings[i] = HandshakeManager.FAKE_MODULUS;
-                                }
-                            }
-                            else if (Main.IsRetro && cString == "10001")
-                            {
-                                containedDefaultExpInABC = true;
-                                cPool.Strings[i] = HandshakeManager.FAKE_EXPONENT.ToString();
-                            }
-                            else if (Main.IsRetro && _ipMatcher.Match(cString).Success)
-                            {
-                                Main.GameData.Host = cString;
-                                cPool.Strings[i] = "127.0.0.1";
-                            }
-                        }
+                        if (MainUI.IsRetro)
+                            ReplaceABC((DoABCTag)flashTag);
                         break;
                     }
                 }
-                #endregion
+            }
+        }
+
+        private void ReplaceABC(DoABCTag abcTag)
+        {
+            bool foundModInABC = false;
+            bool containedDefaultExpInABC = false;
+
+            CPoolInfo cPool = abcTag.ABCData.ConstantPool;
+            StatusTxt.SetDotAnimation("Squeezing ({0})", abcTag.Name);
+
+            var ignorePorts = new List<string>();
+            var possiblePorts = new List<ushort>();
+            for (int i = 1; i < cPool.Strings.Length; i++)
+            {
+                string cString = cPool.Strings[i];
+                if (cString.Length > 256 || cString.Length < 4) continue;
+
+                if (cString.Length > 3 && cString.Length < 6)
+                {
+                    ushort possiblePort = 0;
+                    if (ushort.TryParse(cString, out possiblePort))
+                    {
+                        if (!possiblePorts.Contains(possiblePort) &&
+                            !ignorePorts.Contains(cString))
+                        {
+                            possiblePorts.Add(possiblePort);
+                        }
+                    }
+                }
+
+                if (cPool.Strings[i].Length == 256)
+                {
+                    foundModInABC = true;
+                    if (string.IsNullOrWhiteSpace(MainUI.HandshakeMngr.RealModulus))
+                    {
+                        MainUI.HandshakeMngr.RealModulus = cString;
+                        cPool.Strings[i] = HandshakeManager.FAKE_MODULUS;
+                    }
+                }
+                else if (cString == "10001")
+                {
+                    containedDefaultExpInABC = true;
+                    cPool.Strings[i] = HandshakeManager.FAKE_EXPONENT.ToString();
+                }
+                else if (_ipMatcher.Match(cString).Success)
+                {
+                    MainUI.GameData.Host = cString;
+                    cPool.Strings[i] = "127.0.0.1";
+                }
             }
 
             if (foundModInABC &&
-                !containedDefaultExpInABC && Main.IsRetro)
+                !containedDefaultExpInABC && MainUI.IsRetro)
             {
-                Main.HandshakeMngr.RealExponent = 3;
+                MainUI.HandshakeMngr.RealExponent = 3;
             }
+
+            if (_hasCorrectPort) return;
+            possiblePorts.Insert(0, (ushort)MainUI.GameData.Port);
+            foreach (ushort possiblePort in possiblePorts)
+            {
+                if (AttemptConnect(possiblePort, ignorePorts))
+                {
+                    _hasCorrectPort = true;
+                    MainUI.GameData.Port = possiblePort;
+                    break;
+                }
+            }
+        }
+        private void ReplaceBIN(DefineBinaryDataTag binaryTag)
+        {
+            string binaryDataBody = Encoding.UTF8
+                .GetString(binaryTag.BinaryData);
+
+            if (binaryDataBody.Contains("habbo_login_dialog"))
+            {
+                string realRsaKeys = binaryDataBody
+                    .GetChild("name=\"dummy_field\" caption=\"", '"');
+
+                if (string.IsNullOrWhiteSpace(realRsaKeys)) return;
+                ExtractRsaKeys(realRsaKeys);
+
+                string fakeRsaKeys = EncodeRsaKeys(
+                    HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
+
+                binaryTag.BinaryData = Encoding.UTF8.GetBytes(
+                    binaryDataBody.Replace(realRsaKeys, fakeRsaKeys));
+
+                return;
+            }
+        }
+        private bool AttemptConnect(ushort possiblePort, IList<string> ignorePorts)
+        {
+            Task<HNode> connectTask = HNode.ConnectAsync
+                (MainUI.GameData.Host, possiblePort);
+
+            Task timeout = Task.Delay(1250);
+            Task completed = Task.WhenAny(connectTask, timeout).Result;
+            if (completed == connectTask && !connectTask.IsFaulted)
+            {
+                using (HNode remote = connectTask.Result)
+                {
+                    try
+                    {
+                        var pingPacket = new byte[6] { 0, 0, 0, 2, 0, 0 };
+                        remote.SendAsync(pingPacket).Wait();
+
+                        var buffer = new byte[6];
+                        Task<int> receiveTask = remote.ReceiveAsync(buffer, 0, 6);
+
+                        timeout = Task.Delay(500);
+                        completed = Task.WhenAny(receiveTask, timeout).Result;
+
+                        return (receiveTask.Status != TaskStatus.Faulted);
+                    }
+                    catch { return false; }
+                }
+            }
+            else ignorePorts.Add(possiblePort.ToString());
+            return false;
         }
 
         private void DoCancelConnect()
         {
             ResetInterface();
             Eavesdropper.Terminate();
-            Main.Connection.Disconnect();
+            MainUI.Connection.Disconnect();
         }
         private void DoAutomaticConnect()
         {
@@ -308,10 +412,10 @@ namespace Tanji.Dialogs
         {
             StatusTxt.SetDotAnimation("Intercepting Connection");
 
-            await Main.Connection.ConnectAsync(
+            await MainUI.Connection.ConnectAsync(
                 GameHostTxt.Text, int.Parse(GamePortTxt.Text));
 
-            return Main.Connection.IsConnected;
+            return MainUI.Connection.IsConnected;
         }
 
         private void ResetInterface()
@@ -337,7 +441,8 @@ namespace Tanji.Dialogs
         private async Task<bool> TryLoadModdedClientAsync()
         {
             string possibleClientPath = Path.Combine("Modified Clients",
-               Main.GameData.FlashClientBuild + ".swf");
+                MainUI.IsRetro ? "Retro" : "Original",
+                MainUI.GameData.FlashClientBuild + ".swf");
 
             bool loadSuccess = false;
             if (File.Exists(possibleClientPath))
@@ -365,9 +470,9 @@ namespace Tanji.Dialogs
             }
 
             if (!flash.IsCompressed)
-                Main.Game = flash;
+                MainUI.Game = flash;
 
-            return Main.Game != null;
+            return MainUI.Game != null;
         }
     }
 }

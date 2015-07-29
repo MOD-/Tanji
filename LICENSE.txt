@@ -2,6 +2,9 @@ Icon: http://www.iconarchive.com/show/fs-icons-by-franksouza183/Apps-clementine-
 Artist: franksouza183 - http://www.iconarchive.com/artist/franksouza183.html
 Copyright (C) 2012 franksouza183
 
+BigInteger.cs Class Version 1.03
+Copyright (C) 2002 Chew Keong TAN (http://www.codeproject.com/Articles/2728/C-BigInteger-Class)
+
 GitHub(Source): https://GitHub.com/ArachisH/Eavesdrop
 Eavesdrop.dll - .NET library for manipulating intercepted HTTP(s) traffic.
 Copyright (C) 2015 ArachisH
