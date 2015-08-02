@@ -49,6 +49,13 @@
   <PropertyGroup>
     <ApplicationIcon>Tanji.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -146,7 +153,7 @@
       <Name>FlashInspect</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Sulakore\Sulakore\Sulakore.csproj">
-      <Project>{15E841EC-2411-4F1B-A3EE-07E86CDB32C7}</Project>
+      <Project>{15e841ec-2411-4f1b-a3ee-07e86cdb32c7}</Project>
       <Name>Sulakore</Name>
     </ProjectReference>
   </ItemGroup>

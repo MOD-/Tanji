@@ -1,15 +1,16 @@
 ﻿using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Tanji")]
-[assembly: AssemblyDescription("Habbo Hotel Packet(Logger/Manipulator)")]
+[assembly: AssemblyTitle("ExtDemo")]
+[assembly: AssemblyDescription("Some Extension")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ArachisH")]
-[assembly: AssemblyProduct("Tanji")]
-[assembly: AssemblyCopyright("Copyright © ArachisH 2015")]
+[assembly: AssemblyProduct("ExtDemo")]
+[assembly: AssemblyCopyright("Copyright ©  ArachisH 2015")]
 [assembly: AssemblyTrademark("The Old Nut Man")]
 [assembly: AssemblyCulture("")]
 
@@ -19,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("421f9d4b-7fde-43d9-bbd0-2d3dc70633a7")]
+[assembly: Guid("f486bbad-e40b-4462-a645-53910b49c22f")]
 
 // Version information for an assembly consists of the following four values:
 //

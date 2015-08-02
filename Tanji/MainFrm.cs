@@ -23,7 +23,9 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 using Tanji.Dialogs;
 using Tanji.Managers;
@@ -33,7 +35,6 @@ using Sulakore.Habbo.Web;
 using Sulakore.Communication;
 
 using FlashInspect;
-using System.Threading.Tasks;
 
 namespace Tanji
 {
@@ -75,6 +76,22 @@ namespace Tanji
             // Begin checking for updates asynchronously, await once ConnectUI is shown.
             CheckForUpdatesTask = UpdateUI.CheckForUpdatesAsync();
         }
+
+        private void MainFrm_Load(object sender, EventArgs e)
+        {
+            PromptConnect();
+            Text = $"Tanji ~ Connected[{GameData.Host}:{GameData.Port}]";
+        }
+        private void MainFrm_Shown(object sender, EventArgs e)
+        {
+            if (!PacketLoggerUI.IsLoaded)
+                PacketLoggerUI.Show();
+        }
+
+        private void PromptConnect()
+        {
+            ConnectUI.ShowDialog();
+        }
         private void Connected(object sender, EventArgs e)
         {
             Invoke(new MethodInvoker(ConnectUI.Close));
@@ -84,20 +101,15 @@ namespace Tanji
             Environment.Exit(0);
         }
 
-        private void PromptConnect()
+        private void TanjiInfoTxt_Click(object sender, EventArgs e)
         {
-            ConnectUI.ShowDialog();
+            TanjiInfoTxt.LinkVisited = true;
+            Process.Start("Https://GitHub.com/ArachisH/Tanji");
         }
-
-        private void MainFrm_Load(object sender, EventArgs e)
+        private void TanjiVersionTxt_Click(object sender, EventArgs e)
         {
-            PromptConnect();
-        }
-
-        private void MainFrm_Shown(object sender, EventArgs e)
-        {
-            if (!PacketLoggerUI.IsLoaded)
-                PacketLoggerUI.Show();
+            TanjiVersionTxt.LinkVisited = true;
+            //Process.Start("");
         }
     }
 }
