@@ -53,7 +53,7 @@ namespace Tanji.Dialogs
                 .CreateAsync("ArachisH", "Tanji").ConfigureAwait(false));
 
             if (releases.Count < 1) return false;
-            var remoteVer = new Version(releases[0].TagName);
+            var remoteVer = new Version(releases[0].TagName.Substring(1));
 
             if (LocalVersion < remoteVer)
             {
