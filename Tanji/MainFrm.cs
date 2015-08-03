@@ -41,10 +41,13 @@ namespace Tanji
     public partial class MainFrm : Form
     {
         public bool IsRetro { get; set; }
-        public HGameData GameData { get; set; }
-        public ShockwaveFlash Game { get; set; }
+        public bool IsDebugging { get; } = false;
 
         public HConnection Connection { get; }
+        public HGameData GameData { get; set; }
+        public ShockwaveFlash Game { get; set; }
+        public Task<bool> CheckForUpdatesTask { get; }
+
         public HandshakeManager HandshakeMngr { get; }
         public ExtensionManager ExtensionMngr { get; }
 
@@ -52,13 +55,13 @@ namespace Tanji
         public ConnectFrm ConnectUI { get; }
         public PacketLoggerFrm PacketLoggerUI { get; }
 
-        public Task<bool> CheckForUpdatesTask { get; }
-
         public MainFrm()
         {
             InitializeComponent();
-
             Connection = new HConnection();
+
+            if (!IsDebugging)
+                Load += MainFrm_Load;
 
             UpdateUI = new UpdateFrm(this);
             ConnectUI = new ConnectFrm(this);
@@ -104,7 +107,7 @@ namespace Tanji
         private void TanjiInfoTxt_Click(object sender, EventArgs e)
         {
             TanjiInfoTxt.LinkVisited = true;
-            Process.Start("Https://GitHub.com/ArachisH/Tanji");
+            Process.Start("https://GitHub.com/ArachisH/Tanji");
         }
         private void TanjiVersionTxt_Click(object sender, EventArgs e)
         {

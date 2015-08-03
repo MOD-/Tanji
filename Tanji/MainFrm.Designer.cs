@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainFrm));
             this.TanjiStrip = new System.Windows.Forms.StatusStrip();
             this.TanjiVersionTxt = new System.Windows.Forms.ToolStripStatusLabel();
@@ -35,16 +36,24 @@
             this.TanjiInfoTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.TanjiTabs = new Sulakore.Components.SKoreTabControl();
             this.ExtensionsTab = new System.Windows.Forms.TabPage();
-            this.ETInstallExtensionBtn = new Sulakore.Components.SKoreButton();
+            this.ETExtensionAOTChckbx = new System.Windows.Forms.CheckBox();
+            this.ETUninstallExtensionBtn = new Sulakore.Components.SKoreButton();
             this.ContractorVw = new Sulakore.Components.SKoreExtensionView();
             this.IdentifierCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CreatorCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.DescriptionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.VersionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.StatusCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ETExtensionMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ETOpenMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ETUninstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ETMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
+            this.ETInstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ETInstallExtensionBtn = new Sulakore.Components.SKoreButton();
             this.TanjiStrip.SuspendLayout();
             this.TanjiTabs.SuspendLayout();
             this.ExtensionsTab.SuspendLayout();
+            this.ETExtensionMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // TanjiStrip
@@ -85,7 +94,7 @@
             this.TanjiInfoTxt.IsLink = true;
             this.TanjiInfoTxt.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.TanjiInfoTxt.Name = "TanjiInfoTxt";
-            this.TanjiInfoTxt.Size = new System.Drawing.Size(258, 19);
+            this.TanjiInfoTxt.Size = new System.Drawing.Size(289, 19);
             this.TanjiInfoTxt.Spring = true;
             this.TanjiInfoTxt.Text = "GitHub.com/ArachisH/Tanji";
             this.TanjiInfoTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
@@ -107,8 +116,10 @@
             // 
             // ExtensionsTab
             // 
-            this.ExtensionsTab.Controls.Add(this.ETInstallExtensionBtn);
+            this.ExtensionsTab.Controls.Add(this.ETExtensionAOTChckbx);
+            this.ExtensionsTab.Controls.Add(this.ETUninstallExtensionBtn);
             this.ExtensionsTab.Controls.Add(this.ContractorVw);
+            this.ExtensionsTab.Controls.Add(this.ETInstallExtensionBtn);
             this.ExtensionsTab.Location = new System.Drawing.Point(4, 28);
             this.ExtensionsTab.Name = "ExtensionsTab";
             this.ExtensionsTab.Padding = new System.Windows.Forms.Padding(3);
@@ -117,16 +128,28 @@
             this.ExtensionsTab.Text = "Extensions";
             this.ExtensionsTab.UseVisualStyleBackColor = true;
             // 
-            // ETInstallExtensionBtn
+            // ETExtensionAOTChckbx
             // 
-            this.ETInstallExtensionBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ETInstallExtensionBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ETInstallExtensionBtn.Location = new System.Drawing.Point(342, 285);
-            this.ETInstallExtensionBtn.Name = "ETInstallExtensionBtn";
-            this.ETInstallExtensionBtn.Size = new System.Drawing.Size(123, 22);
-            this.ETInstallExtensionBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ETInstallExtensionBtn.TabIndex = 1;
-            this.ETInstallExtensionBtn.Text = "Install Extension";
+            this.ETExtensionAOTChckbx.AutoSize = true;
+            this.ETExtensionAOTChckbx.Enabled = false;
+            this.ETExtensionAOTChckbx.Location = new System.Drawing.Point(32, 289);
+            this.ETExtensionAOTChckbx.Name = "ETExtensionAOTChckbx";
+            this.ETExtensionAOTChckbx.Size = new System.Drawing.Size(147, 17);
+            this.ETExtensionAOTChckbx.TabIndex = 3;
+            this.ETExtensionAOTChckbx.Text = "Extension Always On Top";
+            this.ETExtensionAOTChckbx.UseVisualStyleBackColor = true;
+            // 
+            // ETUninstallExtensionBtn
+            // 
+            this.ETUninstallExtensionBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ETUninstallExtensionBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ETUninstallExtensionBtn.Enabled = false;
+            this.ETUninstallExtensionBtn.Location = new System.Drawing.Point(213, 285);
+            this.ETUninstallExtensionBtn.Name = "ETUninstallExtensionBtn";
+            this.ETUninstallExtensionBtn.Size = new System.Drawing.Size(123, 22);
+            this.ETUninstallExtensionBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ETUninstallExtensionBtn.TabIndex = 2;
+            this.ETUninstallExtensionBtn.Text = "Uninstall Extension";
             // 
             // ContractorVw
             // 
@@ -137,6 +160,7 @@
             this.DescriptionCol,
             this.VersionCol,
             this.StatusCol});
+            this.ContractorVw.ContextMenuStrip = this.ETExtensionMenu;
             this.ContractorVw.Dock = System.Windows.Forms.DockStyle.Top;
             this.ContractorVw.FullRowSelect = true;
             this.ContractorVw.GridLines = true;
@@ -175,6 +199,52 @@
             // 
             this.StatusCol.Text = "Status";
             // 
+            // ETExtensionMenu
+            // 
+            this.ETExtensionMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ETOpenMenuBtn,
+            this.ETUninstallMenuBtn,
+            this.ETMenuSplitter,
+            this.ETInstallMenuBtn});
+            this.ETExtensionMenu.Name = "ConstructMenu";
+            this.ETExtensionMenu.Size = new System.Drawing.Size(159, 76);
+            // 
+            // ETOpenMenuBtn
+            // 
+            this.ETOpenMenuBtn.Enabled = false;
+            this.ETOpenMenuBtn.Name = "ETOpenMenuBtn";
+            this.ETOpenMenuBtn.Size = new System.Drawing.Size(158, 22);
+            this.ETOpenMenuBtn.Text = "Open";
+            // 
+            // ETUninstallMenuBtn
+            // 
+            this.ETUninstallMenuBtn.Enabled = false;
+            this.ETUninstallMenuBtn.Name = "ETUninstallMenuBtn";
+            this.ETUninstallMenuBtn.Size = new System.Drawing.Size(158, 22);
+            this.ETUninstallMenuBtn.Text = "Uninstall";
+            // 
+            // ETMenuSplitter
+            // 
+            this.ETMenuSplitter.Name = "ETMenuSplitter";
+            this.ETMenuSplitter.Size = new System.Drawing.Size(155, 6);
+            // 
+            // ETInstallMenuBtn
+            // 
+            this.ETInstallMenuBtn.Name = "ETInstallMenuBtn";
+            this.ETInstallMenuBtn.Size = new System.Drawing.Size(158, 22);
+            this.ETInstallMenuBtn.Text = "Install Extension";
+            // 
+            // ETInstallExtensionBtn
+            // 
+            this.ETInstallExtensionBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ETInstallExtensionBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ETInstallExtensionBtn.Location = new System.Drawing.Point(342, 285);
+            this.ETInstallExtensionBtn.Name = "ETInstallExtensionBtn";
+            this.ETInstallExtensionBtn.Size = new System.Drawing.Size(123, 22);
+            this.ETInstallExtensionBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ETInstallExtensionBtn.TabIndex = 1;
+            this.ETInstallExtensionBtn.Text = "Install Extension";
+            // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -189,12 +259,13 @@
             this.Name = "MainFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ Connected[Host:Port]";
-            this.Load += new System.EventHandler(this.MainFrm_Load);
             this.Shown += new System.EventHandler(this.MainFrm_Shown);
             this.TanjiStrip.ResumeLayout(false);
             this.TanjiStrip.PerformLayout();
             this.TanjiTabs.ResumeLayout(false);
             this.ExtensionsTab.ResumeLayout(false);
+            this.ExtensionsTab.PerformLayout();
+            this.ETExtensionMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -215,5 +286,12 @@
         public Sulakore.Components.SKoreExtensionView ContractorVw;
         public System.Windows.Forms.ToolStripStatusLabel ExtensionsActiveTxt;
         public System.Windows.Forms.ToolStripStatusLabel TanjiVersionTxt;
+        public Sulakore.Components.SKoreButton ETUninstallExtensionBtn;
+        public System.Windows.Forms.CheckBox ETExtensionAOTChckbx;
+        private System.Windows.Forms.ToolStripSeparator ETMenuSplitter;
+        public System.Windows.Forms.ContextMenuStrip ETExtensionMenu;
+        public System.Windows.Forms.ToolStripMenuItem ETOpenMenuBtn;
+        public System.Windows.Forms.ToolStripMenuItem ETUninstallMenuBtn;
+        public System.Windows.Forms.ToolStripMenuItem ETInstallMenuBtn;
     }
 }
