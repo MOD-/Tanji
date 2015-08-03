@@ -125,6 +125,7 @@
             this.SaveLogBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
             this.SaveLogBtn.Size = new System.Drawing.Size(196, 22);
             this.SaveLogBtn.Text = "Save Log";
+            this.SaveLogBtn.Click += new System.EventHandler(this.SaveLogBtn_Click);
             // 
             // EmptyLogBtn
             // 
@@ -132,6 +133,7 @@
             this.EmptyLogBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.E)));
             this.EmptyLogBtn.Size = new System.Drawing.Size(196, 22);
             this.EmptyLogBtn.Text = "Empty Log";
+            this.EmptyLogBtn.Click += new System.EventHandler(this.EmptyLogBtn_Click);
             // 
             // SettingsBtn
             // 

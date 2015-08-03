@@ -85,7 +85,7 @@ namespace Tanji.Applications
             IsLoaded = false;
             e.Cancel = IsHalted = true;
             WindowState = FormWindowState.Minimized;
-            
+
             Intercepted.Clear();
             _readQueueTask?.Wait();
 
