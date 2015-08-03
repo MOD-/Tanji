@@ -76,19 +76,25 @@ namespace Tanji.Dialogs
                     ConnectBtn.Enabled = ModePnl.Enabled = false;
 
                 StatusTxt.SetDotAnimation("Searching For Updates");
-                if (await MainUI.CheckForUpdatesTask)
+                try
                 {
-                    StatusTxt.StopDotAnimation("Update Found!");
+                    if (await MainUI.CheckForUpdatesTask)
+                    {
+                        StatusTxt.StopDotAnimation("Update Found!");
 
-                    Hide();
-                    MainUI.UpdateUI.ShowDialog();
-                    Show();
+                        Hide();
+                        MainUI.UpdateUI.ShowDialog();
+                        Show();
+                    }
                 }
+                catch { /* Update check failed. */ }
+                finally
+                {
+                    BrowseBtn.Enabled =
+                        ConnectBtn.Enabled = ModePnl.Enabled = true;
 
-                BrowseBtn.Enabled =
-                    ConnectBtn.Enabled = ModePnl.Enabled = true;
-
-                StatusTxt.StopDotAnimation("Standing By...");
+                    StatusTxt.StopDotAnimation("Standing By...");
+                }
             }
         }
         private void ConnectFrm_FormClosed(object sender, FormClosedEventArgs e)
@@ -262,7 +268,8 @@ namespace Tanji.Dialogs
                 {
                     case FlashTagType.DefineBinaryData:
                     {
-                        ReplaceBIN((DefineBinaryDataTag)flashTag);
+                        if (!MainUI.IsRetro)
+                            ReplaceBIN((DefineBinaryDataTag)flashTag);
                         break;
                     }
 
