@@ -27,6 +27,7 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 
 using Tanji.Utilities;
+using System.Diagnostics;
 
 namespace Tanji.Dialogs
 {
@@ -61,6 +62,11 @@ namespace Tanji.Dialogs
             }
 
             return LocalVersion < remoteVer;
+        }
+
+        private void MoreInformationBtn_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://GitHub.com/ArachisH/Tanji/releases");
         }
     }
 }
