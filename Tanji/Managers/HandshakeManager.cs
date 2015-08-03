@@ -27,15 +27,16 @@ using System.Drawing;
 
 using Eavesdrop;
 
+using Sulakore.Protocol;
 using Sulakore.Communication;
 using Sulakore.Protocol.Encryption;
-using Sulakore.Protocol;
 
 namespace Tanji.Managers
 {
     public class HandshakeManager
     {
         private Bitmap _banner;
+        private int _inStepOffset;
         private string _bannerToken;
         private byte[] _localKey, _remoteKey;
 
@@ -62,7 +63,7 @@ namespace Tanji.Managers
 
         private void DataIncoming(object sender, InterceptedEventArgs e)
         {
-            switch (e.Step)
+            switch (e.Step - _inStepOffset)
             {
                 case 1:
                 {
@@ -95,6 +96,12 @@ namespace Tanji.Managers
                 }
                 case 2:
                 {
+                    if (e.Packet.Length < 5)
+                    {
+                        _inStepOffset++;
+                        return;
+                    }
+
                     _remoteKey = Remote.Exchange.GetSharedKey(e.Packet.ReadString());
                     if (_banner == null)
                     {
@@ -127,6 +134,16 @@ namespace Tanji.Managers
         {
             switch (e.Step)
             {
+                case 2:
+                {
+                    if (e.Packet.Length > 6)
+                    {
+                        MainUI.Connection.DataIncoming -= DataIncoming;
+                        MainUI.Connection.DataOutgoing -= DataOutgoing;
+                        break;
+                    }
+                    break;
+                }
                 case 3:
                 {
                     if (!string.IsNullOrWhiteSpace(_bannerToken))
