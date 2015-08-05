@@ -25,6 +25,7 @@
 using System;
 using System.IO;
 using System.Text;
+using System.Linq;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -50,7 +51,10 @@ namespace Tanji.Dialogs
         private readonly Regex _ipMatcher;
 
         public MainFrm MainUI { get; }
+
         public bool IsConnecting { get; private set; }
+        public bool IsReplacingClient { get; private set; }
+        public bool IsExtracingHostPort { get; private set; }
 
         public ConnectFrm(MainFrm main)
         {
@@ -65,43 +69,40 @@ namespace Tanji.Dialogs
 
             CreateTrustedRootCertificate();
             Eavesdropper.IsSslSupported = true;
-            Eavesdropper.EavesdropperResponse += EavesdropperResponse;
         }
 
         private async void ConnectFrm_Shown(object sender, EventArgs e)
         {
-            if (!MainUI.CheckForUpdatesTask.IsCompleted)
+            BrowseBtn.Enabled =
+                ConnectBtn.Enabled = ModePnl.Enabled = false;
+            StatusTxt.SetDotAnimation("Searching For Updates");
+
+            try
+            {
+                if (await MainUI.CheckForUpdatesTask)
+                {
+                    StatusTxt.StopDotAnimation("Update Found!");
+                    MainUI.UpdateUI.ShowDialog();
+                }
+            }
+            catch { /* Update check failed. */ }
+            finally
             {
                 BrowseBtn.Enabled =
-                    ConnectBtn.Enabled = ModePnl.Enabled = false;
+                    ConnectBtn.Enabled = ModePnl.Enabled = true;
 
-                StatusTxt.SetDotAnimation("Searching For Updates");
-                try
-                {
-                    if (await MainUI.CheckForUpdatesTask)
-                    {
-                        StatusTxt.StopDotAnimation("Update Found!");
-
-                        Hide();
-                        MainUI.UpdateUI.ShowDialog();
-                        Show();
-                    }
-                }
-                catch { /* Update check failed. */ }
-                finally
-                {
-                    BrowseBtn.Enabled =
-                        ConnectBtn.Enabled = ModePnl.Enabled = true;
-
-                    StatusTxt.StopDotAnimation("Standing By...");
-                }
+                StatusTxt.StopDotAnimation("Standing By...");
             }
         }
         private void ConnectFrm_FormClosed(object sender, FormClosedEventArgs e)
         {
             try
             {
-                Eavesdropper.EavesdropperResponse -= EavesdropperResponse;
+                if (IsReplacingClient)
+                    Eavesdropper.EavesdropperResponse -= ReplaceClient;
+
+                if (IsExtracingHostPort)
+                    Eavesdropper.EavesdropperResponse -= ExtractHostPort;
 
                 ResetInterface();
                 Eavesdropper.Terminate();
@@ -114,6 +115,16 @@ namespace Tanji.Dialogs
             }
         }
 
+        private void ModeChanged(object sender, EventArgs e)
+        {
+            GameHostTxt.ReadOnly =
+                GamePortTxt.ReadOnly = !ModePnl.IsManual;
+
+            BrowseBtn.Enabled = !ModePnl.IsManual;
+
+            Text = string.Format("Tanji ~ Connection Setup [{0}]",
+                ModePnl.IsManual ? "Manual" : "Automatic");
+        }
         private async void BrowseBtn_Click(object sender, EventArgs e)
         {
             ChooseClientDlg.FileName = ChooseClientDlg.SafeFileName;
@@ -134,41 +145,26 @@ namespace Tanji.Dialogs
         }
         private async void ConnectBtn_Click(object sender, EventArgs e)
         {
-            IsConnecting = !IsConnecting;
-            if (IsConnecting)
+            if (IsConnecting = !IsConnecting)
             {
                 ModePnl.Enabled = !(GameHostTxt.ReadOnly =
                     GamePortTxt.ReadOnly = ExponentTxt.ReadOnly = ModulusTxt.ReadOnly = true);
 
                 ConnectBtn.Text = "Cancel";
-                if (ModePnl.IsManual)
+                if (ModePnl.IsManual && !(await DoManualConnectAsync()))
                 {
-                    if (!(await DoManualConnectAsync()))
-                    {
-                        ResetInterface();
-                        MessageBox.Show("Something went wrong when attempting to intercept the connection.",
-                            "Tanji ~ Error!",
-                            MessageBoxButtons.OK,
-                            MessageBoxIcon.Error);
-                    }
-                    else Close();
+                    if (!IsConnecting) return;
+
+                    ResetInterface();
+                    MessageBox.Show("Something went wrong when attempting to intercept the connection.",
+                        "Tanji ~ Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else DoAutomaticConnect();
             }
             else DoCancelConnect();
         }
 
-        private void ModeChanged(object sender, EventArgs e)
-        {
-            GameHostTxt.ReadOnly =
-                GamePortTxt.ReadOnly = !ModePnl.IsManual;
-
-            BrowseBtn.Enabled = !ModePnl.IsManual;
-
-            Text = string.Format("Tanji ~ Connection Setup [{0}]",
-                ModePnl.IsManual ? "Manual" : "Automatic");
-        }
-        private void EavesdropperResponse(object sender, EavesdropperResponseEventArgs e)
+        private void ReplaceClient(object sender, EavesdropperResponseEventArgs e)
         {
             if (e.Payload.Length > 3000000 &&
                 e.Response.ContentType == "application/x-shockwave-flash")
@@ -183,22 +179,26 @@ namespace Tanji.Dialogs
                         StatusTxt.SetDotAnimation("Extracting Tags");
                         var flashTags = MainUI.Game.ExtractTags();
 
-                        ModifyClient(flashTags);
-                        e.Payload = MainUI.Game.Rebuild();
+                        IEnumerable<FlashTag> viTags = null;
+                        if (MainUI.IsRetro) viTags = flashTags.OfType<DoABCTag>();
+                        else viTags = flashTags.OfType<DefineBinaryDataTag>();
+
+                        SearchFlashTags(viTags);
+
+                        StatusTxt.SetDotAnimation("Rebuilding Client");
+                        MainUI.Game.Rebuild();
                     }
 
-                    string filename = MainUI.GameData.FlashClientBuild;
-                    if (string.IsNullOrWhiteSpace(filename))
+                    if (!MainUI.IsRetro)
                     {
-                        // TODO: This, ha ha ha, seriously, this file needs a name.
+                        MainUI.Game.Save(Path.Combine("Modified Clients",
+                            MainUI.GameData.FlashClientBuild + ".swf"));
                     }
-                    filename += ".swf";
-
-                    MainUI.Game.Save(Path.Combine("Modified Clients",
-                        MainUI.IsRetro ? "Retro" : "Original", filename));
                 }
-                else e.Payload = MainUI.Game.Data;
 
+                e.Payload = MainUI.Game.Data;
+
+                Eavesdropper.EavesdropperResponse -= ReplaceClient;
                 Eavesdropper.Terminate();
 
                 Task connectTask = MainUI.Connection
@@ -206,32 +206,36 @@ namespace Tanji.Dialogs
 
                 StatusTxt.SetDotAnimation("Intercepting Connection({0})", MainUI.GameData.Port);
             }
-            else if (MainUI.GameData == null)
+        }
+        private void ExtractHostPort(object sender, EavesdropperResponseEventArgs e)
+        {
+            string responseBody = Encoding.UTF8.GetString(e.Payload);
+            if (responseBody.Contains("info.host"))
             {
-                string responseBody = Encoding.UTF8.GetString(e.Payload);
-                if (responseBody.Contains("connection.info.host"))
+                MainUI.GameData = new HGameData(responseBody);
+                MainUI.ExtensionMngr.Hotel = SKore.ToHotel(MainUI.GameData.Host);
+                MainUI.IsRetro = (MainUI.ExtensionMngr.Hotel == HHotel.Unknown);
+
+                if (MainUI.IsRetro)
                 {
-                    MainUI.GameData = new HGameData(responseBody);
-                    MainUI.ExtensionMngr.Hotel = SKore.ToHotel(MainUI.GameData.Host);
-                    MainUI.IsRetro = (MainUI.ExtensionMngr.Hotel == HHotel.Unknown);
-
-                    if (MainUI.IsRetro)
-                    {
-                        responseBody = responseBody.Replace(
-                            MainUI.GameData.Host, "127.0.0.1");
-                    }
-
-                    if (MainUI.Game == null && !MainUI.IsRetro)
-                        TryLoadModdedClientAsync().Wait();
-
-                    StatusTxt.SetDotAnimation((MainUI.Game == null ?
-                        "Intercepting" : "Replacing") + " Client");
-
-                    responseBody = responseBody.Replace(".swf?", ".swf")
-                        .Replace(".swf", ".swf?" + DateTime.Now.Ticks);
-
-                    e.Payload = Encoding.UTF8.GetBytes(responseBody);
+                    responseBody = responseBody
+                        .Replace(MainUI.GameData.Host, "127.0.0.1")
+                        .Replace(MainUI.GameData.ClientStarting, "Peeling Tangerines...");
                 }
+
+                if (!MainUI.IsRetro && MainUI.Game == null)
+                    TryLoadModdedClientAsync().Wait();
+
+                StatusTxt.SetDotAnimation((MainUI.Game == null ?
+                    "Intercepting" : "Replacing") + " Client");
+
+                responseBody = responseBody.Replace(".swf?", ".swf")
+                    .Replace(".swf", ".swf?" + DateTime.Now.Ticks);
+
+                Eavesdropper.EavesdropperResponse -= ExtractHostPort;
+                Eavesdropper.EavesdropperResponse += ReplaceClient;
+
+                e.Payload = Encoding.UTF8.GetBytes(responseBody);
             }
         }
 
@@ -260,29 +264,6 @@ namespace Tanji.Dialogs
             byte[] data = Encoding.UTF8.GetBytes(mergedKeys);
             return Convert.ToBase64String(data);
         }
-        private void ModifyClient(IEnumerable<FlashTag> flashTags)
-        {
-            foreach (FlashTag flashTag in flashTags)
-            {
-                switch (flashTag.TagType)
-                {
-                    case FlashTagType.DefineBinaryData:
-                    {
-                        if (!MainUI.IsRetro)
-                            ReplaceBIN((DefineBinaryDataTag)flashTag);
-                        break;
-                    }
-
-                    case FlashTagType.DoABC:
-                    case FlashTagType.DoABC2:
-                    {
-                        if (MainUI.IsRetro)
-                            ReplaceABC((DoABCTag)flashTag);
-                        break;
-                    }
-                }
-            }
-        }
 
         private void ReplaceABC(DoABCTag abcTag)
         {
@@ -297,9 +278,9 @@ namespace Tanji.Dialogs
             for (int i = 1; i < cPool.Strings.Length; i++)
             {
                 string cString = cPool.Strings[i];
-                if (cString.Length > 256 || cString.Length < 4) continue;
+                if (cString.Length > 256 || cString.Length < 2) continue;
 
-                if (cString.Length > 3 && cString.Length < 6)
+                if (cString.Length > 2 && cString.Length < 6)
                 {
                     ushort possiblePort = 0;
                     if (ushort.TryParse(cString, out possiblePort))
@@ -330,6 +311,10 @@ namespace Tanji.Dialogs
                 {
                     MainUI.GameData.Host = cString;
                     cPool.Strings[i] = "127.0.0.1";
+                }
+                else if (cString == "localhost")
+                {
+                    cPool.Strings[i] = "tsohlacol";
                 }
             }
 
@@ -373,6 +358,27 @@ namespace Tanji.Dialogs
                 return;
             }
         }
+        private void SearchFlashTags(IEnumerable<FlashTag> viTags)
+        {
+            foreach (FlashTag tag in viTags)
+            {
+                switch (tag.TagType)
+                {
+                    case FlashTagType.DefineBinaryData:
+                    {
+                        ReplaceBIN((DefineBinaryDataTag)tag);
+                        break;
+                    }
+
+                    case FlashTagType.DoABC:
+                    case FlashTagType.DoABC2:
+                    {
+                        ReplaceABC((DoABCTag)tag);
+                        break;
+                    }
+                }
+            }
+        }
         private bool AttemptConnect(ushort possiblePort, IList<string> ignorePorts)
         {
             Task<HNode> connectTask = HNode.ConnectAsync
@@ -412,7 +418,9 @@ namespace Tanji.Dialogs
         }
         private void DoAutomaticConnect()
         {
+            Eavesdropper.EavesdropperResponse += ExtractHostPort;
             Eavesdropper.Initiate(8080);
+
             StatusTxt.SetDotAnimation("Extracting Host/Port");
         }
         private async Task<bool> DoManualConnectAsync()
@@ -448,7 +456,6 @@ namespace Tanji.Dialogs
         private async Task<bool> TryLoadModdedClientAsync()
         {
             string possibleClientPath = Path.Combine("Modified Clients",
-                MainUI.IsRetro ? "Retro" : "Original",
                 MainUI.GameData.FlashClientBuild + ".swf");
 
             bool loadSuccess = false;

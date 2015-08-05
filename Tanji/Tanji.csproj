@@ -85,6 +85,7 @@
     </Compile>
     <Compile Include="Managers\ExtensionManager.cs" />
     <Compile Include="Managers\HandshakeManager.cs" />
+    <Compile Include="Managers\InjectionManager.cs" />
     <Compile Include="Utilities\Draw.cs" />
     <Compile Include="Components\TanjiModePanel.cs" />
     <Compile Include="Dialogs\ConnectFrm.cs">

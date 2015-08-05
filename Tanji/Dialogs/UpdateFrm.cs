@@ -66,7 +66,7 @@ namespace Tanji.Dialogs
 
         private void MoreInformationBtn_Click(object sender, EventArgs e)
         {
-            Process.Start("https://GitHub.com/ArachisH/Tanji/releases");
+            Process.Start(Releases[0].HtmlUrl);
         }
     }
 }

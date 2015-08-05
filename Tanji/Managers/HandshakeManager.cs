@@ -63,132 +63,156 @@ namespace Tanji.Managers
 
         private void DataIncoming(object sender, InterceptedEventArgs e)
         {
-            switch (e.Step - _inStepOffset)
+            try
             {
-                case 1:
+                switch (e.Step - _inStepOffset)
                 {
-                    if (RealExponent == 0)
-                        RealExponent = DEFAULT_REAL_EXPONENT;
-
-                    if (string.IsNullOrWhiteSpace(RealModulus))
-                        RealModulus = DEFAULT_REAL_MODULUS;
-
-                    Remote.Exchange = new HKeyExchange(RealExponent, RealModulus);
-                    Local.Exchange = new HKeyExchange(FAKE_EXPONENT, FAKE_MODULUS, FAKE_PRIVATE_EXPONENT);
-
-                    string possibleSignedPrime = e.Packet.ReadString();
-                    if (!e.Packet.CanRead<string>())
+                    case 1:
                     {
-                        _bannerToken = possibleSignedPrime;
+                        if (RealExponent == 0)
+                            RealExponent = DEFAULT_REAL_EXPONENT;
 
-                        Eavesdropper.EavesdropperResponse += EavesdropperResponse;
-                        Eavesdropper.Initiate(8080);
-                        return;
-                    }
-                    string signedGenerator = e.Packet.ReadString();
+                        if (string.IsNullOrWhiteSpace(RealModulus))
+                            RealModulus = DEFAULT_REAL_MODULUS;
 
-                    Remote.Exchange.DoHandshake(possibleSignedPrime, signedGenerator);
-                    Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
+                        Remote.Exchange = new HKeyExchange(RealExponent, RealModulus);
+                        Local.Exchange = new HKeyExchange(FAKE_EXPONENT, FAKE_MODULUS, FAKE_PRIVATE_EXPONENT);
 
-                    e.Replacement = new HMessage(e.Packet.Header,
-                        Local.Exchange.GetSignedPrime(), Local.Exchange.GetSignedGenerator());
-                    break;
-                }
-                case 2:
-                {
-                    if (e.Packet.Length < 5)
-                    {
-                        _inStepOffset++;
-                        return;
-                    }
+                        string possibleSignedPrime = e.Packet.ReadString();
+                        if (!e.Packet.CanRead<string>())
+                        {
+                            _bannerToken = possibleSignedPrime;
 
-                    _remoteKey = Remote.Exchange.GetSharedKey(e.Packet.ReadString());
-                    if (_banner == null)
-                    {
+                            Eavesdropper.EavesdropperResponse += EavesdropperResponse;
+                            Eavesdropper.Initiate(8080);
+                            return;
+                        }
+                        string signedGenerator = e.Packet.ReadString();
+
+                        Remote.Exchange.DoHandshake(possibleSignedPrime, signedGenerator);
                         Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
-                        e.Replacement.Replace<string>(0, Local.Exchange.GetPublicKey());
+
+                        e.Replacement = new HMessage(e.Packet.Header,
+                            Local.Exchange.GetSignedPrime(), Local.Exchange.GetSignedGenerator());
+                        break;
                     }
-                    else e.Replacement = new HMessage(e.Packet.Header, "1");
+                    case 2:
+                    {
+                        if (e.Packet.Length < 5)
+                        {
+                            _inStepOffset++;
+                            return;
+                        }
 
-                    RealExponent = 0;
-                    RealModulus = string.Empty;
+                        _remoteKey = Remote.Exchange.GetSharedKey(e.Packet.ReadString());
+                        if (_banner == null)
+                        {
+                            Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
+                            e.Replacement.Replace<string>(0, Local.Exchange.GetPublicKey());
+                        }
+                        else e.Replacement = new HMessage(e.Packet.Header, "1");
 
-                    Local.Exchange.Dispose();
-                    Remote.Exchange.Dispose();
+                        RealExponent = 0;
+                        RealModulus = string.Empty;
 
-                    Local.Decrypter = new Rc4(_localKey);
-                    Remote.Decrypter = new Rc4(_remoteKey);
-                    break;
+                        Local.Exchange.Dispose();
+                        Remote.Exchange.Dispose();
+
+                        Local.Decrypter = new Rc4(_localKey);
+                        Remote.Decrypter = new Rc4(_remoteKey);
+                        break;
+                    }
+                    case 3:
+                    {
+                        if (Remote.IsDecryptionRequired)
+                            Local.Encrypter = new Rc4(_localKey);
+
+                        MainUI.Connection.DataIncoming -= DataIncoming;
+                        break;
+                    }
                 }
-                case 3:
-                {
-                    if (Remote.IsDecryptionRequired)
-                        Local.Encrypter = new Rc4(_localKey);
-
-                    MainUI.Connection.DataIncoming -= DataIncoming;
-                    break;
-                }
+            }
+            catch
+            {
+                MainUI.Connection.DataIncoming -= DataIncoming;
+                MainUI.Connection.DataOutgoing -= DataOutgoing;
             }
         }
         private void DataOutgoing(object sender, InterceptedEventArgs e)
         {
-            switch (e.Step)
+            try
             {
-                case 2:
+                switch (e.Step)
                 {
-                    if (e.Packet.Length > 6)
+                    case 2:
                     {
-                        MainUI.Connection.DataIncoming -= DataIncoming;
-                        MainUI.Connection.DataOutgoing -= DataOutgoing;
-                        break;
-                    }
-                    break;
-                }
-                case 3:
-                {
-                    if (!string.IsNullOrWhiteSpace(_bannerToken))
-                    {
-                        if (_banner == null)
+                        if (e.Packet.Length > 6)
                         {
                             MainUI.Connection.DataIncoming -= DataIncoming;
                             MainUI.Connection.DataOutgoing -= DataOutgoing;
-
-                            Eavesdropper.Terminate();
-                            Eavesdropper.EavesdropperResponse -= EavesdropperResponse;
-
-                            return;
+                            break;
                         }
-                        else _localKey = new byte[] { 1 };
+                        break;
                     }
-                    else _localKey = Local.Exchange.GetSharedKey(e.Packet.ReadString());
+                    case 3:
+                    {
+                        if (!string.IsNullOrWhiteSpace(_bannerToken))
+                        {
+                            if (_banner == null)
+                            {
+                                MainUI.Connection.DataIncoming -= DataIncoming;
+                                MainUI.Connection.DataOutgoing -= DataOutgoing;
 
-                    Remote.Exchange.Rsa.Padding = Local.Exchange.Rsa.Padding;
-                    e.Replacement.Replace<string>(0, Remote.Exchange.GetPublicKey());
-                    break;
-                }
-                case 4:
-                {
-                    if (Local.IsDecryptionRequired)
-                        Remote.Encrypter = new Rc4(_remoteKey);
+                                Eavesdropper.Terminate();
+                                Eavesdropper.EavesdropperResponse -= EavesdropperResponse;
 
-                    MainUI.Connection.DataOutgoing -= DataOutgoing;
-                    break;
+                                return;
+                            }
+                            else _localKey = new byte[] { 1 };
+                        }
+                        else _localKey = Local.Exchange.GetSharedKey(e.Packet.ReadString());
+
+                        Remote.Exchange.Rsa.Padding = Local.Exchange.Rsa.Padding;
+                        e.Replacement.Replace<string>(0, Remote.Exchange.GetPublicKey());
+                        break;
+                    }
+                    case 4:
+                    {
+                        if (Local.IsDecryptionRequired)
+                            Remote.Encrypter = new Rc4(_remoteKey);
+
+                        MainUI.Connection.DataOutgoing -= DataOutgoing;
+                        break;
+                    }
                 }
+            }
+            catch
+            {
+                MainUI.Connection.DataIncoming -= DataIncoming;
+                MainUI.Connection.DataOutgoing -= DataOutgoing;
             }
         }
 
         private void EavesdropperResponse(object sender, EavesdropperResponseEventArgs e)
         {
-            if (e.Response.ResponseUri.OriginalString.Contains(_bannerToken))
+            try
             {
-                using (var bannerStream = new MemoryStream(e.Payload))
-                    _banner = new Bitmap(bannerStream);
+                if (e.Response.ResponseUri.OriginalString.Contains(_bannerToken))
+                {
+                    using (var bannerStream = new MemoryStream(e.Payload))
+                        _banner = new Bitmap(bannerStream);
 
-                Remote.Exchange.DoHandshake(_banner, _bannerToken);
-                Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
+                    Remote.Exchange.DoHandshake(_banner, _bannerToken);
+                    Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
 
-                Eavesdropper.Terminate();
-                Eavesdropper.EavesdropperResponse -= EavesdropperResponse;
+                    Eavesdropper.Terminate();
+                    Eavesdropper.EavesdropperResponse -= EavesdropperResponse;
+                }
+            }
+            catch
+            {
+                MainUI.Connection.DataIncoming -= DataIncoming;
+                MainUI.Connection.DataOutgoing -= DataOutgoing;
             }
         }
     }

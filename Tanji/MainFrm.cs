@@ -50,6 +50,7 @@ namespace Tanji
 
         public HandshakeManager HandshakeMngr { get; }
         public ExtensionManager ExtensionMngr { get; }
+        public InjectionManager InjectionMngr { get; }
 
         public UpdateFrm UpdateUI { get; }
         public ConnectFrm ConnectUI { get; }
@@ -61,7 +62,10 @@ namespace Tanji
             Connection = new HConnection();
 
             if (!IsDebugging)
+            {
                 Load += MainFrm_Load;
+                Shown += MainFrm_Shown;
+            }
 
             UpdateUI = new UpdateFrm(this);
             ConnectUI = new ConnectFrm(this);
@@ -75,6 +79,8 @@ namespace Tanji
             HandshakeMngr = new HandshakeManager(this);
             // Data Priority - #3 | Display Data
             PacketLoggerUI = new PacketLoggerFrm(this);
+
+            InjectionMngr = new InjectionManager(this);
 
             // Begin checking for updates asynchronously, await once ConnectUI is shown.
             CheckForUpdatesTask = UpdateUI.CheckForUpdatesAsync();
