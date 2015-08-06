@@ -78,6 +78,7 @@
             this.ETMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
             this.ETInstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ETInstallExtensionBtn = new Sulakore.Components.SKoreButton();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.TanjiStrip.SuspendLayout();
             this.TanjiTabs.SuspendLayout();
             this.InjectionTab.SuspendLayout();
@@ -94,6 +95,7 @@
             this.TanjiStrip.BackColor = System.Drawing.Color.White;
             this.TanjiStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TanjiVersionTxt,
+            this.toolStripStatusLabel1,
             this.ExtensionsActiveTxt,
             this.TanjiInfoTxt});
             this.TanjiStrip.Location = new System.Drawing.Point(0, 345);
@@ -127,9 +129,9 @@
             this.TanjiInfoTxt.IsLink = true;
             this.TanjiInfoTxt.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.TanjiInfoTxt.Name = "TanjiInfoTxt";
-            this.TanjiInfoTxt.Size = new System.Drawing.Size(289, 19);
+            this.TanjiInfoTxt.Size = new System.Drawing.Size(166, 19);
             this.TanjiInfoTxt.Spring = true;
-            this.TanjiInfoTxt.Text = "GitHub.com/ArachisH/Tanji";
+            this.TanjiInfoTxt.Text = "GitHub | ArachisH/Tanji";
             this.TanjiInfoTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TanjiInfoTxt.Click += new System.EventHandler(this.TanjiInfoTxt_Click);
             // 
@@ -604,6 +606,13 @@
             this.ETInstallExtensionBtn.TabIndex = 1;
             this.ETInstallExtensionBtn.Text = "Install Extension";
             // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(123, 19);
+            this.toolStripStatusLabel1.Text = "Schedules Active: 0/0";
+            // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -686,5 +695,6 @@
         public Sulakore.Components.SKoreButton ISStartAllBtn;
         public Sulakore.Components.SKoreButton ISRemoveBtn;
         public Sulakore.Components.SKoreButton ISCreateBtn;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
     }
 }

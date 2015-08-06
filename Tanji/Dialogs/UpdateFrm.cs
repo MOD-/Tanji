@@ -35,8 +35,7 @@ namespace Tanji.Dialogs
     {
         public MainFrm MainUI { get; }
         public Version LocalVersion { get; }
-
-        private GitReleases Releases { get; set; }
+        public GitReleases Releases { get; set; }
 
         public UpdateFrm(MainFrm main)
         {

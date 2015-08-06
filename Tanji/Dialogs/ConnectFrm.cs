@@ -197,7 +197,6 @@ namespace Tanji.Dialogs
                 }
 
                 e.Payload = MainUI.Game.Data;
-
                 Eavesdropper.EavesdropperResponse -= ReplaceClient;
                 Eavesdropper.Terminate();
 
@@ -210,7 +209,7 @@ namespace Tanji.Dialogs
         private void ExtractHostPort(object sender, EavesdropperResponseEventArgs e)
         {
             string responseBody = Encoding.UTF8.GetString(e.Payload);
-            if (responseBody.Contains("info.host"))
+            if (MainUI.GameData == null && responseBody.Contains("info.host"))
             {
                 MainUI.GameData = new HGameData(responseBody);
                 MainUI.ExtensionMngr.Hotel = SKore.ToHotel(MainUI.GameData.Host);
@@ -219,8 +218,13 @@ namespace Tanji.Dialogs
                 if (MainUI.IsRetro)
                 {
                     responseBody = responseBody
-                        .Replace(MainUI.GameData.Host, "127.0.0.1")
-                        .Replace(MainUI.GameData.ClientStarting, "Peeling Tangerines...");
+                        .Replace(MainUI.GameData.Host, "127.0.0.1");
+
+                    if (!string.IsNullOrWhiteSpace(MainUI.GameData.ClientStarting))
+                    {
+                        responseBody = responseBody
+                            .Replace(MainUI.GameData.ClientStarting, "Peeling Tangerines...");
+                    }
                 }
 
                 if (!MainUI.IsRetro && MainUI.Game == null)

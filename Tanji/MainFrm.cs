@@ -118,7 +118,10 @@ namespace Tanji
         private void TanjiVersionTxt_Click(object sender, EventArgs e)
         {
             TanjiVersionTxt.LinkVisited = true;
-            //Process.Start("");
+
+            string htmlUrl = UpdateUI.Releases?[0].HtmlUrl;
+            if (!string.IsNullOrWhiteSpace(htmlUrl))
+                Process.Start(htmlUrl);
         }
     }
 }
