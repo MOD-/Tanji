@@ -32,6 +32,7 @@
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainFrm));
             this.TanjiStrip = new System.Windows.Forms.StatusStrip();
             this.TanjiVersionTxt = new System.Windows.Forms.ToolStripStatusLabel();
+            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.ExtensionsActiveTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.TanjiInfoTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.TanjiTabs = new Sulakore.Components.SKoreTabControl();
@@ -40,6 +41,42 @@
             this.ISendToClientBtn = new Sulakore.Components.SKoreButton();
             this.ISendToServerBtn = new Sulakore.Components.SKoreButton();
             this.InjectionTabs = new Sulakore.Components.SKoreTabControl();
+            this.ConstructerTab = new System.Windows.Forms.TabPage();
+            this.ICConstructerLstvw = new Sulakore.Components.SKoreConstructView();
+            this.ICSTypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ICSValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ICSEncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ICConstructMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ICCopyPacketBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ICTransferToBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ICSchedulerBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ICPrimitiveBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ICTransferSeparator = new System.Windows.Forms.ToolStripSeparator();
+            this.ICInjectionBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ICChunksRightGlowPnl = new System.Windows.Forms.Panel();
+            this.ICChunksLeftGlowPnl = new System.Windows.Forms.Panel();
+            this.ICChunkCountLbl = new System.Windows.Forms.Label();
+            this.ICCountTxt = new System.Windows.Forms.NumericUpDown();
+            this.ICCountLbl = new System.Windows.Forms.Label();
+            this.ICRemoveBtn = new Sulakore.Components.SKoreButton();
+            this.ICMoveDownBtn = new Sulakore.Components.SKoreButton();
+            this.ICMoveUpBtn = new Sulakore.Components.SKoreButton();
+            this.ICClearBtn = new Sulakore.Components.SKoreButton();
+            this.ICAppendBooleanBtn = new Sulakore.Components.SKoreButton();
+            this.ICAppendStringBtn = new Sulakore.Components.SKoreButton();
+            this.ICAppendIntegerBtn = new Sulakore.Components.SKoreButton();
+            this.ICHeaderLbl = new System.Windows.Forms.Label();
+            this.ICHeaderTxt = new System.Windows.Forms.TextBox();
+            this.ICValueLbl = new System.Windows.Forms.Label();
+            this.ICValueTxt = new System.Windows.Forms.TextBox();
+            this.PrimitiveTab = new System.Windows.Forms.TabPage();
+            this.IPInsertBooleanBtn = new Sulakore.Components.SKoreButton();
+            this.IPInsertStringBtn = new Sulakore.Components.SKoreButton();
+            this.IPInsertIntegerBtn = new Sulakore.Components.SKoreButton();
+            this.IPInserHeaderBtn = new Sulakore.Components.SKoreButton();
+            this.IPIsCorruptedLbl = new System.Windows.Forms.Label();
+            this.IPPacketInfoLbl = new System.Windows.Forms.Label();
+            this.IPPrimitiveTxt = new System.Windows.Forms.TextBox();
             this.SchedulerTab = new System.Windows.Forms.TabPage();
             this.ISClearBtn = new Sulakore.Components.SKoreButton();
             this.ISStopAllBtn = new Sulakore.Components.SKoreButton();
@@ -63,6 +100,23 @@
             this.STBurstCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STIntervalCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STStatusCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.EncoderDecoderTab = new System.Windows.Forms.TabPage();
+            this.EDExtracterLstvw = new Sulakore.Components.SKoreListView();
+            this.ValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.EncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.PositionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.EDExtractValuesBtn = new Sulakore.Components.SKoreButton();
+            this.EDEncodedBlocksLbl = new System.Windows.Forms.Label();
+            this.EDEncodedBlocksTxt = new System.Windows.Forms.TextBox();
+            this.EDMiddleGlowPnl = new System.Windows.Forms.Panel();
+            this.EDShortOutputTxt = new System.Windows.Forms.TextBox();
+            this.EDIntegerOutputTxt = new System.Windows.Forms.TextBox();
+            this.EDShortInputTxt = new System.Windows.Forms.TextBox();
+            this.EDEncodeShortBtn = new Sulakore.Components.SKoreButton();
+            this.EDEncodeIntegerBtn = new Sulakore.Components.SKoreButton();
+            this.EDDecodeShortBtn = new Sulakore.Components.SKoreButton();
+            this.EDDecodeIntegerBtn = new Sulakore.Components.SKoreButton();
+            this.EDIntegerInputTxt = new System.Windows.Forms.TextBox();
             this.ExtensionsTab = new System.Windows.Forms.TabPage();
             this.ETExtensionAOTChckbx = new System.Windows.Forms.CheckBox();
             this.ETUninstallExtensionBtn = new Sulakore.Components.SKoreButton();
@@ -78,14 +132,24 @@
             this.ETMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
             this.ETInstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ETInstallExtensionBtn = new Sulakore.Components.SKoreButton();
-            this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ICTypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ICValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ICEncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.TanjiStrip.SuspendLayout();
             this.TanjiTabs.SuspendLayout();
             this.InjectionTab.SuspendLayout();
             this.InjectionTabs.SuspendLayout();
+            this.ConstructerTab.SuspendLayout();
+            this.ICConstructMenu.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ICCountTxt)).BeginInit();
+            this.PrimitiveTab.SuspendLayout();
             this.SchedulerTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ISBurstTxt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.ISIntervalTxt)).BeginInit();
+            this.EncoderDecoderTab.SuspendLayout();
             this.ExtensionsTab.SuspendLayout();
             this.ETExtensionMenu.SuspendLayout();
             this.SuspendLayout();
@@ -117,6 +181,13 @@
             this.TanjiVersionTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TanjiVersionTxt.Click += new System.EventHandler(this.TanjiVersionTxt_Click);
             // 
+            // toolStripStatusLabel1
+            // 
+            this.toolStripStatusLabel1.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            this.toolStripStatusLabel1.Size = new System.Drawing.Size(123, 19);
+            this.toolStripStatusLabel1.Text = "Schedules Active: 0/0";
+            // 
             // ExtensionsActiveTxt
             // 
             this.ExtensionsActiveTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
@@ -138,6 +209,7 @@
             // TanjiTabs
             // 
             this.TanjiTabs.Controls.Add(this.InjectionTab);
+            this.TanjiTabs.Controls.Add(this.EncoderDecoderTab);
             this.TanjiTabs.Controls.Add(this.ExtensionsTab);
             this.TanjiTabs.DisplayBoundary = true;
             this.TanjiTabs.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -185,6 +257,7 @@
             this.ISendToClientBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.ISendToClientBtn.TabIndex = 7;
             this.ISendToClientBtn.Text = "Send To Client";
+            this.ISendToClientBtn.Click += new System.EventHandler(this.ISendToClientBtn_Click);
             // 
             // ISendToServerBtn
             // 
@@ -197,15 +270,17 @@
             this.ISendToServerBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.ISendToServerBtn.TabIndex = 6;
             this.ISendToServerBtn.Text = "Send To Server";
+            this.ISendToServerBtn.Click += new System.EventHandler(this.ISendToServerBtn_Click);
             // 
             // InjectionTabs
             // 
             this.InjectionTabs.Alignment = System.Windows.Forms.TabAlignment.Right;
+            this.InjectionTabs.Controls.Add(this.ConstructerTab);
+            this.InjectionTabs.Controls.Add(this.PrimitiveTab);
             this.InjectionTabs.Controls.Add(this.SchedulerTab);
             this.InjectionTabs.DisplayBoundary = true;
             this.InjectionTabs.Dock = System.Windows.Forms.DockStyle.Top;
             this.InjectionTabs.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            this.InjectionTabs.Enabled = false;
             this.InjectionTabs.ItemSize = new System.Drawing.Size(65, 24);
             this.InjectionTabs.Location = new System.Drawing.Point(3, 3);
             this.InjectionTabs.Multiline = true;
@@ -215,6 +290,410 @@
             this.InjectionTabs.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
             this.InjectionTabs.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.InjectionTabs.TabIndex = 0;
+            this.InjectionTabs.Selected += new System.Windows.Forms.TabControlEventHandler(this.InjectionTabs_Selected);
+            // 
+            // ConstructerTab
+            // 
+            this.ConstructerTab.Controls.Add(this.ICConstructerLstvw);
+            this.ConstructerTab.Controls.Add(this.ICChunksRightGlowPnl);
+            this.ConstructerTab.Controls.Add(this.ICChunksLeftGlowPnl);
+            this.ConstructerTab.Controls.Add(this.ICChunkCountLbl);
+            this.ConstructerTab.Controls.Add(this.ICCountTxt);
+            this.ConstructerTab.Controls.Add(this.ICCountLbl);
+            this.ConstructerTab.Controls.Add(this.ICRemoveBtn);
+            this.ConstructerTab.Controls.Add(this.ICMoveDownBtn);
+            this.ConstructerTab.Controls.Add(this.ICMoveUpBtn);
+            this.ConstructerTab.Controls.Add(this.ICClearBtn);
+            this.ConstructerTab.Controls.Add(this.ICAppendBooleanBtn);
+            this.ConstructerTab.Controls.Add(this.ICAppendStringBtn);
+            this.ConstructerTab.Controls.Add(this.ICAppendIntegerBtn);
+            this.ConstructerTab.Controls.Add(this.ICHeaderLbl);
+            this.ConstructerTab.Controls.Add(this.ICHeaderTxt);
+            this.ConstructerTab.Controls.Add(this.ICValueLbl);
+            this.ConstructerTab.Controls.Add(this.ICValueTxt);
+            this.ConstructerTab.Location = new System.Drawing.Point(4, 4);
+            this.ConstructerTab.Name = "ConstructerTab";
+            this.ConstructerTab.Size = new System.Drawing.Size(392, 268);
+            this.ConstructerTab.TabIndex = 2;
+            this.ConstructerTab.Text = "Constructer";
+            this.ConstructerTab.UseVisualStyleBackColor = true;
+            // 
+            // ICConstructerLstvw
+            // 
+            this.ICConstructerLstvw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ICSTypeCol,
+            this.ICSValueCol,
+            this.ICSEncodedCol});
+            this.ICConstructerLstvw.ContextMenuStrip = this.ICConstructMenu;
+            this.ICConstructerLstvw.FullRowSelect = true;
+            this.ICConstructerLstvw.GridLines = true;
+            this.ICConstructerLstvw.Header = ((ushort)(0));
+            this.ICConstructerLstvw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.ICConstructerLstvw.HideSelection = false;
+            this.ICConstructerLstvw.Location = new System.Drawing.Point(9, 75);
+            this.ICConstructerLstvw.MultiSelect = false;
+            this.ICConstructerLstvw.Name = "ICConstructerLstvw";
+            this.ICConstructerLstvw.ShowItemToolTips = true;
+            this.ICConstructerLstvw.Size = new System.Drawing.Size(379, 161);
+            this.ICConstructerLstvw.TabIndex = 44;
+            this.ICConstructerLstvw.UseCompatibleStateImageBehavior = false;
+            this.ICConstructerLstvw.View = System.Windows.Forms.View.Details;
+            this.ICConstructerLstvw.ItemSelected += new System.EventHandler<System.Windows.Forms.ListViewItemSelectionChangedEventArgs>(this.ICConstructerLstvw_ItemSelected);
+            this.ICConstructerLstvw.ItemsDeselected += new System.EventHandler(this.ICConstructerLstvw_ItemsDeselected);
+            this.ICConstructerLstvw.ItemActivate += new System.EventHandler(this.ICConstructerLstvw_ItemActivate);
+            // 
+            // ICSTypeCol
+            // 
+            this.ICSTypeCol.Text = "Type";
+            this.ICSTypeCol.Width = 72;
+            // 
+            // ICSValueCol
+            // 
+            this.ICSValueCol.Text = "Value";
+            this.ICSValueCol.Width = 137;
+            // 
+            // ICSEncodedCol
+            // 
+            this.ICSEncodedCol.Text = "Encoded";
+            this.ICSEncodedCol.Width = 150;
+            // 
+            // ICConstructMenu
+            // 
+            this.ICConstructMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ICCopyPacketBtn,
+            this.ICTransferToBtn});
+            this.ICConstructMenu.Name = "ConstructMenu";
+            this.ICConstructMenu.Size = new System.Drawing.Size(141, 48);
+            // 
+            // ICCopyPacketBtn
+            // 
+            this.ICCopyPacketBtn.Name = "ICCopyPacketBtn";
+            this.ICCopyPacketBtn.Size = new System.Drawing.Size(140, 22);
+            this.ICCopyPacketBtn.Text = "Copy Packet";
+            this.ICCopyPacketBtn.Click += new System.EventHandler(this.ICCopyPacketBtn_Click);
+            // 
+            // ICTransferToBtn
+            // 
+            this.ICTransferToBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ICSchedulerBtn,
+            this.ICPrimitiveBtn,
+            this.ICTransferSeparator,
+            this.ICInjectionBtn});
+            this.ICTransferToBtn.Name = "ICTransferToBtn";
+            this.ICTransferToBtn.Size = new System.Drawing.Size(140, 22);
+            this.ICTransferToBtn.Text = "Transfer To";
+            // 
+            // ICSchedulerBtn
+            // 
+            this.ICSchedulerBtn.Name = "ICSchedulerBtn";
+            this.ICSchedulerBtn.Size = new System.Drawing.Size(163, 22);
+            this.ICSchedulerBtn.Text = "Scheduler";
+            this.ICSchedulerBtn.Click += new System.EventHandler(this.ICSchedulerBtn_Click);
+            // 
+            // ICPrimitiveBtn
+            // 
+            this.ICPrimitiveBtn.Name = "ICPrimitiveBtn";
+            this.ICPrimitiveBtn.Size = new System.Drawing.Size(163, 22);
+            this.ICPrimitiveBtn.Text = "Primitive";
+            this.ICPrimitiveBtn.Click += new System.EventHandler(this.ICPrimitiveBtn_Click);
+            // 
+            // ICTransferSeparator
+            // 
+            this.ICTransferSeparator.Name = "ICTransferSeparator";
+            this.ICTransferSeparator.Size = new System.Drawing.Size(160, 6);
+            // 
+            // ICInjectionBtn
+            // 
+            this.ICInjectionBtn.Name = "ICInjectionBtn";
+            this.ICInjectionBtn.Size = new System.Drawing.Size(163, 22);
+            this.ICInjectionBtn.Text = "Injection (Below)";
+            this.ICInjectionBtn.Click += new System.EventHandler(this.ICInjectionBtn_Click);
+            // 
+            // ICChunksRightGlowPnl
+            // 
+            this.ICChunksRightGlowPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ICChunksRightGlowPnl.Location = new System.Drawing.Point(387, 242);
+            this.ICChunksRightGlowPnl.Name = "ICChunksRightGlowPnl";
+            this.ICChunksRightGlowPnl.Size = new System.Drawing.Size(1, 22);
+            this.ICChunksRightGlowPnl.TabIndex = 43;
+            // 
+            // ICChunksLeftGlowPnl
+            // 
+            this.ICChunksLeftGlowPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ICChunksLeftGlowPnl.Location = new System.Drawing.Point(272, 242);
+            this.ICChunksLeftGlowPnl.Name = "ICChunksLeftGlowPnl";
+            this.ICChunksLeftGlowPnl.Size = new System.Drawing.Size(1, 22);
+            this.ICChunksLeftGlowPnl.TabIndex = 42;
+            // 
+            // ICChunkCountLbl
+            // 
+            this.ICChunkCountLbl.Location = new System.Drawing.Point(275, 242);
+            this.ICChunkCountLbl.Name = "ICChunkCountLbl";
+            this.ICChunkCountLbl.Size = new System.Drawing.Size(110, 22);
+            this.ICChunkCountLbl.TabIndex = 41;
+            this.ICChunkCountLbl.Text = "Chunk Count: 0";
+            this.ICChunkCountLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // ICCountTxt
+            // 
+            this.ICCountTxt.Location = new System.Drawing.Point(328, 21);
+            this.ICCountTxt.Maximum = new decimal(new int[] {
+            5000,
+            0,
+            0,
+            0});
+            this.ICCountTxt.Minimum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.ICCountTxt.Name = "ICCountTxt";
+            this.ICCountTxt.Size = new System.Drawing.Size(60, 20);
+            this.ICCountTxt.TabIndex = 40;
+            this.ICCountTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ICCountTxt.Value = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            // 
+            // ICCountLbl
+            // 
+            this.ICCountLbl.AutoSize = true;
+            this.ICCountLbl.Location = new System.Drawing.Point(326, 5);
+            this.ICCountLbl.Name = "ICCountLbl";
+            this.ICCountLbl.Size = new System.Drawing.Size(35, 13);
+            this.ICCountLbl.TabIndex = 39;
+            this.ICCountLbl.Text = "Count";
+            // 
+            // ICRemoveBtn
+            // 
+            this.ICRemoveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ICRemoveBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ICRemoveBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ICRemoveBtn.Enabled = false;
+            this.ICRemoveBtn.Location = new System.Drawing.Point(8, 242);
+            this.ICRemoveBtn.Name = "ICRemoveBtn";
+            this.ICRemoveBtn.Size = new System.Drawing.Size(82, 22);
+            this.ICRemoveBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ICRemoveBtn.TabIndex = 38;
+            this.ICRemoveBtn.Text = "Remove";
+            this.ICRemoveBtn.Click += new System.EventHandler(this.ICRemoveBtn_Click);
+            // 
+            // ICMoveDownBtn
+            // 
+            this.ICMoveDownBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ICMoveDownBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ICMoveDownBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ICMoveDownBtn.Enabled = false;
+            this.ICMoveDownBtn.Location = new System.Drawing.Point(184, 242);
+            this.ICMoveDownBtn.Name = "ICMoveDownBtn";
+            this.ICMoveDownBtn.Size = new System.Drawing.Size(82, 22);
+            this.ICMoveDownBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ICMoveDownBtn.TabIndex = 37;
+            this.ICMoveDownBtn.Text = "Move Down";
+            this.ICMoveDownBtn.Click += new System.EventHandler(this.ICMoveDownBtn_Click);
+            // 
+            // ICMoveUpBtn
+            // 
+            this.ICMoveUpBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ICMoveUpBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ICMoveUpBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ICMoveUpBtn.Enabled = false;
+            this.ICMoveUpBtn.Location = new System.Drawing.Point(96, 242);
+            this.ICMoveUpBtn.Name = "ICMoveUpBtn";
+            this.ICMoveUpBtn.Size = new System.Drawing.Size(82, 22);
+            this.ICMoveUpBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ICMoveUpBtn.TabIndex = 36;
+            this.ICMoveUpBtn.Text = "Move Up";
+            this.ICMoveUpBtn.Click += new System.EventHandler(this.ICMoveUpBtn_Click);
+            // 
+            // ICClearBtn
+            // 
+            this.ICClearBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ICClearBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ICClearBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ICClearBtn.Location = new System.Drawing.Point(9, 47);
+            this.ICClearBtn.Name = "ICClearBtn";
+            this.ICClearBtn.Size = new System.Drawing.Size(67, 22);
+            this.ICClearBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ICClearBtn.TabIndex = 35;
+            this.ICClearBtn.Text = "Clear";
+            this.ICClearBtn.Click += new System.EventHandler(this.ICClearBtn_Click);
+            // 
+            // ICAppendBooleanBtn
+            // 
+            this.ICAppendBooleanBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ICAppendBooleanBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ICAppendBooleanBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ICAppendBooleanBtn.Location = new System.Drawing.Point(290, 47);
+            this.ICAppendBooleanBtn.Name = "ICAppendBooleanBtn";
+            this.ICAppendBooleanBtn.Size = new System.Drawing.Size(98, 22);
+            this.ICAppendBooleanBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ICAppendBooleanBtn.TabIndex = 34;
+            this.ICAppendBooleanBtn.Text = "Append Boolean";
+            this.ICAppendBooleanBtn.Click += new System.EventHandler(this.ICAppendBtn_Click);
+            // 
+            // ICAppendStringBtn
+            // 
+            this.ICAppendStringBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ICAppendStringBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ICAppendStringBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ICAppendStringBtn.Location = new System.Drawing.Point(186, 47);
+            this.ICAppendStringBtn.Name = "ICAppendStringBtn";
+            this.ICAppendStringBtn.Size = new System.Drawing.Size(98, 22);
+            this.ICAppendStringBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ICAppendStringBtn.TabIndex = 33;
+            this.ICAppendStringBtn.Text = "Append String";
+            this.ICAppendStringBtn.Click += new System.EventHandler(this.ICAppendBtn_Click);
+            // 
+            // ICAppendIntegerBtn
+            // 
+            this.ICAppendIntegerBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.ICAppendIntegerBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ICAppendIntegerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ICAppendIntegerBtn.Location = new System.Drawing.Point(82, 47);
+            this.ICAppendIntegerBtn.Name = "ICAppendIntegerBtn";
+            this.ICAppendIntegerBtn.Size = new System.Drawing.Size(98, 22);
+            this.ICAppendIntegerBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ICAppendIntegerBtn.TabIndex = 32;
+            this.ICAppendIntegerBtn.Text = "Append Integer";
+            this.ICAppendIntegerBtn.Click += new System.EventHandler(this.ICAppendBtn_Click);
+            // 
+            // ICHeaderLbl
+            // 
+            this.ICHeaderLbl.AutoSize = true;
+            this.ICHeaderLbl.Location = new System.Drawing.Point(5, 5);
+            this.ICHeaderLbl.Name = "ICHeaderLbl";
+            this.ICHeaderLbl.Size = new System.Drawing.Size(42, 13);
+            this.ICHeaderLbl.TabIndex = 31;
+            this.ICHeaderLbl.Text = "Header";
+            // 
+            // ICHeaderTxt
+            // 
+            this.ICHeaderTxt.Location = new System.Drawing.Point(8, 21);
+            this.ICHeaderTxt.MaxLength = 4;
+            this.ICHeaderTxt.Name = "ICHeaderTxt";
+            this.ICHeaderTxt.Size = new System.Drawing.Size(67, 20);
+            this.ICHeaderTxt.TabIndex = 30;
+            this.ICHeaderTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ICHeaderTxt.TextChanged += new System.EventHandler(this.ICHeaderTxt_TextChanged);
+            // 
+            // ICValueLbl
+            // 
+            this.ICValueLbl.AutoSize = true;
+            this.ICValueLbl.Location = new System.Drawing.Point(78, 5);
+            this.ICValueLbl.Name = "ICValueLbl";
+            this.ICValueLbl.Size = new System.Drawing.Size(34, 13);
+            this.ICValueLbl.TabIndex = 29;
+            this.ICValueLbl.Text = "Value";
+            // 
+            // ICValueTxt
+            // 
+            this.ICValueTxt.Location = new System.Drawing.Point(81, 21);
+            this.ICValueTxt.Name = "ICValueTxt";
+            this.ICValueTxt.Size = new System.Drawing.Size(241, 20);
+            this.ICValueTxt.TabIndex = 28;
+            this.ICValueTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.ICValueTxt.TextChanged += new System.EventHandler(this.ICValueTxt_TextChanged);
+            // 
+            // PrimitiveTab
+            // 
+            this.PrimitiveTab.Controls.Add(this.IPInsertBooleanBtn);
+            this.PrimitiveTab.Controls.Add(this.IPInsertStringBtn);
+            this.PrimitiveTab.Controls.Add(this.IPInsertIntegerBtn);
+            this.PrimitiveTab.Controls.Add(this.IPInserHeaderBtn);
+            this.PrimitiveTab.Controls.Add(this.IPIsCorruptedLbl);
+            this.PrimitiveTab.Controls.Add(this.IPPacketInfoLbl);
+            this.PrimitiveTab.Controls.Add(this.IPPrimitiveTxt);
+            this.PrimitiveTab.Location = new System.Drawing.Point(4, 4);
+            this.PrimitiveTab.Name = "PrimitiveTab";
+            this.PrimitiveTab.Size = new System.Drawing.Size(392, 268);
+            this.PrimitiveTab.TabIndex = 1;
+            this.PrimitiveTab.Text = "Primitive";
+            this.PrimitiveTab.UseVisualStyleBackColor = true;
+            // 
+            // IPInsertBooleanBtn
+            // 
+            this.IPInsertBooleanBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.IPInsertBooleanBtn.BackColor = System.Drawing.Color.Transparent;
+            this.IPInsertBooleanBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.IPInsertBooleanBtn.Location = new System.Drawing.Point(309, 21);
+            this.IPInsertBooleanBtn.Name = "IPInsertBooleanBtn";
+            this.IPInsertBooleanBtn.Size = new System.Drawing.Size(77, 22);
+            this.IPInsertBooleanBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.IPInsertBooleanBtn.TabIndex = 12;
+            this.IPInsertBooleanBtn.Text = "+ Boolean";
+            this.IPInsertBooleanBtn.Click += new System.EventHandler(this.IPInsertBooleanBtn_Click);
+            // 
+            // IPInsertStringBtn
+            // 
+            this.IPInsertStringBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.IPInsertStringBtn.BackColor = System.Drawing.Color.Transparent;
+            this.IPInsertStringBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.IPInsertStringBtn.Location = new System.Drawing.Point(228, 21);
+            this.IPInsertStringBtn.Name = "IPInsertStringBtn";
+            this.IPInsertStringBtn.Size = new System.Drawing.Size(75, 22);
+            this.IPInsertStringBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.IPInsertStringBtn.TabIndex = 11;
+            this.IPInsertStringBtn.Text = "+ String";
+            this.IPInsertStringBtn.Click += new System.EventHandler(this.IPInsertStringBtn_Click);
+            // 
+            // IPInsertIntegerBtn
+            // 
+            this.IPInsertIntegerBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.IPInsertIntegerBtn.BackColor = System.Drawing.Color.Transparent;
+            this.IPInsertIntegerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.IPInsertIntegerBtn.Location = new System.Drawing.Point(147, 21);
+            this.IPInsertIntegerBtn.Name = "IPInsertIntegerBtn";
+            this.IPInsertIntegerBtn.Size = new System.Drawing.Size(75, 22);
+            this.IPInsertIntegerBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.IPInsertIntegerBtn.TabIndex = 10;
+            this.IPInsertIntegerBtn.Text = "+ Integer";
+            this.IPInsertIntegerBtn.Click += new System.EventHandler(this.IPInsertIntegerBtn_Click);
+            // 
+            // IPInserHeaderBtn
+            // 
+            this.IPInserHeaderBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.IPInserHeaderBtn.BackColor = System.Drawing.Color.Transparent;
+            this.IPInserHeaderBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.IPInserHeaderBtn.Location = new System.Drawing.Point(10, 21);
+            this.IPInserHeaderBtn.Name = "IPInserHeaderBtn";
+            this.IPInserHeaderBtn.Size = new System.Drawing.Size(131, 22);
+            this.IPInserHeaderBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.IPInserHeaderBtn.TabIndex = 9;
+            this.IPInserHeaderBtn.Text = "Insert Length & Header";
+            this.IPInserHeaderBtn.Click += new System.EventHandler(this.IPInserHeaderBtn_Click);
+            // 
+            // IPIsCorruptedLbl
+            // 
+            this.IPIsCorruptedLbl.AutoSize = true;
+            this.IPIsCorruptedLbl.ForeColor = System.Drawing.Color.Firebrick;
+            this.IPIsCorruptedLbl.Location = new System.Drawing.Point(166, 5);
+            this.IPIsCorruptedLbl.Name = "IPIsCorruptedLbl";
+            this.IPIsCorruptedLbl.Size = new System.Drawing.Size(29, 13);
+            this.IPIsCorruptedLbl.TabIndex = 5;
+            this.IPIsCorruptedLbl.Text = "True";
+            // 
+            // IPPacketInfoLbl
+            // 
+            this.IPPacketInfoLbl.AutoSize = true;
+            this.IPPacketInfoLbl.Location = new System.Drawing.Point(7, 5);
+            this.IPPacketInfoLbl.Name = "IPPacketInfoLbl";
+            this.IPPacketInfoLbl.Size = new System.Drawing.Size(164, 13);
+            this.IPPacketInfoLbl.TabIndex = 4;
+            this.IPPacketInfoLbl.Text = "Header: 0 | Length: 0 | Corrupted:";
+            // 
+            // IPPrimitiveTxt
+            // 
+            this.IPPrimitiveTxt.Location = new System.Drawing.Point(7, 48);
+            this.IPPrimitiveTxt.MaxLength = 2147483647;
+            this.IPPrimitiveTxt.Multiline = true;
+            this.IPPrimitiveTxt.Name = "IPPrimitiveTxt";
+            this.IPPrimitiveTxt.Size = new System.Drawing.Size(379, 216);
+            this.IPPrimitiveTxt.TabIndex = 3;
+            this.IPPrimitiveTxt.TextChanged += new System.EventHandler(this.IPPrimitiveTxt_TextChanged);
+            this.IPPrimitiveTxt.KeyDown += new System.Windows.Forms.KeyEventHandler(this.IPPrimitiveTxt_KeyDown);
             // 
             // SchedulerTab
             // 
@@ -475,6 +954,182 @@
             this.STStatusCol.Text = "Status";
             this.STStatusCol.Width = 52;
             // 
+            // EncoderDecoderTab
+            // 
+            this.EncoderDecoderTab.Controls.Add(this.EDExtracterLstvw);
+            this.EncoderDecoderTab.Controls.Add(this.EDExtractValuesBtn);
+            this.EncoderDecoderTab.Controls.Add(this.EDEncodedBlocksLbl);
+            this.EncoderDecoderTab.Controls.Add(this.EDEncodedBlocksTxt);
+            this.EncoderDecoderTab.Controls.Add(this.EDMiddleGlowPnl);
+            this.EncoderDecoderTab.Controls.Add(this.EDShortOutputTxt);
+            this.EncoderDecoderTab.Controls.Add(this.EDIntegerOutputTxt);
+            this.EncoderDecoderTab.Controls.Add(this.EDShortInputTxt);
+            this.EncoderDecoderTab.Controls.Add(this.EDEncodeShortBtn);
+            this.EncoderDecoderTab.Controls.Add(this.EDEncodeIntegerBtn);
+            this.EncoderDecoderTab.Controls.Add(this.EDDecodeShortBtn);
+            this.EncoderDecoderTab.Controls.Add(this.EDDecodeIntegerBtn);
+            this.EncoderDecoderTab.Controls.Add(this.EDIntegerInputTxt);
+            this.EncoderDecoderTab.Location = new System.Drawing.Point(4, 28);
+            this.EncoderDecoderTab.Name = "EncoderDecoderTab";
+            this.EncoderDecoderTab.Size = new System.Drawing.Size(471, 313);
+            this.EncoderDecoderTab.TabIndex = 3;
+            this.EncoderDecoderTab.Text = "Encoder/Decoder";
+            this.EncoderDecoderTab.UseVisualStyleBackColor = true;
+            // 
+            // EDExtracterLstvw
+            // 
+            this.EDExtracterLstvw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ValueCol,
+            this.EncodedCol,
+            this.PositionCol});
+            this.EDExtracterLstvw.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.EDExtracterLstvw.Enabled = false;
+            this.EDExtracterLstvw.FullRowSelect = true;
+            this.EDExtracterLstvw.GridLines = true;
+            this.EDExtracterLstvw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.EDExtracterLstvw.HideSelection = false;
+            this.EDExtracterLstvw.Location = new System.Drawing.Point(0, 102);
+            this.EDExtracterLstvw.MultiSelect = false;
+            this.EDExtracterLstvw.Name = "EDExtracterLstvw";
+            this.EDExtracterLstvw.ShowItemToolTips = true;
+            this.EDExtracterLstvw.Size = new System.Drawing.Size(471, 211);
+            this.EDExtracterLstvw.TabIndex = 43;
+            this.EDExtracterLstvw.UseCompatibleStateImageBehavior = false;
+            this.EDExtracterLstvw.View = System.Windows.Forms.View.Details;
+            // 
+            // ValueCol
+            // 
+            this.ValueCol.Text = "Value";
+            this.ValueCol.Width = 84;
+            // 
+            // EncodedCol
+            // 
+            this.EncodedCol.Text = "Encoded";
+            this.EncodedCol.Width = 109;
+            // 
+            // PositionCol
+            // 
+            this.PositionCol.Text = "Position";
+            this.PositionCol.Width = 71;
+            // 
+            // EDExtractValuesBtn
+            // 
+            this.EDExtractValuesBtn.BackColor = System.Drawing.Color.Transparent;
+            this.EDExtractValuesBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.EDExtractValuesBtn.Enabled = false;
+            this.EDExtractValuesBtn.Location = new System.Drawing.Point(365, 68);
+            this.EDExtractValuesBtn.Name = "EDExtractValuesBtn";
+            this.EDExtractValuesBtn.Size = new System.Drawing.Size(100, 22);
+            this.EDExtractValuesBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDExtractValuesBtn.TabIndex = 42;
+            this.EDExtractValuesBtn.Text = "Extract Values";
+            // 
+            // EDEncodedBlocksLbl
+            // 
+            this.EDEncodedBlocksLbl.AutoSize = true;
+            this.EDEncodedBlocksLbl.Location = new System.Drawing.Point(4, 72);
+            this.EDEncodedBlocksLbl.Name = "EDEncodedBlocksLbl";
+            this.EDEncodedBlocksLbl.Size = new System.Drawing.Size(94, 13);
+            this.EDEncodedBlocksLbl.TabIndex = 40;
+            this.EDEncodedBlocksLbl.Text = "Encoded Block(s):";
+            // 
+            // EDEncodedBlocksTxt
+            // 
+            this.EDEncodedBlocksTxt.Enabled = false;
+            this.EDEncodedBlocksTxt.Location = new System.Drawing.Point(98, 69);
+            this.EDEncodedBlocksTxt.Name = "EDEncodedBlocksTxt";
+            this.EDEncodedBlocksTxt.Size = new System.Drawing.Size(261, 20);
+            this.EDEncodedBlocksTxt.TabIndex = 41;
+            this.EDEncodedBlocksTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // EDMiddleGlowPnl
+            // 
+            this.EDMiddleGlowPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDMiddleGlowPnl.Location = new System.Drawing.Point(6, 61);
+            this.EDMiddleGlowPnl.Name = "EDMiddleGlowPnl";
+            this.EDMiddleGlowPnl.Size = new System.Drawing.Size(459, 1);
+            this.EDMiddleGlowPnl.TabIndex = 39;
+            // 
+            // EDShortOutputTxt
+            // 
+            this.EDShortOutputTxt.Location = new System.Drawing.Point(239, 33);
+            this.EDShortOutputTxt.Name = "EDShortOutputTxt";
+            this.EDShortOutputTxt.Size = new System.Drawing.Size(122, 20);
+            this.EDShortOutputTxt.TabIndex = 38;
+            this.EDShortOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // EDIntegerOutputTxt
+            // 
+            this.EDIntegerOutputTxt.Location = new System.Drawing.Point(239, 5);
+            this.EDIntegerOutputTxt.Name = "EDIntegerOutputTxt";
+            this.EDIntegerOutputTxt.Size = new System.Drawing.Size(122, 20);
+            this.EDIntegerOutputTxt.TabIndex = 37;
+            this.EDIntegerOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // EDShortInputTxt
+            // 
+            this.EDShortInputTxt.Location = new System.Drawing.Point(110, 33);
+            this.EDShortInputTxt.Name = "EDShortInputTxt";
+            this.EDShortInputTxt.Size = new System.Drawing.Size(122, 20);
+            this.EDShortInputTxt.TabIndex = 36;
+            this.EDShortInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // EDEncodeShortBtn
+            // 
+            this.EDEncodeShortBtn.BackColor = System.Drawing.Color.Transparent;
+            this.EDEncodeShortBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.EDEncodeShortBtn.Location = new System.Drawing.Point(6, 32);
+            this.EDEncodeShortBtn.Name = "EDEncodeShortBtn";
+            this.EDEncodeShortBtn.Size = new System.Drawing.Size(98, 23);
+            this.EDEncodeShortBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDEncodeShortBtn.TabIndex = 33;
+            this.EDEncodeShortBtn.Text = "Encode Short";
+            this.EDEncodeShortBtn.Click += new System.EventHandler(this.EDEncodeShortBtn_Click);
+            // 
+            // EDEncodeIntegerBtn
+            // 
+            this.EDEncodeIntegerBtn.BackColor = System.Drawing.Color.Transparent;
+            this.EDEncodeIntegerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.EDEncodeIntegerBtn.Location = new System.Drawing.Point(6, 3);
+            this.EDEncodeIntegerBtn.Name = "EDEncodeIntegerBtn";
+            this.EDEncodeIntegerBtn.Size = new System.Drawing.Size(98, 23);
+            this.EDEncodeIntegerBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDEncodeIntegerBtn.TabIndex = 32;
+            this.EDEncodeIntegerBtn.Text = "Encode Integer";
+            this.EDEncodeIntegerBtn.Click += new System.EventHandler(this.EDEncodeIntegerBtn_Click);
+            // 
+            // EDDecodeShortBtn
+            // 
+            this.EDDecodeShortBtn.BackColor = System.Drawing.Color.Transparent;
+            this.EDDecodeShortBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.EDDecodeShortBtn.Location = new System.Drawing.Point(367, 32);
+            this.EDDecodeShortBtn.Name = "EDDecodeShortBtn";
+            this.EDDecodeShortBtn.Size = new System.Drawing.Size(98, 23);
+            this.EDDecodeShortBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDDecodeShortBtn.TabIndex = 35;
+            this.EDDecodeShortBtn.Text = "Decode Short";
+            this.EDDecodeShortBtn.Click += new System.EventHandler(this.EDDecodeShortBtn_Click);
+            // 
+            // EDDecodeIntegerBtn
+            // 
+            this.EDDecodeIntegerBtn.BackColor = System.Drawing.Color.Transparent;
+            this.EDDecodeIntegerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.EDDecodeIntegerBtn.Location = new System.Drawing.Point(367, 3);
+            this.EDDecodeIntegerBtn.Name = "EDDecodeIntegerBtn";
+            this.EDDecodeIntegerBtn.Size = new System.Drawing.Size(98, 23);
+            this.EDDecodeIntegerBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDDecodeIntegerBtn.TabIndex = 34;
+            this.EDDecodeIntegerBtn.Text = "Decode Integer";
+            this.EDDecodeIntegerBtn.Click += new System.EventHandler(this.EDDecodeIntegerBtn_Click);
+            // 
+            // EDIntegerInputTxt
+            // 
+            this.EDIntegerInputTxt.Location = new System.Drawing.Point(110, 5);
+            this.EDIntegerInputTxt.Name = "EDIntegerInputTxt";
+            this.EDIntegerInputTxt.Size = new System.Drawing.Size(122, 20);
+            this.EDIntegerInputTxt.TabIndex = 31;
+            this.EDIntegerInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // ExtensionsTab
             // 
             this.ExtensionsTab.Controls.Add(this.ETExtensionAOTChckbx);
@@ -606,12 +1261,35 @@
             this.ETInstallExtensionBtn.TabIndex = 1;
             this.ETInstallExtensionBtn.Text = "Install Extension";
             // 
-            // toolStripStatusLabel1
+            // ICTypeCol
             // 
-            this.toolStripStatusLabel1.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.toolStripStatusLabel1.Name = "toolStripStatusLabel1";
-            this.toolStripStatusLabel1.Size = new System.Drawing.Size(123, 19);
-            this.toolStripStatusLabel1.Text = "Schedules Active: 0/0";
+            this.ICTypeCol.Text = "Type";
+            this.ICTypeCol.Width = 72;
+            // 
+            // ICValueCol
+            // 
+            this.ICValueCol.Text = "Value";
+            this.ICValueCol.Width = 137;
+            // 
+            // ICEncodedCol
+            // 
+            this.ICEncodedCol.Text = "Encoded";
+            this.ICEncodedCol.Width = 150;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Type";
+            this.columnHeader1.Width = 72;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Value";
+            this.columnHeader2.Width = 137;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Encoded";
+            this.columnHeader3.Width = 150;
             // 
             // MainFrm
             // 
@@ -633,10 +1311,18 @@
             this.InjectionTab.ResumeLayout(false);
             this.InjectionTab.PerformLayout();
             this.InjectionTabs.ResumeLayout(false);
+            this.ConstructerTab.ResumeLayout(false);
+            this.ConstructerTab.PerformLayout();
+            this.ICConstructMenu.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.ICCountTxt)).EndInit();
+            this.PrimitiveTab.ResumeLayout(false);
+            this.PrimitiveTab.PerformLayout();
             this.SchedulerTab.ResumeLayout(false);
             this.SchedulerTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ISBurstTxt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.ISIntervalTxt)).EndInit();
+            this.EncoderDecoderTab.ResumeLayout(false);
+            this.EncoderDecoderTab.PerformLayout();
             this.ExtensionsTab.ResumeLayout(false);
             this.ExtensionsTab.PerformLayout();
             this.ETExtensionMenu.ResumeLayout(false);
@@ -696,5 +1382,64 @@
         public Sulakore.Components.SKoreButton ISRemoveBtn;
         public Sulakore.Components.SKoreButton ISCreateBtn;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.TabPage PrimitiveTab;
+        public Sulakore.Components.SKoreButton IPInsertBooleanBtn;
+        public Sulakore.Components.SKoreButton IPInsertStringBtn;
+        public Sulakore.Components.SKoreButton IPInsertIntegerBtn;
+        public Sulakore.Components.SKoreButton IPInserHeaderBtn;
+        private System.Windows.Forms.Label IPIsCorruptedLbl;
+        private System.Windows.Forms.Label IPPacketInfoLbl;
+        private System.Windows.Forms.TextBox IPPrimitiveTxt;
+        private System.Windows.Forms.TabPage ConstructerTab;
+        private System.Windows.Forms.Panel ICChunksRightGlowPnl;
+        private System.Windows.Forms.Panel ICChunksLeftGlowPnl;
+        private System.Windows.Forms.Label ICChunkCountLbl;
+        private System.Windows.Forms.NumericUpDown ICCountTxt;
+        private System.Windows.Forms.Label ICCountLbl;
+        private Sulakore.Components.SKoreButton ICRemoveBtn;
+        private Sulakore.Components.SKoreButton ICMoveDownBtn;
+        private Sulakore.Components.SKoreButton ICMoveUpBtn;
+        private Sulakore.Components.SKoreButton ICClearBtn;
+        private Sulakore.Components.SKoreButton ICAppendBooleanBtn;
+        private Sulakore.Components.SKoreButton ICAppendStringBtn;
+        private Sulakore.Components.SKoreButton ICAppendIntegerBtn;
+        private System.Windows.Forms.Label ICHeaderLbl;
+        private System.Windows.Forms.TextBox ICHeaderTxt;
+        private System.Windows.Forms.Label ICValueLbl;
+        private System.Windows.Forms.TextBox ICValueTxt;
+        private System.Windows.Forms.TabPage EncoderDecoderTab;
+        private System.Windows.Forms.ColumnHeader ICTypeCol;
+        private System.Windows.Forms.ColumnHeader ICValueCol;
+        private System.Windows.Forms.ColumnHeader ICEncodedCol;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.ColumnHeader columnHeader3;
+        private Sulakore.Components.SKoreListView EDExtracterLstvw;
+        private System.Windows.Forms.ColumnHeader ValueCol;
+        private System.Windows.Forms.ColumnHeader EncodedCol;
+        private System.Windows.Forms.ColumnHeader PositionCol;
+        private Sulakore.Components.SKoreButton EDExtractValuesBtn;
+        private System.Windows.Forms.Label EDEncodedBlocksLbl;
+        private System.Windows.Forms.TextBox EDEncodedBlocksTxt;
+        private System.Windows.Forms.Panel EDMiddleGlowPnl;
+        private System.Windows.Forms.TextBox EDShortOutputTxt;
+        private System.Windows.Forms.TextBox EDIntegerOutputTxt;
+        private System.Windows.Forms.TextBox EDShortInputTxt;
+        private Sulakore.Components.SKoreButton EDEncodeShortBtn;
+        private Sulakore.Components.SKoreButton EDEncodeIntegerBtn;
+        private Sulakore.Components.SKoreButton EDDecodeShortBtn;
+        private Sulakore.Components.SKoreButton EDDecodeIntegerBtn;
+        private System.Windows.Forms.TextBox EDIntegerInputTxt;
+        private Sulakore.Components.SKoreConstructView ICConstructerLstvw;
+        private System.Windows.Forms.ColumnHeader ICSTypeCol;
+        private System.Windows.Forms.ColumnHeader ICSValueCol;
+        private System.Windows.Forms.ColumnHeader ICSEncodedCol;
+        private System.Windows.Forms.ContextMenuStrip ICConstructMenu;
+        private System.Windows.Forms.ToolStripMenuItem ICCopyPacketBtn;
+        private System.Windows.Forms.ToolStripMenuItem ICTransferToBtn;
+        private System.Windows.Forms.ToolStripMenuItem ICSchedulerBtn;
+        private System.Windows.Forms.ToolStripMenuItem ICPrimitiveBtn;
+        private System.Windows.Forms.ToolStripSeparator ICTransferSeparator;
+        private System.Windows.Forms.ToolStripMenuItem ICInjectionBtn;
     }
 }

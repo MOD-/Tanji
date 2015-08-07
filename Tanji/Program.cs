@@ -32,6 +32,9 @@ using Sulakore.Communication;
 
 namespace Tanji
 {
+    /// <summary>
+    /// Mika was here
+    /// </summary>
     static class Program
     {
         private const string MUST_RUN_AS_ADMIN
