@@ -22,6 +22,7 @@
     See License.txt in the project root for license information.
 */
 
+// Not a test.
 using System;
 using System.Windows.Forms;
 using System.Security.Principal;
@@ -32,9 +33,6 @@ using Sulakore.Communication;
 
 namespace Tanji
 {
-    /// <summary>
-    /// Mika was here
-    /// </summary>
     static class Program
     {
         private const string MUST_RUN_AS_ADMIN
