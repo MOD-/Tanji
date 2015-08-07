@@ -22,7 +22,6 @@
     See License.txt in the project root for license information.
 */
 
-// Not a test.
 using System;
 using System.Windows.Forms;
 using System.Security.Principal;
