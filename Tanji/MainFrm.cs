@@ -46,7 +46,7 @@ namespace Tanji
     public partial class MainFrm : Form
     {
         public bool IsRetro { get; set; }
-        public bool IsDebugging { get; } = true;
+        public bool IsDebugging { get; } = false;
 
         public HConnection Connection { get; }
         public HGameData GameData { get; set; }
