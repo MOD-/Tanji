@@ -2,9 +2,9 @@
 using System.Drawing;
 using System.Windows.Forms;
 
+using Sulakore;
 using Sulakore.Protocol;
 using Sulakore.Protocol.Encoders;
-using Sulakore;
 
 namespace Tanji.Managers.Injection
 {
