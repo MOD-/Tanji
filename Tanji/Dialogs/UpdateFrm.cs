@@ -23,11 +23,12 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 
 using Tanji.Utilities;
-using System.Diagnostics;
+using System.Collections.Generic;
 
 namespace Tanji.Dialogs
 {
@@ -49,7 +50,7 @@ namespace Tanji.Dialogs
         public async Task<bool> CheckForUpdatesAsync()
         {
             var releases = Releases ?? (Releases = await GitReleases
-                .CreateAsync("ArachisH", "Tanji").ConfigureAwait(false));
+                .CreateAsync("ArachisH", "Tanji"));
 
             if (releases.Count < 1) return false;
             var remoteVer = new Version(releases[0].TagName.Substring(1));
@@ -57,7 +58,10 @@ namespace Tanji.Dialogs
             if (LocalVersion < remoteVer)
             {
                 var renderedBody = await GitReleases.RenderBodyToHTML(releases[0]);
-                GitBody.DocumentText = renderedBody;
+                GitBodyWb.DocumentText = renderedBody;
+
+                Text = string.Format(Text,
+                    releases[0].Name, releases[0].TagName);
             }
 
             return LocalVersion < remoteVer;

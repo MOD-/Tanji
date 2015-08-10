@@ -63,23 +63,23 @@
             this.CTHeaderTxt = new System.Windows.Forms.TextBox();
             this.CTValueLbl = new System.Windows.Forms.Label();
             this.SchedulerTab = new System.Windows.Forms.TabPage();
-            this.ISClearBtn = new Sulakore.Components.SKoreButton();
-            this.ISStopAllBtn = new Sulakore.Components.SKoreButton();
-            this.ISStartAllBtn = new Sulakore.Components.SKoreButton();
-            this.ISRemoveBtn = new Sulakore.Components.SKoreButton();
-            this.ISCreateBtn = new Sulakore.Components.SKoreButton();
-            this.ISAutoStartChckbx = new System.Windows.Forms.CheckBox();
-            this.ISBurstLbl = new System.Windows.Forms.Label();
-            this.ISBurstTxt = new System.Windows.Forms.NumericUpDown();
-            this.ISIntervalLbl = new System.Windows.Forms.Label();
-            this.ISIntervalTxt = new System.Windows.Forms.NumericUpDown();
-            this.ISDestinationLbl = new System.Windows.Forms.Label();
-            this.ISDestinationTxt = new System.Windows.Forms.ComboBox();
-            this.ISPacketLbl = new System.Windows.Forms.Label();
-            this.ISPacketTxt = new System.Windows.Forms.TextBox();
-            this.ISDescriptionLbl = new System.Windows.Forms.Label();
-            this.ISDescriptionTxt = new System.Windows.Forms.TextBox();
-            this.ISSchedulerVw = new Sulakore.Components.SKoreScheduleView();
+            this.STIntervalLbl = new System.Windows.Forms.Label();
+            this.STClearBtn = new Sulakore.Components.SKoreButton();
+            this.STStopAllBtn = new Sulakore.Components.SKoreButton();
+            this.STStartAllBtn = new Sulakore.Components.SKoreButton();
+            this.STRemoveBtn = new Sulakore.Components.SKoreButton();
+            this.STCreateBtn = new Sulakore.Components.SKoreButton();
+            this.STBurstLbl = new System.Windows.Forms.Label();
+            this.STBurstTxt = new System.Windows.Forms.NumericUpDown();
+            this.STIntervalTxt = new System.Windows.Forms.NumericUpDown();
+            this.STDestinationLbl = new System.Windows.Forms.Label();
+            this.STDestinationTxt = new System.Windows.Forms.ComboBox();
+            this.STPacketLbl = new System.Windows.Forms.Label();
+            this.STPacketTxt = new System.Windows.Forms.TextBox();
+            this.STDescriptionLbl = new System.Windows.Forms.Label();
+            this.STDescriptionTxt = new System.Windows.Forms.TextBox();
+            this.STAutoStartChckbx = new System.Windows.Forms.CheckBox();
+            this.STSchedulerVw = new Sulakore.Components.SKoreScheduleView();
             this.STPacketCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STDestinationCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STBurstCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -90,7 +90,7 @@
             this.PTPacketInfoLbl = new System.Windows.Forms.Label();
             this.PTPacketTxt = new System.Windows.Forms.TextBox();
             this.PTPrimitiveMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.PTInsertParameterBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PTInsertFormatParameterBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PTIntegerBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PTStringBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PTBooleanBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -99,22 +99,24 @@
             this.PTCutBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PTCopyBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PTPasteBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PTMenuSeperatorBottom = new System.Windows.Forms.ToolStripSeparator();
+            this.PTUndoBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PTSelectAllBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ITPacketTxt = new System.Windows.Forms.ComboBox();
             this.EncoderDecoderTab = new System.Windows.Forms.TabPage();
-            this.EDExtractValuesBtn = new Sulakore.Components.SKoreButton();
-            this.EDEncodedBlocksLbl = new System.Windows.Forms.Label();
-            this.EDEncodedBlocksTxt = new System.Windows.Forms.TextBox();
-            this.EDMiddleGlowPnl = new System.Windows.Forms.Panel();
-            this.EDShortOutputTxt = new System.Windows.Forms.TextBox();
-            this.EDIntegerOutputTxt = new System.Windows.Forms.TextBox();
-            this.EDShortInputTxt = new System.Windows.Forms.TextBox();
-            this.EDEncodeShortBtn = new Sulakore.Components.SKoreButton();
-            this.EDEncodeIntegerBtn = new Sulakore.Components.SKoreButton();
-            this.EDDecodeShortBtn = new Sulakore.Components.SKoreButton();
-            this.EDDecodeIntegerBtn = new Sulakore.Components.SKoreButton();
-            this.EDIntegerInputTxt = new System.Windows.Forms.TextBox();
-            this.EDExtracterLstvw = new Sulakore.Components.SKoreListView();
+            this.EDTIntegerInputTxt = new System.Windows.Forms.NumericUpDown();
+            this.EDTShortInputTxt = new System.Windows.Forms.NumericUpDown();
+            this.EDTDecodeValuesBtn = new Sulakore.Components.SKoreButton();
+            this.EDTEncodedValuesLbl = new System.Windows.Forms.Label();
+            this.EDTEncodedValuesTxt = new System.Windows.Forms.TextBox();
+            this.EDTTopGlowPnl = new System.Windows.Forms.Panel();
+            this.EDTShortOutputTxt = new System.Windows.Forms.TextBox();
+            this.EDTIntegerOutputTxt = new System.Windows.Forms.TextBox();
+            this.EDTEncodeShortBtn = new Sulakore.Components.SKoreButton();
+            this.EDTEncodeIntegerBtn = new Sulakore.Components.SKoreButton();
+            this.EDTDecodeShortBtn = new Sulakore.Components.SKoreButton();
+            this.EDTDecodeIntegerBtn = new Sulakore.Components.SKoreButton();
+            this.EDTDecodedVw = new Sulakore.Components.SKoreListView();
             this.ValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.EncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PositionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -139,8 +141,6 @@
             this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.PTMenuSeperatorBottom = new System.Windows.Forms.ToolStripSeparator();
-            this.PTUndoBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.TanjiStrip.SuspendLayout();
             this.TanjiTabs.SuspendLayout();
             this.InjectionTab.SuspendLayout();
@@ -148,11 +148,13 @@
             this.ConstructerTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.CTCountTxt)).BeginInit();
             this.SchedulerTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ISBurstTxt)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ISIntervalTxt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.STBurstTxt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.STIntervalTxt)).BeginInit();
             this.PrimitiveTab.SuspendLayout();
             this.PTPrimitiveMenu.SuspendLayout();
             this.EncoderDecoderTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.EDTIntegerInputTxt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.EDTShortInputTxt)).BeginInit();
             this.ExtensionsTab.SuspendLayout();
             this.ETExtensionMenu.SuspendLayout();
             this.SuspendLayout();
@@ -541,23 +543,23 @@
             // 
             // SchedulerTab
             // 
-            this.SchedulerTab.Controls.Add(this.ISClearBtn);
-            this.SchedulerTab.Controls.Add(this.ISStopAllBtn);
-            this.SchedulerTab.Controls.Add(this.ISStartAllBtn);
-            this.SchedulerTab.Controls.Add(this.ISRemoveBtn);
-            this.SchedulerTab.Controls.Add(this.ISCreateBtn);
-            this.SchedulerTab.Controls.Add(this.ISAutoStartChckbx);
-            this.SchedulerTab.Controls.Add(this.ISBurstLbl);
-            this.SchedulerTab.Controls.Add(this.ISBurstTxt);
-            this.SchedulerTab.Controls.Add(this.ISIntervalLbl);
-            this.SchedulerTab.Controls.Add(this.ISIntervalTxt);
-            this.SchedulerTab.Controls.Add(this.ISDestinationLbl);
-            this.SchedulerTab.Controls.Add(this.ISDestinationTxt);
-            this.SchedulerTab.Controls.Add(this.ISPacketLbl);
-            this.SchedulerTab.Controls.Add(this.ISPacketTxt);
-            this.SchedulerTab.Controls.Add(this.ISDescriptionLbl);
-            this.SchedulerTab.Controls.Add(this.ISDescriptionTxt);
-            this.SchedulerTab.Controls.Add(this.ISSchedulerVw);
+            this.SchedulerTab.Controls.Add(this.STIntervalLbl);
+            this.SchedulerTab.Controls.Add(this.STClearBtn);
+            this.SchedulerTab.Controls.Add(this.STStopAllBtn);
+            this.SchedulerTab.Controls.Add(this.STStartAllBtn);
+            this.SchedulerTab.Controls.Add(this.STRemoveBtn);
+            this.SchedulerTab.Controls.Add(this.STCreateBtn);
+            this.SchedulerTab.Controls.Add(this.STBurstLbl);
+            this.SchedulerTab.Controls.Add(this.STBurstTxt);
+            this.SchedulerTab.Controls.Add(this.STIntervalTxt);
+            this.SchedulerTab.Controls.Add(this.STDestinationLbl);
+            this.SchedulerTab.Controls.Add(this.STDestinationTxt);
+            this.SchedulerTab.Controls.Add(this.STPacketLbl);
+            this.SchedulerTab.Controls.Add(this.STPacketTxt);
+            this.SchedulerTab.Controls.Add(this.STDescriptionLbl);
+            this.SchedulerTab.Controls.Add(this.STDescriptionTxt);
+            this.SchedulerTab.Controls.Add(this.STAutoStartChckbx);
+            this.SchedulerTab.Controls.Add(this.STSchedulerVw);
             this.SchedulerTab.Location = new System.Drawing.Point(4, 4);
             this.SchedulerTab.Name = "SchedulerTab";
             this.SchedulerTab.Padding = new System.Windows.Forms.Padding(3);
@@ -566,212 +568,211 @@
             this.SchedulerTab.Text = "Scheduler";
             this.SchedulerTab.UseVisualStyleBackColor = true;
             // 
-            // ISClearBtn
+            // STIntervalLbl
             // 
-            this.ISClearBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ISClearBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ISClearBtn.Enabled = false;
-            this.ISClearBtn.Location = new System.Drawing.Point(158, 240);
-            this.ISClearBtn.Name = "ISClearBtn";
-            this.ISClearBtn.Size = new System.Drawing.Size(76, 22);
-            this.ISClearBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ISClearBtn.TabIndex = 58;
-            this.ISClearBtn.Text = "Clear";
+            this.STIntervalLbl.AutoSize = true;
+            this.STIntervalLbl.Location = new System.Drawing.Point(314, 162);
+            this.STIntervalLbl.Name = "STIntervalLbl";
+            this.STIntervalLbl.Size = new System.Drawing.Size(64, 13);
+            this.STIntervalLbl.TabIndex = 50;
+            this.STIntervalLbl.Text = "Interval (ms)";
             // 
-            // ISStopAllBtn
+            // STClearBtn
             // 
-            this.ISStopAllBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ISStopAllBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ISStopAllBtn.Enabled = false;
-            this.ISStopAllBtn.Location = new System.Drawing.Point(82, 240);
-            this.ISStopAllBtn.Name = "ISStopAllBtn";
-            this.ISStopAllBtn.Size = new System.Drawing.Size(70, 22);
-            this.ISStopAllBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ISStopAllBtn.TabIndex = 56;
-            this.ISStopAllBtn.Text = "Stop All";
+            this.STClearBtn.BackColor = System.Drawing.Color.Transparent;
+            this.STClearBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.STClearBtn.Enabled = false;
+            this.STClearBtn.Location = new System.Drawing.Point(159, 243);
+            this.STClearBtn.Name = "STClearBtn";
+            this.STClearBtn.Size = new System.Drawing.Size(74, 22);
+            this.STClearBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.STClearBtn.TabIndex = 58;
+            this.STClearBtn.Text = "Clear";
             // 
-            // ISStartAllBtn
+            // STStopAllBtn
             // 
-            this.ISStartAllBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ISStartAllBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ISStartAllBtn.Enabled = false;
-            this.ISStartAllBtn.Location = new System.Drawing.Point(6, 240);
-            this.ISStartAllBtn.Name = "ISStartAllBtn";
-            this.ISStartAllBtn.Size = new System.Drawing.Size(70, 22);
-            this.ISStartAllBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ISStartAllBtn.TabIndex = 57;
-            this.ISStartAllBtn.Text = "Start All";
+            this.STStopAllBtn.BackColor = System.Drawing.Color.Transparent;
+            this.STStopAllBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.STStopAllBtn.Enabled = false;
+            this.STStopAllBtn.Location = new System.Drawing.Point(81, 243);
+            this.STStopAllBtn.Name = "STStopAllBtn";
+            this.STStopAllBtn.Size = new System.Drawing.Size(72, 22);
+            this.STStopAllBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.STStopAllBtn.TabIndex = 56;
+            this.STStopAllBtn.Text = "Stop All";
             // 
-            // ISRemoveBtn
+            // STStartAllBtn
             // 
-            this.ISRemoveBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ISRemoveBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ISRemoveBtn.Enabled = false;
-            this.ISRemoveBtn.Location = new System.Drawing.Point(240, 240);
-            this.ISRemoveBtn.Name = "ISRemoveBtn";
-            this.ISRemoveBtn.Size = new System.Drawing.Size(70, 22);
-            this.ISRemoveBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ISRemoveBtn.TabIndex = 55;
-            this.ISRemoveBtn.Text = "Remove";
+            this.STStartAllBtn.BackColor = System.Drawing.Color.Transparent;
+            this.STStartAllBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.STStartAllBtn.Enabled = false;
+            this.STStartAllBtn.Location = new System.Drawing.Point(3, 243);
+            this.STStartAllBtn.Name = "STStartAllBtn";
+            this.STStartAllBtn.Size = new System.Drawing.Size(72, 22);
+            this.STStartAllBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.STStartAllBtn.TabIndex = 57;
+            this.STStartAllBtn.Text = "Start All";
             // 
-            // ISCreateBtn
+            // STRemoveBtn
             // 
-            this.ISCreateBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ISCreateBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ISCreateBtn.Location = new System.Drawing.Point(316, 240);
-            this.ISCreateBtn.Name = "ISCreateBtn";
-            this.ISCreateBtn.Size = new System.Drawing.Size(70, 22);
-            this.ISCreateBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ISCreateBtn.TabIndex = 54;
-            this.ISCreateBtn.Text = "Create";
+            this.STRemoveBtn.BackColor = System.Drawing.Color.Transparent;
+            this.STRemoveBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.STRemoveBtn.Enabled = false;
+            this.STRemoveBtn.Location = new System.Drawing.Point(239, 243);
+            this.STRemoveBtn.Name = "STRemoveBtn";
+            this.STRemoveBtn.Size = new System.Drawing.Size(72, 22);
+            this.STRemoveBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.STRemoveBtn.TabIndex = 55;
+            this.STRemoveBtn.Text = "Remove";
             // 
-            // ISAutoStartChckbx
+            // STCreateBtn
             // 
-            this.ISAutoStartChckbx.AutoSize = true;
-            this.ISAutoStartChckbx.Checked = true;
-            this.ISAutoStartChckbx.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.ISAutoStartChckbx.Location = new System.Drawing.Point(244, 158);
-            this.ISAutoStartChckbx.Name = "ISAutoStartChckbx";
-            this.ISAutoStartChckbx.Size = new System.Drawing.Size(73, 17);
-            this.ISAutoStartChckbx.TabIndex = 53;
-            this.ISAutoStartChckbx.Text = "Auto Start";
-            this.ISAutoStartChckbx.UseVisualStyleBackColor = true;
+            this.STCreateBtn.BackColor = System.Drawing.Color.Transparent;
+            this.STCreateBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.STCreateBtn.Location = new System.Drawing.Point(317, 243);
+            this.STCreateBtn.Name = "STCreateBtn";
+            this.STCreateBtn.Size = new System.Drawing.Size(72, 22);
+            this.STCreateBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.STCreateBtn.TabIndex = 54;
+            this.STCreateBtn.Text = "Create";
             // 
-            // ISBurstLbl
+            // STBurstLbl
             // 
-            this.ISBurstLbl.AutoSize = true;
-            this.ISBurstLbl.Location = new System.Drawing.Point(313, 198);
-            this.ISBurstLbl.Name = "ISBurstLbl";
-            this.ISBurstLbl.Size = new System.Drawing.Size(31, 13);
-            this.ISBurstLbl.TabIndex = 52;
-            this.ISBurstLbl.Text = "Burst";
+            this.STBurstLbl.AutoSize = true;
+            this.STBurstLbl.Location = new System.Drawing.Point(314, 201);
+            this.STBurstLbl.Name = "STBurstLbl";
+            this.STBurstLbl.Size = new System.Drawing.Size(31, 13);
+            this.STBurstLbl.TabIndex = 52;
+            this.STBurstLbl.Text = "Burst";
             // 
-            // ISBurstTxt
+            // STBurstTxt
             // 
-            this.ISBurstTxt.Location = new System.Drawing.Point(316, 214);
-            this.ISBurstTxt.Minimum = new decimal(new int[] {
+            this.STBurstTxt.Location = new System.Drawing.Point(317, 217);
+            this.STBurstTxt.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.ISBurstTxt.Name = "ISBurstTxt";
-            this.ISBurstTxt.Size = new System.Drawing.Size(70, 20);
-            this.ISBurstTxt.TabIndex = 51;
-            this.ISBurstTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.ISBurstTxt.Value = new decimal(new int[] {
+            this.STBurstTxt.Name = "STBurstTxt";
+            this.STBurstTxt.Size = new System.Drawing.Size(72, 20);
+            this.STBurstTxt.TabIndex = 51;
+            this.STBurstTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.STBurstTxt.Value = new decimal(new int[] {
             1,
             0,
             0,
             0});
             // 
-            // ISIntervalLbl
+            // STIntervalTxt
             // 
-            this.ISIntervalLbl.AutoSize = true;
-            this.ISIntervalLbl.Location = new System.Drawing.Point(313, 159);
-            this.ISIntervalLbl.Name = "ISIntervalLbl";
-            this.ISIntervalLbl.Size = new System.Drawing.Size(64, 13);
-            this.ISIntervalLbl.TabIndex = 50;
-            this.ISIntervalLbl.Text = "Interval (ms)";
-            // 
-            // ISIntervalTxt
-            // 
-            this.ISIntervalTxt.Location = new System.Drawing.Point(316, 175);
-            this.ISIntervalTxt.Maximum = new decimal(new int[] {
+            this.STIntervalTxt.Location = new System.Drawing.Point(317, 178);
+            this.STIntervalTxt.Maximum = new decimal(new int[] {
             -1,
             0,
             0,
             0});
-            this.ISIntervalTxt.Minimum = new decimal(new int[] {
+            this.STIntervalTxt.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.ISIntervalTxt.Name = "ISIntervalTxt";
-            this.ISIntervalTxt.Size = new System.Drawing.Size(70, 20);
-            this.ISIntervalTxt.TabIndex = 49;
-            this.ISIntervalTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.ISIntervalTxt.Value = new decimal(new int[] {
+            this.STIntervalTxt.Name = "STIntervalTxt";
+            this.STIntervalTxt.Size = new System.Drawing.Size(72, 20);
+            this.STIntervalTxt.TabIndex = 49;
+            this.STIntervalTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.STIntervalTxt.Value = new decimal(new int[] {
             100,
             0,
             0,
             0});
             // 
-            // ISDestinationLbl
+            // STDestinationLbl
             // 
-            this.ISDestinationLbl.AutoSize = true;
-            this.ISDestinationLbl.Location = new System.Drawing.Point(237, 197);
-            this.ISDestinationLbl.Name = "ISDestinationLbl";
-            this.ISDestinationLbl.Size = new System.Drawing.Size(60, 13);
-            this.ISDestinationLbl.TabIndex = 48;
-            this.ISDestinationLbl.Text = "Destination";
+            this.STDestinationLbl.AutoSize = true;
+            this.STDestinationLbl.Location = new System.Drawing.Point(236, 201);
+            this.STDestinationLbl.Name = "STDestinationLbl";
+            this.STDestinationLbl.Size = new System.Drawing.Size(60, 13);
+            this.STDestinationLbl.TabIndex = 48;
+            this.STDestinationLbl.Text = "Destination";
             // 
-            // ISDestinationTxt
+            // STDestinationTxt
             // 
-            this.ISDestinationTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.ISDestinationTxt.FormattingEnabled = true;
-            this.ISDestinationTxt.Items.AddRange(new object[] {
+            this.STDestinationTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.STDestinationTxt.FormattingEnabled = true;
+            this.STDestinationTxt.Items.AddRange(new object[] {
             "Client",
             "Server"});
-            this.ISDestinationTxt.Location = new System.Drawing.Point(240, 213);
-            this.ISDestinationTxt.Name = "ISDestinationTxt";
-            this.ISDestinationTxt.Size = new System.Drawing.Size(70, 21);
-            this.ISDestinationTxt.TabIndex = 47;
+            this.STDestinationTxt.Location = new System.Drawing.Point(239, 217);
+            this.STDestinationTxt.Name = "STDestinationTxt";
+            this.STDestinationTxt.Size = new System.Drawing.Size(72, 21);
+            this.STDestinationTxt.TabIndex = 47;
             // 
-            // ISPacketLbl
+            // STPacketLbl
             // 
-            this.ISPacketLbl.AutoSize = true;
-            this.ISPacketLbl.Location = new System.Drawing.Point(3, 159);
-            this.ISPacketLbl.Name = "ISPacketLbl";
-            this.ISPacketLbl.Size = new System.Drawing.Size(41, 13);
-            this.ISPacketLbl.TabIndex = 46;
-            this.ISPacketLbl.Text = "Packet";
+            this.STPacketLbl.AutoSize = true;
+            this.STPacketLbl.Location = new System.Drawing.Point(0, 162);
+            this.STPacketLbl.Name = "STPacketLbl";
+            this.STPacketLbl.Size = new System.Drawing.Size(41, 13);
+            this.STPacketLbl.TabIndex = 46;
+            this.STPacketLbl.Text = "Packet";
             // 
-            // ISPacketTxt
+            // STPacketTxt
             // 
-            this.ISPacketTxt.Location = new System.Drawing.Point(6, 175);
-            this.ISPacketTxt.MaxLength = 2147483647;
-            this.ISPacketTxt.Name = "ISPacketTxt";
-            this.ISPacketTxt.Size = new System.Drawing.Size(304, 20);
-            this.ISPacketTxt.TabIndex = 45;
+            this.STPacketTxt.Location = new System.Drawing.Point(3, 178);
+            this.STPacketTxt.MaxLength = 2147483647;
+            this.STPacketTxt.Name = "STPacketTxt";
+            this.STPacketTxt.Size = new System.Drawing.Size(308, 20);
+            this.STPacketTxt.TabIndex = 45;
             // 
-            // ISDescriptionLbl
+            // STDescriptionLbl
             // 
-            this.ISDescriptionLbl.AutoSize = true;
-            this.ISDescriptionLbl.Location = new System.Drawing.Point(3, 198);
-            this.ISDescriptionLbl.Name = "ISDescriptionLbl";
-            this.ISDescriptionLbl.Size = new System.Drawing.Size(60, 13);
-            this.ISDescriptionLbl.TabIndex = 44;
-            this.ISDescriptionLbl.Text = "Description";
+            this.STDescriptionLbl.AutoSize = true;
+            this.STDescriptionLbl.Location = new System.Drawing.Point(0, 202);
+            this.STDescriptionLbl.Name = "STDescriptionLbl";
+            this.STDescriptionLbl.Size = new System.Drawing.Size(60, 13);
+            this.STDescriptionLbl.TabIndex = 44;
+            this.STDescriptionLbl.Text = "Description";
             // 
-            // ISDescriptionTxt
+            // STDescriptionTxt
             // 
-            this.ISDescriptionTxt.Location = new System.Drawing.Point(6, 214);
-            this.ISDescriptionTxt.Name = "ISDescriptionTxt";
-            this.ISDescriptionTxt.Size = new System.Drawing.Size(228, 20);
-            this.ISDescriptionTxt.TabIndex = 43;
+            this.STDescriptionTxt.Location = new System.Drawing.Point(3, 218);
+            this.STDescriptionTxt.Name = "STDescriptionTxt";
+            this.STDescriptionTxt.Size = new System.Drawing.Size(230, 20);
+            this.STDescriptionTxt.TabIndex = 43;
             // 
-            // ISSchedulerVw
+            // STAutoStartChckbx
             // 
-            this.ISSchedulerVw.CheckBoxes = true;
-            this.ISSchedulerVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.STAutoStartChckbx.AutoSize = true;
+            this.STAutoStartChckbx.Checked = true;
+            this.STAutoStartChckbx.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.STAutoStartChckbx.Location = new System.Drawing.Point(245, 161);
+            this.STAutoStartChckbx.Name = "STAutoStartChckbx";
+            this.STAutoStartChckbx.Size = new System.Drawing.Size(73, 17);
+            this.STAutoStartChckbx.TabIndex = 53;
+            this.STAutoStartChckbx.Text = "Auto Start";
+            this.STAutoStartChckbx.UseVisualStyleBackColor = true;
+            // 
+            // STSchedulerVw
+            // 
+            this.STSchedulerVw.CheckBoxes = true;
+            this.STSchedulerVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.STPacketCol,
             this.STDestinationCol,
             this.STBurstCol,
             this.STIntervalCol,
             this.STStatusCol});
-            this.ISSchedulerVw.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ISSchedulerVw.FullRowSelect = true;
-            this.ISSchedulerVw.GridLines = true;
-            this.ISSchedulerVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.ISSchedulerVw.HideSelection = false;
-            this.ISSchedulerVw.Location = new System.Drawing.Point(3, 3);
-            this.ISSchedulerVw.MultiSelect = false;
-            this.ISSchedulerVw.Name = "ISSchedulerVw";
-            this.ISSchedulerVw.ShowItemToolTips = true;
-            this.ISSchedulerVw.Size = new System.Drawing.Size(386, 153);
-            this.ISSchedulerVw.TabIndex = 0;
-            this.ISSchedulerVw.UseCompatibleStateImageBehavior = false;
-            this.ISSchedulerVw.View = System.Windows.Forms.View.Details;
+            this.STSchedulerVw.FullRowSelect = true;
+            this.STSchedulerVw.GridLines = true;
+            this.STSchedulerVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.STSchedulerVw.HideSelection = false;
+            this.STSchedulerVw.Location = new System.Drawing.Point(3, 3);
+            this.STSchedulerVw.MultiSelect = false;
+            this.STSchedulerVw.Name = "STSchedulerVw";
+            this.STSchedulerVw.ShowItemToolTips = true;
+            this.STSchedulerVw.Size = new System.Drawing.Size(386, 156);
+            this.STSchedulerVw.TabIndex = 0;
+            this.STSchedulerVw.UseCompatibleStateImageBehavior = false;
+            this.STSchedulerVw.View = System.Windows.Forms.View.Details;
             // 
             // STPacketCol
             // 
@@ -838,13 +839,14 @@
             this.PTPacketTxt.MaxLength = 2147483647;
             this.PTPacketTxt.Multiline = true;
             this.PTPacketTxt.Name = "PTPacketTxt";
+            this.PTPacketTxt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.PTPacketTxt.Size = new System.Drawing.Size(386, 246);
             this.PTPacketTxt.TabIndex = 3;
             // 
             // PTPrimitiveMenu
             // 
             this.PTPrimitiveMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.PTInsertParameterBtn,
+            this.PTInsertFormatParameterBtn,
             this.PTMenuSeparatorTop,
             this.PTCutBtn,
             this.PTCopyBtn,
@@ -853,18 +855,18 @@
             this.PTUndoBtn,
             this.PTSelectAllBtn});
             this.PTPrimitiveMenu.Name = "ConstructMenu";
-            this.PTPrimitiveMenu.Size = new System.Drawing.Size(165, 148);
+            this.PTPrimitiveMenu.Size = new System.Drawing.Size(204, 148);
             // 
-            // PTInsertParameterBtn
+            // PTInsertFormatParameterBtn
             // 
-            this.PTInsertParameterBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PTInsertFormatParameterBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.PTIntegerBtn,
             this.PTStringBtn,
             this.PTBooleanBtn,
             this.PTLengthHeaderBtn});
-            this.PTInsertParameterBtn.Name = "PTInsertParameterBtn";
-            this.PTInsertParameterBtn.Size = new System.Drawing.Size(164, 22);
-            this.PTInsertParameterBtn.Text = "Insert Parameter";
+            this.PTInsertFormatParameterBtn.Name = "PTInsertFormatParameterBtn";
+            this.PTInsertFormatParameterBtn.Size = new System.Drawing.Size(203, 22);
+            this.PTInsertFormatParameterBtn.Text = "Insert/Format Parameter";
             // 
             // PTIntegerBtn
             // 
@@ -897,34 +899,46 @@
             // PTMenuSeparatorTop
             // 
             this.PTMenuSeparatorTop.Name = "PTMenuSeparatorTop";
-            this.PTMenuSeparatorTop.Size = new System.Drawing.Size(161, 6);
+            this.PTMenuSeparatorTop.Size = new System.Drawing.Size(200, 6);
             // 
             // PTCutBtn
             // 
             this.PTCutBtn.Name = "PTCutBtn";
             this.PTCutBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.PTCutBtn.Size = new System.Drawing.Size(164, 22);
+            this.PTCutBtn.Size = new System.Drawing.Size(203, 22);
             this.PTCutBtn.Text = "Cut";
             // 
             // PTCopyBtn
             // 
             this.PTCopyBtn.Name = "PTCopyBtn";
             this.PTCopyBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.PTCopyBtn.Size = new System.Drawing.Size(164, 22);
+            this.PTCopyBtn.Size = new System.Drawing.Size(203, 22);
             this.PTCopyBtn.Text = "Copy";
             // 
             // PTPasteBtn
             // 
             this.PTPasteBtn.Name = "PTPasteBtn";
             this.PTPasteBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.PTPasteBtn.Size = new System.Drawing.Size(164, 22);
+            this.PTPasteBtn.Size = new System.Drawing.Size(203, 22);
             this.PTPasteBtn.Text = "Paste";
+            // 
+            // PTMenuSeperatorBottom
+            // 
+            this.PTMenuSeperatorBottom.Name = "PTMenuSeperatorBottom";
+            this.PTMenuSeperatorBottom.Size = new System.Drawing.Size(200, 6);
+            // 
+            // PTUndoBtn
+            // 
+            this.PTUndoBtn.Name = "PTUndoBtn";
+            this.PTUndoBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
+            this.PTUndoBtn.Size = new System.Drawing.Size(203, 22);
+            this.PTUndoBtn.Text = "Undo";
             // 
             // PTSelectAllBtn
             // 
             this.PTSelectAllBtn.Name = "PTSelectAllBtn";
             this.PTSelectAllBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.PTSelectAllBtn.Size = new System.Drawing.Size(164, 22);
+            this.PTSelectAllBtn.Size = new System.Drawing.Size(203, 22);
             this.PTSelectAllBtn.Text = "Select All";
             // 
             // ITPacketTxt
@@ -939,19 +953,19 @@
             // 
             // EncoderDecoderTab
             // 
-            this.EncoderDecoderTab.Controls.Add(this.EDExtractValuesBtn);
-            this.EncoderDecoderTab.Controls.Add(this.EDEncodedBlocksLbl);
-            this.EncoderDecoderTab.Controls.Add(this.EDEncodedBlocksTxt);
-            this.EncoderDecoderTab.Controls.Add(this.EDMiddleGlowPnl);
-            this.EncoderDecoderTab.Controls.Add(this.EDShortOutputTxt);
-            this.EncoderDecoderTab.Controls.Add(this.EDIntegerOutputTxt);
-            this.EncoderDecoderTab.Controls.Add(this.EDShortInputTxt);
-            this.EncoderDecoderTab.Controls.Add(this.EDEncodeShortBtn);
-            this.EncoderDecoderTab.Controls.Add(this.EDEncodeIntegerBtn);
-            this.EncoderDecoderTab.Controls.Add(this.EDDecodeShortBtn);
-            this.EncoderDecoderTab.Controls.Add(this.EDDecodeIntegerBtn);
-            this.EncoderDecoderTab.Controls.Add(this.EDIntegerInputTxt);
-            this.EncoderDecoderTab.Controls.Add(this.EDExtracterLstvw);
+            this.EncoderDecoderTab.Controls.Add(this.EDTIntegerInputTxt);
+            this.EncoderDecoderTab.Controls.Add(this.EDTShortInputTxt);
+            this.EncoderDecoderTab.Controls.Add(this.EDTDecodeValuesBtn);
+            this.EncoderDecoderTab.Controls.Add(this.EDTEncodedValuesLbl);
+            this.EncoderDecoderTab.Controls.Add(this.EDTEncodedValuesTxt);
+            this.EncoderDecoderTab.Controls.Add(this.EDTTopGlowPnl);
+            this.EncoderDecoderTab.Controls.Add(this.EDTShortOutputTxt);
+            this.EncoderDecoderTab.Controls.Add(this.EDTIntegerOutputTxt);
+            this.EncoderDecoderTab.Controls.Add(this.EDTEncodeShortBtn);
+            this.EncoderDecoderTab.Controls.Add(this.EDTEncodeIntegerBtn);
+            this.EncoderDecoderTab.Controls.Add(this.EDTDecodeShortBtn);
+            this.EncoderDecoderTab.Controls.Add(this.EDTDecodeIntegerBtn);
+            this.EncoderDecoderTab.Controls.Add(this.EDTDecodedVw);
             this.EncoderDecoderTab.Location = new System.Drawing.Point(4, 28);
             this.EncoderDecoderTab.Name = "EncoderDecoderTab";
             this.EncoderDecoderTab.Size = new System.Drawing.Size(471, 313);
@@ -959,144 +973,152 @@
             this.EncoderDecoderTab.Text = "Encoder/Decoder";
             this.EncoderDecoderTab.UseVisualStyleBackColor = true;
             // 
-            // EDExtractValuesBtn
+            // EDTIntegerInputTxt
             // 
-            this.EDExtractValuesBtn.BackColor = System.Drawing.Color.Transparent;
-            this.EDExtractValuesBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.EDExtractValuesBtn.Enabled = false;
-            this.EDExtractValuesBtn.Location = new System.Drawing.Point(365, 68);
-            this.EDExtractValuesBtn.Name = "EDExtractValuesBtn";
-            this.EDExtractValuesBtn.Size = new System.Drawing.Size(100, 22);
-            this.EDExtractValuesBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.EDExtractValuesBtn.TabIndex = 42;
-            this.EDExtractValuesBtn.Text = "Extract Values";
+            this.EDTIntegerInputTxt.Location = new System.Drawing.Point(107, 6);
+            this.EDTIntegerInputTxt.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.EDTIntegerInputTxt.Minimum = new decimal(new int[] {
+            -2147483648,
+            0,
+            0,
+            -2147483648});
+            this.EDTIntegerInputTxt.Name = "EDTIntegerInputTxt";
+            this.EDTIntegerInputTxt.Size = new System.Drawing.Size(125, 20);
+            this.EDTIntegerInputTxt.TabIndex = 45;
+            this.EDTIntegerInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // EDEncodedBlocksLbl
+            // EDTShortInputTxt
             // 
-            this.EDEncodedBlocksLbl.AutoSize = true;
-            this.EDEncodedBlocksLbl.Location = new System.Drawing.Point(4, 72);
-            this.EDEncodedBlocksLbl.Name = "EDEncodedBlocksLbl";
-            this.EDEncodedBlocksLbl.Size = new System.Drawing.Size(94, 13);
-            this.EDEncodedBlocksLbl.TabIndex = 40;
-            this.EDEncodedBlocksLbl.Text = "Encoded Block(s):";
+            this.EDTShortInputTxt.Location = new System.Drawing.Point(107, 34);
+            this.EDTShortInputTxt.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.EDTShortInputTxt.Name = "EDTShortInputTxt";
+            this.EDTShortInputTxt.Size = new System.Drawing.Size(125, 20);
+            this.EDTShortInputTxt.TabIndex = 44;
+            this.EDTShortInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // EDEncodedBlocksTxt
+            // EDTDecodeValuesBtn
             // 
-            this.EDEncodedBlocksTxt.Enabled = false;
-            this.EDEncodedBlocksTxt.Location = new System.Drawing.Point(98, 69);
-            this.EDEncodedBlocksTxt.Name = "EDEncodedBlocksTxt";
-            this.EDEncodedBlocksTxt.Size = new System.Drawing.Size(261, 20);
-            this.EDEncodedBlocksTxt.TabIndex = 41;
-            this.EDEncodedBlocksTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.EDTDecodeValuesBtn.BackColor = System.Drawing.Color.Transparent;
+            this.EDTDecodeValuesBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.EDTDecodeValuesBtn.Location = new System.Drawing.Point(370, 66);
+            this.EDTDecodeValuesBtn.Name = "EDTDecodeValuesBtn";
+            this.EDTDecodeValuesBtn.Size = new System.Drawing.Size(98, 23);
+            this.EDTDecodeValuesBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDTDecodeValuesBtn.TabIndex = 42;
+            this.EDTDecodeValuesBtn.Text = "Decode Value(s)";
             // 
-            // EDMiddleGlowPnl
+            // EDTEncodedValuesLbl
             // 
-            this.EDMiddleGlowPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.EDMiddleGlowPnl.Location = new System.Drawing.Point(6, 61);
-            this.EDMiddleGlowPnl.Name = "EDMiddleGlowPnl";
-            this.EDMiddleGlowPnl.Size = new System.Drawing.Size(459, 1);
-            this.EDMiddleGlowPnl.TabIndex = 39;
+            this.EDTEncodedValuesLbl.Location = new System.Drawing.Point(3, 69);
+            this.EDTEncodedValuesLbl.Name = "EDTEncodedValuesLbl";
+            this.EDTEncodedValuesLbl.Size = new System.Drawing.Size(98, 20);
+            this.EDTEncodedValuesLbl.TabIndex = 40;
+            this.EDTEncodedValuesLbl.Text = "Encoded Value(s):";
+            this.EDTEncodedValuesLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // EDShortOutputTxt
+            // EDTEncodedValuesTxt
             // 
-            this.EDShortOutputTxt.Location = new System.Drawing.Point(239, 33);
-            this.EDShortOutputTxt.Name = "EDShortOutputTxt";
-            this.EDShortOutputTxt.Size = new System.Drawing.Size(122, 20);
-            this.EDShortOutputTxt.TabIndex = 38;
-            this.EDShortOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.EDTEncodedValuesTxt.Location = new System.Drawing.Point(107, 69);
+            this.EDTEncodedValuesTxt.Name = "EDTEncodedValuesTxt";
+            this.EDTEncodedValuesTxt.Size = new System.Drawing.Size(257, 20);
+            this.EDTEncodedValuesTxt.TabIndex = 41;
+            this.EDTEncodedValuesTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // EDIntegerOutputTxt
+            // EDTTopGlowPnl
             // 
-            this.EDIntegerOutputTxt.Location = new System.Drawing.Point(239, 5);
-            this.EDIntegerOutputTxt.Name = "EDIntegerOutputTxt";
-            this.EDIntegerOutputTxt.Size = new System.Drawing.Size(122, 20);
-            this.EDIntegerOutputTxt.TabIndex = 37;
-            this.EDIntegerOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.EDTTopGlowPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDTTopGlowPnl.Location = new System.Drawing.Point(0, 61);
+            this.EDTTopGlowPnl.Name = "EDTTopGlowPnl";
+            this.EDTTopGlowPnl.Size = new System.Drawing.Size(471, 1);
+            this.EDTTopGlowPnl.TabIndex = 39;
             // 
-            // EDShortInputTxt
+            // EDTShortOutputTxt
             // 
-            this.EDShortInputTxt.Location = new System.Drawing.Point(110, 33);
-            this.EDShortInputTxt.Name = "EDShortInputTxt";
-            this.EDShortInputTxt.Size = new System.Drawing.Size(122, 20);
-            this.EDShortInputTxt.TabIndex = 36;
-            this.EDShortInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.EDTShortOutputTxt.Location = new System.Drawing.Point(239, 34);
+            this.EDTShortOutputTxt.Name = "EDTShortOutputTxt";
+            this.EDTShortOutputTxt.Size = new System.Drawing.Size(125, 20);
+            this.EDTShortOutputTxt.TabIndex = 38;
+            this.EDTShortOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // EDEncodeShortBtn
+            // EDTIntegerOutputTxt
             // 
-            this.EDEncodeShortBtn.BackColor = System.Drawing.Color.Transparent;
-            this.EDEncodeShortBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.EDEncodeShortBtn.Location = new System.Drawing.Point(6, 32);
-            this.EDEncodeShortBtn.Name = "EDEncodeShortBtn";
-            this.EDEncodeShortBtn.Size = new System.Drawing.Size(98, 23);
-            this.EDEncodeShortBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.EDEncodeShortBtn.TabIndex = 33;
-            this.EDEncodeShortBtn.Text = "Encode Short";
-            this.EDEncodeShortBtn.Click += new System.EventHandler(this.EDEncodeShortBtn_Click);
+            this.EDTIntegerOutputTxt.Location = new System.Drawing.Point(239, 6);
+            this.EDTIntegerOutputTxt.Name = "EDTIntegerOutputTxt";
+            this.EDTIntegerOutputTxt.Size = new System.Drawing.Size(125, 20);
+            this.EDTIntegerOutputTxt.TabIndex = 37;
+            this.EDTIntegerOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // EDEncodeIntegerBtn
+            // EDTEncodeShortBtn
             // 
-            this.EDEncodeIntegerBtn.BackColor = System.Drawing.Color.Transparent;
-            this.EDEncodeIntegerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.EDEncodeIntegerBtn.Location = new System.Drawing.Point(6, 3);
-            this.EDEncodeIntegerBtn.Name = "EDEncodeIntegerBtn";
-            this.EDEncodeIntegerBtn.Size = new System.Drawing.Size(98, 23);
-            this.EDEncodeIntegerBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.EDEncodeIntegerBtn.TabIndex = 32;
-            this.EDEncodeIntegerBtn.Text = "Encode Integer";
-            this.EDEncodeIntegerBtn.Click += new System.EventHandler(this.EDEncodeIntegerBtn_Click);
+            this.EDTEncodeShortBtn.BackColor = System.Drawing.Color.Transparent;
+            this.EDTEncodeShortBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.EDTEncodeShortBtn.Location = new System.Drawing.Point(3, 32);
+            this.EDTEncodeShortBtn.Name = "EDTEncodeShortBtn";
+            this.EDTEncodeShortBtn.Size = new System.Drawing.Size(98, 23);
+            this.EDTEncodeShortBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDTEncodeShortBtn.TabIndex = 33;
+            this.EDTEncodeShortBtn.Text = "Encode Short";
             // 
-            // EDDecodeShortBtn
+            // EDTEncodeIntegerBtn
             // 
-            this.EDDecodeShortBtn.BackColor = System.Drawing.Color.Transparent;
-            this.EDDecodeShortBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.EDDecodeShortBtn.Location = new System.Drawing.Point(367, 32);
-            this.EDDecodeShortBtn.Name = "EDDecodeShortBtn";
-            this.EDDecodeShortBtn.Size = new System.Drawing.Size(98, 23);
-            this.EDDecodeShortBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.EDDecodeShortBtn.TabIndex = 35;
-            this.EDDecodeShortBtn.Text = "Decode Short";
-            this.EDDecodeShortBtn.Click += new System.EventHandler(this.EDDecodeShortBtn_Click);
+            this.EDTEncodeIntegerBtn.BackColor = System.Drawing.Color.Transparent;
+            this.EDTEncodeIntegerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.EDTEncodeIntegerBtn.Location = new System.Drawing.Point(3, 3);
+            this.EDTEncodeIntegerBtn.Name = "EDTEncodeIntegerBtn";
+            this.EDTEncodeIntegerBtn.Size = new System.Drawing.Size(98, 23);
+            this.EDTEncodeIntegerBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDTEncodeIntegerBtn.TabIndex = 32;
+            this.EDTEncodeIntegerBtn.Text = "Encode Integer";
             // 
-            // EDDecodeIntegerBtn
+            // EDTDecodeShortBtn
             // 
-            this.EDDecodeIntegerBtn.BackColor = System.Drawing.Color.Transparent;
-            this.EDDecodeIntegerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.EDDecodeIntegerBtn.Location = new System.Drawing.Point(367, 3);
-            this.EDDecodeIntegerBtn.Name = "EDDecodeIntegerBtn";
-            this.EDDecodeIntegerBtn.Size = new System.Drawing.Size(98, 23);
-            this.EDDecodeIntegerBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.EDDecodeIntegerBtn.TabIndex = 34;
-            this.EDDecodeIntegerBtn.Text = "Decode Integer";
-            this.EDDecodeIntegerBtn.Click += new System.EventHandler(this.EDDecodeIntegerBtn_Click);
+            this.EDTDecodeShortBtn.BackColor = System.Drawing.Color.Transparent;
+            this.EDTDecodeShortBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.EDTDecodeShortBtn.Location = new System.Drawing.Point(370, 32);
+            this.EDTDecodeShortBtn.Name = "EDTDecodeShortBtn";
+            this.EDTDecodeShortBtn.Size = new System.Drawing.Size(98, 23);
+            this.EDTDecodeShortBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDTDecodeShortBtn.TabIndex = 35;
+            this.EDTDecodeShortBtn.Text = "Decode Short";
             // 
-            // EDIntegerInputTxt
+            // EDTDecodeIntegerBtn
             // 
-            this.EDIntegerInputTxt.Location = new System.Drawing.Point(110, 5);
-            this.EDIntegerInputTxt.Name = "EDIntegerInputTxt";
-            this.EDIntegerInputTxt.Size = new System.Drawing.Size(122, 20);
-            this.EDIntegerInputTxt.TabIndex = 31;
-            this.EDIntegerInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.EDTDecodeIntegerBtn.BackColor = System.Drawing.Color.Transparent;
+            this.EDTDecodeIntegerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.EDTDecodeIntegerBtn.Location = new System.Drawing.Point(370, 3);
+            this.EDTDecodeIntegerBtn.Name = "EDTDecodeIntegerBtn";
+            this.EDTDecodeIntegerBtn.Size = new System.Drawing.Size(98, 23);
+            this.EDTDecodeIntegerBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDTDecodeIntegerBtn.TabIndex = 34;
+            this.EDTDecodeIntegerBtn.Text = "Decode Integer";
             // 
-            // EDExtracterLstvw
+            // EDTDecodedVw
             // 
-            this.EDExtracterLstvw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.EDTDecodedVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ValueCol,
             this.EncodedCol,
             this.PositionCol});
-            this.EDExtracterLstvw.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.EDExtracterLstvw.Enabled = false;
-            this.EDExtracterLstvw.FullRowSelect = true;
-            this.EDExtracterLstvw.GridLines = true;
-            this.EDExtracterLstvw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.EDExtracterLstvw.HideSelection = false;
-            this.EDExtracterLstvw.Location = new System.Drawing.Point(0, 96);
-            this.EDExtracterLstvw.MultiSelect = false;
-            this.EDExtracterLstvw.Name = "EDExtracterLstvw";
-            this.EDExtracterLstvw.ShowItemToolTips = true;
-            this.EDExtracterLstvw.Size = new System.Drawing.Size(471, 217);
-            this.EDExtracterLstvw.TabIndex = 43;
-            this.EDExtracterLstvw.UseCompatibleStateImageBehavior = false;
-            this.EDExtracterLstvw.View = System.Windows.Forms.View.Details;
+            this.EDTDecodedVw.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.EDTDecodedVw.FullRowSelect = true;
+            this.EDTDecodedVw.GridLines = true;
+            this.EDTDecodedVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.EDTDecodedVw.HideSelection = false;
+            this.EDTDecodedVw.Location = new System.Drawing.Point(0, 95);
+            this.EDTDecodedVw.MultiSelect = false;
+            this.EDTDecodedVw.Name = "EDTDecodedVw";
+            this.EDTDecodedVw.ShowItemToolTips = true;
+            this.EDTDecodedVw.Size = new System.Drawing.Size(471, 218);
+            this.EDTDecodedVw.TabIndex = 43;
+            this.EDTDecodedVw.UseCompatibleStateImageBehavior = false;
+            this.EDTDecodedVw.View = System.Windows.Forms.View.Details;
             // 
             // ValueCol
             // 
@@ -1274,18 +1296,6 @@
             this.columnHeader3.Text = "Encoded";
             this.columnHeader3.Width = 150;
             // 
-            // PTMenuSeperatorBottom
-            // 
-            this.PTMenuSeperatorBottom.Name = "PTMenuSeperatorBottom";
-            this.PTMenuSeperatorBottom.Size = new System.Drawing.Size(161, 6);
-            // 
-            // PTUndoBtn
-            // 
-            this.PTUndoBtn.Name = "PTUndoBtn";
-            this.PTUndoBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.PTUndoBtn.Size = new System.Drawing.Size(164, 22);
-            this.PTUndoBtn.Text = "Undo";
-            // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1310,13 +1320,15 @@
             ((System.ComponentModel.ISupportInitialize)(this.CTCountTxt)).EndInit();
             this.SchedulerTab.ResumeLayout(false);
             this.SchedulerTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.ISBurstTxt)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.ISIntervalTxt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.STBurstTxt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.STIntervalTxt)).EndInit();
             this.PrimitiveTab.ResumeLayout(false);
             this.PrimitiveTab.PerformLayout();
             this.PTPrimitiveMenu.ResumeLayout(false);
             this.EncoderDecoderTab.ResumeLayout(false);
             this.EncoderDecoderTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.EDTIntegerInputTxt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.EDTShortInputTxt)).EndInit();
             this.ExtensionsTab.ResumeLayout(false);
             this.ExtensionsTab.PerformLayout();
             this.ETExtensionMenu.ResumeLayout(false);
@@ -1354,26 +1366,26 @@
         private System.Windows.Forms.ColumnHeader STBurstCol;
         private System.Windows.Forms.ColumnHeader STIntervalCol;
         private System.Windows.Forms.ColumnHeader STStatusCol;
-        public Sulakore.Components.SKoreScheduleView ISSchedulerVw;
-        public System.Windows.Forms.CheckBox ISAutoStartChckbx;
-        public System.Windows.Forms.Label ISBurstLbl;
-        public System.Windows.Forms.NumericUpDown ISBurstTxt;
-        public System.Windows.Forms.Label ISIntervalLbl;
-        public System.Windows.Forms.NumericUpDown ISIntervalTxt;
-        public System.Windows.Forms.Label ISDestinationLbl;
-        public System.Windows.Forms.ComboBox ISDestinationTxt;
-        public System.Windows.Forms.Label ISPacketLbl;
-        public System.Windows.Forms.TextBox ISPacketTxt;
-        public System.Windows.Forms.Label ISDescriptionLbl;
-        public System.Windows.Forms.TextBox ISDescriptionTxt;
+        public Sulakore.Components.SKoreScheduleView STSchedulerVw;
+        public System.Windows.Forms.CheckBox STAutoStartChckbx;
+        public System.Windows.Forms.Label STBurstLbl;
+        public System.Windows.Forms.NumericUpDown STBurstTxt;
+        public System.Windows.Forms.Label STIntervalLbl;
+        public System.Windows.Forms.NumericUpDown STIntervalTxt;
+        public System.Windows.Forms.Label STDestinationLbl;
+        public System.Windows.Forms.ComboBox STDestinationTxt;
+        public System.Windows.Forms.Label STPacketLbl;
+        public System.Windows.Forms.TextBox STPacketTxt;
+        public System.Windows.Forms.Label STDescriptionLbl;
+        public System.Windows.Forms.TextBox STDescriptionTxt;
         public System.Windows.Forms.ComboBox ITPacketTxt;
         public Sulakore.Components.SKoreButton ITSendToClientBtn;
         public Sulakore.Components.SKoreButton ITSendToServerBtn;
-        public Sulakore.Components.SKoreButton ISClearBtn;
-        public Sulakore.Components.SKoreButton ISStopAllBtn;
-        public Sulakore.Components.SKoreButton ISStartAllBtn;
-        public Sulakore.Components.SKoreButton ISRemoveBtn;
-        public Sulakore.Components.SKoreButton ISCreateBtn;
+        public Sulakore.Components.SKoreButton STClearBtn;
+        public Sulakore.Components.SKoreButton STStopAllBtn;
+        public Sulakore.Components.SKoreButton STStartAllBtn;
+        public Sulakore.Components.SKoreButton STRemoveBtn;
+        public Sulakore.Components.SKoreButton STCreateBtn;
         private System.Windows.Forms.ToolStripStatusLabel SchedulesActiveTxt;
         private System.Windows.Forms.TabPage ConstructerTab;
         private System.Windows.Forms.Label CTCountLbl;
@@ -1386,22 +1398,11 @@
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.ColumnHeader columnHeader3;
-        private Sulakore.Components.SKoreListView EDExtracterLstvw;
         private System.Windows.Forms.ColumnHeader ValueCol;
         private System.Windows.Forms.ColumnHeader EncodedCol;
         private System.Windows.Forms.ColumnHeader PositionCol;
-        private Sulakore.Components.SKoreButton EDExtractValuesBtn;
-        private System.Windows.Forms.Label EDEncodedBlocksLbl;
-        private System.Windows.Forms.TextBox EDEncodedBlocksTxt;
-        private System.Windows.Forms.Panel EDMiddleGlowPnl;
-        private System.Windows.Forms.TextBox EDShortOutputTxt;
-        private System.Windows.Forms.TextBox EDIntegerOutputTxt;
-        private System.Windows.Forms.TextBox EDShortInputTxt;
-        private Sulakore.Components.SKoreButton EDEncodeShortBtn;
-        private Sulakore.Components.SKoreButton EDEncodeIntegerBtn;
-        private Sulakore.Components.SKoreButton EDDecodeShortBtn;
-        private Sulakore.Components.SKoreButton EDDecodeIntegerBtn;
-        private System.Windows.Forms.TextBox EDIntegerInputTxt;
+        private System.Windows.Forms.Label EDTEncodedValuesLbl;
+        private System.Windows.Forms.Panel EDTTopGlowPnl;
         private System.Windows.Forms.ColumnHeader ICSTypeCol;
         private System.Windows.Forms.ColumnHeader ICSValueCol;
         private System.Windows.Forms.ColumnHeader ICSEncodedCol;
@@ -1425,7 +1426,7 @@
         public System.Windows.Forms.Label PTIsCorruptedLbl;
         public System.Windows.Forms.Label PTPacketInfoLbl;
         public System.Windows.Forms.TextBox PTPacketTxt;
-        private System.Windows.Forms.ToolStripMenuItem PTInsertParameterBtn;
+        private System.Windows.Forms.ToolStripMenuItem PTInsertFormatParameterBtn;
         private System.Windows.Forms.ToolStripSeparator PTMenuSeparatorTop;
         public System.Windows.Forms.TabPage PrimitiveTab;
         public System.Windows.Forms.ToolStripMenuItem PTIntegerBtn;
@@ -1438,5 +1439,16 @@
         public System.Windows.Forms.ToolStripMenuItem PTCutBtn;
         private System.Windows.Forms.ToolStripSeparator PTMenuSeperatorBottom;
         public System.Windows.Forms.ToolStripMenuItem PTUndoBtn;
+        public Sulakore.Components.SKoreListView EDTDecodedVw;
+        public Sulakore.Components.SKoreButton EDTDecodeValuesBtn;
+        public System.Windows.Forms.TextBox EDTEncodedValuesTxt;
+        public System.Windows.Forms.TextBox EDTShortOutputTxt;
+        public System.Windows.Forms.TextBox EDTIntegerOutputTxt;
+        public Sulakore.Components.SKoreButton EDTEncodeShortBtn;
+        public Sulakore.Components.SKoreButton EDTEncodeIntegerBtn;
+        public Sulakore.Components.SKoreButton EDTDecodeShortBtn;
+        public Sulakore.Components.SKoreButton EDTDecodeIntegerBtn;
+        public System.Windows.Forms.NumericUpDown EDTIntegerInputTxt;
+        public System.Windows.Forms.NumericUpDown EDTShortInputTxt;
     }
 }

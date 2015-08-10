@@ -29,19 +29,19 @@
         private void InitializeComponent()
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(UpdateFrm));
-            this.GitBody = new System.Windows.Forms.WebBrowser();
+            this.GitBodyWb = new System.Windows.Forms.WebBrowser();
             this.MoreInformationBtn = new Sulakore.Components.SKoreButton();
             this.SuspendLayout();
             // 
-            // GitBody
+            // GitBodyWb
             // 
-            this.GitBody.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.GitBody.Location = new System.Drawing.Point(0, 0);
-            this.GitBody.MinimumSize = new System.Drawing.Size(20, 20);
-            this.GitBody.Name = "GitBody";
-            this.GitBody.ScriptErrorsSuppressed = true;
-            this.GitBody.Size = new System.Drawing.Size(479, 351);
-            this.GitBody.TabIndex = 0;
+            this.GitBodyWb.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.GitBodyWb.Location = new System.Drawing.Point(0, 0);
+            this.GitBodyWb.MinimumSize = new System.Drawing.Size(20, 20);
+            this.GitBodyWb.Name = "GitBodyWb";
+            this.GitBodyWb.ScriptErrorsSuppressed = true;
+            this.GitBodyWb.Size = new System.Drawing.Size(479, 351);
+            this.GitBodyWb.TabIndex = 0;
             // 
             // MoreInformationBtn
             // 
@@ -62,14 +62,13 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
             this.ClientSize = new System.Drawing.Size(479, 373);
-            this.Controls.Add(this.GitBody);
+            this.Controls.Add(this.GitBodyWb);
             this.Controls.Add(this.MoreInformationBtn);
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.MaximizeBox = false;
             this.MinimumSize = new System.Drawing.Size(352, 325);
             this.Name = "UpdateFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Tanji ~ Update Found!";
+            this.Text = "Tanji ~ Update Found! | {0}({1})";
             this.TopMost = true;
             this.ResumeLayout(false);
 
@@ -77,7 +76,7 @@
 
         #endregion
 
-        private System.Windows.Forms.WebBrowser GitBody;
+        private System.Windows.Forms.WebBrowser GitBodyWb;
         private Sulakore.Components.SKoreButton MoreInformationBtn;
     }
 }

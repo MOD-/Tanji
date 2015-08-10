@@ -1,4 +1,30 @@
-﻿using System;
+﻿/* Copyright
+
+    GitHub(Source): https://GitHub.com/ArachisH/Tanji
+
+    Habbo Hotel Packet(Logger/Manipulator)
+    Copyright (C) 2015 ArachisH
+
+    This program is free software; you can redistribute it and/or modify
+    it under the terms of the GNU General Public License as published by
+    the Free Software Foundation; either version 2 of the License, or
+    (at your option) any later version.
+
+    This program is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License along
+    with this program; if not, write to the Free Software Foundation, Inc.,
+    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+
+    See License.txt in the project root for license information.
+    test
+*/
+
+using System;
+using System.Text;
 using System.Drawing;
 using System.Windows.Forms;
 
@@ -35,15 +61,15 @@ namespace Tanji.Managers.Injection
 
         private void PTStringBtn_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            InsertParamter("s");
         }
         private void PTBooleanBtn_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            InsertParamter("b");
         }
         private void PTIntegerBtn_Click(object sender, EventArgs e)
         {
-            throw new NotImplementedException();
+            InsertParamter("i");
         }
         private void PTLengthHeaderBtn_Click(object sender, EventArgs e)
         {
@@ -151,6 +177,54 @@ namespace Tanji.Managers.Injection
         {
             MainUI.PTIsCorruptedLbl.Location = new Point(
                 MainUI.PTPacketInfoLbl.Width - 2, MainUI.PTIsCorruptedLbl.Location.Y);
+        }
+
+        private void InsertParamter(string paramName)
+        {
+            object value = null;
+            byte[] data = HMessage.ToBytes(MainUI.PTPacketTxt.SelectedText);
+            switch (paramName)
+            {
+                case "i":
+                {
+                    if (data.Length == 4)
+                        value = BigEndian.ToSI32(data);
+                    break;
+                }
+                case "s":
+                {
+                    if (data.Length >= 2)
+                    {
+                        int length = BigEndian.ToUI16(data);
+                        if (length == data.Length - 2)
+                            value = Encoding.UTF8.GetString(data, 2, length);
+                    }
+                    break;
+                }
+                case "b":
+                {
+                    if (data.Length == 1)
+                        value = Convert.ToBoolean(data[0]);
+                    break;
+                }
+            }
+
+            string param = $"{{{paramName}:{value}}}";
+
+            int start = (value == null ?
+                MainUI.PTPacketTxt.TextLength : MainUI.PTPacketTxt.SelectionStart);
+
+            if (value != null)
+            {
+                MainUI.PTPacketTxt.Text = MainUI.PTPacketTxt.Text.Remove(
+                    start, MainUI.PTPacketTxt.SelectedText.Length);
+            }
+
+            string valueString = value == null ?
+                string.Empty : value.ToString();
+
+            MainUI.PTPacketTxt.Text = MainUI.PTPacketTxt.Text.Insert(start, param);
+            MainUI.PTPacketTxt.Select(start + 3, valueString.Length);
         }
     }
 }

@@ -83,6 +83,7 @@
     <Compile Include="Dialogs\UpdateFrm.Designer.cs">
       <DependentUpon>UpdateFrm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Managers\EncoderManager.cs" />
     <Compile Include="Managers\ExtensionManager.cs" />
     <Compile Include="Managers\HandshakeManager.cs" />
     <Compile Include="Managers\Injection\ConstructerManager.cs" />
