@@ -20,41 +20,38 @@
     51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 
     See License.txt in the project root for license information.
-    test
 */
 
 using System;
 using System.Windows.Forms;
 using System.Security.Principal;
 
-using Eavesdrop;
-
 using Sulakore.Communication;
+
+using Eavesdrop;
 
 namespace Tanji
 {
     static class Program
     {
-        private const string MUST_RUN_AS_ADMIN
-            = "Tanji must be ran with administrative privileges.\r\n\r\nIf you are not being prompted to run as administrator, make sure your UAC settings are properly adjusted.";
-
         [STAThread]
         static void Main()
         {
+            Eavesdropper.Terminate();
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
 
             var windowsPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             if (!windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator))
             {
-                MessageBox.Show(MUST_RUN_AS_ADMIN,
+                MessageBox.Show("Tanji must be ran with administrative privileges.",
                     "Tanji ~ Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
             }
-
-            Eavesdropper.Terminate();
-            HConnection.RestoreHosts();
-            Application.Run(new MainFrm());
+            else
+            {
+                HConnection.RestoreHosts();
+                Application.Run(new MainFrm());
+            }
         }
     }
 }
