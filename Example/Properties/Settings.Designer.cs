@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace ExtDemo.Properties
+namespace Example.Properties
 {
 
 

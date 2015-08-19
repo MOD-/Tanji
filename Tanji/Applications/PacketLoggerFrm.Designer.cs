@@ -251,7 +251,7 @@
             this.Controls.Add(this.LoggerTxt);
             this.Controls.Add(this.PacketLoggerStrip);
             this.Controls.Add(this.PacketloggerMenu);
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = Tanji.Properties.Resources.Tanji;
             this.Name = "PacketLoggerFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ PacketLogger";

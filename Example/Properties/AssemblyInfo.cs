@@ -5,11 +5,11 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("ExtDemo")]
-[assembly: AssemblyDescription("Some Extension")]
+[assembly: AssemblyTitle("Example")]
+[assembly: AssemblyDescription("Sulakore Extension Example")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("ArachisH")]
-[assembly: AssemblyProduct("ExtDemo")]
+[assembly: AssemblyProduct("Example")]
 [assembly: AssemblyCopyright("Copyright ©  ArachisH 2015")]
 [assembly: AssemblyTrademark("The Old Nut Man")]
 [assembly: AssemblyCulture("")]
@@ -20,7 +20,7 @@ using System.Runtime.InteropServices;
 [assembly: ComVisible(false)]
 
 // The following GUID is for the ID of the typelib if this project is exposed to COM
-[assembly: Guid("f486bbad-e40b-4462-a645-53910b49c22f")]
+[assembly: Guid("09ccb12d-3263-499e-a1bc-9293391f53d5")]
 
 // Version information for an assembly consists of the following four values:
 //
@@ -32,5 +32,5 @@ using System.Runtime.InteropServices;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("1.0.0.*")]
+[assembly: AssemblyVersion("1.0.*")]
 //[assembly: AssemblyFileVersion("1.0.0.0")]
