@@ -137,6 +137,7 @@ namespace Tanji.Managers
                 MainUI.Connection.DataIncoming -= DataIncoming;
                 MainUI.Connection.DataOutgoing -= DataOutgoing;
             }
+            finally { e.IsBlocked = false; }
         }
         private void DataOutgoing(object sender, InterceptedEventArgs e)
         {
@@ -191,6 +192,7 @@ namespace Tanji.Managers
                 MainUI.Connection.DataIncoming -= DataIncoming;
                 MainUI.Connection.DataOutgoing -= DataOutgoing;
             }
+            finally { e.IsBlocked = false; }
         }
 
         private void EavesdropperResponse(object sender, EavesdropperResponseEventArgs e)
