@@ -75,7 +75,7 @@ namespace Tanji.Dialogs
         {
             BrowseBtn.Enabled =
                 ConnectBtn.Enabled = ModePnl.Enabled = false;
-            StatusTxt.SetDotAnimation("Searching For Updates");
+            StatusTxt.SetDotAnimation("Checking for updates");
 
             try
             {
@@ -192,7 +192,7 @@ namespace Tanji.Dialogs
                     if (!MainUI.IsRetro)
                     {
                         MainUI.Game.Save(Path.Combine("Modified Clients",
-                            MainUI.GameData.FlashClientBuild + ".swf"));
+                            MainUI.GameData.MovieName + ".swf"));
                     }
                 }
 
@@ -201,7 +201,7 @@ namespace Tanji.Dialogs
                 Eavesdropper.Terminate();
 
                 Task connectTask = MainUI.Connection
-                    .ConnectAsync(MainUI.GameData.Host, MainUI.GameData.Port);
+                    .ConnectAsync(MainUI.GameData.Host, int.Parse(MainUI.GameData.Port.Split(',')[0]));
 
                 StatusTxt.SetDotAnimation("Intercepting Connection({0})", MainUI.GameData.Port);
             }
@@ -212,19 +212,20 @@ namespace Tanji.Dialogs
             if (MainUI.GameData == null && responseBody.Contains("info.host"))
             {
                 MainUI.GameData = new HGameData(responseBody);
+                MainUI.ExtensionMngr.GameData = MainUI.GameData;
                 MainUI.ExtensionMngr.Hotel = SKore.ToHotel(MainUI.GameData.Host);
                 MainUI.IsRetro = (MainUI.ExtensionMngr.Hotel == HHotel.Unknown);
 
                 if (MainUI.IsRetro)
                 {
-                    responseBody = responseBody
-                        .Replace(MainUI.GameData.Host, "127.0.0.1");
-
-                    if (!string.IsNullOrWhiteSpace(MainUI.GameData.ClientStarting))
-                    {
-                        responseBody = responseBody
-                            .Replace(MainUI.GameData.ClientStarting, "Peeling Tangerines...");
-                    }
+                    MainUI.GameData.MovieUrl += "?" + DateTime.Now.Ticks;
+                    MainUI.GameData["tanji.connection.info.host"] = "127.0.0.1";
+                    MainUI.GameData["tanji.client.starting"] = "Peeling Tangerines...";
+                }
+                else
+                {
+                    responseBody = responseBody.Replace(".swf?", ".swf")
+                        .Replace(".swf", ".swf?" + DateTime.Now.Ticks);
                 }
 
                 if (!MainUI.IsRetro && MainUI.Game == null)
@@ -233,13 +234,11 @@ namespace Tanji.Dialogs
                 StatusTxt.SetDotAnimation((MainUI.Game == null ?
                     "Intercepting" : "Replacing") + " Client");
 
-                responseBody = responseBody.Replace(".swf?", ".swf")
-                    .Replace(".swf", ".swf?" + DateTime.Now.Ticks);
-
                 Eavesdropper.EavesdropperResponse -= ExtractHostPort;
                 Eavesdropper.EavesdropperResponse += ReplaceClient;
 
-                e.Payload = Encoding.UTF8.GetBytes(responseBody);
+                e.Payload = Encoding.UTF8.GetBytes(MainUI.IsRetro ?
+                    MainUI.GameData.ToString() : responseBody);
             }
         }
 
@@ -306,19 +305,42 @@ namespace Tanji.Dialogs
                         cPool.Strings[i] = HandshakeManager.FAKE_MODULUS;
                     }
                 }
-                else if (cString == "10001")
+                else
                 {
-                    containedDefaultExpInABC = true;
-                    cPool.Strings[i] = HandshakeManager.FAKE_EXPONENT.ToString();
-                }
-                else if (_ipMatcher.Match(cString).Success)
-                {
-                    MainUI.GameData.Host = cString;
-                    cPool.Strings[i] = "127.0.0.1";
-                }
-                else if (cString == "localhost")
-                {
-                    cPool.Strings[i] = "tsohlacol";
+                    switch (cString)
+                    {
+                        default:
+                        {
+                            if (_ipMatcher.Match(cString).Success)
+                            {
+                                MainUI.GameData.Host = cString;
+                                cPool.Strings[i] = "127.0.0.1";
+                            }
+                            break;
+                        }
+
+                        case "10001":
+                        {
+                            containedDefaultExpInABC = true;
+                            cPool.Strings[i] = HandshakeManager.FAKE_EXPONENT.ToString();
+                            break;
+                        }
+                        case "localhost":
+                        {
+                            cPool.Strings[i] = "tsohlacol";
+                            break;
+                        }
+                        case "client.starting":
+                        {
+                            cPool.Strings[i] = "tanji.client.starting";
+                            break;
+                        }
+                        case "connection.info.host":
+                        {
+                            cPool.Strings[i] = "tanji.connection.info.host";
+                            break;
+                        }
+                    }
                 }
             }
 
@@ -329,15 +351,17 @@ namespace Tanji.Dialogs
             }
 
             if (_hasCorrectPort) return;
-            possiblePorts.Insert(0, (ushort)MainUI.GameData.Port);
+            possiblePorts.Insert(0, ushort.Parse(MainUI.GameData.Port));
             foreach (ushort possiblePort in possiblePorts)
             {
+                if (ignorePorts.Contains(possiblePort.ToString())) continue;
                 if (AttemptConnect(possiblePort, ignorePorts))
                 {
                     _hasCorrectPort = true;
-                    MainUI.GameData.Port = possiblePort;
+                    MainUI.GameData.Port = possiblePort.ToString();
                     break;
                 }
+                ignorePorts.Add(possiblePort.ToString());
             }
         }
         private void ReplaceBIN(DefineBinaryDataTag binaryTag)
@@ -396,16 +420,16 @@ namespace Tanji.Dialogs
                 {
                     try
                     {
-                        var pingPacket = new byte[6] { 0, 0, 0, 2, 0, 0 };
+                        var pingPacket = new byte[6] { 0, 0, 0, 1, 0, 0 };
                         remote.SendAsync(pingPacket).Wait();
 
                         var buffer = new byte[6];
                         Task<int> receiveTask = remote.ReceiveAsync(buffer, 0, 6);
 
-                        timeout = Task.Delay(500);
+                        timeout = Task.Delay(1000);
                         completed = Task.WhenAny(receiveTask, timeout).Result;
 
-                        return (receiveTask.Status != TaskStatus.Faulted);
+                        return (receiveTask.Status != TaskStatus.Faulted && remote.Client.Connected);
                     }
                     catch { return false; }
                 }
@@ -460,7 +484,7 @@ namespace Tanji.Dialogs
         private async Task<bool> TryLoadModdedClientAsync()
         {
             string possibleClientPath = Path.Combine("Modified Clients",
-                MainUI.GameData.FlashClientBuild + ".swf");
+                MainUI.GameData.MovieName + ".swf");
 
             bool loadSuccess = false;
             if (File.Exists(possibleClientPath))

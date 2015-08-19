@@ -238,7 +238,7 @@
             this.Controls.Add(this.ConnectBtn);
             this.Controls.Add(this.ModulusGrpbx);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = Tanji.Properties.Resources.Tanji;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "ConnectFrm";
