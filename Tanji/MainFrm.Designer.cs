@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainFrm));
             this.TanjiStrip = new System.Windows.Forms.StatusStrip();
             this.TanjiVersionTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.SchedulesActiveTxt = new System.Windows.Forms.ToolStripStatusLabel();
@@ -737,8 +736,11 @@
             // 
             this.STDescriptionTxt.Location = new System.Drawing.Point(3, 218);
             this.STDescriptionTxt.Name = "STDescriptionTxt";
+            this.STDescriptionTxt.ReadOnly = true;
             this.STDescriptionTxt.Size = new System.Drawing.Size(230, 20);
             this.STDescriptionTxt.TabIndex = 43;
+            this.STDescriptionTxt.Text = "Why am I even here?";
+            this.STDescriptionTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // STAutoStartChckbx
             // 
@@ -797,7 +799,7 @@
             // STStatusCol
             // 
             this.STStatusCol.Text = "Status";
-            this.STStatusCol.Width = 52;
+            this.STStatusCol.Width = 59;
             // 
             // PrimitiveTab
             // 
@@ -946,7 +948,6 @@
             this.ITPacketTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ITPacketTxt.Location = new System.Drawing.Point(6, 286);
-            this.ITPacketTxt.MaxLength = 2147483647;
             this.ITPacketTxt.Name = "ITPacketTxt";
             this.ITPacketTxt.Size = new System.Drawing.Size(247, 21);
             this.ITPacketTxt.TabIndex = 8;
@@ -1305,7 +1306,7 @@
             this.Controls.Add(this.TanjiTabs);
             this.Controls.Add(this.TanjiStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
+            this.Icon = global::Tanji.Properties.Resources.Tanji;
             this.MaximizeBox = false;
             this.Name = "MainFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
@@ -1386,7 +1387,6 @@
         public Sulakore.Components.SKoreButton STStartAllBtn;
         public Sulakore.Components.SKoreButton STRemoveBtn;
         public Sulakore.Components.SKoreButton STCreateBtn;
-        private System.Windows.Forms.ToolStripStatusLabel SchedulesActiveTxt;
         private System.Windows.Forms.TabPage ConstructerTab;
         private System.Windows.Forms.Label CTCountLbl;
         private System.Windows.Forms.Label CTHeaderLbl;
@@ -1450,5 +1450,6 @@
         public Sulakore.Components.SKoreButton EDTDecodeIntegerBtn;
         public System.Windows.Forms.NumericUpDown EDTIntegerInputTxt;
         public System.Windows.Forms.NumericUpDown EDTShortInputTxt;
+        public System.Windows.Forms.ToolStripStatusLabel SchedulesActiveTxt;
     }
 }

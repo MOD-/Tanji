@@ -62,17 +62,19 @@ namespace Tanji
             InitializeComponent();
             Connection = new HConnection();
 
+            UpdateUI = new UpdateFrm(this);
+            ConnectUI = new ConnectFrm(this);
             if (!IsDebugging)
             {
                 Load += MainFrm_Load;
                 Shown += MainFrm_Shown;
+
+                // Begin checking for updates asynchronously, await once ConnectUI is shown.
+                CheckForUpdatesTask = UpdateUI.CheckForUpdatesAsync();
+
+                Connection.Connected += Connected;
+                Connection.Disconnected += Disconnected;
             }
-
-            UpdateUI = new UpdateFrm(this);
-            ConnectUI = new ConnectFrm(this);
-
-            Connection.Connected += Connected;
-            Connection.Disconnected += Disconnected;
 
             // Data Priority - #1 | Notify Extensions
             ExtensionMngr = new ExtensionManager(this);
@@ -83,9 +85,6 @@ namespace Tanji
 
             EncoderMngr = new EncoderManager(this);
             InjectionMngr = new InjectionManager(this);
-
-            // Begin checking for updates asynchronously, await once ConnectUI is shown.
-            CheckForUpdatesTask = UpdateUI.CheckForUpdatesAsync();
         }
 
         private void MainFrm_Load(object sender, EventArgs e)
