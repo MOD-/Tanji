@@ -28,7 +28,6 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 
 using Tanji.Utilities;
-using System.Collections.Generic;
 
 namespace Tanji.Dialogs
 {
