@@ -59,7 +59,7 @@ namespace Tanji.Managers
             _openFileDialog = new OpenFileDialog();
             _openFileDialog.DefaultExt = "dll";
             _openFileDialog.Title = "Tanji ~ Install Extension";
-            _openFileDialog.Filter = "Executable (*.exe)|*.exe|Dynamic Link Library (*.dll)|*.dll";
+            _openFileDialog.Filter = ".NET Assembly (*.dll, *.exe)|*.dll; *.exe|Dynamic Link Library (*.dll)|*.dll|Executable (*.exe)|*.exe";
 
             MainUI.Connection.DataIncoming += DataIncoming;
             MainUI.Connection.DataOutgoing += DataOutgoing;
@@ -90,7 +90,8 @@ namespace Tanji.Managers
 
         private void ExtensionManager_ExtensionAction(object sender, ExtensionActionEventArgs e)
         {
-            int runningCount = Extensions.Count(ext => ext.IsRunning);
+            int runningCount =
+                Extensions.Count(ext => ext.IsRunning);
 
             MainUI.ExtensionsActiveTxt.Text =
                 $"Extensions Active: {runningCount}/{Extensions.Count}";
