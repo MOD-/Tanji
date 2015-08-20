@@ -56,6 +56,7 @@ namespace Tanji.Dialogs
         public bool IsConnecting { get; private set; }
         public bool IsReplacingClient { get; private set; }
         public bool IsExtracingHostPort { get; private set; }
+        public bool IsClientSourceReadable { get; private set; }
 
         public ConnectFrm(MainFrm main)
         {
@@ -250,9 +251,26 @@ namespace Tanji.Dialogs
 
                 if (MainUI.IsRetro)
                 {
-                    MainUI.GameData.MovieUrl += "?" + DateTime.Now.Ticks;
-                    MainUI.GameData["tanji.connection.info.host"] = "127.0.0.1";
-                    MainUI.GameData["tanji.client.starting"] = "Peeling Tangerines...";
+                    if (!string.IsNullOrWhiteSpace(MainUI.GameData.MovieUrl) &&
+                        !string.IsNullOrWhiteSpace(MainUI.GameData.BaseUrl))
+                    {
+                        IsClientSourceReadable = true;
+                        MainUI.GameData.MovieUrl += "?" + DateTime.Now.Ticks;
+                        MainUI.GameData["tanji.connection.info.host"] = "127.0.0.1";
+                        MainUI.GameData["tanji.client.starting"] = "Peeling Tangerines...";
+                    }
+                    else
+                    {
+                        if (responseBody.Contains("embedSWF("))
+                        {
+                            string child = responseBody.GetChild("embedSWF(", ',');
+                            responseBody = responseBody.Replace(child, child + $"+\"?{DateTime.Now.Ticks}\"");
+                        }
+
+                        MainUI.GameData["tanji.connection.info.host"] = "127.0.0.1";
+                        responseBody = responseBody.Replace(MainUI.GameData.Host, MainUI.GameData.Host +
+                            "\", \"tanji.connection.info.host\":\"127.0.0.1");
+                    }
                 }
 
                 if (!MainUI.IsRetro && MainUI.Game == null)
@@ -273,7 +291,8 @@ namespace Tanji.Dialogs
                 Eavesdropper.EavesdropperResponse -= ExtractHostPort;
                 Eavesdropper.EavesdropperResponse += ReplaceClient;
 
-                e.Payload = Encoding.UTF8.GetBytes(MainUI.IsRetro ?
+                e.Payload = Encoding.UTF8.GetBytes(
+                    MainUI.IsRetro && IsClientSourceReadable ?
                     MainUI.GameData.ToString() : responseBody);
             }
         }
@@ -325,12 +344,16 @@ namespace Tanji.Dialogs
                 }
                 case "client.starting":
                 {
-                    constant = "tanji.client.starting";
+                    if (MainUI.GameData.ContainsKey("tanji.client.starting"))
+                        constant = "tanji.client.starting";
+
                     break;
                 }
                 case "connection.info.host":
                 {
-                    constant = "tanji.connection.info.host";
+                    if (MainUI.GameData.ContainsKey("tanji.connection.info.host"))
+                        constant = "tanji.connection.info.host";
+
                     break;
                 }
 
@@ -345,7 +368,7 @@ namespace Tanji.Dialogs
                             constant = HandshakeManager.FAKE_MODULUS;
                         }
                     }
-                    else if (constant.Length < 10 &&
+                    else if (constant.Length <= 15 &&
                         _ipMatcher.Match(constant).Success)
                     {
                         MainUI.GameData.Host = constant;
