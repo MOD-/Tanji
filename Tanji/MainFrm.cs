@@ -66,12 +66,11 @@ namespace Tanji
             ConnectUI = new ConnectFrm(this);
             if (!IsDebugging)
             {
-                Load += MainFrm_Load;
-                Shown += MainFrm_Shown;
-
-                // Begin checking for updates asynchronously, await once ConnectUI is shown.
                 CheckForUpdatesTask = UpdateUI.CheckForUpdatesAsync();
 
+                Load += MainFrm_Load;
+                Shown += MainFrm_Shown;
+                
                 Connection.Connected += Connected;
                 Connection.Disconnected += Disconnected;
             }
