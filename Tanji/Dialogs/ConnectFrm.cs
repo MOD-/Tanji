@@ -24,6 +24,7 @@
 
 using System;
 using System.IO;
+using System.Net;
 using System.Text;
 using System.Linq;
 using System.Windows.Forms;
@@ -165,10 +166,20 @@ namespace Tanji.Dialogs
             else DoCancelConnect();
         }
 
+        private void InjectClient(object sender, EavesdropperRequestEventArgs e)
+        {
+            if (e.Request.RequestUri.OriginalString.Contains(".swf?DoInject"))
+            {
+                Eavesdropper.EavesdropperRequest -= InjectClient;
+                e.Request = WebRequest.Create(new Uri(MainUI.Game.Location));
+            }
+        }
         private void ReplaceClient(object sender, EavesdropperResponseEventArgs e)
         {
+            bool isLocal = false;
             if (e.Payload.Length > 3000000 &&
-                e.Response.ContentType == "application/x-shockwave-flash")
+                e.Response.ContentType == "application/x-shockwave-flash" ||
+                (isLocal = File.Exists(e.Response.ResponseUri.LocalPath)))
             {
                 string[] ports = MainUI.GameData.Port.Split(',');
                 if (MainUI.Game == null)
@@ -209,9 +220,13 @@ namespace Tanji.Dialogs
                     }
                 }
 
-                e.Payload = MainUI.Game.Data;
+                if (!isLocal)
+                    e.Payload = MainUI.Game.Data;
+
                 MainUI.GameData.Port = ports[0];
-                _possiblePorts.Add(ushort.Parse(MainUI.GameData.Port));
+
+                if (!MainUI.IsRetro)
+                    _possiblePorts.Add(ushort.Parse(MainUI.GameData.Port));
 
                 Eavesdropper.EavesdropperResponse -= ReplaceClient;
                 Eavesdropper.Terminate();
@@ -239,17 +254,21 @@ namespace Tanji.Dialogs
                     MainUI.GameData["tanji.connection.info.host"] = "127.0.0.1";
                     MainUI.GameData["tanji.client.starting"] = "Peeling Tangerines...";
                 }
-                else
-                {
-                    responseBody = responseBody.Replace(".swf?", ".swf")
-                        .Replace(".swf", ".swf?" + DateTime.Now.Ticks);
-                }
 
                 if (!MainUI.IsRetro && MainUI.Game == null)
                     TryLoadModdedClientAsync().Wait();
 
                 StatusTxt.SetDotAnimation((MainUI.Game == null ?
-                    "Intercepting" : "Replacing") + " Client");
+                    "Intercepting" : "Injecting") + " Client");
+
+                if (!MainUI.IsRetro)
+                {
+                    responseBody = responseBody.Replace(".swf?", ".swf")
+                        .Replace(".swf", ".swf?DoInject" + DateTime.Now.Ticks);
+
+                    if (MainUI.Game != null)
+                        Eavesdropper.EavesdropperRequest += InjectClient;
+                }
 
                 Eavesdropper.EavesdropperResponse -= ExtractHostPort;
                 Eavesdropper.EavesdropperResponse += ReplaceClient;
