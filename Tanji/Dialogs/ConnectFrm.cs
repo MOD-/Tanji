@@ -47,8 +47,8 @@ namespace Tanji.Dialogs
 {
     public partial class ConnectFrm : Form
     {
-        private bool _hasCorrectPort;
         private readonly Regex _ipMatcher;
+        private readonly IList<ushort> _possiblePorts;
 
         public MainFrm MainUI { get; }
 
@@ -61,6 +61,7 @@ namespace Tanji.Dialogs
             InitializeComponent();
             MainUI = main;
 
+            _possiblePorts = new List<ushort>();
             _ipMatcher = new Regex(
                 "^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
 
@@ -169,6 +170,7 @@ namespace Tanji.Dialogs
             if (e.Payload.Length > 3000000 &&
                 e.Response.ContentType == "application/x-shockwave-flash")
             {
+                string[] ports = MainUI.GameData.Port.Split(',');
                 if (MainUI.Game == null)
                 {
                     bool verifySuccess = VerifyGameClientAsync(
@@ -179,12 +181,23 @@ namespace Tanji.Dialogs
                         StatusTxt.SetDotAnimation("Extracting Tags");
                         var flashTags = MainUI.Game.ExtractTags();
 
-                        IEnumerable<FlashTag> viTags = null;
-                        if (MainUI.IsRetro) viTags = flashTags.OfType<DoABCTag>();
-                        else viTags = flashTags.OfType<DefineBinaryDataTag>();
+                        IEnumerable<FlashTag> tags = null;
+                        if (MainUI.IsRetro)
+                        {
+                            tags = flashTags.OfType<DoABCTag>();
+                            foreach (string port in ports)
+                            {
+                                ushort possiblePort = 0;
+                                if (ushort.TryParse(port, out possiblePort) &&
+                                    !_possiblePorts.Contains(possiblePort))
+                                {
+                                    _possiblePorts.Add(possiblePort);
+                                }
+                            }
+                        }
+                        else tags = flashTags.OfType<DefineBinaryDataTag>();
 
-                        SearchFlashTags(viTags);
-
+                        ModifyTags(tags);
                         StatusTxt.SetDotAnimation("Rebuilding Client");
                         MainUI.Game.Rebuild();
                     }
@@ -197,13 +210,17 @@ namespace Tanji.Dialogs
                 }
 
                 e.Payload = MainUI.Game.Data;
+                MainUI.GameData.Port = ports[0];
+                _possiblePorts.Add(ushort.Parse(MainUI.GameData.Port));
+
                 Eavesdropper.EavesdropperResponse -= ReplaceClient;
                 Eavesdropper.Terminate();
 
                 Task connectTask = MainUI.Connection
-                    .ConnectAsync(MainUI.GameData.Host, int.Parse(MainUI.GameData.Port.Split(',')[0]));
+                    .ConnectAsync(MainUI.GameData.Host, _possiblePorts.ToArray());
 
-                StatusTxt.SetDotAnimation("Intercepting Connection({0})", MainUI.GameData.Port);
+                StatusTxt.SetDotAnimation(
+                    "Intercepting Connection({0})", MainUI.GameData.Port);
             }
         }
         private void ExtractHostPort(object sender, EavesdropperResponseEventArgs e)
@@ -268,103 +285,110 @@ namespace Tanji.Dialogs
             return Convert.ToBase64String(data);
         }
 
-        private void ReplaceABC(DoABCTag abcTag)
+        private string ReplaceConstant(string constant)
         {
-            bool foundModInABC = false;
-            bool containedDefaultExpInABC = false;
+            bool modulusFound = false,
+                exponentFound = false;
 
-            CPoolInfo cPool = abcTag.ABCData.ConstantPool;
-            StatusTxt.SetDotAnimation("Squeezing ({0})", abcTag.Name);
-
-            var ignorePorts = new List<string>();
-            var possiblePorts = new List<ushort>();
-            for (int i = 1; i < cPool.Strings.Length; i++)
+            switch (constant)
             {
-                string cString = cPool.Strings[i];
-                if (cString.Length > 256 || cString.Length < 2) continue;
-
-                if (cString.Length > 2 && cString.Length < 6)
+                case "10001":
                 {
-                    ushort possiblePort = 0;
-                    if (ushort.TryParse(cString, out possiblePort))
-                    {
-                        if (!possiblePorts.Contains(possiblePort) &&
-                            !ignorePorts.Contains(cString))
-                        {
-                            possiblePorts.Add(possiblePort);
-                        }
-                    }
-                }
-
-                if (cPool.Strings[i].Length == 256)
-                {
-                    foundModInABC = true;
-                    if (string.IsNullOrWhiteSpace(MainUI.HandshakeMngr.RealModulus))
-                    {
-                        MainUI.HandshakeMngr.RealModulus = cString;
-                        cPool.Strings[i] = HandshakeManager.FAKE_MODULUS;
-                    }
-                }
-                else
-                {
-                    switch (cString)
-                    {
-                        default:
-                        {
-                            if (_ipMatcher.Match(cString).Success)
-                            {
-                                MainUI.GameData.Host = cString;
-                                cPool.Strings[i] = "127.0.0.1";
-                            }
-                            break;
-                        }
-
-                        case "10001":
-                        {
-                            containedDefaultExpInABC = true;
-                            cPool.Strings[i] = HandshakeManager.FAKE_EXPONENT.ToString();
-                            break;
-                        }
-                        case "localhost":
-                        {
-                            cPool.Strings[i] = "tsohlacol";
-                            break;
-                        }
-                        case "client.starting":
-                        {
-                            cPool.Strings[i] = "tanji.client.starting";
-                            break;
-                        }
-                        case "connection.info.host":
-                        {
-                            cPool.Strings[i] = "tanji.connection.info.host";
-                            break;
-                        }
-                    }
-                }
-            }
-
-            if (foundModInABC &&
-                !containedDefaultExpInABC && MainUI.IsRetro)
-            {
-                MainUI.HandshakeMngr.RealExponent = 3;
-            }
-
-            if (_hasCorrectPort) return;
-            possiblePorts.Insert(0, ushort.Parse(MainUI.GameData.Port));
-            foreach (ushort possiblePort in possiblePorts)
-            {
-                if (ignorePorts.Contains(possiblePort.ToString())) continue;
-                if (AttemptConnect(possiblePort, ignorePorts))
-                {
-                    _hasCorrectPort = true;
-                    MainUI.GameData.Port = possiblePort.ToString();
+                    exponentFound = true;
+                    constant = HandshakeManager.FAKE_EXPONENT.ToString();
                     break;
                 }
-                ignorePorts.Add(possiblePort.ToString());
+                case "localhost":
+                {
+                    constant = "tsohlacol";
+                    break;
+                }
+                case "client.starting":
+                {
+                    constant = "tanji.client.starting";
+                    break;
+                }
+                case "connection.info.host":
+                {
+                    constant = "tanji.connection.info.host";
+                    break;
+                }
+
+                default:
+                {
+                    if (constant.Length == 256)
+                    {
+                        modulusFound = true;
+                        if (string.IsNullOrWhiteSpace(MainUI.HandshakeMngr.RealModulus))
+                        {
+                            MainUI.HandshakeMngr.RealModulus = constant;
+                            constant = HandshakeManager.FAKE_MODULUS;
+                        }
+                    }
+                    else if (constant.Length < 10 &&
+                        _ipMatcher.Match(constant).Success)
+                    {
+                        MainUI.GameData.Host = constant;
+                        constant = "127.0.0.1";
+                    }
+                    break;
+                }
+            }
+
+            if (!exponentFound && modulusFound)
+                MainUI.HandshakeMngr.RealExponent = 3;
+
+            return constant;
+        }
+
+        private void ModifyAbc(DoABCTag abcTag)
+        {
+            CPoolInfo constants = abcTag.ABCData.ConstantPool;
+            StatusTxt.SetDotAnimation("Squeezing ({0})", abcTag.Name);
+
+            for (int i = 1; i < constants.Strings.Length; i++)
+            {
+                string constant = constants.Strings[i];
+                if (constant.Length > 256 || constant.Length < 2) continue;
+
+                if (constant.Length > 2 && constant.Length < 6)
+                {
+                    ushort possiblePort = 0;
+                    if (ushort.TryParse(constant, out possiblePort))
+                    {
+                        if (!_possiblePorts.Contains(possiblePort))
+                            _possiblePorts.Add(possiblePort);
+
+                        if (constant != "10001") continue;
+                    }
+                }
+
+                constants.Strings[i] =
+                    ReplaceConstant(constant);
             }
         }
-        private void ReplaceBIN(DefineBinaryDataTag binaryTag)
+        private void ModifyTags(IEnumerable<FlashTag> tags)
+        {
+            foreach (FlashTag tag in tags)
+            {
+                switch (tag.TagType)
+                {
+                    case FlashTagType.DefineBinaryData:
+                    {
+                        ModifyBin((DefineBinaryDataTag)tag);
+                        break;
+                    }
+
+                    case FlashTagType.DoABC:
+                    case FlashTagType.DoABC2:
+                    {
+                        ModifyAbc((DoABCTag)tag);
+                        break;
+                    }
+                }
+            }
+        }
+        private void ModifyBin(DefineBinaryDataTag binaryTag)
         {
             string binaryDataBody = Encoding.UTF8
                 .GetString(binaryTag.BinaryData);
@@ -382,60 +406,7 @@ namespace Tanji.Dialogs
 
                 binaryTag.BinaryData = Encoding.UTF8.GetBytes(
                     binaryDataBody.Replace(realRsaKeys, fakeRsaKeys));
-
-                return;
             }
-        }
-        private void SearchFlashTags(IEnumerable<FlashTag> viTags)
-        {
-            foreach (FlashTag tag in viTags)
-            {
-                switch (tag.TagType)
-                {
-                    case FlashTagType.DefineBinaryData:
-                    {
-                        ReplaceBIN((DefineBinaryDataTag)tag);
-                        break;
-                    }
-
-                    case FlashTagType.DoABC:
-                    case FlashTagType.DoABC2:
-                    {
-                        ReplaceABC((DoABCTag)tag);
-                        break;
-                    }
-                }
-            }
-        }
-        private bool AttemptConnect(ushort possiblePort, IList<string> ignorePorts)
-        {
-            Task<HNode> connectTask = HNode.ConnectAsync
-                (MainUI.GameData.Host, possiblePort);
-
-            Task timeout = Task.Delay(1250);
-            Task completed = Task.WhenAny(connectTask, timeout).Result;
-            if (completed == connectTask && !connectTask.IsFaulted)
-            {
-                using (HNode remote = connectTask.Result)
-                {
-                    try
-                    {
-                        var pingPacket = new byte[6] { 0, 0, 0, 1, 0, 0 };
-                        remote.SendAsync(pingPacket).Wait();
-
-                        var buffer = new byte[6];
-                        Task<int> receiveTask = remote.ReceiveAsync(buffer, 0, 6);
-
-                        timeout = Task.Delay(1000);
-                        completed = Task.WhenAny(receiveTask, timeout).Result;
-
-                        return (receiveTask.Status != TaskStatus.Faulted && remote.Client.Connected);
-                    }
-                    catch { return false; }
-                }
-            }
-            else ignorePorts.Add(possiblePort.ToString());
-            return false;
         }
 
         private void DoCancelConnect()
@@ -456,7 +427,7 @@ namespace Tanji.Dialogs
             StatusTxt.SetDotAnimation("Intercepting Connection");
 
             await MainUI.Connection.ConnectAsync(
-                GameHostTxt.Text, int.Parse(GamePortTxt.Text));
+                GameHostTxt.Text, ushort.Parse(GamePortTxt.Text));
 
             return MainUI.Connection.IsConnected;
         }
