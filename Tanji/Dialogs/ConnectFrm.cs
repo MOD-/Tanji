@@ -314,6 +314,7 @@ namespace Tanji.Dialogs
                 case "10001":
                 {
                     exponentFound = true;
+                    MainUI.HandshakeMngr.RealExponent = 10001;
                     constant = HandshakeManager.FAKE_EXPONENT.ToString();
                     break;
                 }
@@ -354,9 +355,11 @@ namespace Tanji.Dialogs
                 }
             }
 
-            if (!exponentFound && modulusFound)
+            if (MainUI.HandshakeMngr.RealExponent == 0 &&
+                !exponentFound && modulusFound)
+            {
                 MainUI.HandshakeMngr.RealExponent = 3;
-
+            }
             return constant;
         }
 
