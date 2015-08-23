@@ -490,12 +490,13 @@ namespace Tanji.Dialogs
             while (!Eavesdropper.CreateTrustedRootCertificate())
             {
                 var result = MessageBox.Show(
-                    "Eavesdrop requires a self-signed certificate in the root store to decrypt HTTPS traffic.\r\n\r\nWould you like to retry the process?\r\n\r\n",
+                    "Eavesdrop requires a self-signed certificate in the root store to intercep HTTPS traffic.\r\n\r\nWould you like to retry the process?",
                     "Tanji ~ Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
 
                 if (result == DialogResult.No)
                     Environment.Exit(0);
             }
+            Eavesdropper.ExportTrustedRootCertificate("EavesdropRoot.cer");
         }
         private async Task<bool> TryLoadModdedClientAsync()
         {
