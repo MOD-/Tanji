@@ -23,6 +23,7 @@
 */
 
 using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 using System.Security.Principal;
 
@@ -38,18 +39,22 @@ namespace Tanji
         static void Main()
         {
             Eavesdropper.Terminate();
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-
             var windowsPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             if (!windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator))
             {
-                MessageBox.Show("Tanji must be ran with administrative privileges.",
-                    "Tanji ~ Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                using (var tanjiProcess = new Process())
+                {
+                    tanjiProcess.StartInfo.Verb = "runas";
+                    tanjiProcess.StartInfo.FileName = "Tanji.exe";
+                    tanjiProcess.StartInfo.UseShellExecute = true;
+                    tanjiProcess.Start();
+                }
             }
             else
             {
                 HConnection.RestoreHosts();
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
                 Application.Run(new MainFrm());
             }
         }
