@@ -23,19 +23,40 @@
 */
 
 using System;
+using System.Net;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 
 using Tanji.Utilities;
+using System.IO.Compression;
+using System.IO;
 
 namespace Tanji.Dialogs
 {
     public partial class UpdateFrm : Form
     {
+        private readonly Task<bool> _checkForUpdatesTask;
+
         public MainFrm MainUI { get; }
         public Version LocalVersion { get; }
-        public GitReleases Releases { get; set; }
+
+        public GitAsset SelectedAsset
+        {
+            get { return SelectedRelease.Assets[0]; }
+        }
+        public GitRelease SelectedRelease
+        {
+            get { return TanjiReleases[ReleasesTxt.SelectedIndex]; }
+        }
+
+        public bool IsDownloading { get; private set; }
+        public string DownloadUrl { get; private set; }
+        public string ReleaseNotesUrl { get; private set; }
+
+        public Version LatestVersion { get; private set; }
+        public GitRelease LatestRelease { get; private set; }
+        public GitReleases TanjiReleases { get; private set; }
 
         public UpdateFrm(MainFrm main)
         {
@@ -44,31 +65,93 @@ namespace Tanji.Dialogs
 
             LocalVersion = new Version(Application.ProductVersion);
             MainUI.TanjiVersionTxt.Text = "v" + LocalVersion;
+
+            if (!main.IsDebugging)
+                _checkForUpdatesTask = CheckForUpdatesAsync();
+        }
+
+        private void UpdateFrm_Load(object sender, EventArgs e)
+        {
+            ReleasesTxt.DataSource = TanjiReleases;
+        }
+        private async void DownloadBtn_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                IsDownloading = true;
+                Cursor = Cursors.WaitCursor;
+
+                DownloadBtn.Enabled =
+                    ReleasesTxt.Enabled = false;
+
+                using (var webClient = new WebClient())
+                {
+                    webClient.Proxy = null;
+                    StatusLbl.SetDotAnimation("Downloading");
+                    byte[] tanjiZip = await webClient.DownloadDataTaskAsync(DownloadUrl);
+
+                    BringToFront();
+                    StatusLbl.StopDotAnimation("Extracting...");
+                    if (TanjiDirectoryDlg.ShowDialog() != DialogResult.OK)
+                    {
+                        StatusLbl.StopDotAnimation("Standing By...");
+                        return;
+                    }
+
+                    using (var tanjiStream = new MemoryStream(tanjiZip))
+                    using (var tanjiArchive = new ZipArchive(tanjiStream))
+                    {
+                        foreach (var tanjiFile in tanjiArchive.Entries)
+                        {
+                            StatusLbl.SetDotAnimation("Extracting {0}", tanjiFile.Name);
+
+                            string saveAs = Path.Combine(TanjiDirectoryDlg.SelectedPath, tanjiFile.Name);
+                            tanjiFile.ExtractToFile(saveAs, true);
+                        }
+                    }
+                }
+            }
+            finally
+            {
+                IsDownloading = false;
+                Cursor = Cursors.Default;
+
+                DownloadBtn.Enabled =
+                    ReleasesTxt.Enabled = true;
+
+                StatusLbl.StopDotAnimation("Standing By...");
+            }
+        }
+        private void UpdateFrm_FormClosing(object sender, FormClosingEventArgs e)
+        {
+            e.Cancel = IsDownloading;
+        }
+        private void ReleasesTxt_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            ReleaseNotesUrl = SelectedRelease.HtmlUrl;
+            DownloadUrl = SelectedAsset.BrowserDownloadUrl;
+
+            DownloadBtn.Text = $"Download ({SelectedAsset.Size / 1024} KB)";
+        }
+        private void ReleaseNotesLbl_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
+        {
+            Process.Start(ReleaseNotesUrl);
         }
 
         public async Task<bool> CheckForUpdatesAsync()
         {
-            var releases = Releases ?? (Releases = await GitReleases
-                .CreateAsync("ArachisH", "Tanji"));
+            if (_checkForUpdatesTask != null)
+                return await _checkForUpdatesTask.ConfigureAwait(false);
 
-            if (releases.Count < 1) return false;
-            var remoteVer = new Version(releases[0].TagName.Substring(1));
+            TanjiReleases = await GitReleases.CreateAsync(
+                "ArachisH", "Tanji").ConfigureAwait(false);
 
-            if (LocalVersion < remoteVer)
-            {
-                var renderedBody = await GitReleases.RenderBodyToHTML(releases[0]);
-                GitBodyWb.DocumentText = renderedBody;
+            if (TanjiReleases.Count < 1) return false;
 
-                Text = string.Format(Text,
-                    releases[0].Name, releases[0].TagName);
-            }
+            LatestRelease = TanjiReleases[0];
+            LatestVersion = new Version(LatestRelease.TagName.Substring(1));
 
-            return LocalVersion < remoteVer;
-        }
-
-        private void MoreInformationBtn_Click(object sender, EventArgs e)
-        {
-            Process.Start(Releases[0].HtmlUrl);
+            return LocalVersion < LatestVersion;
         }
     }
 }
