@@ -38,9 +38,10 @@ namespace Tanji.Managers
         public MainFrm MainUI { get; }
 
         public ExtensionManager(MainFrm main)
-            : base(main.Connection)
         {
             MainUI = main;
+            Connection = main.Connection;
+
             ExtensionAction += ExtensionManager_ExtensionAction;
 
             MainUI.ETOpenMenuBtn.Click += ETOpenMenuBtn_Click;
@@ -91,19 +92,19 @@ namespace Tanji.Managers
         private void ExtensionManager_ExtensionAction(object sender, ExtensionActionEventArgs e)
         {
             int runningCount =
-                Extensions.Count(ext => ext.IsRunning);
+                this.Count(ext => ext.IsRunning);
 
             MainUI.ExtensionsActiveTxt.Text =
-                $"Extensions Active: {runningCount}/{Extensions.Count}";
+                $"Extensions Active: {runningCount}/{Count}";
         }
 
         private void ContractorVw_ItemsDeselected(object sender, EventArgs e)
         {
-            MainUI.ETExtensionAOTChckbx.Enabled = false;
-            MainUI.ETUninstallExtensionBtn.Enabled = false;
-
             MainUI.ETOpenMenuBtn.Enabled = false;
             MainUI.ETUninstallMenuBtn.Enabled = false;
+
+            MainUI.ETExtensionAOTChckbx.Enabled = false;
+            MainUI.ETUninstallExtensionBtn.Enabled = false;
         }
         private void ContractorVw_ItemSelected(object sender, ListViewItemSelectionChangedEventArgs e)
         {
