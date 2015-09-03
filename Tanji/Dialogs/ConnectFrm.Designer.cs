@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConnectFrm));
             this.MiddleGlowPnl = new System.Windows.Forms.Panel();
             this.GamePortLbl = new System.Windows.Forms.Label();
             this.GameHostLbl = new System.Windows.Forms.Label();
@@ -238,12 +237,11 @@
             this.Controls.Add(this.ConnectBtn);
             this.Controls.Add(this.ModulusGrpbx);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.Icon = Tanji.Properties.Resources.Tanji;
+            this.Icon = global::Tanji.Properties.Resources.Tanji;
             this.MaximizeBox = false;
-            this.MinimizeBox = false;
             this.Name = "ConnectFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Tanji ~ Connection Setup [Automatic]";
+            this.Text = "Tanji ~ Connection Setup";
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConnectFrm_FormClosed);
             this.Shown += new System.EventHandler(this.ConnectFrm_Shown);

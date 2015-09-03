@@ -54,8 +54,6 @@ namespace Tanji.Dialogs
         public MainFrm MainUI { get; }
 
         public bool IsConnecting { get; private set; }
-        public bool IsReplacingClient { get; private set; }
-        public bool IsExtracingHostPort { get; private set; }
         public bool IsClientSourceReadable { get; private set; }
 
         public ConnectFrm(MainFrm main)
@@ -82,8 +80,9 @@ namespace Tanji.Dialogs
 
             try
             {
-                if (await MainUI.CheckForUpdatesTask)
+                if (await MainUI.UpdateUI.CheckForUpdatesAsync())
                 {
+                    WindowState = FormWindowState.Minimized;
                     StatusTxt.StopDotAnimation("Update Found!");
                     MainUI.UpdateUI.ShowDialog();
                 }
@@ -95,27 +94,12 @@ namespace Tanji.Dialogs
                     ConnectBtn.Enabled = ModePnl.Enabled = true;
 
                 StatusTxt.StopDotAnimation("Standing By...");
+                WindowState = FormWindowState.Normal;
             }
         }
         private void ConnectFrm_FormClosed(object sender, FormClosedEventArgs e)
         {
-            try
-            {
-                if (IsReplacingClient)
-                    Eavesdropper.EavesdropperResponse -= ReplaceClient;
-
-                if (IsExtracingHostPort)
-                    Eavesdropper.EavesdropperResponse -= ExtractHostPort;
-
-                ResetInterface();
-                Eavesdropper.Terminate();
-                HConnection.RestoreHosts();
-            }
-            finally
-            {
-                if (!MainUI.Connection.IsConnected)
-                    Environment.Exit(0);
-            }
+            DoConnectCleanup();
         }
 
         private void ModeChanged(object sender, EventArgs e)
@@ -124,9 +108,6 @@ namespace Tanji.Dialogs
                 GamePortTxt.ReadOnly = !ModePnl.IsManual;
 
             BrowseBtn.Enabled = !ModePnl.IsManual;
-
-            Text = string.Format("Tanji ~ Connection Setup [{0}]",
-                ModePnl.IsManual ? "Manual" : "Automatic");
         }
         private async void BrowseBtn_Click(object sender, EventArgs e)
         {
@@ -158,7 +139,7 @@ namespace Tanji.Dialogs
                 {
                     if (!IsConnecting) return;
 
-                    ResetInterface();
+                    DoConnectCleanup();
                     MessageBox.Show("Something went wrong when attempting to intercept the connection.",
                         "Tanji ~ Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
@@ -169,7 +150,7 @@ namespace Tanji.Dialogs
 
         private void InjectClient(object sender, EavesdropperRequestEventArgs e)
         {
-            if (e.Request.RequestUri.OriginalString.Contains(".swf?DoInject"))
+            if (e.Request.RequestUri.OriginalString.Contains(".swf?Tanji-"))
             {
                 Eavesdropper.EavesdropperRequest -= InjectClient;
                 e.Request = WebRequest.Create(new Uri(MainUI.Game.Location));
@@ -221,9 +202,7 @@ namespace Tanji.Dialogs
                     }
                 }
 
-                if (!isLocal)
-                    e.Payload = MainUI.Game.Data;
-
+                e.Payload = MainUI.Game.Data;
                 MainUI.GameData.Port = ports[0];
 
                 if (!MainUI.IsRetro)
@@ -251,25 +230,20 @@ namespace Tanji.Dialogs
 
                 if (MainUI.IsRetro)
                 {
+                    MainUI.GameData["tanji.connection.info.host"] = "127.0.0.1";
+                    MainUI.GameData["tanji.client.starting"] = "Peeling Tangerines...";
+
                     if (!string.IsNullOrWhiteSpace(MainUI.GameData.MovieUrl) &&
                         !string.IsNullOrWhiteSpace(MainUI.GameData.BaseUrl))
                     {
                         IsClientSourceReadable = true;
                         MainUI.GameData.MovieUrl += "?" + DateTime.Now.Ticks;
-                        MainUI.GameData["tanji.connection.info.host"] = "127.0.0.1";
-                        MainUI.GameData["tanji.client.starting"] = "Peeling Tangerines...";
                     }
                     else
                     {
-                        if (responseBody.Contains("embedSWF("))
-                        {
-                            string child = responseBody.GetChild("embedSWF(", ',');
-                            responseBody = responseBody.Replace(child, child + $"+\"?{DateTime.Now.Ticks}\"");
-                        }
-
-                        MainUI.GameData["tanji.connection.info.host"] = "127.0.0.1";
-                        responseBody = responseBody.Replace(MainUI.GameData.Host, MainUI.GameData.Host +
-                            "\", \"tanji.connection.info.host\":\"127.0.0.1");
+                        responseBody = responseBody.Replace(MainUI.GameData.Host,
+                            MainUI.GameData.Host +
+                            "\", \"tanji.connection.info.host\":\"127.0.0.1\", \"tanji.client.starting\":\"Peeling Tangerines...");
                     }
                 }
 
@@ -279,11 +253,16 @@ namespace Tanji.Dialogs
                 StatusTxt.SetDotAnimation((MainUI.Game == null ?
                     "Intercepting" : "Injecting") + " Client");
 
+                if (responseBody.Contains("embedSWF("))
+                {
+                    string child = responseBody.GetChild("embedSWF(", ',');
+
+                    responseBody = responseBody.Replace($"embedSWF({child}",
+                        $"embedSWF({child} + \"?Tanji-{DateTime.Now.Ticks}\"");
+                }
+
                 if (!MainUI.IsRetro)
                 {
-                    responseBody = responseBody.Replace(".swf?", ".swf")
-                        .Replace(".swf", ".swf?DoInject" + DateTime.Now.Ticks);
-
                     if (MainUI.Game != null)
                         Eavesdropper.EavesdropperRequest += InjectClient;
                 }
@@ -295,32 +274,6 @@ namespace Tanji.Dialogs
                     MainUI.IsRetro && IsClientSourceReadable ?
                     MainUI.GameData.ToString() : responseBody);
             }
-        }
-
-        private void ExtractRsaKeys(string base64RsaKeys)
-        {
-            byte[] rsaKeyData = Convert.FromBase64String(base64RsaKeys);
-            string mergedRsaKeys = Encoding.UTF8.GetString(rsaKeyData);
-
-            int modLength = mergedRsaKeys[0];
-            string modulus = mergedRsaKeys.Substring(1, modLength);
-
-            mergedRsaKeys = mergedRsaKeys.Substring(modLength);
-            int exponent = int.Parse(mergedRsaKeys.Substring(2));
-
-            if (string.IsNullOrWhiteSpace(MainUI.HandshakeMngr.RealModulus))
-                MainUI.HandshakeMngr.RealModulus = modulus;
-
-            if (MainUI.HandshakeMngr.RealExponent == 0)
-                MainUI.HandshakeMngr.RealExponent = exponent;
-        }
-        private string EncodeRsaKeys(int exponent, string modulus)
-        {
-            string mergedKeys = string.Format("{0}{1} {2}",
-                (char)modulus.Length, modulus, exponent);
-
-            byte[] data = Encoding.UTF8.GetBytes(mergedKeys);
-            return Convert.ToBase64String(data);
         }
 
         private string ReplaceConstant(string constant)
@@ -384,6 +337,31 @@ namespace Tanji.Dialogs
                 MainUI.HandshakeMngr.RealExponent = 3;
             }
             return constant;
+        }
+        private void ExtractRsaKeys(string base64RsaKeys)
+        {
+            byte[] rsaKeyData = Convert.FromBase64String(base64RsaKeys);
+            string mergedRsaKeys = Encoding.UTF8.GetString(rsaKeyData);
+
+            int modLength = mergedRsaKeys[0];
+            string modulus = mergedRsaKeys.Substring(1, modLength);
+
+            mergedRsaKeys = mergedRsaKeys.Substring(modLength);
+            int exponent = int.Parse(mergedRsaKeys.Substring(2));
+
+            if (string.IsNullOrWhiteSpace(MainUI.HandshakeMngr.RealModulus))
+                MainUI.HandshakeMngr.RealModulus = modulus;
+
+            if (MainUI.HandshakeMngr.RealExponent == 0)
+                MainUI.HandshakeMngr.RealExponent = exponent;
+        }
+        private string EncodeRsaKeys(int exponent, string modulus)
+        {
+            string mergedKeys = string.Format("{0}{1} {2}",
+                (char)modulus.Length, modulus, exponent);
+
+            byte[] data = Encoding.UTF8.GetBytes(mergedKeys);
+            return Convert.ToBase64String(data);
         }
 
         private void ModifyAbc(DoABCTag abcTag)
@@ -456,9 +434,28 @@ namespace Tanji.Dialogs
 
         private void DoCancelConnect()
         {
-            ResetInterface();
-            Eavesdropper.Terminate();
+            DoConnectCleanup();
             MainUI.Connection.Disconnect();
+
+            _possiblePorts.Clear();
+            IsClientSourceReadable = false;
+
+            MainUI.Game = null;
+            MainUI.GameData = null;
+        }
+        private void DoConnectCleanup()
+        {
+            IsConnecting = false;
+            ConnectBtn.Text = "Connect";
+            StatusTxt.StopDotAnimation("Standing By...");
+            GameHostTxt.ReadOnly = GamePortTxt.ReadOnly = !ModePnl.IsManual;
+            ModePnl.Enabled = !(ExponentTxt.ReadOnly = ModulusTxt.ReadOnly = false);
+
+            Eavesdropper.Terminate();
+            HConnection.RestoreHosts();
+            Eavesdropper.EavesdropperRequest -= InjectClient;
+            Eavesdropper.EavesdropperResponse -= ReplaceClient;
+            Eavesdropper.EavesdropperResponse -= ExtractHostPort;
         }
         private void DoAutomaticConnect()
         {
@@ -477,14 +474,6 @@ namespace Tanji.Dialogs
             return MainUI.Connection.IsConnected;
         }
 
-        private void ResetInterface()
-        {
-            IsConnecting = false;
-            ConnectBtn.Text = "Connect";
-            StatusTxt.StopDotAnimation("Standing By...");
-            GameHostTxt.ReadOnly = GamePortTxt.ReadOnly = !ModePnl.IsManual;
-            ModePnl.Enabled = !(ExponentTxt.ReadOnly = ModulusTxt.ReadOnly = false);
-        }
         private void CreateTrustedRootCertificate()
         {
             while (!Eavesdropper.CreateTrustedRootCertificate())
