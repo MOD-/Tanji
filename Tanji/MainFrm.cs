@@ -25,7 +25,6 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using System.Threading.Tasks;
 
 using Tanji.Dialogs;
 using Tanji.Managers;
@@ -46,7 +45,6 @@ namespace Tanji
         public HConnection Connection { get; }
         public HGameData GameData { get; set; }
         public ShockwaveFlash Game { get; set; }
-        public Task<bool> CheckForUpdatesTask { get; }
 
         public EncoderManager EncoderMngr { get; }
         public HandshakeManager HandshakeMngr { get; }
@@ -66,11 +64,9 @@ namespace Tanji
             ConnectUI = new ConnectFrm(this);
             if (!IsDebugging)
             {
-                CheckForUpdatesTask = UpdateUI.CheckForUpdatesAsync();
-
                 Load += MainFrm_Load;
                 Shown += MainFrm_Shown;
-                
+
                 Connection.Connected += Connected;
                 Connection.Disconnected += Disconnected;
             }
@@ -89,7 +85,9 @@ namespace Tanji
         private void MainFrm_Load(object sender, EventArgs e)
         {
             PromptConnect();
-            Text = $"Tanji ~ Connected[{GameData.Host}:{GameData.Port}]";
+
+            if (!Connection.IsConnected) Close();
+            else Text = $"Tanji ~ Connected[{GameData.Host}:{GameData.Port}]";
         }
         private void MainFrm_Shown(object sender, EventArgs e)
         {
@@ -107,7 +105,7 @@ namespace Tanji
         }
         private void Disconnected(object sender, EventArgs e)
         {
-            Environment.Exit(0);
+            Invoke(new MethodInvoker(Close));
         }
 
         private void TanjiInfoTxt_Click(object sender, EventArgs e)
@@ -119,7 +117,7 @@ namespace Tanji
         {
             TanjiVersionTxt.LinkVisited = true;
 
-            string htmlUrl = UpdateUI.Releases?[0].HtmlUrl;
+            string htmlUrl = UpdateUI.TanjiReleases?[0].HtmlUrl;
             if (!string.IsNullOrWhiteSpace(htmlUrl))
                 Process.Start(htmlUrl);
         }
