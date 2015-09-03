@@ -77,5 +77,10 @@ namespace Tanji.Utilities
 
         [DataMember(Name = "assets")]
         public List<GitAsset> Assets { get; set; }
+
+        public override string ToString()
+        {
+            return TagName;
+        }
     }
 }
