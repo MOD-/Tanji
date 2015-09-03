@@ -22,10 +22,10 @@
     See License.txt in the project root for license information.
 */
 
+using System;
 using System.IO;
 using System.Text;
 using System.Net.Http;
-using System.Collections;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
@@ -33,57 +33,44 @@ using System.Runtime.Serialization.Json;
 
 namespace Tanji.Utilities
 {
-    [DataContract]
-    public class GitReleases : IReadOnlyList<GitRelease>
+    [CollectionDataContract]
+    public class GitReleases : List<GitRelease>
     {
-        [DataMember(Name = "releases")]
-        private List<GitRelease> _releases { get; set; } = new List<GitRelease>();
-
         private static readonly HttpClient _httpClient;
         private static readonly HttpClientHandler _httpClientHandler;
         private static readonly DataContractJsonSerializer _deserializer;
-
-        public int Count => _releases.Count;
-        public GitRelease this[int index] => _releases[index];
-
-        public IEnumerator<GitRelease> GetEnumerator() =>
-            _releases.GetEnumerator();
-
-        IEnumerator IEnumerable.GetEnumerator() =>
-            ((IEnumerable)_releases).GetEnumerator();
 
         static GitReleases()
         {
             _deserializer = new DataContractJsonSerializer(typeof(GitReleases));
 
             _httpClientHandler = new HttpClientHandler() { UseProxy = false };
-            _httpClient = new HttpClient(_httpClientHandler, true);
+            _httpClient = new HttpClient(_httpClientHandler, true) { Timeout = TimeSpan.FromSeconds(10) };
 
             _httpClient.DefaultRequestHeaders.Add("User-Agent",
-                "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident / 6.0)");
+                    "Mozilla/5.0 (compatible; MSIE 10.0; Windows NT 6.2; WOW64; Trident / 6.0)");
         }
 
-        public static async Task<string> RenderBodyToHTML(GitRelease release)
+        public static async Task<string> ToHTMLAsync(GitRelease release)
         {
-            var content = new StringContent(release.Body,
-                Encoding.UTF8, "text/plain");
+            var content = new StringContent(
+                release.Body, Encoding.UTF8, "text/plain");
 
             var releaseJson = await _httpClient.PostAsync(
                 "https://api.github.com/markdown/raw", content).ConfigureAwait(false);
 
-            return await releaseJson.Content.ReadAsStringAsync();
+            return await releaseJson.Content
+                .ReadAsStringAsync().ConfigureAwait(false);
         }
         public static async Task<GitReleases> CreateAsync(string owner, string repository)
         {
             string releaseJson = await _httpClient.GetStringAsync(
-                $"https://api.github.com/repos/{owner}/{repository}/releases").ConfigureAwait(false);
-            releaseJson = $"{{\"releases\":[{releaseJson.Substring(1, releaseJson.Length - 2)}]}}";
+                $"https://api.github.com/repos/{owner}/{repository}/releases")
+                .ConfigureAwait(false);
 
             byte[] rawJson = Encoding.UTF8.GetBytes(releaseJson);
             using (var jsonStream = new MemoryStream(rawJson))
-            {
                 return (GitReleases)_deserializer.ReadObject(jsonStream);
-            }
         }
     }
 }
