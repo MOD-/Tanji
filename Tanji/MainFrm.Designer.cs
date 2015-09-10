@@ -34,6 +34,30 @@
             this.SchedulesActiveTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.ExtensionsActiveTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.TanjiInfoTxt = new System.Windows.Forms.ToolStripStatusLabel();
+            this.PTPrimitiveMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.PTInsertFormatParameterBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PTIntegerBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PTStringBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PTBooleanBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PTLengthHeaderBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PTMenuSeparatorTop = new System.Windows.Forms.ToolStripSeparator();
+            this.PTCutBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PTCopyBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PTPasteBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PTMenuSeperatorBottom = new System.Windows.Forms.ToolStripSeparator();
+            this.PTUndoBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PTSelectAllBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ETExtensionMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.ETOpenMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ETUninstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ETMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
+            this.ETInstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ICTypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ICValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ICEncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.TanjiTabs = new Sulakore.Components.SKoreTabControl();
             this.InjectionTab = new System.Windows.Forms.TabPage();
             this.ITSendToClientBtn = new Sulakore.Components.SKoreButton();
@@ -88,19 +112,6 @@
             this.PTIsCorruptedLbl = new System.Windows.Forms.Label();
             this.PTPacketInfoLbl = new System.Windows.Forms.Label();
             this.PTPacketTxt = new System.Windows.Forms.TextBox();
-            this.PTPrimitiveMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.PTInsertFormatParameterBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.PTIntegerBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.PTStringBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.PTBooleanBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.PTLengthHeaderBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.PTMenuSeparatorTop = new System.Windows.Forms.ToolStripSeparator();
-            this.PTCutBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.PTCopyBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.PTPasteBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.PTMenuSeperatorBottom = new System.Windows.Forms.ToolStripSeparator();
-            this.PTUndoBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.PTSelectAllBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ITPacketTxt = new System.Windows.Forms.ComboBox();
             this.EncoderDecoderTab = new System.Windows.Forms.TabPage();
             this.EDTIntegerInputTxt = new System.Windows.Forms.NumericUpDown();
@@ -128,19 +139,10 @@
             this.ETDescriptionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ETVersionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ETStatusCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ETExtensionMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ETOpenMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.ETUninstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.ETMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
-            this.ETInstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ETInstallExtensionBtn = new Sulakore.Components.SKoreButton();
-            this.ICTypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ICValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ICEncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.TanjiStrip.SuspendLayout();
+            this.PTPrimitiveMenu.SuspendLayout();
+            this.ETExtensionMenu.SuspendLayout();
             this.TanjiTabs.SuspendLayout();
             this.InjectionTab.SuspendLayout();
             this.InjectionTabs.SuspendLayout();
@@ -150,12 +152,10 @@
             ((System.ComponentModel.ISupportInitialize)(this.STBurstTxt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.STIntervalTxt)).BeginInit();
             this.PrimitiveTab.SuspendLayout();
-            this.PTPrimitiveMenu.SuspendLayout();
             this.EncoderDecoderTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.EDTIntegerInputTxt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.EDTShortInputTxt)).BeginInit();
             this.ExtensionsTab.SuspendLayout();
-            this.ETExtensionMenu.SuspendLayout();
             this.SuspendLayout();
             // 
             // TanjiStrip
@@ -209,6 +209,169 @@
             this.TanjiInfoTxt.Text = "GitHub | ArachisH/Tanji";
             this.TanjiInfoTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TanjiInfoTxt.Click += new System.EventHandler(this.TanjiInfoTxt_Click);
+            // 
+            // PTPrimitiveMenu
+            // 
+            this.PTPrimitiveMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PTInsertFormatParameterBtn,
+            this.PTMenuSeparatorTop,
+            this.PTCutBtn,
+            this.PTCopyBtn,
+            this.PTPasteBtn,
+            this.PTMenuSeperatorBottom,
+            this.PTUndoBtn,
+            this.PTSelectAllBtn});
+            this.PTPrimitiveMenu.Name = "ConstructMenu";
+            this.PTPrimitiveMenu.Size = new System.Drawing.Size(204, 148);
+            // 
+            // PTInsertFormatParameterBtn
+            // 
+            this.PTInsertFormatParameterBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PTIntegerBtn,
+            this.PTStringBtn,
+            this.PTBooleanBtn,
+            this.PTLengthHeaderBtn});
+            this.PTInsertFormatParameterBtn.Name = "PTInsertFormatParameterBtn";
+            this.PTInsertFormatParameterBtn.Size = new System.Drawing.Size(203, 22);
+            this.PTInsertFormatParameterBtn.Text = "Insert/Format Parameter";
+            // 
+            // PTIntegerBtn
+            // 
+            this.PTIntegerBtn.Name = "PTIntegerBtn";
+            this.PTIntegerBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+            this.PTIntegerBtn.Size = new System.Drawing.Size(197, 22);
+            this.PTIntegerBtn.Text = "Integer";
+            // 
+            // PTStringBtn
+            // 
+            this.PTStringBtn.Name = "PTStringBtn";
+            this.PTStringBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.PTStringBtn.Size = new System.Drawing.Size(197, 22);
+            this.PTStringBtn.Text = "String";
+            // 
+            // PTBooleanBtn
+            // 
+            this.PTBooleanBtn.Name = "PTBooleanBtn";
+            this.PTBooleanBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
+            this.PTBooleanBtn.Size = new System.Drawing.Size(197, 22);
+            this.PTBooleanBtn.Text = "Boolean";
+            // 
+            // PTLengthHeaderBtn
+            // 
+            this.PTLengthHeaderBtn.Name = "PTLengthHeaderBtn";
+            this.PTLengthHeaderBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
+            this.PTLengthHeaderBtn.Size = new System.Drawing.Size(197, 22);
+            this.PTLengthHeaderBtn.Text = "Length/Header";
+            // 
+            // PTMenuSeparatorTop
+            // 
+            this.PTMenuSeparatorTop.Name = "PTMenuSeparatorTop";
+            this.PTMenuSeparatorTop.Size = new System.Drawing.Size(200, 6);
+            // 
+            // PTCutBtn
+            // 
+            this.PTCutBtn.Name = "PTCutBtn";
+            this.PTCutBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
+            this.PTCutBtn.Size = new System.Drawing.Size(203, 22);
+            this.PTCutBtn.Text = "Cut";
+            // 
+            // PTCopyBtn
+            // 
+            this.PTCopyBtn.Name = "PTCopyBtn";
+            this.PTCopyBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.PTCopyBtn.Size = new System.Drawing.Size(203, 22);
+            this.PTCopyBtn.Text = "Copy";
+            // 
+            // PTPasteBtn
+            // 
+            this.PTPasteBtn.Name = "PTPasteBtn";
+            this.PTPasteBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
+            this.PTPasteBtn.Size = new System.Drawing.Size(203, 22);
+            this.PTPasteBtn.Text = "Paste";
+            // 
+            // PTMenuSeperatorBottom
+            // 
+            this.PTMenuSeperatorBottom.Name = "PTMenuSeperatorBottom";
+            this.PTMenuSeperatorBottom.Size = new System.Drawing.Size(200, 6);
+            // 
+            // PTUndoBtn
+            // 
+            this.PTUndoBtn.Name = "PTUndoBtn";
+            this.PTUndoBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
+            this.PTUndoBtn.Size = new System.Drawing.Size(203, 22);
+            this.PTUndoBtn.Text = "Undo";
+            // 
+            // PTSelectAllBtn
+            // 
+            this.PTSelectAllBtn.Name = "PTSelectAllBtn";
+            this.PTSelectAllBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
+            this.PTSelectAllBtn.Size = new System.Drawing.Size(203, 22);
+            this.PTSelectAllBtn.Text = "Select All";
+            // 
+            // ETExtensionMenu
+            // 
+            this.ETExtensionMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.ETOpenMenuBtn,
+            this.ETUninstallMenuBtn,
+            this.ETMenuSplitter,
+            this.ETInstallMenuBtn});
+            this.ETExtensionMenu.Name = "ConstructMenu";
+            this.ETExtensionMenu.Size = new System.Drawing.Size(159, 76);
+            // 
+            // ETOpenMenuBtn
+            // 
+            this.ETOpenMenuBtn.Enabled = false;
+            this.ETOpenMenuBtn.Name = "ETOpenMenuBtn";
+            this.ETOpenMenuBtn.Size = new System.Drawing.Size(158, 22);
+            this.ETOpenMenuBtn.Text = "Open";
+            // 
+            // ETUninstallMenuBtn
+            // 
+            this.ETUninstallMenuBtn.Enabled = false;
+            this.ETUninstallMenuBtn.Name = "ETUninstallMenuBtn";
+            this.ETUninstallMenuBtn.Size = new System.Drawing.Size(158, 22);
+            this.ETUninstallMenuBtn.Text = "Uninstall";
+            // 
+            // ETMenuSplitter
+            // 
+            this.ETMenuSplitter.Name = "ETMenuSplitter";
+            this.ETMenuSplitter.Size = new System.Drawing.Size(155, 6);
+            // 
+            // ETInstallMenuBtn
+            // 
+            this.ETInstallMenuBtn.Name = "ETInstallMenuBtn";
+            this.ETInstallMenuBtn.Size = new System.Drawing.Size(158, 22);
+            this.ETInstallMenuBtn.Text = "Install Extension";
+            // 
+            // ICTypeCol
+            // 
+            this.ICTypeCol.Text = "Type";
+            this.ICTypeCol.Width = 72;
+            // 
+            // ICValueCol
+            // 
+            this.ICValueCol.Text = "Value";
+            this.ICValueCol.Width = 137;
+            // 
+            // ICEncodedCol
+            // 
+            this.ICEncodedCol.Text = "Encoded";
+            this.ICEncodedCol.Width = 150;
+            // 
+            // columnHeader1
+            // 
+            this.columnHeader1.Text = "Type";
+            this.columnHeader1.Width = 72;
+            // 
+            // columnHeader2
+            // 
+            this.columnHeader2.Text = "Value";
+            this.columnHeader2.Width = 137;
+            // 
+            // columnHeader3
+            // 
+            this.columnHeader3.Text = "Encoded";
+            this.columnHeader3.Width = 150;
             // 
             // TanjiTabs
             // 
@@ -739,7 +902,6 @@
             this.STDescriptionTxt.ReadOnly = true;
             this.STDescriptionTxt.Size = new System.Drawing.Size(230, 20);
             this.STDescriptionTxt.TabIndex = 43;
-            this.STDescriptionTxt.Text = "Why am I even here?";
             this.STDescriptionTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // STAutoStartChckbx
@@ -844,104 +1006,6 @@
             this.PTPacketTxt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
             this.PTPacketTxt.Size = new System.Drawing.Size(386, 246);
             this.PTPacketTxt.TabIndex = 3;
-            // 
-            // PTPrimitiveMenu
-            // 
-            this.PTPrimitiveMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.PTInsertFormatParameterBtn,
-            this.PTMenuSeparatorTop,
-            this.PTCutBtn,
-            this.PTCopyBtn,
-            this.PTPasteBtn,
-            this.PTMenuSeperatorBottom,
-            this.PTUndoBtn,
-            this.PTSelectAllBtn});
-            this.PTPrimitiveMenu.Name = "ConstructMenu";
-            this.PTPrimitiveMenu.Size = new System.Drawing.Size(204, 148);
-            // 
-            // PTInsertFormatParameterBtn
-            // 
-            this.PTInsertFormatParameterBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.PTIntegerBtn,
-            this.PTStringBtn,
-            this.PTBooleanBtn,
-            this.PTLengthHeaderBtn});
-            this.PTInsertFormatParameterBtn.Name = "PTInsertFormatParameterBtn";
-            this.PTInsertFormatParameterBtn.Size = new System.Drawing.Size(203, 22);
-            this.PTInsertFormatParameterBtn.Text = "Insert/Format Parameter";
-            // 
-            // PTIntegerBtn
-            // 
-            this.PTIntegerBtn.Name = "PTIntegerBtn";
-            this.PTIntegerBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
-            this.PTIntegerBtn.Size = new System.Drawing.Size(197, 22);
-            this.PTIntegerBtn.Text = "Integer";
-            // 
-            // PTStringBtn
-            // 
-            this.PTStringBtn.Name = "PTStringBtn";
-            this.PTStringBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.PTStringBtn.Size = new System.Drawing.Size(197, 22);
-            this.PTStringBtn.Text = "String";
-            // 
-            // PTBooleanBtn
-            // 
-            this.PTBooleanBtn.Name = "PTBooleanBtn";
-            this.PTBooleanBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
-            this.PTBooleanBtn.Size = new System.Drawing.Size(197, 22);
-            this.PTBooleanBtn.Text = "Boolean";
-            // 
-            // PTLengthHeaderBtn
-            // 
-            this.PTLengthHeaderBtn.Name = "PTLengthHeaderBtn";
-            this.PTLengthHeaderBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.H)));
-            this.PTLengthHeaderBtn.Size = new System.Drawing.Size(197, 22);
-            this.PTLengthHeaderBtn.Text = "Length/Header";
-            // 
-            // PTMenuSeparatorTop
-            // 
-            this.PTMenuSeparatorTop.Name = "PTMenuSeparatorTop";
-            this.PTMenuSeparatorTop.Size = new System.Drawing.Size(200, 6);
-            // 
-            // PTCutBtn
-            // 
-            this.PTCutBtn.Name = "PTCutBtn";
-            this.PTCutBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.X)));
-            this.PTCutBtn.Size = new System.Drawing.Size(203, 22);
-            this.PTCutBtn.Text = "Cut";
-            // 
-            // PTCopyBtn
-            // 
-            this.PTCopyBtn.Name = "PTCopyBtn";
-            this.PTCopyBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
-            this.PTCopyBtn.Size = new System.Drawing.Size(203, 22);
-            this.PTCopyBtn.Text = "Copy";
-            // 
-            // PTPasteBtn
-            // 
-            this.PTPasteBtn.Name = "PTPasteBtn";
-            this.PTPasteBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.V)));
-            this.PTPasteBtn.Size = new System.Drawing.Size(203, 22);
-            this.PTPasteBtn.Text = "Paste";
-            // 
-            // PTMenuSeperatorBottom
-            // 
-            this.PTMenuSeperatorBottom.Name = "PTMenuSeperatorBottom";
-            this.PTMenuSeperatorBottom.Size = new System.Drawing.Size(200, 6);
-            // 
-            // PTUndoBtn
-            // 
-            this.PTUndoBtn.Name = "PTUndoBtn";
-            this.PTUndoBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Z)));
-            this.PTUndoBtn.Size = new System.Drawing.Size(203, 22);
-            this.PTUndoBtn.Text = "Undo";
-            // 
-            // PTSelectAllBtn
-            // 
-            this.PTSelectAllBtn.Name = "PTSelectAllBtn";
-            this.PTSelectAllBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.A)));
-            this.PTSelectAllBtn.Size = new System.Drawing.Size(203, 22);
-            this.PTSelectAllBtn.Text = "Select All";
             // 
             // ITPacketTxt
             // 
@@ -1221,41 +1285,6 @@
             // 
             this.ETStatusCol.Text = "Status";
             // 
-            // ETExtensionMenu
-            // 
-            this.ETExtensionMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ETOpenMenuBtn,
-            this.ETUninstallMenuBtn,
-            this.ETMenuSplitter,
-            this.ETInstallMenuBtn});
-            this.ETExtensionMenu.Name = "ConstructMenu";
-            this.ETExtensionMenu.Size = new System.Drawing.Size(159, 76);
-            // 
-            // ETOpenMenuBtn
-            // 
-            this.ETOpenMenuBtn.Enabled = false;
-            this.ETOpenMenuBtn.Name = "ETOpenMenuBtn";
-            this.ETOpenMenuBtn.Size = new System.Drawing.Size(158, 22);
-            this.ETOpenMenuBtn.Text = "Open";
-            // 
-            // ETUninstallMenuBtn
-            // 
-            this.ETUninstallMenuBtn.Enabled = false;
-            this.ETUninstallMenuBtn.Name = "ETUninstallMenuBtn";
-            this.ETUninstallMenuBtn.Size = new System.Drawing.Size(158, 22);
-            this.ETUninstallMenuBtn.Text = "Uninstall";
-            // 
-            // ETMenuSplitter
-            // 
-            this.ETMenuSplitter.Name = "ETMenuSplitter";
-            this.ETMenuSplitter.Size = new System.Drawing.Size(155, 6);
-            // 
-            // ETInstallMenuBtn
-            // 
-            this.ETInstallMenuBtn.Name = "ETInstallMenuBtn";
-            this.ETInstallMenuBtn.Size = new System.Drawing.Size(158, 22);
-            this.ETInstallMenuBtn.Text = "Install Extension";
-            // 
             // ETInstallExtensionBtn
             // 
             this.ETInstallExtensionBtn.BackColor = System.Drawing.Color.Transparent;
@@ -1266,36 +1295,6 @@
             this.ETInstallExtensionBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.ETInstallExtensionBtn.TabIndex = 1;
             this.ETInstallExtensionBtn.Text = "Install Extension";
-            // 
-            // ICTypeCol
-            // 
-            this.ICTypeCol.Text = "Type";
-            this.ICTypeCol.Width = 72;
-            // 
-            // ICValueCol
-            // 
-            this.ICValueCol.Text = "Value";
-            this.ICValueCol.Width = 137;
-            // 
-            // ICEncodedCol
-            // 
-            this.ICEncodedCol.Text = "Encoded";
-            this.ICEncodedCol.Width = 150;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Type";
-            this.columnHeader1.Width = 72;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Value";
-            this.columnHeader2.Width = 137;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Encoded";
-            this.columnHeader3.Width = 150;
             // 
             // MainFrm
             // 
@@ -1313,6 +1312,8 @@
             this.Text = "Tanji ~ Connected[Host:Port]";
             this.TanjiStrip.ResumeLayout(false);
             this.TanjiStrip.PerformLayout();
+            this.PTPrimitiveMenu.ResumeLayout(false);
+            this.ETExtensionMenu.ResumeLayout(false);
             this.TanjiTabs.ResumeLayout(false);
             this.InjectionTab.ResumeLayout(false);
             this.InjectionTabs.ResumeLayout(false);
@@ -1325,14 +1326,12 @@
             ((System.ComponentModel.ISupportInitialize)(this.STIntervalTxt)).EndInit();
             this.PrimitiveTab.ResumeLayout(false);
             this.PrimitiveTab.PerformLayout();
-            this.PTPrimitiveMenu.ResumeLayout(false);
             this.EncoderDecoderTab.ResumeLayout(false);
             this.EncoderDecoderTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.EDTIntegerInputTxt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.EDTShortInputTxt)).EndInit();
             this.ExtensionsTab.ResumeLayout(false);
             this.ExtensionsTab.PerformLayout();
-            this.ETExtensionMenu.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
