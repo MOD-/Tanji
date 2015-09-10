@@ -43,6 +43,7 @@ using Eavesdrop;
 using FlashInspect;
 using FlashInspect.Tags;
 using FlashInspect.Bytecode.DataTypes;
+using System.Diagnostics;
 
 namespace Tanji.Dialogs
 {
@@ -52,14 +53,16 @@ namespace Tanji.Dialogs
         private readonly IList<ushort> _possiblePorts;
 
         public MainFrm MainUI { get; }
-
-        public bool IsConnecting { get; private set; }
-        public bool IsClientSourceReadable { get; private set; }
+        public AboutManager AboutMngr { get; }
+        public ConnectionManager ConnectionMngr { get; }
 
         public ConnectFrm(MainFrm main)
         {
             InitializeComponent();
             MainUI = main;
+
+            ConnectionMngr = new ConnectionManager(this);
+            AboutMngr = new AboutManager(main, AboutTab);
 
             _possiblePorts = new List<ushort>();
             _ipMatcher = new Regex(
@@ -74,8 +77,8 @@ namespace Tanji.Dialogs
 
         private async void ConnectFrm_Shown(object sender, EventArgs e)
         {
-            BrowseBtn.Enabled =
-                ConnectBtn.Enabled = ModePnl.Enabled = false;
+            CTBrowseBtn.Enabled =
+                ConnectBtn.Enabled = false;
             StatusTxt.SetDotAnimation("Checking for updates");
 
             try
@@ -90,8 +93,8 @@ namespace Tanji.Dialogs
             catch { /* Update check failed. */ }
             finally
             {
-                BrowseBtn.Enabled =
-                    ConnectBtn.Enabled = ModePnl.Enabled = true;
+                CTBrowseBtn.Enabled =
+                    ConnectBtn.Enabled = true;
 
                 StatusTxt.StopDotAnimation("Standing By...");
                 WindowState = FormWindowState.Normal;
@@ -102,13 +105,6 @@ namespace Tanji.Dialogs
             DoConnectCleanup();
         }
 
-        private void ModeChanged(object sender, EventArgs e)
-        {
-            GameHostTxt.ReadOnly =
-                GamePortTxt.ReadOnly = !ModePnl.IsManual;
-
-            BrowseBtn.Enabled = !ModePnl.IsManual;
-        }
         private async void BrowseBtn_Click(object sender, EventArgs e)
         {
             ChooseClientDlg.FileName = ChooseClientDlg.SafeFileName;
@@ -124,26 +120,15 @@ namespace Tanji.Dialogs
                     "Tanji ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            CustomClientTxt.Text = verifySuccess ?
+            CTCustomClientTxt.Text = verifySuccess ?
                 MainUI.Game.Location : string.Empty;
         }
-        private async void ConnectBtn_Click(object sender, EventArgs e)
+        private void ConnectBtn_Click(object sender, EventArgs e)
         {
-            if (IsConnecting = !IsConnecting)
+            if (!Eavesdropper.IsRunning)
             {
-                ModePnl.Enabled = !(GameHostTxt.ReadOnly =
-                    GamePortTxt.ReadOnly = ExponentTxt.ReadOnly = ModulusTxt.ReadOnly = true);
-
                 ConnectBtn.Text = "Cancel";
-                if (ModePnl.IsManual && !(await DoManualConnectAsync()))
-                {
-                    if (!IsConnecting) return;
-
-                    DoConnectCleanup();
-                    MessageBox.Show("Something went wrong when attempting to intercept the connection.",
-                        "Tanji ~ Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-                else DoAutomaticConnect();
+                DoAutomaticConnect();
             }
             else DoCancelConnect();
         }
@@ -228,6 +213,7 @@ namespace Tanji.Dialogs
                 MainUI.ExtensionMngr.Hotel = SKore.ToHotel(MainUI.GameData.Host);
                 MainUI.IsRetro = (MainUI.ExtensionMngr.Hotel == HHotel.Unknown);
 
+                bool isSourceReadable = false;
                 if (MainUI.IsRetro)
                 {
                     MainUI.GameData["tanji.connection.info.host"] = "127.0.0.1";
@@ -236,14 +222,13 @@ namespace Tanji.Dialogs
                     if (!string.IsNullOrWhiteSpace(MainUI.GameData.MovieUrl) &&
                         !string.IsNullOrWhiteSpace(MainUI.GameData.BaseUrl))
                     {
-                        IsClientSourceReadable = true;
+                        isSourceReadable = true;
                         MainUI.GameData.MovieUrl += "?" + DateTime.Now.Ticks;
                     }
                     else
                     {
                         responseBody = responseBody.Replace(MainUI.GameData.Host,
-                            MainUI.GameData.Host +
-                            "\", \"tanji.connection.info.host\":\"127.0.0.1\", \"tanji.client.starting\":\"Peeling Tangerines...");
+                            (MainUI.GameData.Host + "\", \"tanji.connection.info.host\":\"127.0.0.1\", \"tanji.client.starting\":\"Peeling Tangerines..."));
                     }
                 }
 
@@ -261,17 +246,15 @@ namespace Tanji.Dialogs
                         $"embedSWF({child} + \"?Tanji-{DateTime.Now.Ticks}\"");
                 }
 
-                if (!MainUI.IsRetro)
-                {
-                    if (MainUI.Game != null)
-                        Eavesdropper.EavesdropperRequest += InjectClient;
-                }
 
                 Eavesdropper.EavesdropperResponse -= ExtractHostPort;
                 Eavesdropper.EavesdropperResponse += ReplaceClient;
 
+                if (!MainUI.IsRetro && MainUI.Game != null)
+                    Eavesdropper.EavesdropperRequest += InjectClient;
+
                 e.Payload = Encoding.UTF8.GetBytes(
-                    MainUI.IsRetro && IsClientSourceReadable ?
+                    MainUI.IsRetro && isSourceReadable ?
                     MainUI.GameData.ToString() : responseBody);
             }
         }
@@ -438,24 +421,21 @@ namespace Tanji.Dialogs
             MainUI.Connection.Disconnect();
 
             _possiblePorts.Clear();
-            IsClientSourceReadable = false;
 
             MainUI.Game = null;
             MainUI.GameData = null;
         }
         private void DoConnectCleanup()
         {
-            IsConnecting = false;
-            ConnectBtn.Text = "Connect";
-            StatusTxt.StopDotAnimation("Standing By...");
-            GameHostTxt.ReadOnly = GamePortTxt.ReadOnly = !ModePnl.IsManual;
-            ModePnl.Enabled = !(ExponentTxt.ReadOnly = ModulusTxt.ReadOnly = false);
-
             Eavesdropper.Terminate();
-            HConnection.RestoreHosts();
             Eavesdropper.EavesdropperRequest -= InjectClient;
             Eavesdropper.EavesdropperResponse -= ReplaceClient;
             Eavesdropper.EavesdropperResponse -= ExtractHostPort;
+
+            ConnectBtn.Text = "Connect";
+            StatusTxt.StopDotAnimation("Standing By...");
+
+            HConnection.RestoreHosts();
         }
         private void DoAutomaticConnect()
         {
@@ -464,28 +444,22 @@ namespace Tanji.Dialogs
 
             StatusTxt.SetDotAnimation("Extracting Host/Port");
         }
-        private async Task<bool> DoManualConnectAsync()
-        {
-            StatusTxt.SetDotAnimation("Intercepting Connection");
-
-            await MainUI.Connection.ConnectAsync(
-                GameHostTxt.Text, ushort.Parse(GamePortTxt.Text));
-
-            return MainUI.Connection.IsConnected;
-        }
 
         private void CreateTrustedRootCertificate()
         {
-            while (!Eavesdropper.CreateTrustedRootCertificate())
+            while (!Eavesdropper.CertificateMngr.CreateTrustedRootCertificate())
             {
                 var result = MessageBox.Show(
-                    "Eavesdrop requires a self-signed certificate in the root store to intercep HTTPS traffic.\r\n\r\nWould you like to retry the process?",
+                    "Eavesdrop requires a self-signed certificate in the root store to intercept HTTPS traffic.\r\n\r\nWould you like to retry the process?",
                     "Tanji ~ Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
 
                 if (result == DialogResult.No)
-                    Environment.Exit(0);
+                {
+                    Close();
+                    return;
+                }
             }
-            Eavesdropper.ExportTrustedRootCertificate("EavesdropRoot.cer");
+            Eavesdropper.CertificateMngr.ExportTrustedRootCertificate("EavesdropRoot.cer");
         }
         private async Task<bool> TryLoadModdedClientAsync()
         {
@@ -521,6 +495,12 @@ namespace Tanji.Dialogs
                 MainUI.Game = flash;
 
             return MainUI.Game != null;
+        }
+
+        private void CTDestroyCertificatesBtn_Click(object sender, EventArgs e)
+        {
+            Eavesdropper.CertificateMngr.DestroySignedCertificates();
+            CreateTrustedRootCertificate();
         }
     }
 }

@@ -28,135 +28,95 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.MiddleGlowPnl = new System.Windows.Forms.Panel();
-            this.GamePortLbl = new System.Windows.Forms.Label();
-            this.GameHostLbl = new System.Windows.Forms.Label();
-            this.TopGlowPnl = new System.Windows.Forms.Panel();
-            this.ExponentTxt = new System.Windows.Forms.TextBox();
-            this.ExponentGrpbx = new System.Windows.Forms.GroupBox();
-            this.CustomClientTxt = new System.Windows.Forms.TextBox();
-            this.CustomClientGrpbx = new System.Windows.Forms.GroupBox();
-            this.BrowseBtn = new Sulakore.Components.SKoreButton();
-            this.ModulusTxt = new System.Windows.Forms.TextBox();
-            this.ModulusGrpbx = new System.Windows.Forms.GroupBox();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ConnectFrm));
+            this.CTGamePortsLbl = new System.Windows.Forms.Label();
+            this.CTGameHostLbl = new System.Windows.Forms.Label();
             this.ChooseClientDlg = new System.Windows.Forms.OpenFileDialog();
             this.StatusTxt = new Sulakore.Components.SKoreLabel();
             this.ConnectBtn = new Sulakore.Components.SKoreButton();
-            this.GameHostTxt = new System.Windows.Forms.TextBox();
-            this.GamePortTxt = new System.Windows.Forms.TextBox();
-            this.ModePnl = new Tanji.Components.TanjiModePanel();
-            this.ExponentGrpbx.SuspendLayout();
-            this.CustomClientGrpbx.SuspendLayout();
-            this.ModulusGrpbx.SuspendLayout();
+            this.CTGameHostTxt = new System.Windows.Forms.TextBox();
+            this.CTGamePortsTxt = new System.Windows.Forms.TextBox();
+            this.ConnectTabs = new Sulakore.Components.SKoreTabControl();
+            this.ConnectionTab = new System.Windows.Forms.TabPage();
+            this.CTCustomClientGrpbx = new System.Windows.Forms.GroupBox();
+            this.CTBrowseBtn = new Sulakore.Components.SKoreButton();
+            this.CTCustomClientTxt = new System.Windows.Forms.TextBox();
+            this.CTLocalProxySettingsGrpbx = new System.Windows.Forms.GroupBox();
+            this.CTProxyPortLbl = new System.Windows.Forms.Label();
+            this.CTProxyPortTxt = new System.Windows.Forms.NumericUpDown();
+            this.CTRemoteProxyLbl = new System.Windows.Forms.Label();
+            this.CTDestroyCertificatesBtn = new Sulakore.Components.SKoreButton();
+            this.CTRemoteProxyTxt = new System.Windows.Forms.TextBox();
+            this.CTExportRootCertificateAuthorityBtn = new Sulakore.Components.SKoreButton();
+            this.CTModifyFlashVariablesChckbx = new System.Windows.Forms.CheckBox();
+            this.HandshakeTab = new System.Windows.Forms.TabPage();
+            this.HTPrivateExponentGrpbx = new System.Windows.Forms.GroupBox();
+            this.HTPrivateExponentTxt = new System.Windows.Forms.TextBox();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.textBox3 = new System.Windows.Forms.TextBox();
+            this.label2 = new System.Windows.Forms.Label();
+            this.textBox2 = new System.Windows.Forms.TextBox();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.HTPublicExponentGrpbx = new System.Windows.Forms.GroupBox();
+            this.HTPublicExponentTxt = new System.Windows.Forms.TextBox();
+            this.HTPublicModulusGrpbx = new System.Windows.Forms.GroupBox();
+            this.HTPublicModulusTxt = new System.Windows.Forms.TextBox();
+            this.DownloadsTab = new System.Windows.Forms.TabPage();
+            this.sKoreButton1 = new Sulakore.Components.SKoreButton();
+            this.AboutTab = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.ATKekomundoBtn = new Sulakore.Components.SKoreButton();
+            this.ATDonationsBtn = new Sulakore.Components.SKoreButton();
+            this.ATDarkboxBtn = new Sulakore.Components.SKoreButton();
+            this.ATVerticalGlowPnl = new System.Windows.Forms.Panel();
+            this.ATMakeCertBtn = new Sulakore.Components.SKoreButton();
+            this.ATLogoSourceBtn = new Sulakore.Components.SKoreButton();
+            this.ATSulakoreBtn = new Sulakore.Components.SKoreButton();
+            this.ATFlashInspectBtn = new Sulakore.Components.SKoreButton();
+            this.ATEavesdropBtn = new Sulakore.Components.SKoreButton();
+            this.ATTanjiBtn = new Sulakore.Components.SKoreButton();
+            this.ATHorizontalGlowPnl = new System.Windows.Forms.Panel();
+            this.ATTwitterBtn = new Sulakore.Components.SKoreButton();
+            this.ATGithubBtn = new Sulakore.Components.SKoreButton();
+            this.ATTONMLbl = new System.Windows.Forms.Label();
+            this.ATCopyrightLbl = new System.Windows.Forms.Label();
+            this.ATVersionLbl = new System.Windows.Forms.Label();
+            this.ATTanjiLbl = new System.Windows.Forms.Label();
+            this.ATLogoPctbx = new System.Windows.Forms.PictureBox();
+            this.ConnectTabs.SuspendLayout();
+            this.ConnectionTab.SuspendLayout();
+            this.CTCustomClientGrpbx.SuspendLayout();
+            this.CTLocalProxySettingsGrpbx.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CTProxyPortTxt)).BeginInit();
+            this.HandshakeTab.SuspendLayout();
+            this.HTPrivateExponentGrpbx.SuspendLayout();
+            this.groupBox1.SuspendLayout();
+            this.HTPublicExponentGrpbx.SuspendLayout();
+            this.HTPublicModulusGrpbx.SuspendLayout();
+            this.DownloadsTab.SuspendLayout();
+            this.AboutTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ATLogoPctbx)).BeginInit();
             this.SuspendLayout();
             // 
-            // MiddleGlowPnl
+            // CTGamePortsLbl
             // 
-            this.MiddleGlowPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.MiddleGlowPnl.Location = new System.Drawing.Point(0, 192);
-            this.MiddleGlowPnl.Name = "MiddleGlowPnl";
-            this.MiddleGlowPnl.Size = new System.Drawing.Size(330, 1);
-            this.MiddleGlowPnl.TabIndex = 65;
+            this.CTGamePortsLbl.AutoSize = true;
+            this.CTGamePortsLbl.Location = new System.Drawing.Point(188, 7);
+            this.CTGamePortsLbl.Name = "CTGamePortsLbl";
+            this.CTGamePortsLbl.Size = new System.Drawing.Size(68, 13);
+            this.CTGamePortsLbl.TabIndex = 68;
+            this.CTGamePortsLbl.Text = "Game Port(s)";
             // 
-            // GamePortLbl
+            // CTGameHostLbl
             // 
-            this.GamePortLbl.AutoSize = true;
-            this.GamePortLbl.Location = new System.Drawing.Point(165, 41);
-            this.GamePortLbl.Name = "GamePortLbl";
-            this.GamePortLbl.Size = new System.Drawing.Size(57, 13);
-            this.GamePortLbl.TabIndex = 68;
-            this.GamePortLbl.Text = "Game Port";
-            // 
-            // GameHostLbl
-            // 
-            this.GameHostLbl.AutoSize = true;
-            this.GameHostLbl.Location = new System.Drawing.Point(9, 41);
-            this.GameHostLbl.Name = "GameHostLbl";
-            this.GameHostLbl.Size = new System.Drawing.Size(60, 13);
-            this.GameHostLbl.TabIndex = 67;
-            this.GameHostLbl.Text = "Game Host";
-            // 
-            // TopGlowPnl
-            // 
-            this.TopGlowPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.TopGlowPnl.Location = new System.Drawing.Point(0, 83);
-            this.TopGlowPnl.Name = "TopGlowPnl";
-            this.TopGlowPnl.Size = new System.Drawing.Size(330, 1);
-            this.TopGlowPnl.TabIndex = 66;
-            // 
-            // ExponentTxt
-            // 
-            this.ExponentTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.ExponentTxt.Location = new System.Drawing.Point(6, 19);
-            this.ExponentTxt.Name = "ExponentTxt";
-            this.ExponentTxt.Size = new System.Drawing.Size(77, 20);
-            this.ExponentTxt.TabIndex = 0;
-            this.ExponentTxt.TabStop = false;
-            this.ExponentTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // ExponentGrpbx
-            // 
-            this.ExponentGrpbx.Controls.Add(this.ExponentTxt);
-            this.ExponentGrpbx.Location = new System.Drawing.Point(12, 90);
-            this.ExponentGrpbx.Name = "ExponentGrpbx";
-            this.ExponentGrpbx.Size = new System.Drawing.Size(89, 45);
-            this.ExponentGrpbx.TabIndex = 69;
-            this.ExponentGrpbx.TabStop = false;
-            this.ExponentGrpbx.Text = "Exponent";
-            // 
-            // CustomClientTxt
-            // 
-            this.CustomClientTxt.Location = new System.Drawing.Point(6, 17);
-            this.CustomClientTxt.Name = "CustomClientTxt";
-            this.CustomClientTxt.ReadOnly = true;
-            this.CustomClientTxt.Size = new System.Drawing.Size(220, 20);
-            this.CustomClientTxt.TabIndex = 0;
-            this.CustomClientTxt.TabStop = false;
-            // 
-            // CustomClientGrpbx
-            // 
-            this.CustomClientGrpbx.Controls.Add(this.BrowseBtn);
-            this.CustomClientGrpbx.Controls.Add(this.CustomClientTxt);
-            this.CustomClientGrpbx.Location = new System.Drawing.Point(12, 141);
-            this.CustomClientGrpbx.Name = "CustomClientGrpbx";
-            this.CustomClientGrpbx.Size = new System.Drawing.Size(306, 45);
-            this.CustomClientGrpbx.TabIndex = 71;
-            this.CustomClientGrpbx.TabStop = false;
-            this.CustomClientGrpbx.Text = "Custom Client";
-            // 
-            // BrowseBtn
-            // 
-            this.BrowseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.BrowseBtn.BackColor = System.Drawing.Color.Transparent;
-            this.BrowseBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.BrowseBtn.Location = new System.Drawing.Point(232, 17);
-            this.BrowseBtn.Name = "BrowseBtn";
-            this.BrowseBtn.Size = new System.Drawing.Size(68, 20);
-            this.BrowseBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.BrowseBtn.TabIndex = 2;
-            this.BrowseBtn.TabStop = false;
-            this.BrowseBtn.Text = "Browse";
-            this.BrowseBtn.Click += new System.EventHandler(this.BrowseBtn_Click);
-            // 
-            // ModulusTxt
-            // 
-            this.ModulusTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
-            this.ModulusTxt.Location = new System.Drawing.Point(6, 19);
-            this.ModulusTxt.Name = "ModulusTxt";
-            this.ModulusTxt.Size = new System.Drawing.Size(199, 20);
-            this.ModulusTxt.TabIndex = 0;
-            this.ModulusTxt.TabStop = false;
-            this.ModulusTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // ModulusGrpbx
-            // 
-            this.ModulusGrpbx.Controls.Add(this.ModulusTxt);
-            this.ModulusGrpbx.Location = new System.Drawing.Point(107, 90);
-            this.ModulusGrpbx.Name = "ModulusGrpbx";
-            this.ModulusGrpbx.Size = new System.Drawing.Size(211, 45);
-            this.ModulusGrpbx.TabIndex = 70;
-            this.ModulusGrpbx.TabStop = false;
-            this.ModulusGrpbx.Text = "Modulus";
+            this.CTGameHostLbl.AutoSize = true;
+            this.CTGameHostLbl.Location = new System.Drawing.Point(6, 7);
+            this.CTGameHostLbl.Name = "CTGameHostLbl";
+            this.CTGameHostLbl.Size = new System.Drawing.Size(60, 13);
+            this.CTGameHostLbl.TabIndex = 67;
+            this.CTGameHostLbl.Text = "Game Host";
             // 
             // ChooseClientDlg
             // 
@@ -166,11 +126,13 @@
             // 
             // StatusTxt
             // 
+            this.StatusTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.StatusTxt.AnimationInterval = 500;
             this.StatusTxt.DisplayBoundary = true;
-            this.StatusTxt.Location = new System.Drawing.Point(12, 202);
+            this.StatusTxt.Location = new System.Drawing.Point(6, 225);
             this.StatusTxt.Name = "StatusTxt";
-            this.StatusTxt.Size = new System.Drawing.Size(207, 23);
+            this.StatusTxt.Size = new System.Drawing.Size(271, 23);
             this.StatusTxt.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.StatusTxt.TabIndex = 75;
             this.StatusTxt.Text = "Standing By...";
@@ -178,9 +140,11 @@
             // 
             // ConnectBtn
             // 
+            this.ConnectBtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.ConnectBtn.BackColor = System.Drawing.Color.Transparent;
             this.ConnectBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ConnectBtn.Location = new System.Drawing.Point(225, 202);
+            this.ConnectBtn.Location = new System.Drawing.Point(283, 225);
             this.ConnectBtn.Name = "ConnectBtn";
             this.ConnectBtn.Size = new System.Drawing.Size(93, 23);
             this.ConnectBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
@@ -189,33 +153,581 @@
             this.ConnectBtn.Text = "Connect";
             this.ConnectBtn.Click += new System.EventHandler(this.ConnectBtn_Click);
             // 
-            // GameHostTxt
+            // CTGameHostTxt
             // 
-            this.GameHostTxt.Location = new System.Drawing.Point(12, 57);
-            this.GameHostTxt.Name = "GameHostTxt";
-            this.GameHostTxt.ReadOnly = true;
-            this.GameHostTxt.Size = new System.Drawing.Size(150, 20);
-            this.GameHostTxt.TabIndex = 77;
-            this.GameHostTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CTGameHostTxt.Location = new System.Drawing.Point(6, 23);
+            this.CTGameHostTxt.Name = "CTGameHostTxt";
+            this.CTGameHostTxt.Size = new System.Drawing.Size(175, 20);
+            this.CTGameHostTxt.TabIndex = 77;
+            this.CTGameHostTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // GamePortTxt
+            // CTGamePortsTxt
             // 
-            this.GamePortTxt.Location = new System.Drawing.Point(168, 57);
-            this.GamePortTxt.Name = "GamePortTxt";
-            this.GamePortTxt.ReadOnly = true;
-            this.GamePortTxt.Size = new System.Drawing.Size(150, 20);
-            this.GamePortTxt.TabIndex = 78;
-            this.GamePortTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CTGamePortsTxt.Location = new System.Drawing.Point(187, 23);
+            this.CTGamePortsTxt.Name = "CTGamePortsTxt";
+            this.CTGamePortsTxt.Size = new System.Drawing.Size(175, 20);
+            this.CTGamePortsTxt.TabIndex = 78;
+            this.CTGamePortsTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // ModePnl
+            // ConnectTabs
             // 
-            this.ModePnl.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ModePnl.Font = new System.Drawing.Font("Segoe UI", 15F);
-            this.ModePnl.Location = new System.Drawing.Point(0, 0);
-            this.ModePnl.Name = "ModePnl";
-            this.ModePnl.Size = new System.Drawing.Size(330, 33);
-            this.ModePnl.TabIndex = 76;
-            this.ModePnl.ModeChanged += new System.EventHandler(this.ModeChanged);
+            this.ConnectTabs.Controls.Add(this.ConnectionTab);
+            this.ConnectTabs.Controls.Add(this.HandshakeTab);
+            this.ConnectTabs.Controls.Add(this.DownloadsTab);
+            this.ConnectTabs.Controls.Add(this.AboutTab);
+            this.ConnectTabs.DisplayBoundary = true;
+            this.ConnectTabs.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ConnectTabs.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+            this.ConnectTabs.ItemSize = new System.Drawing.Size(93, 24);
+            this.ConnectTabs.Location = new System.Drawing.Point(3, 3);
+            this.ConnectTabs.Name = "ConnectTabs";
+            this.ConnectTabs.SelectedIndex = 0;
+            this.ConnectTabs.Size = new System.Drawing.Size(376, 215);
+            this.ConnectTabs.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.ConnectTabs.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ConnectTabs.TabIndex = 79;
+            // 
+            // ConnectionTab
+            // 
+            this.ConnectionTab.Controls.Add(this.CTCustomClientGrpbx);
+            this.ConnectionTab.Controls.Add(this.CTLocalProxySettingsGrpbx);
+            this.ConnectionTab.Controls.Add(this.CTGamePortsTxt);
+            this.ConnectionTab.Controls.Add(this.CTGameHostLbl);
+            this.ConnectionTab.Controls.Add(this.CTGameHostTxt);
+            this.ConnectionTab.Controls.Add(this.CTGamePortsLbl);
+            this.ConnectionTab.Location = new System.Drawing.Point(4, 28);
+            this.ConnectionTab.Name = "ConnectionTab";
+            this.ConnectionTab.Padding = new System.Windows.Forms.Padding(3);
+            this.ConnectionTab.Size = new System.Drawing.Size(368, 183);
+            this.ConnectionTab.TabIndex = 0;
+            this.ConnectionTab.Text = "Connection";
+            this.ConnectionTab.UseVisualStyleBackColor = true;
+            // 
+            // CTCustomClientGrpbx
+            // 
+            this.CTCustomClientGrpbx.Controls.Add(this.CTBrowseBtn);
+            this.CTCustomClientGrpbx.Controls.Add(this.CTCustomClientTxt);
+            this.CTCustomClientGrpbx.Location = new System.Drawing.Point(6, 130);
+            this.CTCustomClientGrpbx.Name = "CTCustomClientGrpbx";
+            this.CTCustomClientGrpbx.Size = new System.Drawing.Size(356, 47);
+            this.CTCustomClientGrpbx.TabIndex = 85;
+            this.CTCustomClientGrpbx.TabStop = false;
+            this.CTCustomClientGrpbx.Text = "Custom Client";
+            // 
+            // CTBrowseBtn
+            // 
+            this.CTBrowseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CTBrowseBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CTBrowseBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.CTBrowseBtn.Location = new System.Drawing.Point(264, 19);
+            this.CTBrowseBtn.Name = "CTBrowseBtn";
+            this.CTBrowseBtn.Size = new System.Drawing.Size(86, 22);
+            this.CTBrowseBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CTBrowseBtn.TabIndex = 2;
+            this.CTBrowseBtn.TabStop = false;
+            this.CTBrowseBtn.Text = "Browse";
+            this.CTBrowseBtn.Click += new System.EventHandler(this.BrowseBtn_Click);
+            // 
+            // CTCustomClientTxt
+            // 
+            this.CTCustomClientTxt.Location = new System.Drawing.Point(6, 21);
+            this.CTCustomClientTxt.Name = "CTCustomClientTxt";
+            this.CTCustomClientTxt.ReadOnly = true;
+            this.CTCustomClientTxt.Size = new System.Drawing.Size(252, 20);
+            this.CTCustomClientTxt.TabIndex = 0;
+            this.CTCustomClientTxt.TabStop = false;
+            // 
+            // CTLocalProxySettingsGrpbx
+            // 
+            this.CTLocalProxySettingsGrpbx.Controls.Add(this.CTProxyPortLbl);
+            this.CTLocalProxySettingsGrpbx.Controls.Add(this.CTProxyPortTxt);
+            this.CTLocalProxySettingsGrpbx.Controls.Add(this.CTRemoteProxyLbl);
+            this.CTLocalProxySettingsGrpbx.Controls.Add(this.CTDestroyCertificatesBtn);
+            this.CTLocalProxySettingsGrpbx.Controls.Add(this.CTRemoteProxyTxt);
+            this.CTLocalProxySettingsGrpbx.Controls.Add(this.CTExportRootCertificateAuthorityBtn);
+            this.CTLocalProxySettingsGrpbx.Controls.Add(this.CTModifyFlashVariablesChckbx);
+            this.CTLocalProxySettingsGrpbx.Location = new System.Drawing.Point(6, 49);
+            this.CTLocalProxySettingsGrpbx.Name = "CTLocalProxySettingsGrpbx";
+            this.CTLocalProxySettingsGrpbx.Size = new System.Drawing.Size(356, 75);
+            this.CTLocalProxySettingsGrpbx.TabIndex = 84;
+            this.CTLocalProxySettingsGrpbx.TabStop = false;
+            this.CTLocalProxySettingsGrpbx.Text = "Local Proxy Settings";
+            // 
+            // CTProxyPortLbl
+            // 
+            this.CTProxyPortLbl.AutoSize = true;
+            this.CTProxyPortLbl.Location = new System.Drawing.Point(3, 50);
+            this.CTProxyPortLbl.Name = "CTProxyPortLbl";
+            this.CTProxyPortLbl.Size = new System.Drawing.Size(58, 13);
+            this.CTProxyPortLbl.TabIndex = 86;
+            this.CTProxyPortLbl.Text = "Proxy Port:";
+            // 
+            // CTProxyPortTxt
+            // 
+            this.CTProxyPortTxt.Location = new System.Drawing.Point(61, 48);
+            this.CTProxyPortTxt.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.CTProxyPortTxt.Name = "CTProxyPortTxt";
+            this.CTProxyPortTxt.Size = new System.Drawing.Size(71, 20);
+            this.CTProxyPortTxt.TabIndex = 87;
+            this.CTProxyPortTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CTProxyPortTxt.Value = new decimal(new int[] {
+            8080,
+            0,
+            0,
+            0});
+            // 
+            // CTRemoteProxyLbl
+            // 
+            this.CTRemoteProxyLbl.AutoSize = true;
+            this.CTRemoteProxyLbl.Location = new System.Drawing.Point(135, 50);
+            this.CTRemoteProxyLbl.Name = "CTRemoteProxyLbl";
+            this.CTRemoteProxyLbl.Size = new System.Drawing.Size(76, 13);
+            this.CTRemoteProxyLbl.TabIndex = 90;
+            this.CTRemoteProxyLbl.Text = "Remote Proxy:";
+            // 
+            // CTDestroyCertificatesBtn
+            // 
+            this.CTDestroyCertificatesBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CTDestroyCertificatesBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CTDestroyCertificatesBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.CTDestroyCertificatesBtn.Location = new System.Drawing.Point(6, 19);
+            this.CTDestroyCertificatesBtn.Name = "CTDestroyCertificatesBtn";
+            this.CTDestroyCertificatesBtn.Size = new System.Drawing.Size(126, 22);
+            this.CTDestroyCertificatesBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CTDestroyCertificatesBtn.TabIndex = 88;
+            this.CTDestroyCertificatesBtn.TabStop = false;
+            this.CTDestroyCertificatesBtn.Text = "Destroy Certificates";
+            this.CTDestroyCertificatesBtn.Click += new System.EventHandler(this.CTDestroyCertificatesBtn_Click);
+            // 
+            // CTRemoteProxyTxt
+            // 
+            this.CTRemoteProxyTxt.Location = new System.Drawing.Point(211, 47);
+            this.CTRemoteProxyTxt.Name = "CTRemoteProxyTxt";
+            this.CTRemoteProxyTxt.ReadOnly = true;
+            this.CTRemoteProxyTxt.Size = new System.Drawing.Size(139, 20);
+            this.CTRemoteProxyTxt.TabIndex = 89;
+            this.CTRemoteProxyTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // CTExportRootCertificateAuthorityBtn
+            // 
+            this.CTExportRootCertificateAuthorityBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CTExportRootCertificateAuthorityBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CTExportRootCertificateAuthorityBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.CTExportRootCertificateAuthorityBtn.Location = new System.Drawing.Point(138, 19);
+            this.CTExportRootCertificateAuthorityBtn.Name = "CTExportRootCertificateAuthorityBtn";
+            this.CTExportRootCertificateAuthorityBtn.Size = new System.Drawing.Size(212, 22);
+            this.CTExportRootCertificateAuthorityBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CTExportRootCertificateAuthorityBtn.TabIndex = 85;
+            this.CTExportRootCertificateAuthorityBtn.TabStop = false;
+            this.CTExportRootCertificateAuthorityBtn.Text = "Export Root Certificate Authority";
+            // 
+            // CTModifyFlashVariablesChckbx
+            // 
+            this.CTModifyFlashVariablesChckbx.AutoSize = true;
+            this.CTModifyFlashVariablesChckbx.BackColor = System.Drawing.Color.White;
+            this.CTModifyFlashVariablesChckbx.Location = new System.Drawing.Point(219, 0);
+            this.CTModifyFlashVariablesChckbx.Name = "CTModifyFlashVariablesChckbx";
+            this.CTModifyFlashVariablesChckbx.Size = new System.Drawing.Size(131, 17);
+            this.CTModifyFlashVariablesChckbx.TabIndex = 83;
+            this.CTModifyFlashVariablesChckbx.Text = "Modify Flash Variables";
+            this.CTModifyFlashVariablesChckbx.UseVisualStyleBackColor = false;
+            // 
+            // HandshakeTab
+            // 
+            this.HandshakeTab.Controls.Add(this.HTPrivateExponentGrpbx);
+            this.HandshakeTab.Controls.Add(this.groupBox1);
+            this.HandshakeTab.Controls.Add(this.HTPublicExponentGrpbx);
+            this.HandshakeTab.Controls.Add(this.HTPublicModulusGrpbx);
+            this.HandshakeTab.Location = new System.Drawing.Point(4, 28);
+            this.HandshakeTab.Name = "HandshakeTab";
+            this.HandshakeTab.Padding = new System.Windows.Forms.Padding(3);
+            this.HandshakeTab.Size = new System.Drawing.Size(368, 183);
+            this.HandshakeTab.TabIndex = 1;
+            this.HandshakeTab.Text = "Handshake";
+            this.HandshakeTab.UseVisualStyleBackColor = true;
+            // 
+            // HTPrivateExponentGrpbx
+            // 
+            this.HTPrivateExponentGrpbx.Controls.Add(this.HTPrivateExponentTxt);
+            this.HTPrivateExponentGrpbx.Location = new System.Drawing.Point(6, 57);
+            this.HTPrivateExponentGrpbx.Name = "HTPrivateExponentGrpbx";
+            this.HTPrivateExponentGrpbx.Size = new System.Drawing.Size(356, 45);
+            this.HTPrivateExponentGrpbx.TabIndex = 83;
+            this.HTPrivateExponentGrpbx.TabStop = false;
+            this.HTPrivateExponentGrpbx.Text = "Private Exponent (Optional)";
+            // 
+            // HTPrivateExponentTxt
+            // 
+            this.HTPrivateExponentTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.HTPrivateExponentTxt.Location = new System.Drawing.Point(6, 19);
+            this.HTPrivateExponentTxt.Name = "HTPrivateExponentTxt";
+            this.HTPrivateExponentTxt.Size = new System.Drawing.Size(344, 20);
+            this.HTPrivateExponentTxt.TabIndex = 0;
+            this.HTPrivateExponentTxt.TabStop = false;
+            this.HTPrivateExponentTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.label4);
+            this.groupBox1.Controls.Add(this.label3);
+            this.groupBox1.Controls.Add(this.textBox3);
+            this.groupBox1.Controls.Add(this.label2);
+            this.groupBox1.Controls.Add(this.textBox2);
+            this.groupBox1.Controls.Add(this.textBox1);
+            this.groupBox1.Location = new System.Drawing.Point(6, 108);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(356, 71);
+            this.groupBox1.TabIndex = 83;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "RSA Replacement Keys";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 48);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(18, 13);
+            this.label4.TabIndex = 88;
+            this.label4.Text = "D:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(6, 22);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(18, 13);
+            this.label3.TabIndex = 86;
+            this.label3.Text = "N:";
+            // 
+            // textBox3
+            // 
+            this.textBox3.Location = new System.Drawing.Point(24, 45);
+            this.textBox3.Name = "textBox3";
+            this.textBox3.ReadOnly = true;
+            this.textBox3.Size = new System.Drawing.Size(326, 20);
+            this.textBox3.TabIndex = 87;
+            this.textBox3.TabStop = false;
+            this.textBox3.Text = resources.GetString("textBox3.Text");
+            this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(302, 22);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(17, 13);
+            this.label2.TabIndex = 84;
+            this.label2.Text = "E:";
+            // 
+            // textBox2
+            // 
+            this.textBox2.Location = new System.Drawing.Point(24, 19);
+            this.textBox2.Name = "textBox2";
+            this.textBox2.ReadOnly = true;
+            this.textBox2.Size = new System.Drawing.Size(277, 20);
+            this.textBox2.TabIndex = 85;
+            this.textBox2.TabStop = false;
+            this.textBox2.Text = resources.GetString("textBox2.Text");
+            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(319, 19);
+            this.textBox1.Name = "textBox1";
+            this.textBox1.ReadOnly = true;
+            this.textBox1.Size = new System.Drawing.Size(31, 20);
+            this.textBox1.TabIndex = 1;
+            this.textBox1.TabStop = false;
+            this.textBox1.Text = "3";
+            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // HTPublicExponentGrpbx
+            // 
+            this.HTPublicExponentGrpbx.Controls.Add(this.HTPublicExponentTxt);
+            this.HTPublicExponentGrpbx.Location = new System.Drawing.Point(255, 6);
+            this.HTPublicExponentGrpbx.Name = "HTPublicExponentGrpbx";
+            this.HTPublicExponentGrpbx.Size = new System.Drawing.Size(107, 45);
+            this.HTPublicExponentGrpbx.TabIndex = 81;
+            this.HTPublicExponentGrpbx.TabStop = false;
+            this.HTPublicExponentGrpbx.Text = "Public Exponent";
+            // 
+            // HTPublicExponentTxt
+            // 
+            this.HTPublicExponentTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.HTPublicExponentTxt.Location = new System.Drawing.Point(6, 19);
+            this.HTPublicExponentTxt.Name = "HTPublicExponentTxt";
+            this.HTPublicExponentTxt.Size = new System.Drawing.Size(95, 20);
+            this.HTPublicExponentTxt.TabIndex = 0;
+            this.HTPublicExponentTxt.TabStop = false;
+            this.HTPublicExponentTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // HTPublicModulusGrpbx
+            // 
+            this.HTPublicModulusGrpbx.Controls.Add(this.HTPublicModulusTxt);
+            this.HTPublicModulusGrpbx.Location = new System.Drawing.Point(6, 6);
+            this.HTPublicModulusGrpbx.Name = "HTPublicModulusGrpbx";
+            this.HTPublicModulusGrpbx.Size = new System.Drawing.Size(243, 45);
+            this.HTPublicModulusGrpbx.TabIndex = 82;
+            this.HTPublicModulusGrpbx.TabStop = false;
+            this.HTPublicModulusGrpbx.Text = "Public Modulus";
+            // 
+            // HTPublicModulusTxt
+            // 
+            this.HTPublicModulusTxt.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Left | System.Windows.Forms.AnchorStyles.Right)));
+            this.HTPublicModulusTxt.Location = new System.Drawing.Point(6, 19);
+            this.HTPublicModulusTxt.Name = "HTPublicModulusTxt";
+            this.HTPublicModulusTxt.Size = new System.Drawing.Size(231, 20);
+            this.HTPublicModulusTxt.TabIndex = 0;
+            this.HTPublicModulusTxt.TabStop = false;
+            this.HTPublicModulusTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // DownloadsTab
+            // 
+            this.DownloadsTab.Controls.Add(this.sKoreButton1);
+            this.DownloadsTab.Location = new System.Drawing.Point(4, 28);
+            this.DownloadsTab.Name = "DownloadsTab";
+            this.DownloadsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.DownloadsTab.Size = new System.Drawing.Size(368, 183);
+            this.DownloadsTab.TabIndex = 2;
+            this.DownloadsTab.Text = "Downloads";
+            this.DownloadsTab.UseVisualStyleBackColor = true;
+            // 
+            // sKoreButton1
+            // 
+            this.sKoreButton1.BackColor = System.Drawing.Color.Transparent;
+            this.sKoreButton1.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.sKoreButton1.Location = new System.Drawing.Point(247, 155);
+            this.sKoreButton1.Name = "sKoreButton1";
+            this.sKoreButton1.Size = new System.Drawing.Size(115, 22);
+            this.sKoreButton1.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.sKoreButton1.TabIndex = 0;
+            this.sKoreButton1.Text = "Download";
+            // 
+            // AboutTab
+            // 
+            this.AboutTab.Controls.Add(this.panel1);
+            this.AboutTab.Controls.Add(this.ATKekomundoBtn);
+            this.AboutTab.Controls.Add(this.ATDonationsBtn);
+            this.AboutTab.Controls.Add(this.ATDarkboxBtn);
+            this.AboutTab.Controls.Add(this.ATVerticalGlowPnl);
+            this.AboutTab.Controls.Add(this.ATMakeCertBtn);
+            this.AboutTab.Controls.Add(this.ATLogoSourceBtn);
+            this.AboutTab.Controls.Add(this.ATSulakoreBtn);
+            this.AboutTab.Controls.Add(this.ATFlashInspectBtn);
+            this.AboutTab.Controls.Add(this.ATEavesdropBtn);
+            this.AboutTab.Controls.Add(this.ATTanjiBtn);
+            this.AboutTab.Controls.Add(this.ATHorizontalGlowPnl);
+            this.AboutTab.Controls.Add(this.ATTwitterBtn);
+            this.AboutTab.Controls.Add(this.ATGithubBtn);
+            this.AboutTab.Controls.Add(this.ATTONMLbl);
+            this.AboutTab.Controls.Add(this.ATCopyrightLbl);
+            this.AboutTab.Controls.Add(this.ATVersionLbl);
+            this.AboutTab.Controls.Add(this.ATTanjiLbl);
+            this.AboutTab.Controls.Add(this.ATLogoPctbx);
+            this.AboutTab.Location = new System.Drawing.Point(4, 28);
+            this.AboutTab.Name = "AboutTab";
+            this.AboutTab.Padding = new System.Windows.Forms.Padding(3);
+            this.AboutTab.Size = new System.Drawing.Size(368, 183);
+            this.AboutTab.TabIndex = 3;
+            this.AboutTab.Text = "About";
+            this.AboutTab.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.panel1.Location = new System.Drawing.Point(225, 66);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(137, 1);
+            this.panel1.TabIndex = 8;
+            // 
+            // ATKekomundoBtn
+            // 
+            this.ATKekomundoBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATKekomundoBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATKekomundoBtn.Location = new System.Drawing.Point(225, 38);
+            this.ATKekomundoBtn.Name = "ATKekomundoBtn";
+            this.ATKekomundoBtn.Size = new System.Drawing.Size(137, 22);
+            this.ATKekomundoBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(73)))), ((int)(((byte)(94)))));
+            this.ATKekomundoBtn.TabIndex = 16;
+            this.ATKekomundoBtn.Text = "KekoMundo";
+            // 
+            // ATDonationsBtn
+            // 
+            this.ATDonationsBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATDonationsBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATDonationsBtn.Location = new System.Drawing.Point(225, 73);
+            this.ATDonationsBtn.Name = "ATDonationsBtn";
+            this.ATDonationsBtn.Size = new System.Drawing.Size(137, 22);
+            this.ATDonationsBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(126)))), ((int)(((byte)(178)))));
+            this.ATDonationsBtn.TabIndex = 15;
+            this.ATDonationsBtn.Text = "Donations";
+            // 
+            // ATDarkboxBtn
+            // 
+            this.ATDarkboxBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATDarkboxBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATDarkboxBtn.Location = new System.Drawing.Point(225, 10);
+            this.ATDarkboxBtn.Name = "ATDarkboxBtn";
+            this.ATDarkboxBtn.Size = new System.Drawing.Size(137, 22);
+            this.ATDarkboxBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(50)))), ((int)(((byte)(50)))), ((int)(((byte)(50)))));
+            this.ATDarkboxBtn.TabIndex = 14;
+            this.ATDarkboxBtn.Text = "Darkbox";
+            // 
+            // ATVerticalGlowPnl
+            // 
+            this.ATVerticalGlowPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ATVerticalGlowPnl.Location = new System.Drawing.Point(218, 6);
+            this.ATVerticalGlowPnl.Name = "ATVerticalGlowPnl";
+            this.ATVerticalGlowPnl.Size = new System.Drawing.Size(1, 94);
+            this.ATVerticalGlowPnl.TabIndex = 8;
+            // 
+            // ATMakeCertBtn
+            // 
+            this.ATMakeCertBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATMakeCertBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATMakeCertBtn.Location = new System.Drawing.Point(112, 42);
+            this.ATMakeCertBtn.Name = "ATMakeCertBtn";
+            this.ATMakeCertBtn.Size = new System.Drawing.Size(100, 22);
+            this.ATMakeCertBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ATMakeCertBtn.TabIndex = 13;
+            this.ATMakeCertBtn.Text = "MakeCert";
+            // 
+            // ATLogoSourceBtn
+            // 
+            this.ATLogoSourceBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATLogoSourceBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATLogoSourceBtn.Location = new System.Drawing.Point(112, 70);
+            this.ATLogoSourceBtn.Name = "ATLogoSourceBtn";
+            this.ATLogoSourceBtn.Size = new System.Drawing.Size(100, 22);
+            this.ATLogoSourceBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ATLogoSourceBtn.TabIndex = 12;
+            this.ATLogoSourceBtn.Text = "Logo Source";
+            // 
+            // ATSulakoreBtn
+            // 
+            this.ATSulakoreBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATSulakoreBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATSulakoreBtn.Location = new System.Drawing.Point(6, 42);
+            this.ATSulakoreBtn.Name = "ATSulakoreBtn";
+            this.ATSulakoreBtn.Size = new System.Drawing.Size(100, 22);
+            this.ATSulakoreBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ATSulakoreBtn.TabIndex = 11;
+            this.ATSulakoreBtn.Text = "Sulakore";
+            // 
+            // ATFlashInspectBtn
+            // 
+            this.ATFlashInspectBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATFlashInspectBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATFlashInspectBtn.Location = new System.Drawing.Point(112, 14);
+            this.ATFlashInspectBtn.Name = "ATFlashInspectBtn";
+            this.ATFlashInspectBtn.Size = new System.Drawing.Size(100, 22);
+            this.ATFlashInspectBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ATFlashInspectBtn.TabIndex = 10;
+            this.ATFlashInspectBtn.Text = "FlashInspect";
+            // 
+            // ATEavesdropBtn
+            // 
+            this.ATEavesdropBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATEavesdropBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATEavesdropBtn.Location = new System.Drawing.Point(6, 70);
+            this.ATEavesdropBtn.Name = "ATEavesdropBtn";
+            this.ATEavesdropBtn.Size = new System.Drawing.Size(100, 22);
+            this.ATEavesdropBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ATEavesdropBtn.TabIndex = 9;
+            this.ATEavesdropBtn.Text = "Eavesdrop";
+            // 
+            // ATTanjiBtn
+            // 
+            this.ATTanjiBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATTanjiBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATTanjiBtn.Location = new System.Drawing.Point(6, 14);
+            this.ATTanjiBtn.Name = "ATTanjiBtn";
+            this.ATTanjiBtn.Size = new System.Drawing.Size(100, 22);
+            this.ATTanjiBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ATTanjiBtn.TabIndex = 8;
+            this.ATTanjiBtn.Text = "Tanji";
+            // 
+            // ATHorizontalGlowPnl
+            // 
+            this.ATHorizontalGlowPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ATHorizontalGlowPnl.Location = new System.Drawing.Point(1, 106);
+            this.ATHorizontalGlowPnl.Name = "ATHorizontalGlowPnl";
+            this.ATHorizontalGlowPnl.Size = new System.Drawing.Size(366, 1);
+            this.ATHorizontalGlowPnl.TabIndex = 7;
+            // 
+            // ATTwitterBtn
+            // 
+            this.ATTwitterBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATTwitterBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATTwitterBtn.Location = new System.Drawing.Point(230, 122);
+            this.ATTwitterBtn.Name = "ATTwitterBtn";
+            this.ATTwitterBtn.Size = new System.Drawing.Size(132, 22);
+            this.ATTwitterBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ATTwitterBtn.TabIndex = 6;
+            this.ATTwitterBtn.Text = "Twitter";
+            // 
+            // ATGithubBtn
+            // 
+            this.ATGithubBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATGithubBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATGithubBtn.Location = new System.Drawing.Point(230, 150);
+            this.ATGithubBtn.Name = "ATGithubBtn";
+            this.ATGithubBtn.Size = new System.Drawing.Size(132, 22);
+            this.ATGithubBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ATGithubBtn.TabIndex = 5;
+            this.ATGithubBtn.Text = "GitHub";
+            // 
+            // ATTONMLbl
+            // 
+            this.ATTONMLbl.AutoSize = true;
+            this.ATTONMLbl.Location = new System.Drawing.Point(76, 147);
+            this.ATTONMLbl.Name = "ATTONMLbl";
+            this.ATTONMLbl.Size = new System.Drawing.Size(89, 13);
+            this.ATTONMLbl.TabIndex = 4;
+            this.ATTONMLbl.Text = "The Old Nut Man";
+            // 
+            // ATCopyrightLbl
+            // 
+            this.ATCopyrightLbl.AutoSize = true;
+            this.ATCopyrightLbl.Location = new System.Drawing.Point(76, 164);
+            this.ATCopyrightLbl.Name = "ATCopyrightLbl";
+            this.ATCopyrightLbl.Size = new System.Drawing.Size(136, 13);
+            this.ATCopyrightLbl.TabIndex = 3;
+            this.ATCopyrightLbl.Text = "Copyright © ArachisH 2015";
+            // 
+            // ATVersionLbl
+            // 
+            this.ATVersionLbl.AutoSize = true;
+            this.ATVersionLbl.Location = new System.Drawing.Point(76, 130);
+            this.ATVersionLbl.Name = "ATVersionLbl";
+            this.ATVersionLbl.Size = new System.Drawing.Size(46, 13);
+            this.ATVersionLbl.TabIndex = 2;
+            this.ATVersionLbl.Text = "v0.0.0.0";
+            // 
+            // ATTanjiLbl
+            // 
+            this.ATTanjiLbl.AutoSize = true;
+            this.ATTanjiLbl.Location = new System.Drawing.Point(76, 113);
+            this.ATTanjiLbl.Name = "ATTanjiLbl";
+            this.ATTanjiLbl.Size = new System.Drawing.Size(30, 13);
+            this.ATTanjiLbl.TabIndex = 1;
+            this.ATTanjiLbl.Text = "Tanji";
+            // 
+            // ATLogoPctbx
+            // 
+            this.ATLogoPctbx.ErrorImage = null;
+            this.ATLogoPctbx.Image = global::Tanji.Properties.Resources.Tanji64;
+            this.ATLogoPctbx.InitialImage = null;
+            this.ATLogoPctbx.Location = new System.Drawing.Point(6, 113);
+            this.ATLogoPctbx.Name = "ATLogoPctbx";
+            this.ATLogoPctbx.Size = new System.Drawing.Size(64, 64);
+            this.ATLogoPctbx.SizeMode = System.Windows.Forms.PictureBoxSizeMode.AutoSize;
+            this.ATLogoPctbx.TabIndex = 0;
+            this.ATLogoPctbx.TabStop = false;
             // 
             // ConnectFrm
             // 
@@ -223,58 +735,101 @@
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(330, 234);
-            this.Controls.Add(this.GamePortTxt);
-            this.Controls.Add(this.GameHostTxt);
-            this.Controls.Add(this.MiddleGlowPnl);
-            this.Controls.Add(this.GamePortLbl);
-            this.Controls.Add(this.GameHostLbl);
-            this.Controls.Add(this.TopGlowPnl);
-            this.Controls.Add(this.ExponentGrpbx);
-            this.Controls.Add(this.CustomClientGrpbx);
-            this.Controls.Add(this.ModePnl);
+            this.ClientSize = new System.Drawing.Size(382, 254);
             this.Controls.Add(this.StatusTxt);
+            this.Controls.Add(this.ConnectTabs);
             this.Controls.Add(this.ConnectBtn);
-            this.Controls.Add(this.ModulusGrpbx);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.Icon = global::Tanji.Properties.Resources.Tanji;
             this.MaximizeBox = false;
             this.Name = "ConnectFrm";
+            this.Padding = new System.Windows.Forms.Padding(3);
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Tanji ~ Connection Setup";
+            this.Text = "Tanji ~ Hotel Connect";
             this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.ConnectFrm_FormClosed);
             this.Shown += new System.EventHandler(this.ConnectFrm_Shown);
-            this.ExponentGrpbx.ResumeLayout(false);
-            this.ExponentGrpbx.PerformLayout();
-            this.CustomClientGrpbx.ResumeLayout(false);
-            this.CustomClientGrpbx.PerformLayout();
-            this.ModulusGrpbx.ResumeLayout(false);
-            this.ModulusGrpbx.PerformLayout();
+            this.ConnectTabs.ResumeLayout(false);
+            this.ConnectionTab.ResumeLayout(false);
+            this.ConnectionTab.PerformLayout();
+            this.CTCustomClientGrpbx.ResumeLayout(false);
+            this.CTCustomClientGrpbx.PerformLayout();
+            this.CTLocalProxySettingsGrpbx.ResumeLayout(false);
+            this.CTLocalProxySettingsGrpbx.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CTProxyPortTxt)).EndInit();
+            this.HandshakeTab.ResumeLayout(false);
+            this.HTPrivateExponentGrpbx.ResumeLayout(false);
+            this.HTPrivateExponentGrpbx.PerformLayout();
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
+            this.HTPublicExponentGrpbx.ResumeLayout(false);
+            this.HTPublicExponentGrpbx.PerformLayout();
+            this.HTPublicModulusGrpbx.ResumeLayout(false);
+            this.HTPublicModulusGrpbx.PerformLayout();
+            this.DownloadsTab.ResumeLayout(false);
+            this.AboutTab.ResumeLayout(false);
+            this.AboutTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.ATLogoPctbx)).EndInit();
             this.ResumeLayout(false);
-            this.PerformLayout();
 
         }
 
         #endregion
-
-        private System.Windows.Forms.Panel MiddleGlowPnl;
-        private System.Windows.Forms.Label GamePortLbl;
-        private System.Windows.Forms.Label GameHostLbl;
-        private System.Windows.Forms.Panel TopGlowPnl;
-        public System.Windows.Forms.TextBox ExponentTxt;
-        private System.Windows.Forms.GroupBox ExponentGrpbx;
-        private System.Windows.Forms.TextBox CustomClientTxt;
-        private System.Windows.Forms.GroupBox CustomClientGrpbx;
-        private Sulakore.Components.SKoreButton BrowseBtn;
-        public System.Windows.Forms.TextBox ModulusTxt;
-        private Components.TanjiModePanel ModePnl;
+        private System.Windows.Forms.Label CTGamePortsLbl;
+        private System.Windows.Forms.Label CTGameHostLbl;
         private Sulakore.Components.SKoreLabel StatusTxt;
         private Sulakore.Components.SKoreButton ConnectBtn;
-        private System.Windows.Forms.GroupBox ModulusGrpbx;
         private System.Windows.Forms.OpenFileDialog ChooseClientDlg;
-        private System.Windows.Forms.TextBox GameHostTxt;
-        private System.Windows.Forms.TextBox GamePortTxt;
-
+        private Sulakore.Components.SKoreTabControl ConnectTabs;
+        private System.Windows.Forms.TabPage ConnectionTab;
+        private System.Windows.Forms.TabPage HandshakeTab;
+        private System.Windows.Forms.TabPage DownloadsTab;
+        private System.Windows.Forms.TabPage AboutTab;
+        private Sulakore.Components.SKoreButton CTBrowseBtn;
+        private System.Windows.Forms.TextBox CTCustomClientTxt;
+        private System.Windows.Forms.GroupBox HTPublicExponentGrpbx;
+        public System.Windows.Forms.TextBox HTPublicExponentTxt;
+        private System.Windows.Forms.GroupBox HTPublicModulusGrpbx;
+        public System.Windows.Forms.TextBox HTPublicModulusTxt;
+        private System.Windows.Forms.GroupBox groupBox1;
+        private System.Windows.Forms.Label label4;
+        public System.Windows.Forms.TextBox textBox3;
+        private System.Windows.Forms.Label label3;
+        public System.Windows.Forms.TextBox textBox2;
+        private System.Windows.Forms.Label label2;
+        public System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.GroupBox HTPrivateExponentGrpbx;
+        public System.Windows.Forms.TextBox HTPrivateExponentTxt;
+        private System.Windows.Forms.PictureBox ATLogoPctbx;
+        private System.Windows.Forms.Label ATTanjiLbl;
+        private System.Windows.Forms.Panel ATHorizontalGlowPnl;
+        private System.Windows.Forms.Panel ATVerticalGlowPnl;
+        public System.Windows.Forms.Label ATVersionLbl;
+        public Sulakore.Components.SKoreButton ATGithubBtn;
+        public Sulakore.Components.SKoreButton ATTwitterBtn;
+        public Sulakore.Components.SKoreButton ATFlashInspectBtn;
+        public Sulakore.Components.SKoreButton ATEavesdropBtn;
+        public Sulakore.Components.SKoreButton ATTanjiBtn;
+        public Sulakore.Components.SKoreButton ATLogoSourceBtn;
+        public Sulakore.Components.SKoreButton ATSulakoreBtn;
+        public Sulakore.Components.SKoreButton ATMakeCertBtn;
+        public Sulakore.Components.SKoreButton ATKekomundoBtn;
+        public Sulakore.Components.SKoreButton ATDonationsBtn;
+        public Sulakore.Components.SKoreButton ATDarkboxBtn;
+        private System.Windows.Forms.Label ATCopyrightLbl;
+        private System.Windows.Forms.Label ATTONMLbl;
+        private System.Windows.Forms.GroupBox CTLocalProxySettingsGrpbx;
+        private System.Windows.Forms.Label CTProxyPortLbl;
+        private Sulakore.Components.SKoreButton CTExportRootCertificateAuthorityBtn;
+        private Sulakore.Components.SKoreButton CTDestroyCertificatesBtn;
+        private System.Windows.Forms.Label CTRemoteProxyLbl;
+        private System.Windows.Forms.GroupBox CTCustomClientGrpbx;
+        public System.Windows.Forms.TextBox CTGameHostTxt;
+        public System.Windows.Forms.TextBox CTGamePortsTxt;
+        public System.Windows.Forms.CheckBox CTModifyFlashVariablesChckbx;
+        public System.Windows.Forms.NumericUpDown CTProxyPortTxt;
+        public System.Windows.Forms.TextBox CTRemoteProxyTxt;
+        private Sulakore.Components.SKoreButton sKoreButton1;
+        private System.Windows.Forms.Panel panel1;
     }
 }
