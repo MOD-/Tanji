@@ -68,6 +68,7 @@
   <PropertyGroup />
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -83,12 +84,22 @@
     <Compile Include="Applications\PacketLoggerFrm.Designer.cs">
       <DependentUpon>PacketLoggerFrm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Converters\GamePortsConverter.cs" />
+    <Compile Include="Converters\RemoteProxyConverter.cs" />
     <Compile Include="Dialogs\UpdateFrm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Dialogs\UpdateFrm.Designer.cs">
       <DependentUpon>UpdateFrm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dialogs\VariablesFrm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Dialogs\VariablesFrm.Designer.cs">
+      <DependentUpon>VariablesFrm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Managers\AboutManager.cs" />
+    <Compile Include="Managers\ConnectionManager.cs" />
     <Compile Include="Managers\EncoderManager.cs" />
     <Compile Include="Managers\ExtensionManager.cs" />
     <Compile Include="Managers\HandshakeManager.cs" />
@@ -97,7 +108,6 @@
     <Compile Include="Managers\Injection\PrimitiveManager.cs" />
     <Compile Include="Managers\Injection\SchedulerManager.cs" />
     <Compile Include="Utilities\Draw.cs" />
-    <Compile Include="Components\TanjiModePanel.cs" />
     <Compile Include="Dialogs\ConnectFrm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -127,6 +137,9 @@
       <DependentUpon>UpdateFrm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <EmbeddedResource Include="Dialogs\VariablesFrm.resx">
+      <DependentUpon>VariablesFrm.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="MainFrm.resx">
       <DependentUpon>MainFrm.cs</DependentUpon>
     </EmbeddedResource>
@@ -155,6 +168,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Tanji.ico" />
+    <None Include="Resources\Tanji64.png" />
     <Content Include="Tanji.ico" />
   </ItemGroup>
   <ItemGroup>
