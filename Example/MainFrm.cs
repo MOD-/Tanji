@@ -12,7 +12,7 @@ namespace Example
         public MainFrm()
         {
             InitializeComponent();
-
+            
             // Attach - Block/Replace examaple.
             Triggers.InAttach(1000, AttachedIncoming);
         }

@@ -11,7 +11,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Eavesdrop", "..\Eavesdrop\E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FlashInspect", "..\FlashInspect\FlashInspect\FlashInspect.csproj", "{EBEE07E0-BF46-424C-BB55-A86C0B78D7A5}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extensions", "Extensions", "{C01F49AE-A4BC-4262-A60B-3B592C3D7C3D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Extension Examples", "Extension Examples", "{C01F49AE-A4BC-4262-A60B-3B592C3D7C3D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Example", "Example\Example.csproj", "{09CCB12D-3263-499E-A1BC-9293391F53D5}"
 EndProject

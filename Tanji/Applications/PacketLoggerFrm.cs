@@ -82,11 +82,12 @@ namespace Tanji.Applications
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            Intercepted.Clear();
-
             IsLoaded = false;
             e.Cancel = IsHalted = true;
             WindowState = FormWindowState.Minimized;
+
+            Intercepted.Clear();
+            _readQueueTask?.Wait();
 
             LoggerTxt.Clear();
         }
@@ -189,11 +190,9 @@ namespace Tanji.Applications
         }
         private void PushToQueue(object sender, InterceptedEventArgs e)
         {
-            if (WindowState == FormWindowState.Minimized ||
-                e.IsBlocked && !DisplayBlocked)
-            { return; }
-
+            if (e.IsBlocked && !DisplayBlocked) return;
             Intercepted.Enqueue(e);
+
             if (!_isReadingQueue)
             {
                 _readQueueTask = Task.Factory.StartNew(

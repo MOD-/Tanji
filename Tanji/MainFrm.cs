@@ -41,11 +41,11 @@ namespace Tanji
     {
         public bool IsRetro { get; set; }
         public bool IsDebugging { get; } = false;
-        
+
+        public HConnection Connection { get; }
         public HGameData GameData { get; set; }
         public ShockwaveFlash Game { get; set; }
 
-        public HConnection Connection { get; }
         public EncoderManager EncoderMngr { get; }
         public HandshakeManager HandshakeMngr { get; }
         public ExtensionManager ExtensionMngr { get; }
