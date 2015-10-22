@@ -28,7 +28,6 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(PacketLoggerFrm));
             this.LoggerTxt = new System.Windows.Forms.RichTextBox();
             this.PacketloggerMenu = new System.Windows.Forms.MenuStrip();
             this.OptionsBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -47,8 +46,7 @@
             this.PacketLoggerStrip = new System.Windows.Forms.StatusStrip();
             this.CaptureOutgoingLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.CaptureIncomingLbl = new System.Windows.Forms.ToolStripStatusLabel();
-            this.DisplayBlockedLbl = new System.Windows.Forms.ToolStripStatusLabel();
-            this.DisplayReplacedLbl = new System.Windows.Forms.ToolStripStatusLabel();
+            this.DisplayPacketStructureBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PacketloggerMenu.SuspendLayout();
             this.PacketLoggerStrip.SuspendLayout();
             this.SuspendLayout();
@@ -140,6 +138,7 @@
             this.SettingsBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DisplayFiltersBtn,
             this.DisplaySplitterBtn,
+            this.DisplayPacketStructureBtn,
             this.SettingsSeperator,
             this.AlwaysOnTopBtn});
             this.SettingsBtn.Name = "SettingsBtn";
@@ -152,7 +151,7 @@
             this.BlockedBtn,
             this.ReplacedBtn});
             this.DisplayFiltersBtn.Name = "DisplayFiltersBtn";
-            this.DisplayFiltersBtn.Size = new System.Drawing.Size(194, 22);
+            this.DisplayFiltersBtn.Size = new System.Drawing.Size(201, 22);
             this.DisplayFiltersBtn.Text = "Display Filters";
             // 
             // BlockedBtn
@@ -184,21 +183,21 @@
             this.DisplaySplitterBtn.CheckState = System.Windows.Forms.CheckState.Checked;
             this.DisplaySplitterBtn.Name = "DisplaySplitterBtn";
             this.DisplaySplitterBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.S)));
-            this.DisplaySplitterBtn.Size = new System.Drawing.Size(194, 22);
+            this.DisplaySplitterBtn.Size = new System.Drawing.Size(201, 22);
             this.DisplaySplitterBtn.Text = "Display Splitter";
             this.DisplaySplitterBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
             // 
             // SettingsSeperator
             // 
             this.SettingsSeperator.Name = "SettingsSeperator";
-            this.SettingsSeperator.Size = new System.Drawing.Size(191, 6);
+            this.SettingsSeperator.Size = new System.Drawing.Size(198, 6);
             // 
             // AlwaysOnTopBtn
             // 
             this.AlwaysOnTopBtn.CheckOnClick = true;
             this.AlwaysOnTopBtn.Name = "AlwaysOnTopBtn";
             this.AlwaysOnTopBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.AlwaysOnTopBtn.Size = new System.Drawing.Size(194, 22);
+            this.AlwaysOnTopBtn.Size = new System.Drawing.Size(201, 22);
             this.AlwaysOnTopBtn.Text = "Always On Top";
             this.AlwaysOnTopBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
             // 
@@ -206,9 +205,7 @@
             // 
             this.PacketLoggerStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.CaptureOutgoingLbl,
-            this.CaptureIncomingLbl,
-            this.DisplayBlockedLbl,
-            this.DisplayReplacedLbl});
+            this.CaptureIncomingLbl});
             this.PacketLoggerStrip.Location = new System.Drawing.Point(0, 497);
             this.PacketLoggerStrip.Name = "PacketLoggerStrip";
             this.PacketLoggerStrip.Size = new System.Drawing.Size(710, 24);
@@ -228,19 +225,13 @@
             this.CaptureIncomingLbl.Size = new System.Drawing.Size(136, 19);
             this.CaptureIncomingLbl.Text = "Capture Incoming: True";
             // 
-            // DisplayBlockedLbl
+            // DisplayPacketStructureBtn
             // 
-            this.DisplayBlockedLbl.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.DisplayBlockedLbl.Name = "DisplayBlockedLbl";
-            this.DisplayBlockedLbl.Size = new System.Drawing.Size(123, 19);
-            this.DisplayBlockedLbl.Text = "Display Blocked: True";
-            // 
-            // DisplayReplacedLbl
-            // 
-            this.DisplayReplacedLbl.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.DisplayReplacedLbl.Name = "DisplayReplacedLbl";
-            this.DisplayReplacedLbl.Size = new System.Drawing.Size(129, 19);
-            this.DisplayReplacedLbl.Text = "Display Replaced: True";
+            this.DisplayPacketStructureBtn.CheckOnClick = true;
+            this.DisplayPacketStructureBtn.Name = "DisplayPacketStructureBtn";
+            this.DisplayPacketStructureBtn.Size = new System.Drawing.Size(201, 22);
+            this.DisplayPacketStructureBtn.Text = "Display Packet Structure";
+            this.DisplayPacketStructureBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
             // 
             // PacketLoggerFrm
             // 
@@ -251,7 +242,7 @@
             this.Controls.Add(this.LoggerTxt);
             this.Controls.Add(this.PacketLoggerStrip);
             this.Controls.Add(this.PacketloggerMenu);
-            this.Icon = Tanji.Properties.Resources.Tanji;
+            this.Icon = global::Tanji.Properties.Resources.Tanji;
             this.Name = "PacketLoggerFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ PacketLogger";
@@ -284,7 +275,6 @@
         private System.Windows.Forms.StatusStrip PacketLoggerStrip;
         private System.Windows.Forms.ToolStripStatusLabel CaptureOutgoingLbl;
         private System.Windows.Forms.ToolStripStatusLabel CaptureIncomingLbl;
-        private System.Windows.Forms.ToolStripStatusLabel DisplayBlockedLbl;
-        private System.Windows.Forms.ToolStripStatusLabel DisplayReplacedLbl;
+        private System.Windows.Forms.ToolStripMenuItem DisplayPacketStructureBtn;
     }
 }

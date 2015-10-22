@@ -1,4 +1,4 @@
-﻿namespace Example
+﻿namespace Extension_Demo
 {
     partial class MainFrm
     {

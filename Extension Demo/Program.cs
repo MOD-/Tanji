@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Windows.Forms;
 
-namespace Example
+namespace Extension_Demo
 {
     static class Program
     {

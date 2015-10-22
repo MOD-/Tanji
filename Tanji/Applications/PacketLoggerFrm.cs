@@ -1,28 +1,15 @@
-﻿/* Copyright
-
+﻿/*
     GitHub(Source): https://GitHub.com/ArachisH/Tanji
 
-    Habbo Hotel Packet(Logger/Manipulator)
+    This file is part of Tanji.
     Copyright (C) 2015 ArachisH
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
+    
+    This code is licensed under the GNU General Public License.
     See License.txt in the project root for license information.
 */
 
 using System;
+using System.Linq;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
@@ -54,6 +41,7 @@ namespace Tanji.Applications
         public Color ReplaceHighlight { get; set; } = Color.DarkCyan;
         public Color IncomingHighlight { get; set; } = Color.Firebrick;
         public Color OutgoingHighlight { get; set; } = SystemColors.HotTrack;
+        public Color PacketStructHighlight { get; set; } = Color.FromArgb(0, 204, 136);
 
         public bool ViewOutgoing { get; private set; } = true;
         public bool ViewIncoming { get; private set; } = true;
@@ -61,6 +49,7 @@ namespace Tanji.Applications
         public bool DisplayBlocked { get; private set; } = true;
         public bool DisplayReplaced { get; private set; } = true;
         public bool DisplaySplitter { get; private set; } = true;
+        public bool DisplayPacketStructure { get; private set; } = false;
 
         public PacketLoggerFrm(MainFrm main)
         {
@@ -79,17 +68,18 @@ namespace Tanji.Applications
         {
             IsLoaded = true;
             if (IsHalted) IsHalted = false;
+            base.OnActivated(e);
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
+            Intercepted.Clear();
+
             IsLoaded = false;
             e.Cancel = IsHalted = true;
             WindowState = FormWindowState.Minimized;
 
-            Intercepted.Clear();
-            _readQueueTask?.Wait();
-
             LoggerTxt.Clear();
+            base.OnFormClosing(e);
         }
 
         private void ItemChecked(object sender, EventArgs e)
@@ -111,28 +101,26 @@ namespace Tanji.Applications
                     ViewOutgoing = isChecked;
                     break;
                 }
+
+                case nameof(DisplayPacketStructureBtn):
+                DisplayPacketStructure = isChecked;
+                break;
+
                 case nameof(BlockedBtn):
-                {
-                    DisplayBlockedLbl.Text = "Display Blocked: " + isChecked;
-                    DisplayBlocked = isChecked;
-                    break;
-                }
+                DisplayBlocked = isChecked;
+                break;
+
                 case nameof(ReplacedBtn):
-                {
-                    DisplayReplacedLbl.Text = "Display Replaced: " + isChecked;
-                    DisplayReplaced = isChecked;
-                    break;
-                }
+                DisplayReplaced = isChecked;
+                break;
+
                 case nameof(DisplaySplitterBtn):
-                {
-                    DisplaySplitter = isChecked;
-                    break;
-                }
+                DisplaySplitter = isChecked;
+                break;
+
                 case nameof(AlwaysOnTopBtn):
-                {
-                    TopMost = isChecked;
-                    break;
-                }
+                TopMost = isChecked;
+                break;
             }
         }
         private void CopyBtn_Click(object sender, EventArgs e)
@@ -190,9 +178,13 @@ namespace Tanji.Applications
         }
         private void PushToQueue(object sender, InterceptedEventArgs e)
         {
-            if (e.IsBlocked && !DisplayBlocked) return;
-            Intercepted.Enqueue(e);
+            if (WindowState == FormWindowState.Minimized ||
+                e.IsBlocked && !DisplayBlocked)
+            {
+                return;
+            }
 
+            Intercepted.Enqueue(e);
             if (!_isReadingQueue)
             {
                 _readQueueTask = Task.Factory.StartNew(
@@ -216,12 +208,61 @@ namespace Tanji.Applications
 
                 if (e.IsBlocked) WriteHighlight("Blocked | ", BlockHighlight);
                 else if (e.WasReplaced) WriteHighlight("Replaced | ", ReplaceHighlight);
+                WriteHighlight(dataLog, highlight);
 
-                string splitter = (DisplaySplitter ? "\n--------------------\n" : "\n");
-                WriteHighlight(dataLog + splitter, highlight);
+                if (toServer && DisplayPacketStructure)
+                {
+                    string[] structure = MainUI.OutStructs[e.Packet.Header];
+                    if (!structure.Contains("array"))
+                    {
+                        e.Packet.Position = 0;
+                        string packetInfo = $"\r\n{{l}}{{u:{e.Packet.Header}}}";
+                        try
+                        {
+                            foreach (string valueType in structure)
+                            {
+                                if (string.IsNullOrWhiteSpace(packetInfo)) break;
+                                packetInfo += "{" + valueType[0] + ":";
+
+                                switch (valueType)
+                                {
+                                    case "int":
+                                    packetInfo += e.Packet.ReadInteger();
+                                    break;
+
+                                    case "string":
+                                    packetInfo += e.Packet.ReadString();
+                                    break;
+
+                                    case "boolean":
+                                    packetInfo += e.Packet.ReadBoolean().ToString();
+                                    break;
+
+                                    default:
+                                    packetInfo = string.Empty;
+                                    break;
+                                }
+
+                                if (!string.IsNullOrWhiteSpace(packetInfo))
+                                    packetInfo += "}";
+                            }
+                        }
+                        catch { packetInfo = "\r\nDeconstruction Failed."; }
+                        finally
+                        {
+                            if (!string.IsNullOrWhiteSpace(packetInfo))
+                                WriteHighlight(packetInfo, PacketStructHighlight);
+
+                            e.Packet.Position = 0;
+                        }
+                    }
+                }
+
+                string splitter = (DisplaySplitter ? "\r\n--------------------\r\n" : "\r\n");
+                WriteHighlight(splitter, highlight);
+
                 LoggerTxt.SelectionStart = LoggerTxt.TextLength;
                 LoggerTxt.ScrollToCaret();
-
                 Application.DoEvents();
             }
         }

@@ -1,24 +1,10 @@
-﻿/* Copyright
-
+﻿/*
     GitHub(Source): https://GitHub.com/ArachisH/Tanji
 
-    Habbo Hotel Packet(Logger/Manipulator)
+    This file is part of Tanji.
     Copyright (C) 2015 ArachisH
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
+    
+    This code is licensed under the GNU General Public License.
     See License.txt in the project root for license information.
 */
 
@@ -37,25 +23,25 @@ namespace Tanji.Managers
             MainUI = main;
 
             aboutTab.Controls["ATTanjiBtn"].Click += ATTanjiBtn_Click;
-            aboutTab.Controls["ATMakecertBtn"].Click += ATMakecertBtn_Click;
+            aboutTab.Controls["ATIconLogoBtn"].Click += ATIconLogoBtn_Click;
+            aboutTab.Controls["ATMakeCertBtn"].Click += ATMakeCertBtn_Click;
             aboutTab.Controls["ATSulakoreBtn"].Click += ATSulakoreBtn_Click;
             aboutTab.Controls["ATEavesdropBtn"].Click += ATEavesdropBtn_Click;
-            aboutTab.Controls["ATLogoSourceBtn"].Click += ATLogoSourcetBtn_Click;
             aboutTab.Controls["ATFlashInspectBtn"].Click += ATFlashInspectBtn_Click;
 
             aboutTab.Controls["ATDarkboxBtn"].Click += ATDarkboxBtn_Click;
-            aboutTab.Controls["ATKekomundoBtn"].Click += ATKekomundoBtn_Click;
+            aboutTab.Controls["ATRagezoneBtn"].Click += ATRagezoneBtn_Click;
             aboutTab.Controls["ATDonationsBtn"].Click += ATDonationsBtn_Click;
 
-            aboutTab.Controls["ATGithubBtn"].Click += ATGithubBtn_Click;
+            aboutTab.Controls["ATGitHubBtn"].Click += ATGitHubBtn_Click;
             aboutTab.Controls["ATTwitterBtn"].Click += ATTwitterBtn_Click;
 
             aboutTab.Controls["ATVersionLbl"].Text = "v" + MainUI.UpdateUI.LocalVersion;
         }
 
-        private void ATGithubBtn_Click(object sender, EventArgs e)
+        private void ATGitHubBtn_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/ArachisH");
+            Process.Start("https://GitHub.com/ArachisH");
         }
         private void ATTwitterBtn_Click(object sender, EventArgs e)
         {
@@ -64,36 +50,36 @@ namespace Tanji.Managers
 
         private void ATDarkboxBtn_Click(object sender, EventArgs e)
         {
-            Process.Start("http://www.Darkbox.nl");
+            Process.Start("http://www.Darkbox.nl/board/index.php");
         }
-        private void ATKekomundoBtn_Click(object sender, EventArgs e)
+        private void ATRagezoneBtn_Click(object sender, EventArgs e)
         {
-            Process.Start("http://kekomundo.com/foro/index.php?c=3");
+            Process.Start("https://Forum.RaGEZONE.com/f282/");
         }
         private void ATDonationsBtn_Click(object sender, EventArgs e)
         {
-            Process.Start("https://pledgie.com/campaigns/30163");
+            Process.Start("https://Pledgie.com/campaigns/30163");
         }
 
         private void ATTanjiBtn_Click(object sender, EventArgs e)
         {
             Process.Start("https://GitHub.com/ArachisH/Tanji");
         }
-        private void ATMakecertBtn_Click(object sender, EventArgs e)
+        private void ATIconLogoBtn_Click(object sender, EventArgs e)
+        {
+            Process.Start("http://www.iconarchive.com/show/fs-icons-by-franksouza183/Apps-clementine-icon.html");
+        }
+        private void ATMakeCertBtn_Click(object sender, EventArgs e)
         {
             Process.Start("https://msdn.microsoft.com/en-us/library/bfsktky3(v=vs.110).aspx");
         }
         private void ATSulakoreBtn_Click(object sender, EventArgs e)
         {
-            Process.Start("https://github.com/ArachisH/Sulakore");
+            Process.Start("https://GitHub.com/ArachisH/Sulakore");
         }
         private void ATEavesdropBtn_Click(object sender, EventArgs e)
         {
             Process.Start("https://GitHub.com/ArachisH/Eavesdrop");
-        }
-        private void ATLogoSourcetBtn_Click(object sender, EventArgs e)
-        {
-            Process.Start("http://www.iconarchive.com/show/fs-icons-by-franksouza183/Apps-clementine-icon.html");
         }
         private void ATFlashInspectBtn_Click(object sender, EventArgs e)
         {

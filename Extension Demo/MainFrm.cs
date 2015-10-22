@@ -5,14 +5,14 @@ using Sulakore.Protocol;
 using Sulakore.Extensions;
 using Sulakore.Communication;
 
-namespace Example
+namespace Extension_Demo
 {
     public partial class MainFrm : ExtensionForm
     {
         public MainFrm()
         {
             InitializeComponent();
-            
+
             // Attach - Block/Replace examaple.
             Triggers.InAttach(1000, AttachedIncoming);
         }
@@ -20,7 +20,7 @@ namespace Example
         private void AttachedIncoming(InterceptedEventArgs e)
         {
             // If we can't read a string, leave this method.
-            if (!e.Packet.CanRead<string>()) return;
+            if (!e.Packet.CanReadString()) return;
 
             string value = e.Packet.ReadString();
             switch (value.ToLower())
@@ -34,7 +34,8 @@ namespace Example
                 case "replace":
                 {
                     // Replace the first string found in the packet.
-                    e.Replacement.Replace<string>(0, "Replaced!");
+                    e.Replacement.RemoveString(0);
+                    e.Replacement.WriteString("Replaced!", 0);
                     break;
                 }
 

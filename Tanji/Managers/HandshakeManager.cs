@@ -1,24 +1,10 @@
-﻿/* Copyright
-
+﻿/*
     GitHub(Source): https://GitHub.com/ArachisH/Tanji
 
-    Habbo Hotel Packet(Logger/Manipulator)
+    This file is part of Tanji.
     Copyright (C) 2015 ArachisH
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
+    
+    This code is licensed under the GNU General Public License.
     See License.txt in the project root for license information.
 */
 
@@ -79,7 +65,7 @@ namespace Tanji.Managers
                         Local.Exchange = new HKeyExchange(FAKE_EXPONENT, FAKE_MODULUS, FAKE_PRIVATE_EXPONENT);
 
                         string possibleSignedPrime = e.Packet.ReadString();
-                        if (!e.Packet.CanRead<string>())
+                        if (!e.Packet.CanReadString())
                         {
                             _bannerToken = possibleSignedPrime;
 
@@ -108,7 +94,9 @@ namespace Tanji.Managers
                         if (_banner == null)
                         {
                             Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
-                            e.Replacement.Replace<string>(0, Local.Exchange.GetPublicKey());
+
+                            e.Replacement.RemoveString(0);
+                            e.Replacement.WriteString(Local.Exchange.GetPublicKey(), 0);
                         }
                         else e.Replacement = new HMessage(e.Packet.Header, "1");
 
@@ -174,7 +162,9 @@ namespace Tanji.Managers
                         else _localKey = Local.Exchange.GetSharedKey(e.Packet.ReadString());
 
                         Remote.Exchange.Rsa.Padding = Local.Exchange.Rsa.Padding;
-                        e.Replacement.Replace<string>(0, Remote.Exchange.GetPublicKey());
+
+                        e.Replacement.RemoveString(0);
+                        e.Replacement.WriteString(Remote.Exchange.GetPublicKey(), 0);
                         break;
                     }
                     case 4:

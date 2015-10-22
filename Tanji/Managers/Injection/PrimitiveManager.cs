@@ -1,26 +1,11 @@
-﻿/* Copyright
-
+﻿/*
     GitHub(Source): https://GitHub.com/ArachisH/Tanji
 
-    Habbo Hotel Packet(Logger/Manipulator)
+    This file is part of Tanji.
     Copyright (C) 2015 ArachisH
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
+    
+    This code is licensed under the GNU General Public License.
     See License.txt in the project root for license information.
-    test
 */
 
 using System;
@@ -30,7 +15,6 @@ using System.Windows.Forms;
 
 using Sulakore;
 using Sulakore.Protocol;
-using Sulakore.Protocol.Encoders;
 
 namespace Tanji.Managers.Injection
 {
@@ -80,8 +64,8 @@ namespace Tanji.Managers.Injection
                 byte[] data = HMessage.ToBytes(MainUI.PTPacketTxt.Text);
                 if (data.Length >= 6)
                 {
-                    int length = BigEndian.ToSI32(data);
-                    ushort header = BigEndian.ToUI16(data, 4);
+                    int length = BigEndian.ToInt32(data, 0);
+                    ushort header = BigEndian.ToUInt16(data, 4);
 
                     byte[] headerLength = new byte[6];
                     Buffer.BlockCopy(data, 0, headerLength, 0, 6);
@@ -119,8 +103,8 @@ namespace Tanji.Managers.Injection
             if (length < 6) isCorrupted = true;
             else
             {
-                length = BigEndian.ToSI32(data);
-                header = BigEndian.ToUI16(data, 4);
+                length = BigEndian.ToInt32(data, 0);
+                header = BigEndian.ToUInt16(data, 4);
 
                 int realLength = data.Length - 4;
                 isCorrupted = (realLength != length);
@@ -188,14 +172,14 @@ namespace Tanji.Managers.Injection
                 case "i":
                 {
                     if (data.Length == 4)
-                        value = BigEndian.ToSI32(data);
+                        value = BigEndian.ToInt32(data, 0);
                     break;
                 }
                 case "s":
                 {
                     if (data.Length >= 2)
                     {
-                        int length = BigEndian.ToUI16(data);
+                        int length = BigEndian.ToUInt16(data, 0);
                         if (length == data.Length - 2)
                             value = Encoding.UTF8.GetString(data, 2, length);
                     }

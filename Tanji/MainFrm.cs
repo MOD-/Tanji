@@ -1,30 +1,19 @@
-﻿/* Copyright
-
+﻿/*
     GitHub(Source): https://GitHub.com/ArachisH/Tanji
 
-    Habbo Hotel Packet(Logger/Manipulator)
+    This file is part of Tanji.
     Copyright (C) 2015 ArachisH
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
+    
+    This code is licensed under the GNU General Public License.
     See License.txt in the project root for license information.
 */
 
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Collections.Generic;
+
+using FlashInspect;
 
 using Tanji.Dialogs;
 using Tanji.Managers;
@@ -33,19 +22,19 @@ using Tanji.Applications;
 using Sulakore.Habbo.Web;
 using Sulakore.Communication;
 
-using FlashInspect;
-
 namespace Tanji
 {
     public partial class MainFrm : Form
     {
         public bool IsRetro { get; set; }
         public bool IsDebugging { get; } = false;
+        
+        public IDictionary<ushort, string[]> OutStructs { get; }
 
-        public HConnection Connection { get; }
         public HGameData GameData { get; set; }
         public ShockwaveFlash Game { get; set; }
 
+        public HConnection Connection { get; }
         public EncoderManager EncoderMngr { get; }
         public HandshakeManager HandshakeMngr { get; }
         public ExtensionManager ExtensionMngr { get; }
@@ -58,10 +47,13 @@ namespace Tanji
         public MainFrm()
         {
             InitializeComponent();
-            Connection = new HConnection();
 
+            OutStructs = new Dictionary<ushort, string[]>();
+
+            Connection = new HConnection();
             UpdateUI = new UpdateFrm(this);
             ConnectUI = new ConnectFrm(this);
+
             if (!IsDebugging)
             {
                 Load += MainFrm_Load;
@@ -87,7 +79,7 @@ namespace Tanji
             PromptConnect();
 
             if (!Connection.IsConnected) Close();
-            else Text = $"Tanji ~ Connected[{GameData.Host}:{GameData.Port}]";
+            else Text = $"Tanji ~ Connected[{Connection.Host}:{Connection.Port}]";
         }
         private void MainFrm_Shown(object sender, EventArgs e)
         {
@@ -103,6 +95,7 @@ namespace Tanji
         {
             Invoke(new MethodInvoker(ConnectUI.Close));
         }
+
         private void Disconnected(object sender, EventArgs e)
         {
             Invoke(new MethodInvoker(Close));
@@ -110,12 +103,12 @@ namespace Tanji
 
         private void TanjiInfoTxt_Click(object sender, EventArgs e)
         {
-            TanjiInfoTxt.LinkVisited = true;
+            TanjiVersionTxt.LinkVisited = true;
             Process.Start("https://GitHub.com/ArachisH/Tanji");
         }
         private void TanjiVersionTxt_Click(object sender, EventArgs e)
         {
-            TanjiVersionTxt.LinkVisited = true;
+            //TanjiVersionTxt.LinkVisited = true;
 
             string htmlUrl = UpdateUI.TanjiReleases?[0].HtmlUrl;
             if (!string.IsNullOrWhiteSpace(htmlUrl))

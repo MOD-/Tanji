@@ -1,36 +1,22 @@
-﻿/* Copyright
-
+﻿/*
     GitHub(Source): https://GitHub.com/ArachisH/Tanji
 
-    Habbo Hotel Packet(Logger/Manipulator)
+    This file is part of Tanji.
     Copyright (C) 2015 ArachisH
-
-    This program is free software; you can redistribute it and/or modify
-    it under the terms of the GNU General Public License as published by
-    the Free Software Foundation; either version 2 of the License, or
-    (at your option) any later version.
-
-    This program is distributed in the hope that it will be useful,
-    but WITHOUT ANY WARRANTY; without even the implied warranty of
-    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-    GNU General Public License for more details.
-
-    You should have received a copy of the GNU General Public License along
-    with this program; if not, write to the Free Software Foundation, Inc.,
-    51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
-
+    
+    This code is licensed under the GNU General Public License.
     See License.txt in the project root for license information.
 */
 
 using System;
+using System.IO;
 using System.Net;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.IO.Compression;
 using System.Threading.Tasks;
 
 using Tanji.Utilities;
-using System.IO.Compression;
-using System.IO;
 
 namespace Tanji.Dialogs
 {
@@ -103,7 +89,7 @@ namespace Tanji.Dialogs
                     {
                         foreach (var tanjiFile in tanjiArchive.Entries)
                         {
-                            StatusLbl.SetDotAnimation("Extracting {0}", tanjiFile.Name);
+                            StatusLbl.SetDotAnimation("Extracting '{0}'", tanjiFile.Name);
 
                             string saveAs = Path.Combine(TanjiDirectoryDlg.SelectedPath, tanjiFile.Name);
                             tanjiFile.ExtractToFile(saveAs, true);
