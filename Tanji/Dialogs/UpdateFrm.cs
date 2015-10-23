@@ -78,12 +78,18 @@ namespace Tanji.Dialogs
 
                     BringToFront();
                     StatusLbl.StopDotAnimation("Extracting...");
+
+                    TanjiDirectoryDlg.ShowNewFolderButton = false;
                     if (TanjiDirectoryDlg.ShowDialog() != DialogResult.OK)
                     {
                         StatusLbl.StopDotAnimation("Standing By...");
                         return;
                     }
 
+                    string selectedPath = Path.Combine(TanjiDirectoryDlg.SelectedPath,
+                        "Tanji v" + SelectedRelease.TagName.Substring(1));
+
+                    Directory.CreateDirectory(selectedPath);
                     using (var tanjiStream = new MemoryStream(tanjiZip))
                     using (var tanjiArchive = new ZipArchive(tanjiStream))
                     {
@@ -91,7 +97,7 @@ namespace Tanji.Dialogs
                         {
                             StatusLbl.SetDotAnimation("Extracting '{0}'", tanjiFile.Name);
 
-                            string saveAs = Path.Combine(TanjiDirectoryDlg.SelectedPath, tanjiFile.Name);
+                            string saveAs = Path.Combine(selectedPath, tanjiFile.Name);
                             tanjiFile.ExtractToFile(saveAs, true);
                         }
                     }
