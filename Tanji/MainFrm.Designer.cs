@@ -33,7 +33,7 @@
             this.TanjiVersionTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.SchedulesActiveTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.ExtensionsActiveTxt = new System.Windows.Forms.ToolStripStatusLabel();
-            this.PTPrimitiveMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.PTPrimitiveContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.PTInsertFormatParameterBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PTIntegerBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PTStringBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -140,7 +140,7 @@
             this.ETStatusCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ETInstallExtensionBtn = new Sulakore.Components.SKoreButton();
             this.TanjiStrip.SuspendLayout();
-            this.PTPrimitiveMenu.SuspendLayout();
+            this.PTPrimitiveContextMenu.SuspendLayout();
             this.ETExtensionMenu.SuspendLayout();
             this.TanjiTabs.SuspendLayout();
             this.InjectionTab.SuspendLayout();
@@ -196,9 +196,9 @@
             this.ExtensionsActiveTxt.Size = new System.Drawing.Size(125, 19);
             this.ExtensionsActiveTxt.Text = "Extensions Active: 0/0";
             // 
-            // PTPrimitiveMenu
+            // PTPrimitiveContextMenu
             // 
-            this.PTPrimitiveMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PTPrimitiveContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.PTInsertFormatParameterBtn,
             this.PTMenuSeparatorTop,
             this.PTCutBtn,
@@ -207,8 +207,8 @@
             this.PTMenuSeperatorBottom,
             this.PTUndoBtn,
             this.PTSelectAllBtn});
-            this.PTPrimitiveMenu.Name = "ConstructMenu";
-            this.PTPrimitiveMenu.Size = new System.Drawing.Size(204, 148);
+            this.PTPrimitiveContextMenu.Name = "ConstructMenu";
+            this.PTPrimitiveContextMenu.Size = new System.Drawing.Size(204, 148);
             // 
             // PTInsertFormatParameterBtn
             // 
@@ -984,7 +984,7 @@
             // 
             // PTPacketTxt
             // 
-            this.PTPacketTxt.ContextMenuStrip = this.PTPrimitiveMenu;
+            this.PTPacketTxt.ContextMenuStrip = this.PTPrimitiveContextMenu;
             this.PTPacketTxt.Location = new System.Drawing.Point(3, 19);
             this.PTPacketTxt.MaxLength = 2147483647;
             this.PTPacketTxt.Multiline = true;
@@ -1298,7 +1298,7 @@
             this.Text = "Tanji ~ Connected[Host:Port]";
             this.TanjiStrip.ResumeLayout(false);
             this.TanjiStrip.PerformLayout();
-            this.PTPrimitiveMenu.ResumeLayout(false);
+            this.PTPrimitiveContextMenu.ResumeLayout(false);
             this.ETExtensionMenu.ResumeLayout(false);
             this.TanjiTabs.ResumeLayout(false);
             this.InjectionTab.ResumeLayout(false);
@@ -1389,7 +1389,7 @@
         private System.Windows.Forms.ColumnHeader ICSTypeCol;
         private System.Windows.Forms.ColumnHeader ICSValueCol;
         private System.Windows.Forms.ColumnHeader ICSEncodedCol;
-        private System.Windows.Forms.ContextMenuStrip PTPrimitiveMenu;
+        private System.Windows.Forms.ContextMenuStrip PTPrimitiveContextMenu;
         public Sulakore.Components.SKoreTabControl InjectionTabs;
         public System.Windows.Forms.NumericUpDown CTCountTxt;
         public Sulakore.Components.SKoreButton CTRemoveBtn;

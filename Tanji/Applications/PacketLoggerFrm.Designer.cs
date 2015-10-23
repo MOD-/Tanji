@@ -28,8 +28,11 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.LoggerTxt = new System.Windows.Forms.RichTextBox();
-            this.PacketloggerMenu = new System.Windows.Forms.MenuStrip();
+            this.PacketLoggerContextMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.PLCMCopyBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.PacketLoggerMenu = new System.Windows.Forms.MenuStrip();
             this.OptionsBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewOutgoingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewIncomingBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -41,13 +44,14 @@
             this.BlockedBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ReplacedBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.DisplaySplitterBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.DisplayPacketStructureBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingsSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.AlwaysOnTopBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PacketLoggerStrip = new System.Windows.Forms.StatusStrip();
             this.CaptureOutgoingLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.CaptureIncomingLbl = new System.Windows.Forms.ToolStripStatusLabel();
-            this.DisplayPacketStructureBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.PacketloggerMenu.SuspendLayout();
+            this.PacketLoggerContextMenu.SuspendLayout();
+            this.PacketLoggerMenu.SuspendLayout();
             this.PacketLoggerStrip.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -55,6 +59,7 @@
             // 
             this.LoggerTxt.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(10)))), ((int)(((byte)(10)))), ((int)(((byte)(10)))));
             this.LoggerTxt.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.LoggerTxt.ContextMenuStrip = this.PacketLoggerContextMenu;
             this.LoggerTxt.DetectUrls = false;
             this.LoggerTxt.Dock = System.Windows.Forms.DockStyle.Fill;
             this.LoggerTxt.Font = new System.Drawing.Font("Segoe UI", 9F);
@@ -67,15 +72,30 @@
             this.LoggerTxt.TabIndex = 0;
             this.LoggerTxt.Text = "";
             // 
-            // PacketloggerMenu
+            // PacketLoggerContextMenu
             // 
-            this.PacketloggerMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PacketLoggerContextMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.PLCMCopyBtn});
+            this.PacketLoggerContextMenu.Name = "ConstructMenu";
+            this.PacketLoggerContextMenu.Size = new System.Drawing.Size(145, 26);
+            // 
+            // PLCMCopyBtn
+            // 
+            this.PLCMCopyBtn.Name = "PLCMCopyBtn";
+            this.PLCMCopyBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.PLCMCopyBtn.Size = new System.Drawing.Size(144, 22);
+            this.PLCMCopyBtn.Text = "Copy";
+            this.PLCMCopyBtn.Click += new System.EventHandler(this.CopyBtn_Click);
+            // 
+            // PacketLoggerMenu
+            // 
+            this.PacketLoggerMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.OptionsBtn,
             this.SettingsBtn});
-            this.PacketloggerMenu.Location = new System.Drawing.Point(0, 0);
-            this.PacketloggerMenu.Name = "PacketloggerMenu";
-            this.PacketloggerMenu.Size = new System.Drawing.Size(710, 24);
-            this.PacketloggerMenu.TabIndex = 7;
+            this.PacketLoggerMenu.Location = new System.Drawing.Point(0, 0);
+            this.PacketLoggerMenu.Name = "PacketLoggerMenu";
+            this.PacketLoggerMenu.Size = new System.Drawing.Size(710, 24);
+            this.PacketLoggerMenu.TabIndex = 7;
             // 
             // OptionsBtn
             // 
@@ -187,6 +207,14 @@
             this.DisplaySplitterBtn.Text = "Display Splitter";
             this.DisplaySplitterBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
             // 
+            // DisplayPacketStructureBtn
+            // 
+            this.DisplayPacketStructureBtn.CheckOnClick = true;
+            this.DisplayPacketStructureBtn.Name = "DisplayPacketStructureBtn";
+            this.DisplayPacketStructureBtn.Size = new System.Drawing.Size(201, 22);
+            this.DisplayPacketStructureBtn.Text = "Display Packet Structure";
+            this.DisplayPacketStructureBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
+            // 
             // SettingsSeperator
             // 
             this.SettingsSeperator.Name = "SettingsSeperator";
@@ -225,14 +253,6 @@
             this.CaptureIncomingLbl.Size = new System.Drawing.Size(136, 19);
             this.CaptureIncomingLbl.Text = "Capture Incoming: True";
             // 
-            // DisplayPacketStructureBtn
-            // 
-            this.DisplayPacketStructureBtn.CheckOnClick = true;
-            this.DisplayPacketStructureBtn.Name = "DisplayPacketStructureBtn";
-            this.DisplayPacketStructureBtn.Size = new System.Drawing.Size(201, 22);
-            this.DisplayPacketStructureBtn.Text = "Display Packet Structure";
-            this.DisplayPacketStructureBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
-            // 
             // PacketLoggerFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -241,13 +261,14 @@
             this.ClientSize = new System.Drawing.Size(710, 521);
             this.Controls.Add(this.LoggerTxt);
             this.Controls.Add(this.PacketLoggerStrip);
-            this.Controls.Add(this.PacketloggerMenu);
+            this.Controls.Add(this.PacketLoggerMenu);
             this.Icon = global::Tanji.Properties.Resources.Tanji;
             this.Name = "PacketLoggerFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ PacketLogger";
-            this.PacketloggerMenu.ResumeLayout(false);
-            this.PacketloggerMenu.PerformLayout();
+            this.PacketLoggerContextMenu.ResumeLayout(false);
+            this.PacketLoggerMenu.ResumeLayout(false);
+            this.PacketLoggerMenu.PerformLayout();
             this.PacketLoggerStrip.ResumeLayout(false);
             this.PacketLoggerStrip.PerformLayout();
             this.ResumeLayout(false);
@@ -258,7 +279,7 @@
         #endregion
 
         private System.Windows.Forms.RichTextBox LoggerTxt;
-        private System.Windows.Forms.MenuStrip PacketloggerMenu;
+        private System.Windows.Forms.MenuStrip PacketLoggerMenu;
         private System.Windows.Forms.ToolStripMenuItem OptionsBtn;
         private System.Windows.Forms.ToolStripMenuItem ViewOutgoingBtn;
         private System.Windows.Forms.ToolStripMenuItem ViewIncomingBtn;
@@ -276,5 +297,7 @@
         private System.Windows.Forms.ToolStripStatusLabel CaptureOutgoingLbl;
         private System.Windows.Forms.ToolStripStatusLabel CaptureIncomingLbl;
         private System.Windows.Forms.ToolStripMenuItem DisplayPacketStructureBtn;
+        private System.Windows.Forms.ContextMenuStrip PacketLoggerContextMenu;
+        public System.Windows.Forms.ToolStripMenuItem PLCMCopyBtn;
     }
 }
