@@ -326,6 +326,7 @@
             // 
             this.CTModifyFlashVariablesChckbx.AutoSize = true;
             this.CTModifyFlashVariablesChckbx.BackColor = System.Drawing.Color.White;
+            this.CTModifyFlashVariablesChckbx.Enabled = false;
             this.CTModifyFlashVariablesChckbx.Location = new System.Drawing.Point(219, 0);
             this.CTModifyFlashVariablesChckbx.Name = "CTModifyFlashVariablesChckbx";
             this.CTModifyFlashVariablesChckbx.Size = new System.Drawing.Size(131, 17);

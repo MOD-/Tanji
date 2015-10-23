@@ -27,10 +27,11 @@ using Sulakore.Habbo.Web;
 using Sulakore.Communication;
 
 using FlashInspect;
+using FlashInspect.IO;
 using FlashInspect.Tags;
 using FlashInspect.ActionScript;
 using FlashInspect.ActionScript.Constants;
-using FlashInspect.IO;
+using FlashInspect.ActionScript.Multinames;
 
 namespace Tanji.Dialogs
 {
@@ -92,6 +93,15 @@ namespace Tanji.Dialogs
             DoConnectCleanup();
         }
 
+        private void ConnectBtn_Click(object sender, EventArgs e)
+        {
+            if (!Eavesdropper.IsRunning)
+            {
+                ConnectBtn.Text = "Cancel";
+                DoAutomaticConnect();
+            }
+            else DoCancelConnect();
+        }
         private async void BrowseBtn_Click(object sender, EventArgs e)
         {
             ChooseClientDlg.FileName = ChooseClientDlg.SafeFileName;
@@ -109,15 +119,6 @@ namespace Tanji.Dialogs
 
             CTCustomClientTxt.Text = verifySuccess ?
                 MainUI.Game.Location : string.Empty;
-        }
-        private void ConnectBtn_Click(object sender, EventArgs e)
-        {
-            if (!Eavesdropper.IsRunning)
-            {
-                ConnectBtn.Text = "Cancel";
-                DoAutomaticConnect();
-            }
-            else DoCancelConnect();
         }
 
         private void InjectClient(object sender, EavesdropperRequestEventArgs e)
@@ -353,6 +354,12 @@ namespace Tanji.Dialogs
         }
         private void ModifyTags(IEnumerable<FlashTag> tags)
         {
+            if (ConnectionMngr.PublicExponent != 0)
+                MainUI.HandshakeMngr.RealExponent = ConnectionMngr.PublicExponent;
+
+            if (!string.IsNullOrWhiteSpace(ConnectionMngr.PublicModulus))
+                MainUI.HandshakeMngr.RealModulus = ConnectionMngr.PublicModulus;
+
             foreach (FlashTag tag in tags)
             {
                 switch (tag.Header.TagType)
@@ -417,7 +424,7 @@ namespace Tanji.Dialogs
         private void DoAutomaticConnect()
         {
             Eavesdropper.EavesdropperResponse += ExtractHostPort;
-            Eavesdropper.Initiate(8080);
+            Eavesdropper.Initiate(ConnectionMngr.ProxyPort);
 
             StatusTxt.SetDotAnimation("Extracting Host/Port");
         }
@@ -445,7 +452,7 @@ namespace Tanji.Dialogs
             }
         }
 
-        private void ExtractMessages(DoABCTag abcTag)
+        private void FindMessages(DoABCTag abcTag)
         {
             ABCFile abc = abcTag.ABC;
             ASClass habboMessages = abc.FindClassByName("HabboMessages");
@@ -483,16 +490,34 @@ namespace Tanji.Dialogs
                     ASInstance outgoingType =
                         abc.FindInstanceByName(messageType.ObjName);
 
-                    ASMethod outgoingCtor = outgoingType.Constructor;
-                    var structure = new string[outgoingCtor.Parameters.Count];
-                    for (int i = 0; i < structure.Length; i++)
-                    {
-                        structure[i] =
-                            outgoingCtor.Parameters[i].Type.ObjName?.ToLower();
-                    }
-                    MainUI.OutStructs.Add((ushort)header, structure);
+                    MainUI.OutStructs.Add((ushort)header,
+                        GetStructure(abc.Constants, outgoingType));
                 }
             }
+        }
+        private string[] GetStructure(ASConstants constants, ASInstance instance)
+        {
+            ASMethod ctor = instance.Constructor;
+            var typeNames = new List<string>(ctor.Parameters.Count);
+            foreach (ASParameter param in ctor.Parameters)
+            {
+                string typeName = string.Empty;
+                ASMultiname paramType = param.Type;
+                if (paramType.MultinameType == ConstantType.Typename)
+                {
+                    var genericParam = (Typename)paramType.Data;
+                    typeName = genericParam.Type.ObjName + ".<";
+
+                    ASMultiname genericType =
+                        constants.Multinames[genericParam.ParameterTypeIndices[0]];
+
+                    typeName += genericType.ObjName + ">";
+                }
+                else typeName += paramType.ObjName;
+
+                typeNames.Add(typeName.ToLower());
+            }
+            return typeNames.ToArray();
         }
 
         private async Task<bool> VerifyGameClientAsync(string path)
@@ -524,7 +549,7 @@ namespace Tanji.Dialogs
                     try
                     {
                         if (tag.Header.TagType != FlashTagType.DoABC) continue;
-                        ExtractMessages((DoABCTag)tag);
+                        FindMessages((DoABCTag)tag);
 
                         if (MainUI.OutStructs.Count != 0) break;
                     }
