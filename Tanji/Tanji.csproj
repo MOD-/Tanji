@@ -26,7 +26,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>1.3.111.0</AssemblyVersion>
+    <AssemblyVersion>1.3.175.0</AssemblyVersion>
     <TargetFrameworkProfile />
     <PrimaryVersionType>AssemblyFileVersionAttribute</PrimaryVersionType>
     <AssemblyInfoFilePath>Properties\AssemblyInfo.cs</AssemblyInfoFilePath>
@@ -181,14 +181,6 @@
     <Content Include="Tanji.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Eavesdrop\Eavesdrop\Eavesdrop.csproj">
-      <Project>{08316ac1-5cbd-4443-9d73-0114c9c107f3}</Project>
-      <Name>Eavesdrop</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\FlashInspect\FlashInspect\FlashInspect.csproj">
-      <Project>{ebee07e0-bf46-424c-bb55-a86c0b78d7a5}</Project>
-      <Name>FlashInspect</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Sulakore\Sulakore\Sulakore.csproj">
       <Project>{15e841ec-2411-4f1b-a3ee-07e86cdb32c7}</Project>
       <Name>Sulakore</Name>

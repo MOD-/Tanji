@@ -1,14 +1,4 @@
-﻿/*
-    GitHub(Source): https://GitHub.com/ArachisH/Tanji
-
-    This file is part of Tanji.
-    Copyright (C) 2015 ArachisH
-    
-    This code is licensed under the GNU General Public License.
-    See License.txt in the project root for license information.
-*/
-
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 using System.Net.Http;
@@ -54,8 +44,8 @@ namespace Tanji.Utilities
                 $"https://api.github.com/repos/{owner}/{repository}/releases")
                 .ConfigureAwait(false);
 
-            byte[] rawJson = Encoding.UTF8.GetBytes(releaseJson);
-            using (var jsonStream = new MemoryStream(rawJson))
+            byte[] jsonData = Encoding.UTF8.GetBytes(releaseJson);
+            using (var jsonStream = new MemoryStream(jsonData))
                 return (GitReleases)_deserializer.ReadObject(jsonStream);
         }
     }

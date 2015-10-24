@@ -1,14 +1,4 @@
-﻿/*
-    GitHub(Source): https://GitHub.com/ArachisH/Tanji
-
-    This file is part of Tanji.
-    Copyright (C) 2015 ArachisH
-    
-    This code is licensed under the GNU General Public License.
-    See License.txt in the project root for license information.
-*/
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Drawing;
 using System.Threading;
@@ -212,7 +202,9 @@ namespace Tanji.Applications
 
                 if (toServer && DisplayPacketStructure)
                 {
-                    string[] structure = MainUI.OutStructs[e.Packet.Header];
+                    Tuple<string, string[]> outgoingItems = MainUI.OutStructs[e.Packet.Header];
+                    string[] structure = outgoingItems.Item2;
+
                     if (!structure.Contains("array"))
                     {
                         e.Packet.Position = 0;
@@ -251,7 +243,7 @@ namespace Tanji.Applications
                         finally
                         {
                             if (!string.IsNullOrWhiteSpace(packetInfo))
-                                WriteHighlight(packetInfo, PacketStructHighlight);
+                                WriteHighlight(packetInfo + " | " + outgoingItems.Item1, PacketStructHighlight);
 
                             e.Packet.Position = 0;
                         }

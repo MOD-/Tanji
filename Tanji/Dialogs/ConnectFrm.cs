@@ -1,14 +1,4 @@
-﻿/*
-    GitHub(Source): https://GitHub.com/ArachisH/Tanji
-
-    This file is part of Tanji.
-    Copyright (C) 2015 ArachisH
-    
-    This code is licensed under the GNU General Public License.
-    See License.txt in the project root for license information.
-*/
-
-using System;
+﻿using System;
 using System.IO;
 using System.Net;
 using System.Text;
@@ -162,6 +152,7 @@ namespace Tanji.Dialogs
                         StatusTxt.SetDotAnimation("Reconstructing");
                         MainUI.Game.Reconstruct();
 
+                        // TODO: Save, and compress client?
                         //StatusTxt.SetDotAnimation("Compressing Client");
                         //MainUI.Game.Compress();
                     }
@@ -177,8 +168,8 @@ namespace Tanji.Dialogs
                 Eavesdropper.EavesdropperResponse -= ReplaceClient;
                 Eavesdropper.Terminate();
 
-                Task connectTask = MainUI.Connection
-                    .ConnectAsync(MainUI.GameData.Host, _possiblePorts.ToArray());
+                Task connectTask = MainUI.Connection.ConnectAsync(
+                    MainUI.GameData.Host, _possiblePorts.ToArray());
 
                 StatusTxt.SetDotAnimation(
                     "Intercepting Connection({0})", MainUI.GameData.Port);
@@ -490,8 +481,10 @@ namespace Tanji.Dialogs
                     ASInstance outgoingType =
                         abc.FindInstanceByName(messageType.ObjName);
 
-                    MainUI.OutStructs.Add((ushort)header,
-                        GetStructure(abc.Constants, outgoingType));
+                    var outgoingItems = new Tuple<string, string[]>(
+                        messageType.ObjName, GetStructure(abc.Constants, outgoingType));
+
+                    MainUI.OutStructs.Add((ushort)header, outgoingItems);
                 }
             }
         }
@@ -546,14 +539,10 @@ namespace Tanji.Dialogs
 
                 foreach (FlashTag tag in MainUI.Game.Tags)
                 {
-                    try
-                    {
-                        if (tag.Header.TagType != FlashTagType.DoABC) continue;
-                        FindMessages((DoABCTag)tag);
+                    if (tag.Header.TagType != FlashTagType.DoABC) continue;
+                    FindMessages((DoABCTag)tag);
 
-                        if (MainUI.OutStructs.Count != 0) break;
-                    }
-                    catch (Exception ex) { MessageBox.Show(ex.ToString()); }
+                    if (MainUI.OutStructs.Count != 0) break;
                 }
             }
 

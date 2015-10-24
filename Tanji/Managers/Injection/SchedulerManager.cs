@@ -1,14 +1,4 @@
-﻿/*
-    GitHub(Source): https://GitHub.com/ArachisH/Tanji
-
-    This file is part of Tanji.
-    Copyright (C) 2015 ArachisH
-    
-    This code is licensed under the GNU General Public License.
-    See License.txt in the project root for license information.
-*/
-
-using System;
+﻿using System;
 using System.Windows.Forms;
 
 using Sulakore.Protocol;
@@ -58,7 +48,7 @@ namespace Tanji.Managers.Injection
             else
             {
                 MainUI.STSchedulerVw.AddSchedule(packet,
-                    (int)MainUI.STIntervalTxt.Value, (int)MainUI.STBurstTxt.Value);
+                    (int)MainUI.STBurstTxt.Value, (int)MainUI.STIntervalTxt.Value, MainUI.STDescriptionTxt.Text);
 
                 UpdateSchedulesActiveLabel();
             }
@@ -70,12 +60,12 @@ namespace Tanji.Managers.Injection
         }
         private void STStopAllBtn_Click(object sender, EventArgs e)
         {
-            MainUI.STSchedulerVw.StopAll();
+            MainUI.STSchedulerVw.StopAllSchedules();
             UpdateSchedulesActiveLabel();
         }
         private void STStartAllBtn_Click(object sender, EventArgs e)
         {
-            MainUI.STSchedulerVw.StartAll();
+            MainUI.STSchedulerVw.StartAllSchedules();
             UpdateSchedulesActiveLabel();
         }
         private void STAutoStartChckbx_CheckedChanged(object sender, EventArgs e)
@@ -90,8 +80,7 @@ namespace Tanji.Managers.Injection
 
             HNode node = (e.Packet.Destination == HDestination.Server ?
                 MainUI.Connection.Remote : MainUI.Connection.Local);
-
-            // Fire n forget m8
+            
             node?.SendAsync(e.Packet.ToBytes());
         }
 
@@ -121,7 +110,7 @@ namespace Tanji.Managers.Injection
         private void UpdateSchedulesActiveLabel()
         {
             MainUI.SchedulesActiveTxt.Text =
-                $"Schedules Active: {MainUI.STSchedulerVw.SchedulesRunning}/{MainUI.STSchedulerVw.Items.Count}";
+                $"Schedules Active: {MainUI.STSchedulerVw.Running}/{MainUI.STSchedulerVw.Items.Count}";
         }
     }
 }

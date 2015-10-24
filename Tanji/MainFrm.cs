@@ -1,14 +1,4 @@
-﻿/*
-    GitHub(Source): https://GitHub.com/ArachisH/Tanji
-
-    This file is part of Tanji.
-    Copyright (C) 2015 ArachisH
-    
-    This code is licensed under the GNU General Public License.
-    See License.txt in the project root for license information.
-*/
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Collections.Generic;
@@ -28,8 +18,8 @@ namespace Tanji
     {
         public bool IsRetro { get; set; }
         public bool IsDebugging { get; } = false;
-        
-        public IDictionary<ushort, string[]> OutStructs { get; }
+
+        public IDictionary<ushort, Tuple<string, string[]>> OutStructs { get; }
 
         public HGameData GameData { get; set; }
         public ShockwaveFlash Game { get; set; }
@@ -48,7 +38,7 @@ namespace Tanji
         {
             InitializeComponent();
 
-            OutStructs = new Dictionary<ushort, string[]>();
+            OutStructs = new Dictionary<ushort, Tuple<string, string[]>>();
 
             Connection = new HConnection();
             UpdateUI = new UpdateFrm(this);
