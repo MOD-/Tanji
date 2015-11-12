@@ -14,7 +14,6 @@ namespace Tanji.Applications
     public partial class PacketLoggerFrm : Form
     {
         private Task _readQueueTask;
-        private bool _isReadingQueue;
 
         private readonly WriteHighlightCallback _writeHighlight;
         private delegate void WriteHighlightCallback(string value, Color highlight);
@@ -23,14 +22,13 @@ namespace Tanji.Applications
         private delegate void WriteCallback(InterceptedEventArgs e);
 
         public MainFrm MainUI { get; }
-        public bool IsLoaded { get; private set; }
         public bool IsHalted { get; private set; }
         public Queue<InterceptedEventArgs> Intercepted { get; }
 
-        public Color BlockHighlight { get; set; } = Color.DimGray;
-        public Color ReplaceHighlight { get; set; } = Color.DarkCyan;
-        public Color IncomingHighlight { get; set; } = Color.Firebrick;
-        public Color OutgoingHighlight { get; set; } = SystemColors.HotTrack;
+        public Color BlockHighlight { get; set; } = Color.FromArgb(105, 105, 105);
+        public Color ReplaceHighlight { get; set; } = Color.FromArgb(0, 139, 139);
+        public Color IncomingHighlight { get; set; } = Color.FromArgb(178, 34, 34);
+        public Color OutgoingHighlight { get; set; } = Color.FromArgb(0, 102, 204);
         public Color PacketStructHighlight { get; set; } = Color.FromArgb(0, 204, 136);
 
         public bool ViewOutgoing { get; private set; } = true;
@@ -54,22 +52,27 @@ namespace Tanji.Applications
             MainUI.Connection.DataOutgoing += DataOutgoing;
         }
 
+        protected override void OnLoad(EventArgs e)
+        {
+            _readQueueTask = Task.Factory.StartNew(
+                RunDisplayQueueLoop, TaskCreationOptions.LongRunning);
+
+            base.OnLoad(e);
+        }
         protected override void OnActivated(EventArgs e)
         {
-            IsLoaded = true;
-            if (IsHalted) IsHalted = false;
+            IsHalted = false;
             base.OnActivated(e);
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            Intercepted.Clear();
-
-            IsLoaded = false;
             e.Cancel = IsHalted = true;
-            WindowState = FormWindowState.Minimized;
+            Intercepted.Clear();
 
             LoggerTxt.Clear();
             base.OnFormClosing(e);
+
+            WindowState = FormWindowState.Minimized;
         }
 
         private void ItemChecked(object sender, EventArgs e)
@@ -118,10 +121,6 @@ namespace Tanji.Applications
             if (!string.IsNullOrEmpty(LoggerTxt.SelectedText))
                 Clipboard.SetText(LoggerTxt.SelectedText);
         }
-        private void SaveLogBtn_Click(object sender, EventArgs e)
-        {
-            // TODO: This.
-        }
         private void EmptyLogBtn_Click(object sender, EventArgs e)
         {
             LoggerTxt.Clear();
@@ -130,56 +129,63 @@ namespace Tanji.Applications
         private void DataIncoming(object sender, InterceptedEventArgs e)
         {
             if (!IsHalted && ViewIncoming)
-                PushToQueue(sender, e);
+                PushToQueue(e);
         }
         private void DataOutgoing(object sender, InterceptedEventArgs e)
         {
             if (!IsHalted && ViewOutgoing)
-                PushToQueue(sender, e);
+                PushToQueue(e);
         }
 
         private void RunDisplayQueueLoop()
         {
-            if (!_isReadingQueue && Monitor.TryEnter(Intercepted))
+            if (Monitor.TryEnter(Intercepted))
             {
-                _isReadingQueue = true;
                 try
                 {
                     while (Intercepted.Count > 0)
                     {
-                        InterceptedEventArgs e = Intercepted.Dequeue();
-                        bool toServer = (e.Packet.Destination == HDestination.Server);
+                        InterceptedEventArgs args = Intercepted.Dequeue();
+                        bool toServer = (args.Packet.Destination == HDestination.Server);
 
+                        if (args.IsBlocked && !DisplayBlocked) continue;
                         if (toServer && !ViewOutgoing) continue;
                         if (!toServer && !ViewIncoming) continue;
-                        if (e.IsBlocked && !DisplayBlocked) continue;
 
-                        while (!IsLoaded) Thread.Sleep(100);
-                        Write(e);
+                        string packetLog = ExtractPacketLog(args.Replacement, toServer);
+                        Color packetLogHighlight = (toServer ? OutgoingHighlight : IncomingHighlight);
+
+                        if (args.IsBlocked) WriteHighlight("Blocked ", BlockHighlight);
+                        else if (args.WasReplaced) WriteHighlight("Replaced ", ReplaceHighlight);
+
+                        WriteHighlight(packetLog + "\r\n", packetLogHighlight);
+
+                        if (DisplaySplitter)
+                            WriteHighlight("--------------------\r\n", packetLogHighlight);
                     }
                 }
-                finally
-                {
-                    Monitor.Exit(Intercepted);
-                    _isReadingQueue = false;
-                }
+                finally { Monitor.Exit(Intercepted); }
             }
-            else return;
         }
-        private void PushToQueue(object sender, InterceptedEventArgs e)
+        private void PushToQueue(InterceptedEventArgs e)
         {
-            if (WindowState == FormWindowState.Minimized ||
-                e.IsBlocked && !DisplayBlocked)
-            {
-                return;
-            }
-
             Intercepted.Enqueue(e);
-            if (!_isReadingQueue)
+            if (_readQueueTask != null && _readQueueTask.IsCompleted)
             {
                 _readQueueTask = Task.Factory.StartNew(
                     RunDisplayQueueLoop, TaskCreationOptions.LongRunning);
             }
+        }
+
+        public string ExtractPacketLog(HMessage packet, bool toServer)
+        {
+            string arrow = (toServer ? "->" : "<-");
+            string type = (toServer ? "Outgoing" : "Incoming");
+            return $"{type}({packet.Header}, {packet.Length}) {arrow} {packet}";
+        }
+        public string ExtractStructureLog(HMessage packet, bool toServer)
+        {
+            return string.Empty;
         }
 
         public void Write(InterceptedEventArgs e)

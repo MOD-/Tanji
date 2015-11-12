@@ -48,7 +48,6 @@
             this.CTDestroyCertificatesBtn = new Sulakore.Components.SKoreButton();
             this.CTRemoteProxyTxt = new System.Windows.Forms.TextBox();
             this.CTExportRootCertificateAuthorityBtn = new Sulakore.Components.SKoreButton();
-            this.CTModifyFlashVariablesChckbx = new System.Windows.Forms.CheckBox();
             this.HandshakeTab = new System.Windows.Forms.TabPage();
             this.HTPrivateExponentGrpbx = new System.Windows.Forms.GroupBox();
             this.HTPrivateExponentTxt = new System.Windows.Forms.TextBox();
@@ -64,6 +63,10 @@
             this.HTPublicModulusGrpbx = new System.Windows.Forms.GroupBox();
             this.HTPublicModulusTxt = new System.Windows.Forms.TextBox();
             this.AboutTab = new System.Windows.Forms.TabPage();
+            this.panel3 = new System.Windows.Forms.Panel();
+            this.ATReleasesBtn = new Sulakore.Components.SKoreButton();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.ATDownloadsLbl = new System.Windows.Forms.Label();
             this.panel1 = new System.Windows.Forms.Panel();
             this.ATRagezoneBtn = new Sulakore.Components.SKoreButton();
             this.ATDonationsBtn = new Sulakore.Components.SKoreButton();
@@ -72,8 +75,6 @@
             this.ATMakeCertBtn = new Sulakore.Components.SKoreButton();
             this.ATIconLogoBtn = new Sulakore.Components.SKoreButton();
             this.ATSulakoreBtn = new Sulakore.Components.SKoreButton();
-            this.ATFlashInspectBtn = new Sulakore.Components.SKoreButton();
-            this.ATEavesdropBtn = new Sulakore.Components.SKoreButton();
             this.ATTanjiBtn = new Sulakore.Components.SKoreButton();
             this.ATHorizontalGlowPnl = new System.Windows.Forms.Panel();
             this.ATTwitterBtn = new Sulakore.Components.SKoreButton();
@@ -174,7 +175,7 @@
             this.ConnectTabs.DisplayBoundary = true;
             this.ConnectTabs.Dock = System.Windows.Forms.DockStyle.Top;
             this.ConnectTabs.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            this.ConnectTabs.ItemSize = new System.Drawing.Size(93, 24);
+            this.ConnectTabs.ItemSize = new System.Drawing.Size(124, 24);
             this.ConnectTabs.Location = new System.Drawing.Point(3, 3);
             this.ConnectTabs.Name = "ConnectTabs";
             this.ConnectTabs.SelectedIndex = 0;
@@ -241,7 +242,6 @@
             this.CTLocalProxySettingsGrpbx.Controls.Add(this.CTDestroyCertificatesBtn);
             this.CTLocalProxySettingsGrpbx.Controls.Add(this.CTRemoteProxyTxt);
             this.CTLocalProxySettingsGrpbx.Controls.Add(this.CTExportRootCertificateAuthorityBtn);
-            this.CTLocalProxySettingsGrpbx.Controls.Add(this.CTModifyFlashVariablesChckbx);
             this.CTLocalProxySettingsGrpbx.Location = new System.Drawing.Point(6, 49);
             this.CTLocalProxySettingsGrpbx.Name = "CTLocalProxySettingsGrpbx";
             this.CTLocalProxySettingsGrpbx.Size = new System.Drawing.Size(356, 75);
@@ -321,18 +321,6 @@
             this.CTExportRootCertificateAuthorityBtn.TabStop = false;
             this.CTExportRootCertificateAuthorityBtn.Text = "Export Root Certificate Authority";
             this.CTExportRootCertificateAuthorityBtn.Click += new System.EventHandler(this.CTExportRootCertificateAuthorityBtn_Click);
-            // 
-            // CTModifyFlashVariablesChckbx
-            // 
-            this.CTModifyFlashVariablesChckbx.AutoSize = true;
-            this.CTModifyFlashVariablesChckbx.BackColor = System.Drawing.Color.White;
-            this.CTModifyFlashVariablesChckbx.Enabled = false;
-            this.CTModifyFlashVariablesChckbx.Location = new System.Drawing.Point(219, 0);
-            this.CTModifyFlashVariablesChckbx.Name = "CTModifyFlashVariablesChckbx";
-            this.CTModifyFlashVariablesChckbx.Size = new System.Drawing.Size(131, 17);
-            this.CTModifyFlashVariablesChckbx.TabIndex = 83;
-            this.CTModifyFlashVariablesChckbx.Text = "Modify Flash Variables";
-            this.CTModifyFlashVariablesChckbx.UseVisualStyleBackColor = false;
             // 
             // HandshakeTab
             // 
@@ -485,6 +473,10 @@
             // 
             // AboutTab
             // 
+            this.AboutTab.Controls.Add(this.panel3);
+            this.AboutTab.Controls.Add(this.ATReleasesBtn);
+            this.AboutTab.Controls.Add(this.panel2);
+            this.AboutTab.Controls.Add(this.ATDownloadsLbl);
             this.AboutTab.Controls.Add(this.panel1);
             this.AboutTab.Controls.Add(this.ATRagezoneBtn);
             this.AboutTab.Controls.Add(this.ATDonationsBtn);
@@ -493,8 +485,6 @@
             this.AboutTab.Controls.Add(this.ATMakeCertBtn);
             this.AboutTab.Controls.Add(this.ATIconLogoBtn);
             this.AboutTab.Controls.Add(this.ATSulakoreBtn);
-            this.AboutTab.Controls.Add(this.ATFlashInspectBtn);
-            this.AboutTab.Controls.Add(this.ATEavesdropBtn);
             this.AboutTab.Controls.Add(this.ATTanjiBtn);
             this.AboutTab.Controls.Add(this.ATHorizontalGlowPnl);
             this.AboutTab.Controls.Add(this.ATTwitterBtn);
@@ -511,6 +501,42 @@
             this.AboutTab.TabIndex = 3;
             this.AboutTab.Text = "About";
             this.AboutTab.UseVisualStyleBackColor = true;
+            // 
+            // panel3
+            // 
+            this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.panel3.Location = new System.Drawing.Point(218, 113);
+            this.panel3.Name = "panel3";
+            this.panel3.Size = new System.Drawing.Size(1, 63);
+            this.panel3.TabIndex = 9;
+            // 
+            // ATReleasesBtn
+            // 
+            this.ATReleasesBtn.BackColor = System.Drawing.Color.Transparent;
+            this.ATReleasesBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.ATReleasesBtn.Location = new System.Drawing.Point(6, 75);
+            this.ATReleasesBtn.Name = "ATReleasesBtn";
+            this.ATReleasesBtn.Size = new System.Drawing.Size(100, 22);
+            this.ATReleasesBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ATReleasesBtn.TabIndex = 19;
+            this.ATReleasesBtn.Text = "Releases: 0";
+            // 
+            // panel2
+            // 
+            this.panel2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.panel2.Location = new System.Drawing.Point(6, 66);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(206, 1);
+            this.panel2.TabIndex = 18;
+            // 
+            // ATDownloadsLbl
+            // 
+            this.ATDownloadsLbl.Location = new System.Drawing.Point(112, 75);
+            this.ATDownloadsLbl.Name = "ATDownloadsLbl";
+            this.ATDownloadsLbl.Size = new System.Drawing.Size(100, 22);
+            this.ATDownloadsLbl.TabIndex = 17;
+            this.ATDownloadsLbl.Text = "Downloads: 0";
+            this.ATDownloadsLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // panel1
             // 
@@ -535,7 +561,7 @@
             // 
             this.ATDonationsBtn.BackColor = System.Drawing.Color.Transparent;
             this.ATDonationsBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ATDonationsBtn.Location = new System.Drawing.Point(225, 73);
+            this.ATDonationsBtn.Location = new System.Drawing.Point(225, 75);
             this.ATDonationsBtn.Name = "ATDonationsBtn";
             this.ATDonationsBtn.Size = new System.Drawing.Size(137, 22);
             this.ATDonationsBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(52)))), ((int)(((byte)(126)))), ((int)(((byte)(178)))));
@@ -565,7 +591,7 @@
             // 
             this.ATMakeCertBtn.BackColor = System.Drawing.Color.Transparent;
             this.ATMakeCertBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ATMakeCertBtn.Location = new System.Drawing.Point(112, 42);
+            this.ATMakeCertBtn.Location = new System.Drawing.Point(6, 38);
             this.ATMakeCertBtn.Name = "ATMakeCertBtn";
             this.ATMakeCertBtn.Size = new System.Drawing.Size(100, 22);
             this.ATMakeCertBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
@@ -576,7 +602,7 @@
             // 
             this.ATIconLogoBtn.BackColor = System.Drawing.Color.Transparent;
             this.ATIconLogoBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ATIconLogoBtn.Location = new System.Drawing.Point(112, 70);
+            this.ATIconLogoBtn.Location = new System.Drawing.Point(112, 38);
             this.ATIconLogoBtn.Name = "ATIconLogoBtn";
             this.ATIconLogoBtn.Size = new System.Drawing.Size(100, 22);
             this.ATIconLogoBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
@@ -587,40 +613,18 @@
             // 
             this.ATSulakoreBtn.BackColor = System.Drawing.Color.Transparent;
             this.ATSulakoreBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ATSulakoreBtn.Location = new System.Drawing.Point(6, 42);
+            this.ATSulakoreBtn.Location = new System.Drawing.Point(112, 10);
             this.ATSulakoreBtn.Name = "ATSulakoreBtn";
             this.ATSulakoreBtn.Size = new System.Drawing.Size(100, 22);
             this.ATSulakoreBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.ATSulakoreBtn.TabIndex = 11;
             this.ATSulakoreBtn.Text = "Sulakore";
             // 
-            // ATFlashInspectBtn
-            // 
-            this.ATFlashInspectBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ATFlashInspectBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ATFlashInspectBtn.Location = new System.Drawing.Point(112, 14);
-            this.ATFlashInspectBtn.Name = "ATFlashInspectBtn";
-            this.ATFlashInspectBtn.Size = new System.Drawing.Size(100, 22);
-            this.ATFlashInspectBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ATFlashInspectBtn.TabIndex = 10;
-            this.ATFlashInspectBtn.Text = "FlashInspect";
-            // 
-            // ATEavesdropBtn
-            // 
-            this.ATEavesdropBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ATEavesdropBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ATEavesdropBtn.Location = new System.Drawing.Point(6, 70);
-            this.ATEavesdropBtn.Name = "ATEavesdropBtn";
-            this.ATEavesdropBtn.Size = new System.Drawing.Size(100, 22);
-            this.ATEavesdropBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ATEavesdropBtn.TabIndex = 9;
-            this.ATEavesdropBtn.Text = "Eavesdrop";
-            // 
             // ATTanjiBtn
             // 
             this.ATTanjiBtn.BackColor = System.Drawing.Color.Transparent;
             this.ATTanjiBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.ATTanjiBtn.Location = new System.Drawing.Point(6, 14);
+            this.ATTanjiBtn.Location = new System.Drawing.Point(6, 10);
             this.ATTanjiBtn.Name = "ATTanjiBtn";
             this.ATTanjiBtn.Size = new System.Drawing.Size(100, 22);
             this.ATTanjiBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
@@ -781,8 +785,6 @@
         public System.Windows.Forms.Label ATVersionLbl;
         public Sulakore.Components.SKoreButton ATGitHubBtn;
         public Sulakore.Components.SKoreButton ATTwitterBtn;
-        public Sulakore.Components.SKoreButton ATFlashInspectBtn;
-        public Sulakore.Components.SKoreButton ATEavesdropBtn;
         public Sulakore.Components.SKoreButton ATTanjiBtn;
         public Sulakore.Components.SKoreButton ATIconLogoBtn;
         public Sulakore.Components.SKoreButton ATSulakoreBtn;
@@ -800,9 +802,12 @@
         private System.Windows.Forms.GroupBox CTCustomClientGrpbx;
         public System.Windows.Forms.TextBox CTGameHostTxt;
         public System.Windows.Forms.TextBox CTGamePortsTxt;
-        public System.Windows.Forms.CheckBox CTModifyFlashVariablesChckbx;
         public System.Windows.Forms.NumericUpDown CTProxyPortTxt;
         public System.Windows.Forms.TextBox CTRemoteProxyTxt;
         private System.Windows.Forms.Panel panel1;
+        public Sulakore.Components.SKoreButton ATReleasesBtn;
+        private System.Windows.Forms.Panel panel2;
+        public System.Windows.Forms.Label ATDownloadsLbl;
+        private System.Windows.Forms.Panel panel3;
     }
 }

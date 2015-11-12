@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Security.Principal;
 
-using Sulakore.Communication;
-
 using Eavesdrop;
+
+using Sulakore.Communication;
 
 namespace Tanji
 {
@@ -27,7 +27,8 @@ namespace Tanji
             }
             else
             {
-                AppDomain.CurrentDomain.UnhandledException += CurrentDomain_UnhandledException;
+                AppDomain.CurrentDomain.UnhandledException +=
+                    CurrentDomain_UnhandledException;
 
                 Eavesdropper.Terminate();
                 HConnection.RestoreHosts();
@@ -40,13 +41,12 @@ namespace Tanji
 
         static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
+            var exception = (Exception)e.ExceptionObject;
+            MessageBox.Show($"Message: {exception.Message}\r\n\r\n{exception.StackTrace.Trim()}",
+                "Tanji ~ Critical Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
             if (e.IsTerminating)
             {
-                var exception = (Exception)e.ExceptionObject;
-
-                MessageBox.Show($"Message: {exception.Message}\r\n\r\n{exception.StackTrace.Trim()}\r\n\r\nShutting down...",
-                    "Tanji ~ Critical Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
                 Eavesdropper.Terminate();
                 HConnection.RestoreHosts();
             }

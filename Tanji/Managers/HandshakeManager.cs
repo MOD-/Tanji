@@ -1,9 +1,4 @@
-﻿using System.IO;
-using System.Drawing;
-
-using Eavesdrop;
-
-using Sulakore.Protocol;
+﻿using Sulakore.Protocol;
 using Sulakore.Communication;
 using Sulakore.Protocol.Encryption;
 
@@ -11,9 +6,7 @@ namespace Tanji.Managers
 {
     public class HandshakeManager
     {
-        private Bitmap _banner;
         private int _inStepOffset;
-        private string _bannerToken;
         private byte[] _localKey, _remoteKey;
 
         public MainFrm MainUI { get; }
@@ -51,21 +44,13 @@ namespace Tanji.Managers
                         if (string.IsNullOrWhiteSpace(RealModulus))
                             RealModulus = DEFAULT_REAL_MODULUS;
 
-                        Remote.Exchange = new HKeyExchange(RealExponent, RealModulus);
-                        Local.Exchange = new HKeyExchange(FAKE_EXPONENT, FAKE_MODULUS, FAKE_PRIVATE_EXPONENT);
+                        Remote.Exchange = new HKeyExchange2(RealExponent, RealModulus);
+                        Local.Exchange = new HKeyExchange2(FAKE_EXPONENT, FAKE_MODULUS, FAKE_PRIVATE_EXPONENT);
 
-                        string possibleSignedPrime = e.Packet.ReadString();
-                        if (!e.Packet.CanReadString())
-                        {
-                            _bannerToken = possibleSignedPrime;
-
-                            Eavesdropper.EavesdropperResponse += EavesdropperResponse;
-                            Eavesdropper.Initiate(8080);
-                            return;
-                        }
+                        string signedPrime = e.Packet.ReadString();
                         string signedGenerator = e.Packet.ReadString();
 
-                        Remote.Exchange.DoHandshake(possibleSignedPrime, signedGenerator);
+                        Remote.Exchange.DoHandshake(signedPrime, signedGenerator);
                         Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
 
                         e.Replacement = new HMessage(e.Packet.Header,
@@ -81,14 +66,10 @@ namespace Tanji.Managers
                         }
 
                         _remoteKey = Remote.Exchange.GetSharedKey(e.Packet.ReadString());
-                        if (_banner == null)
-                        {
-                            Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
+                        Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
 
-                            e.Replacement.RemoveString(0);
-                            e.Replacement.WriteString(Local.Exchange.GetPublicKey(), 0);
-                        }
-                        else e.Replacement = new HMessage(e.Packet.Header, "1");
+                        e.Replacement.RemoveString(0);
+                        e.Replacement.WriteString(Local.Exchange.GetPublicKey(), 0);
 
                         RealExponent = 0;
                         RealModulus = string.Empty;
@@ -135,22 +116,7 @@ namespace Tanji.Managers
                     }
                     case 3:
                     {
-                        if (!string.IsNullOrWhiteSpace(_bannerToken))
-                        {
-                            if (_banner == null)
-                            {
-                                MainUI.Connection.DataIncoming -= DataIncoming;
-                                MainUI.Connection.DataOutgoing -= DataOutgoing;
-
-                                Eavesdropper.Terminate();
-                                Eavesdropper.EavesdropperResponse -= EavesdropperResponse;
-
-                                return;
-                            }
-                            else _localKey = new byte[] { 1 };
-                        }
-                        else _localKey = Local.Exchange.GetSharedKey(e.Packet.ReadString());
-
+                        _localKey = Local.Exchange.GetSharedKey(e.Packet.ReadString());
                         Remote.Exchange.Rsa.Padding = Local.Exchange.Rsa.Padding;
 
                         e.Replacement.RemoveString(0);
@@ -173,29 +139,6 @@ namespace Tanji.Managers
                 MainUI.Connection.DataOutgoing -= DataOutgoing;
             }
             finally { e.IsBlocked = false; }
-        }
-
-        private void EavesdropperResponse(object sender, EavesdropperResponseEventArgs e)
-        {
-            try
-            {
-                if (e.Response.ResponseUri.OriginalString.Contains(_bannerToken))
-                {
-                    using (var bannerStream = new MemoryStream(e.Payload))
-                        _banner = new Bitmap(bannerStream);
-
-                    Remote.Exchange.DoHandshake(_banner, _bannerToken);
-                    Local.Exchange.Rsa.Padding = Remote.Exchange.Rsa.Padding;
-
-                    Eavesdropper.Terminate();
-                    Eavesdropper.EavesdropperResponse -= EavesdropperResponse;
-                }
-            }
-            catch
-            {
-                MainUI.Connection.DataIncoming -= DataIncoming;
-                MainUI.Connection.DataOutgoing -= DataOutgoing;
-            }
         }
     }
 }

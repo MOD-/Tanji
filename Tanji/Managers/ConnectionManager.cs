@@ -60,17 +60,6 @@ namespace Tanji.Managers
             }
         }
 
-        private bool _isModifyingFlashVariables = false;
-        public bool IsModifyingFlashVariables
-        {
-            get { return _isModifyingFlashVariables; }
-            set
-            {
-                _isModifyingFlashVariables = value;
-                RaiseOnPropertyChanged(nameof(IsModifyingFlashVariables));
-            }
-        }
-
         private IWebProxy _remoteProxy;
         [TypeConverter(typeof(RemoteProxyConverter))]
         public IWebProxy RemoteProxy
@@ -141,9 +130,6 @@ namespace Tanji.Managers
 
             ConnectUI.CTProxyPortTxt.DataBindings.Add("Value", this,
                 nameof(ProxyPort), false, DataSourceUpdateMode.OnPropertyChanged);
-
-            ConnectUI.CTModifyFlashVariablesChckbx.DataBindings.Add("Checked", this,
-                nameof(IsModifyingFlashVariables), false, DataSourceUpdateMode.OnPropertyChanged);
         }
     }
 }

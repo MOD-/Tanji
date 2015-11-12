@@ -37,7 +37,6 @@
             this.ViewOutgoingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewIncomingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.OptionsSep = new System.Windows.Forms.ToolStripSeparator();
-            this.SaveLogBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.EmptyLogBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingsBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.DisplayFiltersBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -103,7 +102,6 @@
             this.ViewOutgoingBtn,
             this.ViewIncomingBtn,
             this.OptionsSep,
-            this.SaveLogBtn,
             this.EmptyLogBtn});
             this.OptionsBtn.Name = "OptionsBtn";
             this.OptionsBtn.Size = new System.Drawing.Size(61, 20);
@@ -135,15 +133,6 @@
             // 
             this.OptionsSep.Name = "OptionsSep";
             this.OptionsSep.Size = new System.Drawing.Size(193, 6);
-            // 
-            // SaveLogBtn
-            // 
-            this.SaveLogBtn.Enabled = false;
-            this.SaveLogBtn.Name = "SaveLogBtn";
-            this.SaveLogBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
-            this.SaveLogBtn.Size = new System.Drawing.Size(196, 22);
-            this.SaveLogBtn.Text = "Save Log";
-            this.SaveLogBtn.Click += new System.EventHandler(this.SaveLogBtn_Click);
             // 
             // EmptyLogBtn
             // 
@@ -284,7 +273,6 @@
         private System.Windows.Forms.ToolStripMenuItem ViewOutgoingBtn;
         private System.Windows.Forms.ToolStripMenuItem ViewIncomingBtn;
         private System.Windows.Forms.ToolStripSeparator OptionsSep;
-        private System.Windows.Forms.ToolStripMenuItem SaveLogBtn;
         private System.Windows.Forms.ToolStripMenuItem EmptyLogBtn;
         private System.Windows.Forms.ToolStripMenuItem SettingsBtn;
         private System.Windows.Forms.ToolStripMenuItem DisplayFiltersBtn;

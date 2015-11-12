@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Tanji.Managers
@@ -16,8 +17,6 @@ namespace Tanji.Managers
             aboutTab.Controls["ATIconLogoBtn"].Click += ATIconLogoBtn_Click;
             aboutTab.Controls["ATMakeCertBtn"].Click += ATMakeCertBtn_Click;
             aboutTab.Controls["ATSulakoreBtn"].Click += ATSulakoreBtn_Click;
-            aboutTab.Controls["ATEavesdropBtn"].Click += ATEavesdropBtn_Click;
-            aboutTab.Controls["ATFlashInspectBtn"].Click += ATFlashInspectBtn_Click;
 
             aboutTab.Controls["ATDarkboxBtn"].Click += ATDarkboxBtn_Click;
             aboutTab.Controls["ATRagezoneBtn"].Click += ATRagezoneBtn_Click;
@@ -25,8 +24,24 @@ namespace Tanji.Managers
 
             aboutTab.Controls["ATGitHubBtn"].Click += ATGitHubBtn_Click;
             aboutTab.Controls["ATTwitterBtn"].Click += ATTwitterBtn_Click;
+            aboutTab.Controls["ATReleasesBtn"].Click += ATReleasesBtn_Click;
 
-            aboutTab.Controls["ATVersionLbl"].Text = "v" + MainUI.UpdateUI.LocalVersion;
+            aboutTab.Controls["ATVersionLbl"].Text =
+                ("v" + MainUI.UpdateUI.LocalVersion);
+
+            MainUI.UpdateUI.CheckForUpdatesAsync().ContinueWith(
+                UpdateCheckFinished, aboutTab, TaskScheduler.FromCurrentSynchronizationContext());
+        }
+        
+        private void UpdateCheckFinished(Task<bool> updateCheckTask, object tab)
+        {
+            var aboutTab = (TabPage)tab;
+
+            aboutTab.Controls["ATDownloadsLbl"].Text =
+                ("Downloads: " + (MainUI.UpdateUI.CurrentRelease?.Assets[0].DownloadCount ?? 0));
+
+            aboutTab.Controls["ATReleasesBtn"].Text =
+                ("Release(s): " + (MainUI.UpdateUI?.TanjiReleases.Count ?? 0));
         }
 
         private void ATGitHubBtn_Click(object sender, EventArgs e)
@@ -45,6 +60,10 @@ namespace Tanji.Managers
         private void ATRagezoneBtn_Click(object sender, EventArgs e)
         {
             Process.Start("https://Forum.RaGEZONE.com/f282/");
+        }
+        private void ATReleasesBtn_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://GitHub.com/ArachisH/Tanji/releases");
         }
         private void ATDonationsBtn_Click(object sender, EventArgs e)
         {
@@ -66,14 +85,6 @@ namespace Tanji.Managers
         private void ATSulakoreBtn_Click(object sender, EventArgs e)
         {
             Process.Start("https://GitHub.com/ArachisH/Sulakore");
-        }
-        private void ATEavesdropBtn_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://GitHub.com/ArachisH/Eavesdrop");
-        }
-        private void ATFlashInspectBtn_Click(object sender, EventArgs e)
-        {
-            Process.Start("https://GitHub.com/ArachisH/FlashInspect");
         }
     }
 }

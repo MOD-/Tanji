@@ -53,8 +53,7 @@ namespace Extension_Demo
                 }
             }
         }
-
-        // Asynchronously send data to the local/remote endpoint(s).
+        
         private byte[] GetInputPacket()
         {
             return PacketTxt.TextLength > 0 ?

@@ -32,6 +32,7 @@ namespace Tanji.Dialogs
 
         public Version LatestVersion { get; private set; }
         public GitRelease LatestRelease { get; private set; }
+        public GitRelease CurrentRelease { get; private set; }
         public GitReleases TanjiReleases { get; private set; }
 
         public UpdateFrm(MainFrm main)
@@ -42,8 +43,7 @@ namespace Tanji.Dialogs
             LocalVersion = new Version(Application.ProductVersion);
             MainUI.TanjiVersionTxt.Text = "v" + LocalVersion;
 
-            if (!main.IsDebugging)
-                _checkForUpdatesTask = CheckForUpdatesAsync();
+            _checkForUpdatesTask = CheckForUpdatesAsync();
         }
 
         private void UpdateFrm_Load(object sender, EventArgs e)
@@ -132,6 +132,17 @@ namespace Tanji.Dialogs
 
             LatestRelease = TanjiReleases[0];
             LatestVersion = new Version(LatestRelease.TagName.Substring(1));
+
+            string currentTagName = "v" + LocalVersion;
+            foreach (GitRelease release in TanjiReleases)
+            {
+                if (release.TagName != currentTagName) continue;
+                CurrentRelease = release;
+                break;
+            }
+
+            if (CurrentRelease == null)
+                CurrentRelease = LatestRelease;
 
             return LocalVersion < LatestVersion;
         }

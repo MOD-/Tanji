@@ -166,6 +166,7 @@ namespace Tanji.Dialogs
 
                 e.Payload = MainUI.Game.ToArray();
                 Eavesdropper.EavesdropperResponse -= ReplaceClient;
+
                 Eavesdropper.Terminate();
 
                 Task connectTask = MainUI.Connection.ConnectAsync(
@@ -403,6 +404,7 @@ namespace Tanji.Dialogs
         private void DoConnectCleanup()
         {
             Eavesdropper.Terminate();
+
             Eavesdropper.EavesdropperRequest -= InjectClient;
             Eavesdropper.EavesdropperResponse -= ReplaceClient;
             Eavesdropper.EavesdropperResponse -= ExtractHostPort;
@@ -435,7 +437,7 @@ namespace Tanji.Dialogs
                     "Eavesdrop requires a self-signed certificate in the root store to intercept HTTPS traffic.\r\n\r\nWould you like to retry the process?",
                     "Tanji ~ Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
 
-                if (result == DialogResult.No)
+                if (result != DialogResult.Yes)
                 {
                     Close();
                     return;
@@ -443,11 +445,10 @@ namespace Tanji.Dialogs
             }
         }
 
-        private void FindMessages(DoABCTag abcTag)
+        private bool ExtractMessages(ABCFile abc)
         {
-            ABCFile abc = abcTag.ABC;
             ASClass habboMessages = abc.FindClassByName("HabboMessages");
-            if (habboMessages == null) return;
+            if (habboMessages == null || habboMessages.Traits.Count < 2) return false;
 
             ASTrait incomingMap = habboMessages.Traits[0];
             ASTrait outgoingMap = habboMessages.Traits[1];
@@ -460,33 +461,30 @@ namespace Tanji.Dialogs
                     var op = (OPCode)mapReader.ReadByte();
                     if (op != OPCode.GetLex) continue;
 
-                    int multinameIndex = mapReader.Read7BitEncodedInt();
-
-                    bool isOutgoing = (multinameIndex == outgoingMap.NameIndex);
-                    bool isIncoming = (multinameIndex == incomingMap.NameIndex);
+                    int mapTypeIndex = mapReader.Read7BitEncodedInt();
+                    bool isOutgoing = (mapTypeIndex == outgoingMap.NameIndex);
+                    bool isIncoming = (mapTypeIndex == incomingMap.NameIndex);
                     if (!isOutgoing && !isIncoming) continue;
-                    else if (isIncoming) break;
 
                     op = (OPCode)mapReader.ReadByte();
                     if (op != OPCode.PushShort && op != OPCode.PushByte) continue;
 
-                    int header = mapReader.Read7BitEncodedInt();
+                    var header = (ushort)mapReader.Read7BitEncodedInt();
 
                     op = (OPCode)mapReader.ReadByte();
                     if (op != OPCode.GetLex) continue;
 
                     int messageTypeIndex = mapReader.Read7BitEncodedInt();
                     ASMultiname messageType = abc.Constants.Multinames[messageTypeIndex];
+                    ASInstance messageInstance = abc.FindInstanceByName(messageType.ObjName);
 
-                    ASInstance outgoingType =
-                        abc.FindInstanceByName(messageType.ObjName);
-
-                    var outgoingItems = new Tuple<string, string[]>(
-                        messageType.ObjName, GetStructure(abc.Constants, outgoingType));
-
-                    MainUI.OutStructs.Add((ushort)header, outgoingItems);
+                    if (isOutgoing) MainUI.OutgoingTypes[header] = messageInstance;
+                    else if (isIncoming) MainUI.IncomingTypes[header] = messageInstance;
                 }
             }
+
+            return (MainUI.OutgoingTypes.Count > 0
+                && MainUI.IncomingTypes.Count > 0);
         }
         private string[] GetStructure(ASConstants constants, ASInstance instance)
         {
@@ -533,16 +531,18 @@ namespace Tanji.Dialogs
             if (!flash.IsCompressed)
             {
                 MainUI.Game = flash;
-
                 StatusTxt.SetDotAnimation("Disassembling");
-                MainUI.Game.ReadTags();
 
+                MainUI.Game.ReadTags();
                 foreach (FlashTag tag in MainUI.Game.Tags)
                 {
                     if (tag.Header.TagType != FlashTagType.DoABC) continue;
-                    FindMessages((DoABCTag)tag);
 
-                    if (MainUI.OutStructs.Count != 0) break;
+                    var abcTag = (DoABCTag)tag;
+                    if (abcTag.Name != "frame2") continue;
+
+                    ExtractMessages(abcTag.ABC);
+                    break;
                 }
             }
 
@@ -556,7 +556,17 @@ namespace Tanji.Dialogs
         }
         private void CTExportRootCertificateAuthorityBtn_Click(object sender, EventArgs e)
         {
-            Eavesdropper.Certificates.ExportTrustedRootCertificate("EavesdropRoot.cer");
+            string name = "EavesdropRoot";
+
+            bool exportSuccess = Eavesdropper.Certificates
+                .ExportTrustedRootCertificate(name + ".cer");
+
+            string message = (exportSuccess
+                ? $"Successfully exported {name} to:\r\n{Path.GetFullPath(name + ".cer")}"
+                : $"Failed to export {name} certificate authority.");
+
+            MessageBox.Show(message,
+                "Tanji ~ Alert!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
         }
     }
 }

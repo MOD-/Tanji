@@ -26,15 +26,17 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>1.3.175.0</AssemblyVersion>
+    <AssemblyVersion>1.3.301.0</AssemblyVersion>
     <TargetFrameworkProfile />
-    <PrimaryVersionType>AssemblyFileVersionAttribute</PrimaryVersionType>
-    <AssemblyInfoFilePath>Properties\AssemblyInfo.cs</AssemblyInfoFilePath>
+    <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
+    <AssemblyInfoFilePath>
+    </AssemblyInfoFilePath>
     <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
-    <UpdateAssemblyFileVersion>True</UpdateAssemblyFileVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
     <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
     <AssemblyVersionSettings>None.IncrementOnDemandWithReset.Increment.None</AssemblyVersionSettings>
-    <AssemblyFileVersionSettings>None.IncrementOnDemandWithReset.Increment.None</AssemblyFileVersionSettings>
+    <AssemblyFileVersionSettings>
+    </AssemblyFileVersionSettings>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -100,12 +102,6 @@
     <Compile Include="Dialogs\UpdateFrm.Designer.cs">
       <DependentUpon>UpdateFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Dialogs\VariablesFrm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\VariablesFrm.Designer.cs">
-      <DependentUpon>VariablesFrm.cs</DependentUpon>
-    </Compile>
     <Compile Include="Managers\AboutManager.cs" />
     <Compile Include="Managers\ConnectionManager.cs" />
     <Compile Include="Managers\EncoderManager.cs" />
@@ -145,9 +141,6 @@
     <EmbeddedResource Include="Dialogs\UpdateFrm.resx">
       <DependentUpon>UpdateFrm.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\VariablesFrm.resx">
-      <DependentUpon>VariablesFrm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainFrm.resx">
       <DependentUpon>MainFrm.cs</DependentUpon>

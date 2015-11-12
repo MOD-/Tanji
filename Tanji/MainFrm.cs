@@ -1,4 +1,6 @@
-﻿using System;
+﻿//#define UI_DEBUG
+
+using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 using System.Collections.Generic;
@@ -11,16 +13,13 @@ using Tanji.Applications;
 
 using Sulakore.Habbo.Web;
 using Sulakore.Communication;
+using FlashInspect.ActionScript;
 
 namespace Tanji
 {
     public partial class MainFrm : Form
     {
         public bool IsRetro { get; set; }
-        public bool IsDebugging { get; } = false;
-
-        public IDictionary<ushort, Tuple<string, string[]>> OutStructs { get; }
-
         public HGameData GameData { get; set; }
         public ShockwaveFlash Game { get; set; }
 
@@ -34,30 +33,36 @@ namespace Tanji
         public ConnectFrm ConnectUI { get; }
         public PacketLoggerFrm PacketLoggerUI { get; }
 
+        public Dictionary<ushort, ASInstance> OutgoingTypes { get; }
+        public Dictionary<ushort, ASInstance> IncomingTypes { get; }
+
+        public IDictionary<ushort, Tuple<string, string[]>> OutStructs { get; }
+
         public MainFrm()
         {
             InitializeComponent();
 
+            OutgoingTypes = new Dictionary<ushort, ASInstance>();
+            IncomingTypes = new Dictionary<ushort, ASInstance>();
             OutStructs = new Dictionary<ushort, Tuple<string, string[]>>();
 
             Connection = new HConnection();
             UpdateUI = new UpdateFrm(this);
             ConnectUI = new ConnectFrm(this);
 
-            if (!IsDebugging)
-            {
-                Load += MainFrm_Load;
-                Shown += MainFrm_Shown;
+            Shown += MainFrm_Shown;
+#if !UI_DEBUG
+            Load += MainFrm_Load;
 
-                Connection.Connected += Connected;
-                Connection.Disconnected += Disconnected;
-            }
+            Connection.Connected += Connected;
+            Connection.Disconnected += Disconnected;
+#endif
 
-            // Data Priority - #1 | Notify Extensions
+            // Data Receive Order - #1 | Notify Extensions
             ExtensionMngr = new ExtensionManager(this);
-            // Data Priority - #2 | Process Handshake
+            // Data Receive Order - #2 | Process Handshake
             HandshakeMngr = new HandshakeManager(this);
-            // Data Priority - #3 | Display Data
+            // Data Receive Order - #3 | Display Data
             PacketLoggerUI = new PacketLoggerFrm(this);
 
             EncoderMngr = new EncoderManager(this);
@@ -66,26 +71,20 @@ namespace Tanji
 
         private void MainFrm_Load(object sender, EventArgs e)
         {
-            PromptConnect();
+            ConnectUI.ShowDialog();
 
             if (!Connection.IsConnected) Close();
             else Text = $"Tanji ~ Connected[{Connection.Host}:{Connection.Port}]";
         }
         private void MainFrm_Shown(object sender, EventArgs e)
         {
-            if (!PacketLoggerUI.IsLoaded)
-                PacketLoggerUI.Show();
+            PacketLoggerUI.Show();
         }
 
-        private void PromptConnect()
-        {
-            ConnectUI.ShowDialog();
-        }
         private void Connected(object sender, EventArgs e)
         {
             Invoke(new MethodInvoker(ConnectUI.Close));
         }
-
         private void Disconnected(object sender, EventArgs e)
         {
             Invoke(new MethodInvoker(Close));
@@ -93,16 +92,11 @@ namespace Tanji
 
         private void TanjiInfoTxt_Click(object sender, EventArgs e)
         {
-            TanjiVersionTxt.LinkVisited = true;
             Process.Start("https://GitHub.com/ArachisH/Tanji");
         }
         private void TanjiVersionTxt_Click(object sender, EventArgs e)
         {
-            //TanjiVersionTxt.LinkVisited = true;
-
-            string htmlUrl = UpdateUI.TanjiReleases?[0].HtmlUrl;
-            if (!string.IsNullOrWhiteSpace(htmlUrl))
-                Process.Start(htmlUrl);
+            Process.Start(UpdateUI.CurrentRelease.HtmlUrl);
         }
     }
 }
