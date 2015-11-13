@@ -22,6 +22,7 @@ namespace Tanji.Managers
         public InjectionManager(MainFrm main)
         {
             MainUI = main;
+
             PrimitiveMngr = new PrimitiveManager(main);
             SchedulerMngr = new SchedulerManager(main);
             ConstructerMngr = new ConstructerManager(main);
