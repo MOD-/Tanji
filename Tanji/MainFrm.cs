@@ -36,15 +36,12 @@ namespace Tanji
         public Dictionary<ushort, ASInstance> OutgoingTypes { get; }
         public Dictionary<ushort, ASInstance> IncomingTypes { get; }
 
-        public IDictionary<ushort, Tuple<string, string[]>> OutStructs { get; }
-
         public MainFrm()
         {
             InitializeComponent();
 
             OutgoingTypes = new Dictionary<ushort, ASInstance>();
             IncomingTypes = new Dictionary<ushort, ASInstance>();
-            OutStructs = new Dictionary<ushort, Tuple<string, string[]>>();
 
             Connection = new HConnection();
             UpdateUI = new UpdateFrm(this);
