@@ -21,7 +21,6 @@ using FlashInspect.IO;
 using FlashInspect.Tags;
 using FlashInspect.ActionScript;
 using FlashInspect.ActionScript.Constants;
-using FlashInspect.ActionScript.Multinames;
 
 namespace Tanji.Dialogs
 {
@@ -43,8 +42,7 @@ namespace Tanji.Dialogs
             AboutMngr = new AboutManager(main, AboutTab);
 
             _possiblePorts = new List<ushort>();
-            _ipMatcher = new Regex(
-                "^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
+            _ipMatcher = new Regex("^(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)(\\.(25[0-5]|2[0-4]\\d|[0-1]?\\d?\\d)){3}$");
 
             if (!Directory.Exists("Modified Clients"))
                 Directory.CreateDirectory("Modified Clients");
@@ -433,6 +431,7 @@ namespace Tanji.Dialogs
         {
             while (!Eavesdropper.Certificates.CreateTrustedRootCertificate())
             {
+                BringToFront();
                 var result = MessageBox.Show(
                     "Eavesdrop requires a self-signed certificate in the root store to intercept HTTPS traffic.\r\n\r\nWould you like to retry the process?",
                     "Tanji ~ Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
@@ -440,7 +439,7 @@ namespace Tanji.Dialogs
                 if (result != DialogResult.Yes)
                 {
                     Close();
-                    return;
+                    break;
                 }
             }
         }
@@ -485,30 +484,6 @@ namespace Tanji.Dialogs
 
             return (MainUI.OutgoingTypes.Count > 0
                 && MainUI.IncomingTypes.Count > 0);
-        }
-        private string[] GetStructure(ASConstants constants, ASInstance instance)
-        {
-            ASMethod ctor = instance.Constructor;
-            var typeNames = new List<string>(ctor.Parameters.Count);
-            foreach (ASParameter param in ctor.Parameters)
-            {
-                string typeName = string.Empty;
-                ASMultiname paramType = param.Type;
-                if (paramType.MultinameType == ConstantType.Typename)
-                {
-                    var genericParam = (Typename)paramType.Data;
-                    typeName = genericParam.Type.ObjName + ".<";
-
-                    ASMultiname genericType =
-                        constants.Multinames[genericParam.ParameterTypeIndices[0]];
-
-                    typeName += genericType.ObjName + ">";
-                }
-                else typeName += paramType.ObjName;
-
-                typeNames.Add(typeName.ToLower());
-            }
-            return typeNames.ToArray();
         }
 
         private async Task<bool> VerifyGameClientAsync(string path)
