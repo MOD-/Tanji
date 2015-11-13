@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Linq;
 using System.Drawing;
 using System.Threading;
 using System.Windows.Forms;
@@ -9,17 +8,19 @@ using System.Collections.Generic;
 using Sulakore.Protocol;
 using Sulakore.Communication;
 
+using FlashInspect.ActionScript;
+
 namespace Tanji.Applications
 {
     public partial class PacketLoggerFrm : Form
     {
         private Task _readQueueTask;
 
+        private readonly RefreshLogCallback _refreshLog;
+        private delegate void RefreshLogCallback();
+
         private readonly WriteHighlightCallback _writeHighlight;
         private delegate void WriteHighlightCallback(string value, Color highlight);
-
-        private readonly WriteCallback _write;
-        private delegate void WriteCallback(InterceptedEventArgs e);
 
         public MainFrm MainUI { get; }
         public bool IsHalted { get; private set; }
@@ -37,19 +38,19 @@ namespace Tanji.Applications
         public bool DisplayBlocked { get; private set; } = true;
         public bool DisplayReplaced { get; private set; } = true;
         public bool DisplaySplitter { get; private set; } = true;
-        public bool DisplayPacketStructure { get; private set; } = false;
+        public bool DisplayStructures { get; private set; } = true;
 
         public PacketLoggerFrm(MainFrm main)
         {
             InitializeComponent();
             MainUI = main;
 
-            _write = Write;
+            _refreshLog = RefreshLog;
             _writeHighlight = WriteHighlight;
-            Intercepted = new Queue<InterceptedEventArgs>();
 
             MainUI.Connection.DataIncoming += DataIncoming;
             MainUI.Connection.DataOutgoing += DataOutgoing;
+            Intercepted = new Queue<InterceptedEventArgs>();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -95,8 +96,8 @@ namespace Tanji.Applications
                     break;
                 }
 
-                case nameof(DisplayPacketStructureBtn):
-                DisplayPacketStructure = isChecked;
+                case nameof(DisplayStructuresBtn):
+                DisplayStructures = isChecked;
                 break;
 
                 case nameof(BlockedBtn):
@@ -112,8 +113,14 @@ namespace Tanji.Applications
                 break;
 
                 case nameof(AlwaysOnTopBtn):
-                TopMost = isChecked;
-                break;
+                {
+                    TopMost = isChecked;
+
+                    Text = "Tanji ~ PacketLogger" +
+                        (TopMost ? " | TopMost" : string.Empty);
+
+                    break;
+                }
             }
         }
         private void CopyBtn_Click(object sender, EventArgs e)
@@ -137,6 +144,15 @@ namespace Tanji.Applications
                 PushToQueue(e);
         }
 
+        private void RefreshLog()
+        {
+            if (InvokeRequired) Invoke(_refreshLog);
+            else
+            {
+                LoggerTxt.SelectionStart = LoggerTxt.TextLength;
+                LoggerTxt.ScrollToCaret();
+            }
+        }
         private void RunDisplayQueueLoop()
         {
             if (Monitor.TryEnter(Intercepted))
@@ -159,12 +175,25 @@ namespace Tanji.Applications
                         else if (args.WasReplaced) WriteHighlight("Replaced ", ReplaceHighlight);
 
                         WriteHighlight(packetLog + "\r\n", packetLogHighlight);
+                        if (DisplayStructures)
+                        {
+                            string structureLog = ExtractStructureLog(args.Replacement, toServer);
+
+                            if (!string.IsNullOrWhiteSpace(structureLog))
+                                WriteHighlight(structureLog + "\r\n", PacketStructHighlight);
+                        }
 
                         if (DisplaySplitter)
                             WriteHighlight("--------------------\r\n", packetLogHighlight);
+
+                        RefreshLog();
                     }
                 }
-                finally { Monitor.Exit(Intercepted); }
+                finally
+                {
+                    Monitor.Exit(Intercepted);
+                    Application.DoEvents();
+                }
             }
         }
         private void PushToQueue(InterceptedEventArgs e)
@@ -177,93 +206,6 @@ namespace Tanji.Applications
             }
         }
 
-        public string ExtractPacketLog(HMessage packet, bool toServer)
-        {
-            string arrow = (toServer ? "->" : "<-");
-            string type = (toServer ? "Outgoing" : "Incoming");
-            return $"{type}({packet.Header}, {packet.Length}) {arrow} {packet}";
-        }
-        public string ExtractStructureLog(HMessage packet, bool toServer)
-        {
-            return string.Empty;
-        }
-
-        public void Write(InterceptedEventArgs e)
-        {
-            if (InvokeRequired) Invoke(_write, e);
-            else
-            {
-                bool toServer = (e.Packet.Destination == HDestination.Server);
-
-                string directionArrow = (toServer ? "->" : "<-");
-                string packetType = (toServer ? "Outgoing" : "Incoming");
-                string dataLog = $"{packetType}({e.Replacement.Header}, {e.Replacement.Length}) {directionArrow} {e.Replacement}";
-
-                Color highlight = toServer ?
-                    OutgoingHighlight : IncomingHighlight;
-
-                if (e.IsBlocked) WriteHighlight("Blocked | ", BlockHighlight);
-                else if (e.WasReplaced) WriteHighlight("Replaced | ", ReplaceHighlight);
-                WriteHighlight(dataLog, highlight);
-
-                if (toServer && DisplayPacketStructure)
-                {
-                    Tuple<string, string[]> outgoingItems = MainUI.OutStructs[e.Packet.Header];
-                    string[] structure = outgoingItems.Item2;
-
-                    if (!structure.Contains("array"))
-                    {
-                        e.Packet.Position = 0;
-                        string packetInfo = $"\r\n{{l}}{{u:{e.Packet.Header}}}";
-                        try
-                        {
-                            foreach (string valueType in structure)
-                            {
-                                if (string.IsNullOrWhiteSpace(packetInfo)) break;
-                                packetInfo += "{" + valueType[0] + ":";
-
-                                switch (valueType)
-                                {
-                                    case "int":
-                                    packetInfo += e.Packet.ReadInteger();
-                                    break;
-
-                                    case "string":
-                                    packetInfo += e.Packet.ReadString();
-                                    break;
-
-                                    case "boolean":
-                                    packetInfo += e.Packet.ReadBoolean().ToString();
-                                    break;
-
-                                    default:
-                                    packetInfo = string.Empty;
-                                    break;
-                                }
-
-                                if (!string.IsNullOrWhiteSpace(packetInfo))
-                                    packetInfo += "}";
-                            }
-                        }
-                        catch { packetInfo = "\r\nDeconstruction Failed."; }
-                        finally
-                        {
-                            if (!string.IsNullOrWhiteSpace(packetInfo))
-                                WriteHighlight(packetInfo + " | " + outgoingItems.Item1, PacketStructHighlight);
-
-                            e.Packet.Position = 0;
-                        }
-                    }
-                }
-
-                string splitter = (DisplaySplitter ? "\r\n--------------------\r\n" : "\r\n");
-                WriteHighlight(splitter, highlight);
-
-                LoggerTxt.SelectionStart = LoggerTxt.TextLength;
-                LoggerTxt.ScrollToCaret();
-                Application.DoEvents();
-            }
-        }
         public void WriteHighlight(string value, Color highlight)
         {
             if (InvokeRequired) Invoke(_writeHighlight, value, highlight);
@@ -274,6 +216,58 @@ namespace Tanji.Applications
                 LoggerTxt.SelectionColor = highlight;
                 LoggerTxt.AppendText(value);
             }
+        }
+        public string ExtractPacketLog(HMessage packet, bool toServer)
+        {
+            ASInstance messageInstance = (toServer ?
+                MainUI.OutgoingTypes : MainUI.IncomingTypes)[packet.Header];
+
+            string arrow = (toServer ? "->" : "<-");
+            string type = (toServer ? "Outgoing" : "Incoming");
+            return $"{type}({packet.Header}, {packet.Length}, {messageInstance.Name.ObjName}) {arrow} {packet}";
+        }
+        public string ExtractStructureLog(HMessage packet, bool toServer)
+        {
+            if (!toServer)
+                return string.Empty;
+
+            ASInstance messageInstance = (toServer ?
+                MainUI.OutgoingTypes : MainUI.IncomingTypes)[packet.Header];
+
+            string arguments = $"{{l}}{{u:{packet.Header}}}";
+            ASMethod messageCtor = messageInstance.Constructor;
+            foreach (ASParameter param in messageCtor.Parameters)
+            {
+                try
+                {
+                    arguments += "{";
+                    switch (param.Type.ObjName.ToLower())
+                    {
+                        default:
+                        return string.Empty;
+
+                        case "string":
+                        arguments += "s:" + packet.ReadString();
+                        break;
+
+                        case "int":
+                        arguments += "i:" + packet.ReadInteger();
+                        break;
+
+                        case "boolean":
+                        arguments += "b:" + packet.ReadBoolean();
+                        break;
+                    }
+                    arguments += "}";
+                }
+                catch { return string.Empty; }
+            }
+
+            if (packet.Readable != 0)
+                arguments = string.Empty;
+
+            packet.Position = 0;
+            return arguments;
         }
     }
 }

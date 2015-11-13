@@ -43,7 +43,7 @@
             this.BlockedBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ReplacedBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.DisplaySplitterBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.DisplayPacketStructureBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.DisplayStructuresBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingsSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.AlwaysOnTopBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PacketLoggerStrip = new System.Windows.Forms.StatusStrip();
@@ -147,7 +147,7 @@
             this.SettingsBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DisplayFiltersBtn,
             this.DisplaySplitterBtn,
-            this.DisplayPacketStructureBtn,
+            this.DisplayStructuresBtn,
             this.SettingsSeperator,
             this.AlwaysOnTopBtn});
             this.SettingsBtn.Name = "SettingsBtn";
@@ -160,7 +160,7 @@
             this.BlockedBtn,
             this.ReplacedBtn});
             this.DisplayFiltersBtn.Name = "DisplayFiltersBtn";
-            this.DisplayFiltersBtn.Size = new System.Drawing.Size(201, 22);
+            this.DisplayFiltersBtn.Size = new System.Drawing.Size(208, 22);
             this.DisplayFiltersBtn.Text = "Display Filters";
             // 
             // BlockedBtn
@@ -191,30 +191,32 @@
             this.DisplaySplitterBtn.CheckOnClick = true;
             this.DisplaySplitterBtn.CheckState = System.Windows.Forms.CheckState.Checked;
             this.DisplaySplitterBtn.Name = "DisplaySplitterBtn";
-            this.DisplaySplitterBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Alt | System.Windows.Forms.Keys.S)));
-            this.DisplaySplitterBtn.Size = new System.Drawing.Size(201, 22);
+            this.DisplaySplitterBtn.Size = new System.Drawing.Size(208, 22);
             this.DisplaySplitterBtn.Text = "Display Splitter";
             this.DisplaySplitterBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
             // 
-            // DisplayPacketStructureBtn
+            // DisplayStructuresBtn
             // 
-            this.DisplayPacketStructureBtn.CheckOnClick = true;
-            this.DisplayPacketStructureBtn.Name = "DisplayPacketStructureBtn";
-            this.DisplayPacketStructureBtn.Size = new System.Drawing.Size(201, 22);
-            this.DisplayPacketStructureBtn.Text = "Display Packet Structure";
-            this.DisplayPacketStructureBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
+            this.DisplayStructuresBtn.Checked = true;
+            this.DisplayStructuresBtn.CheckOnClick = true;
+            this.DisplayStructuresBtn.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.DisplayStructuresBtn.Name = "DisplayStructuresBtn";
+            this.DisplayStructuresBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.DisplayStructuresBtn.Size = new System.Drawing.Size(208, 22);
+            this.DisplayStructuresBtn.Text = "Display Structures";
+            this.DisplayStructuresBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
             // 
             // SettingsSeperator
             // 
             this.SettingsSeperator.Name = "SettingsSeperator";
-            this.SettingsSeperator.Size = new System.Drawing.Size(198, 6);
+            this.SettingsSeperator.Size = new System.Drawing.Size(205, 6);
             // 
             // AlwaysOnTopBtn
             // 
             this.AlwaysOnTopBtn.CheckOnClick = true;
             this.AlwaysOnTopBtn.Name = "AlwaysOnTopBtn";
             this.AlwaysOnTopBtn.ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
-            this.AlwaysOnTopBtn.Size = new System.Drawing.Size(201, 22);
+            this.AlwaysOnTopBtn.Size = new System.Drawing.Size(208, 22);
             this.AlwaysOnTopBtn.Text = "Always On Top";
             this.AlwaysOnTopBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
             // 
@@ -284,7 +286,7 @@
         private System.Windows.Forms.StatusStrip PacketLoggerStrip;
         private System.Windows.Forms.ToolStripStatusLabel CaptureOutgoingLbl;
         private System.Windows.Forms.ToolStripStatusLabel CaptureIncomingLbl;
-        private System.Windows.Forms.ToolStripMenuItem DisplayPacketStructureBtn;
+        private System.Windows.Forms.ToolStripMenuItem DisplayStructuresBtn;
         private System.Windows.Forms.ContextMenuStrip PacketLoggerContextMenu;
         public System.Windows.Forms.ToolStripMenuItem PLCMCopyBtn;
     }
