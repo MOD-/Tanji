@@ -51,13 +51,13 @@
             this.HandshakeTab = new System.Windows.Forms.TabPage();
             this.HTPrivateExponentGrpbx = new System.Windows.Forms.GroupBox();
             this.HTPrivateExponentTxt = new System.Windows.Forms.TextBox();
-            this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.textBox3 = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.textBox2 = new System.Windows.Forms.TextBox();
-            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.HTRSAReplaceGrpbx = new System.Windows.Forms.GroupBox();
+            this.HTRSAReplaceDLbl = new System.Windows.Forms.Label();
+            this.HTRSAReplaceNLbl = new System.Windows.Forms.Label();
+            this.HTRSAReplaceDTxt = new System.Windows.Forms.TextBox();
+            this.HTRSAReplaceELbl = new System.Windows.Forms.Label();
+            this.HTRSAReplaceNTxt = new System.Windows.Forms.TextBox();
+            this.HTRSAReplaceETxt = new System.Windows.Forms.TextBox();
             this.HTPublicExponentGrpbx = new System.Windows.Forms.GroupBox();
             this.HTPublicExponentTxt = new System.Windows.Forms.TextBox();
             this.HTPublicModulusGrpbx = new System.Windows.Forms.GroupBox();
@@ -91,7 +91,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.CTProxyPortTxt)).BeginInit();
             this.HandshakeTab.SuspendLayout();
             this.HTPrivateExponentGrpbx.SuspendLayout();
-            this.groupBox1.SuspendLayout();
+            this.HTRSAReplaceGrpbx.SuspendLayout();
             this.HTPublicExponentGrpbx.SuspendLayout();
             this.HTPublicModulusGrpbx.SuspendLayout();
             this.AboutTab.SuspendLayout();
@@ -325,7 +325,7 @@
             // HandshakeTab
             // 
             this.HandshakeTab.Controls.Add(this.HTPrivateExponentGrpbx);
-            this.HandshakeTab.Controls.Add(this.groupBox1);
+            this.HandshakeTab.Controls.Add(this.HTRSAReplaceGrpbx);
             this.HandshakeTab.Controls.Add(this.HTPublicExponentGrpbx);
             this.HandshakeTab.Controls.Add(this.HTPublicModulusGrpbx);
             this.HandshakeTab.Location = new System.Drawing.Point(4, 28);
@@ -356,80 +356,80 @@
             this.HTPrivateExponentTxt.TabStop = false;
             this.HTPrivateExponentTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // groupBox1
+            // HTRSAReplaceGrpbx
             // 
-            this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.textBox3);
-            this.groupBox1.Controls.Add(this.label2);
-            this.groupBox1.Controls.Add(this.textBox2);
-            this.groupBox1.Controls.Add(this.textBox1);
-            this.groupBox1.Location = new System.Drawing.Point(6, 108);
-            this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(356, 71);
-            this.groupBox1.TabIndex = 83;
-            this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "RSA Replacement Keys";
+            this.HTRSAReplaceGrpbx.Controls.Add(this.HTRSAReplaceDLbl);
+            this.HTRSAReplaceGrpbx.Controls.Add(this.HTRSAReplaceNLbl);
+            this.HTRSAReplaceGrpbx.Controls.Add(this.HTRSAReplaceDTxt);
+            this.HTRSAReplaceGrpbx.Controls.Add(this.HTRSAReplaceELbl);
+            this.HTRSAReplaceGrpbx.Controls.Add(this.HTRSAReplaceNTxt);
+            this.HTRSAReplaceGrpbx.Controls.Add(this.HTRSAReplaceETxt);
+            this.HTRSAReplaceGrpbx.Location = new System.Drawing.Point(6, 108);
+            this.HTRSAReplaceGrpbx.Name = "HTRSAReplaceGrpbx";
+            this.HTRSAReplaceGrpbx.Size = new System.Drawing.Size(356, 71);
+            this.HTRSAReplaceGrpbx.TabIndex = 83;
+            this.HTRSAReplaceGrpbx.TabStop = false;
+            this.HTRSAReplaceGrpbx.Text = "RSA Replacement Keys";
             // 
-            // label4
+            // HTRSAReplaceDLbl
             // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(6, 48);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(18, 13);
-            this.label4.TabIndex = 88;
-            this.label4.Text = "D:";
+            this.HTRSAReplaceDLbl.AutoSize = true;
+            this.HTRSAReplaceDLbl.Location = new System.Drawing.Point(6, 48);
+            this.HTRSAReplaceDLbl.Name = "HTRSAReplaceDLbl";
+            this.HTRSAReplaceDLbl.Size = new System.Drawing.Size(18, 13);
+            this.HTRSAReplaceDLbl.TabIndex = 88;
+            this.HTRSAReplaceDLbl.Text = "D:";
             // 
-            // label3
+            // HTRSAReplaceNLbl
             // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(6, 22);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(18, 13);
-            this.label3.TabIndex = 86;
-            this.label3.Text = "N:";
+            this.HTRSAReplaceNLbl.AutoSize = true;
+            this.HTRSAReplaceNLbl.Location = new System.Drawing.Point(6, 22);
+            this.HTRSAReplaceNLbl.Name = "HTRSAReplaceNLbl";
+            this.HTRSAReplaceNLbl.Size = new System.Drawing.Size(18, 13);
+            this.HTRSAReplaceNLbl.TabIndex = 86;
+            this.HTRSAReplaceNLbl.Text = "N:";
             // 
-            // textBox3
+            // HTRSAReplaceDTxt
             // 
-            this.textBox3.Location = new System.Drawing.Point(24, 45);
-            this.textBox3.Name = "textBox3";
-            this.textBox3.ReadOnly = true;
-            this.textBox3.Size = new System.Drawing.Size(326, 20);
-            this.textBox3.TabIndex = 87;
-            this.textBox3.TabStop = false;
-            this.textBox3.Text = resources.GetString("textBox3.Text");
-            this.textBox3.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.HTRSAReplaceDTxt.Location = new System.Drawing.Point(24, 45);
+            this.HTRSAReplaceDTxt.Name = "HTRSAReplaceDTxt";
+            this.HTRSAReplaceDTxt.ReadOnly = true;
+            this.HTRSAReplaceDTxt.Size = new System.Drawing.Size(326, 20);
+            this.HTRSAReplaceDTxt.TabIndex = 87;
+            this.HTRSAReplaceDTxt.TabStop = false;
+            this.HTRSAReplaceDTxt.Text = resources.GetString("HTRSAReplaceDTxt.Text");
+            this.HTRSAReplaceDTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // label2
+            // HTRSAReplaceELbl
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(302, 22);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(17, 13);
-            this.label2.TabIndex = 84;
-            this.label2.Text = "E:";
+            this.HTRSAReplaceELbl.AutoSize = true;
+            this.HTRSAReplaceELbl.Location = new System.Drawing.Point(302, 22);
+            this.HTRSAReplaceELbl.Name = "HTRSAReplaceELbl";
+            this.HTRSAReplaceELbl.Size = new System.Drawing.Size(17, 13);
+            this.HTRSAReplaceELbl.TabIndex = 84;
+            this.HTRSAReplaceELbl.Text = "E:";
             // 
-            // textBox2
+            // HTRSAReplaceNTxt
             // 
-            this.textBox2.Location = new System.Drawing.Point(24, 19);
-            this.textBox2.Name = "textBox2";
-            this.textBox2.ReadOnly = true;
-            this.textBox2.Size = new System.Drawing.Size(277, 20);
-            this.textBox2.TabIndex = 85;
-            this.textBox2.TabStop = false;
-            this.textBox2.Text = resources.GetString("textBox2.Text");
-            this.textBox2.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.HTRSAReplaceNTxt.Location = new System.Drawing.Point(24, 19);
+            this.HTRSAReplaceNTxt.Name = "HTRSAReplaceNTxt";
+            this.HTRSAReplaceNTxt.ReadOnly = true;
+            this.HTRSAReplaceNTxt.Size = new System.Drawing.Size(277, 20);
+            this.HTRSAReplaceNTxt.TabIndex = 85;
+            this.HTRSAReplaceNTxt.TabStop = false;
+            this.HTRSAReplaceNTxt.Text = resources.GetString("HTRSAReplaceNTxt.Text");
+            this.HTRSAReplaceNTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // textBox1
+            // HTRSAReplaceETxt
             // 
-            this.textBox1.Location = new System.Drawing.Point(319, 19);
-            this.textBox1.Name = "textBox1";
-            this.textBox1.ReadOnly = true;
-            this.textBox1.Size = new System.Drawing.Size(31, 20);
-            this.textBox1.TabIndex = 1;
-            this.textBox1.TabStop = false;
-            this.textBox1.Text = "3";
-            this.textBox1.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.HTRSAReplaceETxt.Location = new System.Drawing.Point(319, 19);
+            this.HTRSAReplaceETxt.Name = "HTRSAReplaceETxt";
+            this.HTRSAReplaceETxt.ReadOnly = true;
+            this.HTRSAReplaceETxt.Size = new System.Drawing.Size(31, 20);
+            this.HTRSAReplaceETxt.TabIndex = 1;
+            this.HTRSAReplaceETxt.TabStop = false;
+            this.HTRSAReplaceETxt.Text = "3";
+            this.HTRSAReplaceETxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // HTPublicExponentGrpbx
             // 
@@ -740,8 +740,8 @@
             this.HandshakeTab.ResumeLayout(false);
             this.HTPrivateExponentGrpbx.ResumeLayout(false);
             this.HTPrivateExponentGrpbx.PerformLayout();
-            this.groupBox1.ResumeLayout(false);
-            this.groupBox1.PerformLayout();
+            this.HTRSAReplaceGrpbx.ResumeLayout(false);
+            this.HTRSAReplaceGrpbx.PerformLayout();
             this.HTPublicExponentGrpbx.ResumeLayout(false);
             this.HTPublicExponentGrpbx.PerformLayout();
             this.HTPublicModulusGrpbx.ResumeLayout(false);
@@ -769,13 +769,13 @@
         public System.Windows.Forms.TextBox HTPublicExponentTxt;
         private System.Windows.Forms.GroupBox HTPublicModulusGrpbx;
         public System.Windows.Forms.TextBox HTPublicModulusTxt;
-        private System.Windows.Forms.GroupBox groupBox1;
-        private System.Windows.Forms.Label label4;
-        public System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Label label3;
-        public System.Windows.Forms.TextBox textBox2;
-        private System.Windows.Forms.Label label2;
-        public System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.GroupBox HTRSAReplaceGrpbx;
+        private System.Windows.Forms.Label HTRSAReplaceDLbl;
+        public System.Windows.Forms.TextBox HTRSAReplaceDTxt;
+        private System.Windows.Forms.Label HTRSAReplaceNLbl;
+        public System.Windows.Forms.TextBox HTRSAReplaceNTxt;
+        private System.Windows.Forms.Label HTRSAReplaceELbl;
+        public System.Windows.Forms.TextBox HTRSAReplaceETxt;
         private System.Windows.Forms.GroupBox HTPrivateExponentGrpbx;
         public System.Windows.Forms.TextBox HTPrivateExponentTxt;
         private System.Windows.Forms.PictureBox ATLogoPctbx;

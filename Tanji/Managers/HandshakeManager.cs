@@ -44,8 +44,8 @@ namespace Tanji.Managers
                         if (string.IsNullOrWhiteSpace(RealModulus))
                             RealModulus = DEFAULT_REAL_MODULUS;
 
-                        Remote.Exchange = new HKeyExchange2(RealExponent, RealModulus);
-                        Local.Exchange = new HKeyExchange2(FAKE_EXPONENT, FAKE_MODULUS, FAKE_PRIVATE_EXPONENT);
+                        Remote.Exchange = new HKeyExchange(RealExponent, RealModulus);
+                        Local.Exchange = new HKeyExchange(FAKE_EXPONENT, FAKE_MODULUS, FAKE_PRIVATE_EXPONENT);
 
                         string signedPrime = e.Packet.ReadString();
                         string signedGenerator = e.Packet.ReadString();

@@ -13,14 +13,12 @@ using Eavesdrop;
 using Tanji.Managers;
 
 using Sulakore;
+using Sulakore.Habbo;
 using Sulakore.Habbo.Web;
 using Sulakore.Communication;
 
-using FlashInspect;
-using FlashInspect.IO;
 using FlashInspect.Tags;
 using FlashInspect.ActionScript;
-using FlashInspect.ActionScript.Constants;
 
 namespace Tanji.Dialogs
 {
@@ -138,7 +136,7 @@ namespace Tanji.Dialogs
                 if (MainUI.Game == null)
                 {
                     bool verifySuccess = VerifyGameClientAsync(
-                        new ShockwaveFlash(e.Payload)).Result;
+                        new HFlash(e.Payload)).Result;
 
                     if (verifySuccess)
                     {
@@ -147,12 +145,13 @@ namespace Tanji.Dialogs
                         else tags = MainUI.Game.Tags.OfType<DefineBinaryDataTag>();
 
                         ModifyTags(tags);
+                        // MainUI.Game.DisableClientEncryption();
+                        /* We need to figure out if we should encrypt the incoming being sent to the client,
+                        otherwise we disable client encryption it will currently think no parties are using encryption. */
+                        MainUI.Game.RemoveLocalUseRestrictions();
+
                         StatusTxt.SetDotAnimation("Reconstructing");
                         MainUI.Game.Reconstruct();
-
-                        // TODO: Save, and compress client?
-                        //StatusTxt.SetDotAnimation("Compressing Client");
-                        //MainUI.Game.Compress();
                     }
 
                     if (!MainUI.IsRetro)
@@ -164,14 +163,13 @@ namespace Tanji.Dialogs
 
                 e.Payload = MainUI.Game.ToArray();
                 Eavesdropper.EavesdropperResponse -= ReplaceClient;
-
                 Eavesdropper.Terminate();
 
                 Task connectTask = MainUI.Connection.ConnectAsync(
                     MainUI.GameData.Host, _possiblePorts.ToArray());
 
-                StatusTxt.SetDotAnimation(
-                    "Intercepting Connection({0})", MainUI.GameData.Port);
+                StatusTxt.SetDotAnimation("Intercepting Connection({0})",
+                    MainUI.GameData.Port.Replace(",", ", "));
             }
         }
         private void ExtractHostPort(object sender, EavesdropperResponseEventArgs e)
@@ -444,81 +442,29 @@ namespace Tanji.Dialogs
             }
         }
 
-        private bool ExtractMessages(ABCFile abc)
-        {
-            ASClass habboMessages = abc.FindClassByName("HabboMessages");
-            if (habboMessages == null || habboMessages.Traits.Count < 2) return false;
-
-            ASTrait incomingMap = habboMessages.Traits[0];
-            ASTrait outgoingMap = habboMessages.Traits[1];
-
-            using (var mapReader = new FlashReader(
-                habboMessages.Constructor.Body.Code.ToArray()))
-            {
-                while (mapReader.Position != mapReader.Length)
-                {
-                    var op = (OPCode)mapReader.ReadByte();
-                    if (op != OPCode.GetLex) continue;
-
-                    int mapTypeIndex = mapReader.Read7BitEncodedInt();
-                    bool isOutgoing = (mapTypeIndex == outgoingMap.NameIndex);
-                    bool isIncoming = (mapTypeIndex == incomingMap.NameIndex);
-                    if (!isOutgoing && !isIncoming) continue;
-
-                    op = (OPCode)mapReader.ReadByte();
-                    if (op != OPCode.PushShort && op != OPCode.PushByte) continue;
-
-                    var header = (ushort)mapReader.Read7BitEncodedInt();
-
-                    op = (OPCode)mapReader.ReadByte();
-                    if (op != OPCode.GetLex) continue;
-
-                    int messageTypeIndex = mapReader.Read7BitEncodedInt();
-                    ASMultiname messageType = abc.Constants.Multinames[messageTypeIndex];
-                    ASInstance messageInstance = abc.FindInstanceByName(messageType.ObjName);
-
-                    if (isOutgoing) MainUI.OutgoingTypes[header] = messageInstance;
-                    else if (isIncoming) MainUI.IncomingTypes[header] = messageInstance;
-                }
-            }
-
-            return (MainUI.OutgoingTypes.Count > 0
-                && MainUI.IncomingTypes.Count > 0);
-        }
-
         private async Task<bool> VerifyGameClientAsync(string path)
         {
             if (!File.Exists(path)) return false;
 
             return await VerifyGameClientAsync(
-                new ShockwaveFlash(path)).ConfigureAwait(false);
+                new HFlash(path)).ConfigureAwait(false);
         }
-        private async Task<bool> VerifyGameClientAsync(ShockwaveFlash flash)
+        private async Task<bool> VerifyGameClientAsync(HFlash game)
         {
-            if (flash.IsCompressed)
+            if (game.IsCompressed)
             {
                 StatusTxt.SetDotAnimation("Decompressing");
 
                 await Task.Factory.StartNew(
-                    flash.Decompress).ConfigureAwait(false);
+                    game.Decompress).ConfigureAwait(false);
             }
 
-            if (!flash.IsCompressed)
+            if (!game.IsCompressed)
             {
-                MainUI.Game = flash;
+                MainUI.Game = game;
+
                 StatusTxt.SetDotAnimation("Disassembling");
-
                 MainUI.Game.ReadTags();
-                foreach (FlashTag tag in MainUI.Game.Tags)
-                {
-                    if (tag.Header.TagType != FlashTagType.DoABC) continue;
-
-                    var abcTag = (DoABCTag)tag;
-                    if (abcTag.Name != "frame2") continue;
-
-                    ExtractMessages(abcTag.ABC);
-                    break;
-                }
             }
 
             return MainUI.Game != null;

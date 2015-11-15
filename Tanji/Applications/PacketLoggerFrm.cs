@@ -220,7 +220,7 @@ namespace Tanji.Applications
         public string ExtractPacketLog(HMessage packet, bool toServer)
         {
             ASInstance messageInstance = (toServer ?
-                MainUI.OutgoingTypes : MainUI.IncomingTypes)[packet.Header];
+                MainUI.Game.OutgoingTypes : MainUI.Game.IncomingTypes)[packet.Header];
 
             string arrow = (toServer ? "->" : "<-");
             string type = (toServer ? "Outgoing" : "Incoming");
@@ -232,7 +232,7 @@ namespace Tanji.Applications
                 return string.Empty;
 
             ASInstance messageInstance = (toServer ?
-                MainUI.OutgoingTypes : MainUI.IncomingTypes)[packet.Header];
+                MainUI.Game.OutgoingTypes : MainUI.Game.IncomingTypes)[packet.Header];
 
             string arguments = $"{{l}}{{u:{packet.Header}}}";
             ASMethod messageCtor = messageInstance.Constructor;

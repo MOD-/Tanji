@@ -3,25 +3,23 @@
 using System;
 using System.Diagnostics;
 using System.Windows.Forms;
-using System.Collections.Generic;
-
-using FlashInspect;
 
 using Tanji.Dialogs;
 using Tanji.Managers;
 using Tanji.Applications;
 
+using Sulakore.Habbo;
 using Sulakore.Habbo.Web;
 using Sulakore.Communication;
-using FlashInspect.ActionScript;
 
 namespace Tanji
 {
     public partial class MainFrm : Form
     {
         public bool IsRetro { get; set; }
+
+        public HFlash Game { get; set; }
         public HGameData GameData { get; set; }
-        public ShockwaveFlash Game { get; set; }
 
         public HConnection Connection { get; }
         public EncoderManager EncoderMngr { get; }
@@ -33,15 +31,9 @@ namespace Tanji
         public ConnectFrm ConnectUI { get; }
         public PacketLoggerFrm PacketLoggerUI { get; }
 
-        public Dictionary<ushort, ASInstance> OutgoingTypes { get; }
-        public Dictionary<ushort, ASInstance> IncomingTypes { get; }
-
         public MainFrm()
         {
             InitializeComponent();
-
-            OutgoingTypes = new Dictionary<ushort, ASInstance>();
-            IncomingTypes = new Dictionary<ushort, ASInstance>();
 
             Connection = new HConnection();
             UpdateUI = new UpdateFrm(this);
