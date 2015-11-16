@@ -93,18 +93,18 @@ namespace Tanji.Dialogs
             ChooseClientDlg.FileName = ChooseClientDlg.SafeFileName;
             if (ChooseClientDlg.ShowDialog() != DialogResult.OK) return;
 
-            bool verifySuccess = await VerifyGameClientAsync(
-                ChooseClientDlg.FileName);
-
-            StatusTxt.StopDotAnimation("Standing By...");
-            if (!verifySuccess)
+            try
             {
-                MessageBox.Show("Unable to disassemble the Shockwave Flash(.swf) file.",
-                    "Tanji ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                if (!(await VerifyGameClientAsync(ChooseClientDlg.FileName)))
+                {
+                    MessageBox.Show("Unable to disassemble the Shockwave Flash(.swf) file.",
+                        "Tanji ~ Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
             }
+            finally { StatusTxt.StopDotAnimation("Standing By..."); }
 
-            CTCustomClientTxt.Text = verifySuccess ?
-                MainUI.Game.Location : string.Empty;
+            CTCustomClientTxt.Text =
+                (MainUI.Game?.Location ?? string.Empty);
         }
 
         private void InjectClient(object sender, EavesdropperRequestEventArgs e)
@@ -113,51 +113,44 @@ namespace Tanji.Dialogs
             {
                 Eavesdropper.EavesdropperRequest -= InjectClient;
                 e.Request = WebRequest.Create(new Uri(MainUI.Game.Location));
+                Eavesdropper.EavesdropperResponse += ReplaceClient;
             }
         }
         private void ReplaceClient(object sender, EavesdropperResponseEventArgs e)
         {
-            bool isLocal = false;
-            if (e.Payload.Length > 3000000 &&
-                e.Response.ContentType == "application/x-shockwave-flash" ||
-                (isLocal = File.Exists(e.Response.ResponseUri.LocalPath)))
+            if ((e.Payload.Length > 3000000 && e.Response.ContentType == "application/x-shockwave-flash") ||
+                File.Exists(e.Response.ResponseUri.LocalPath))
             {
                 string[] ports = MainUI.GameData.Port.Split(',');
-                foreach (string port in ports)
-                {
-                    ushort possiblePort = 0;
-                    if (ushort.TryParse(port, out possiblePort) &&
-                        !_possiblePorts.Contains(possiblePort))
-                    {
-                        _possiblePorts.Add(possiblePort);
-                    }
-                }
+                foreach (string port in ports) TryAddPort(port);
 
                 if (MainUI.Game == null)
                 {
-                    bool verifySuccess = VerifyGameClientAsync(
-                        new HFlash(e.Payload)).Result;
-
-                    if (verifySuccess)
+                    VerifyGameClientAsync(new HFlash(e.Payload)).Wait();
+                    if (MainUI.Game != null)
                     {
-                        IEnumerable<FlashTag> tags = null;
-                        if (MainUI.IsRetro) tags = MainUI.Game.Tags.OfType<DoABCTag>();
-                        else tags = MainUI.Game.Tags.OfType<DefineBinaryDataTag>();
+                        if (MainUI.IsRetro)
+                        {
+                            IEnumerable<DoABCTag> abcTags =
+                                MainUI.Game.Tags.OfType<DoABCTag>();
 
-                        ModifyTags(tags);
-                        // MainUI.Game.DisableClientEncryption();
-                        /* We need to figure out if we should encrypt the incoming being sent to the client,
-                        otherwise we disable client encryption it will currently think no parties are using encryption. */
+                            // Find(if any) hard-coded IP addresses.
+                            // Overwrite the "connection.info.host" variable with "tanji.connection.info.host".
+                            HandleConstants(abcTags);
+                        }
+
                         MainUI.Game.RemoveLocalUseRestrictions();
+                        MainUI.Game.ReplaceRSA(HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
 
                         StatusTxt.SetDotAnimation("Reconstructing");
                         MainUI.Game.Reconstruct();
-                    }
 
-                    if (!MainUI.IsRetro)
-                    {
-                        File.WriteAllBytes(Path.Combine("Modified Clients",
-                            MainUI.GameData.MovieName + ".swf"), MainUI.Game.ToArray());
+                        // TODO: Cache retro clients with a file hash as their identifier.
+                        if (!MainUI.IsRetro)
+                        {
+                            File.WriteAllBytes(Path.Combine("Modified Clients",
+                                MainUI.GameData.MovieName + ".swf"), MainUI.Game.ToArray());
+                        }
                     }
                 }
 
@@ -177,213 +170,94 @@ namespace Tanji.Dialogs
             string responseBody = Encoding.UTF8.GetString(e.Payload);
             if (MainUI.GameData == null && responseBody.Contains("info.host"))
             {
+                Eavesdropper.EavesdropperResponse -= ExtractHostPort;
+
                 MainUI.GameData = new HGameData(responseBody);
                 MainUI.ExtensionMngr.GameData = MainUI.GameData;
                 MainUI.ExtensionMngr.Hotel = SKore.ToHotel(MainUI.GameData.Host);
                 MainUI.IsRetro = (MainUI.ExtensionMngr.Hotel == HHotel.Unknown);
 
-                bool isSourceReadable = false;
+                string ticks = DateTime.Now.Ticks.ToString();
+                if (responseBody.Contains("embedSWF("))
+                {
+                    // Force a non-cached client to be returned.
+                    string child = responseBody.GetChild("embedSWF(", ',');
+                    responseBody = responseBody.Replace($"embedSWF({child}",
+                        $"embedSWF({child} + \"?Tanji-{ticks}\"");
+                }
+                else
+                {
+                    responseBody =
+                        responseBody.Replace(".swf", ".swf?Tanji-" + ticks);
+                }
                 if (MainUI.IsRetro)
                 {
-                    MainUI.GameData["tanji.connection.info.host"] = "127.0.0.1";
-                    MainUI.GameData["tanji.client.starting"] = "Peeling Tangerines...";
-
-                    if (!string.IsNullOrWhiteSpace(MainUI.GameData.MovieUrl) &&
-                        !string.IsNullOrWhiteSpace(MainUI.GameData.BaseUrl))
-                    {
-                        isSourceReadable = true;
-                        MainUI.GameData.MovieUrl += "?" + DateTime.Now.Ticks;
-                    }
-                    else
-                    {
-                        responseBody = responseBody.Replace(MainUI.GameData.Host,
-                            (MainUI.GameData.Host + "\", \"tanji.connection.info.host\":\"127.0.0.1\", \"tanji.client.starting\":\"Peeling Tangerines..."));
-                    }
+                    // TODO: Possibly randomize the variable name?
+                    // Add custom variable that will replace "connection.info.host" in the client.
+                    responseBody = responseBody.Replace(MainUI.GameData.Host,
+                        (MainUI.GameData.Host + "\", \"tanji.connection.info.host\":\"127.0.0.1"));
                 }
+                else if (MainUI.Game == null) TryLoadModdedClient();
+                e.Payload = Encoding.UTF8.GetBytes(responseBody);
 
-                if (!MainUI.IsRetro && MainUI.Game == null)
-                    TryLoadModdedClient();
+                if (MainUI.Game != null) Eavesdropper.EavesdropperRequest += InjectClient;
+                else Eavesdropper.EavesdropperResponse += ReplaceClient;
 
                 StatusTxt.SetDotAnimation((MainUI.Game == null ?
                     "Intercepting" : "Injecting") + " Client");
-
-                if (responseBody.Contains("embedSWF("))
-                {
-                    string child = responseBody.GetChild("embedSWF(", ',');
-                    responseBody = responseBody.Replace($"embedSWF({child}",
-                        $"embedSWF({child} + \"?Tanji-{DateTime.Now.Ticks}\"");
-                }
-
-                Eavesdropper.EavesdropperResponse -= ExtractHostPort;
-                Eavesdropper.EavesdropperResponse += ReplaceClient;
-
-                if (!MainUI.IsRetro && MainUI.Game != null)
-                    Eavesdropper.EavesdropperRequest += InjectClient;
-
-                e.Payload = Encoding.UTF8.GetBytes(
-                    MainUI.IsRetro && isSourceReadable ?
-                    MainUI.GameData.ToString() : responseBody);
             }
         }
 
-        private string ReplaceConstant(string constant)
+        private bool TryAddPort(string port)
         {
-            bool modulusFound = false,
-                exponentFound = false;
-
-            switch (constant)
+            ushort possiblePort = 0;
+            if (ushort.TryParse(port, out possiblePort))
             {
-                case "10001":
+                if (possiblePort < 1024) return false;
+                if (!_possiblePorts.Contains(possiblePort))
                 {
-                    exponentFound = true;
-                    MainUI.HandshakeMngr.RealExponent = 10001;
-                    constant = HandshakeManager.FAKE_EXPONENT.ToString();
-                    break;
+                    _possiblePorts.Add(possiblePort);
+                    return true;
                 }
-                case "localhost":
-                {
-                    constant = "tsohlacol";
-                    break;
-                }
-                case "client.starting":
-                {
-                    if (MainUI.GameData.ContainsKey("tanji.client.starting"))
-                        constant = "tanji.client.starting";
+            }
+            return false;
+        }
+        private void HandleConstants(IEnumerable<DoABCTag> abcTags)
+        {
+            foreach (DoABCTag abcTag in abcTags)
+            {
+                if (abcTag.Name != "frame2") continue;
 
-                    break;
-                }
-                case "connection.info.host":
-                {
-                    if (MainUI.GameData.ContainsKey("tanji.connection.info.host"))
-                        constant = "tanji.connection.info.host";
+                ABCFile abc = abcTag.ABC;
+                ASConstants constants = abc.Constants;
 
-                    break;
-                }
-
-                default:
+                for (int i = 1; i < constants.Strings.Count; i++)
                 {
-                    if (constant.Length == 256)
+                    string cString = constants.Strings[i];
+                    switch (cString)
                     {
-                        modulusFound = true;
-                        if (string.IsNullOrWhiteSpace(MainUI.HandshakeMngr.RealModulus))
+                        case "connection.info.host":
                         {
-                            MainUI.HandshakeMngr.RealModulus = constant;
-                            constant = HandshakeManager.FAKE_MODULUS;
+                            constants.Strings[i] = "tanji.connection.info.host";
+                            break;
+                        }
+                        default:
+                        {
+                            if (cString.Length < 3) continue;
+                            if (cString.Length < 6 && TryAddPort(cString)) continue;
+
+                            // TODO: Check 'SocketConnection.init' if a host/port has been hard-coded to override the external params.
+                            if (cString.Length <= 15 &&
+                                _ipMatcher.Match(cString).Success)
+                            {
+                                MainUI.GameData.Host = cString;
+                                constants.Strings[i] = "127.0.0.1";
+                            }
+                            break;
                         }
                     }
-                    else if (constant.Length <= 15 &&
-                        _ipMatcher.Match(constant).Success)
-                    {
-                        MainUI.GameData.Host = constant;
-                        constant = "127.0.0.1";
-                    }
-                    break;
                 }
-            }
-
-            if (MainUI.HandshakeMngr.RealExponent == 0 &&
-                !exponentFound && modulusFound)
-            {
-                MainUI.HandshakeMngr.RealExponent = 3;
-            }
-            return constant;
-        }
-        private void ExtractRsaKeys(string base64RsaKeys)
-        {
-            byte[] rsaKeyData = Convert.FromBase64String(base64RsaKeys);
-            string mergedRsaKeys = Encoding.UTF8.GetString(rsaKeyData);
-
-            int modLength = mergedRsaKeys[0];
-            string modulus = mergedRsaKeys.Substring(1, modLength);
-
-            mergedRsaKeys = mergedRsaKeys.Substring(modLength);
-            int exponent = int.Parse(mergedRsaKeys.Substring(2));
-
-            if (string.IsNullOrWhiteSpace(MainUI.HandshakeMngr.RealModulus))
-                MainUI.HandshakeMngr.RealModulus = modulus;
-
-            if (MainUI.HandshakeMngr.RealExponent == 0)
-                MainUI.HandshakeMngr.RealExponent = exponent;
-        }
-        private string EncodeRsaKeys(int exponent, string modulus)
-        {
-            string mergedKeys = string.Format("{0}{1} {2}",
-                (char)modulus.Length, modulus, exponent);
-
-            byte[] data = Encoding.UTF8.GetBytes(mergedKeys);
-            return Convert.ToBase64String(data);
-        }
-
-        private void ModifyAbc(DoABCTag abcTag)
-        {
-            ASConstants constants = abcTag.ABC.Constants;
-            StatusTxt.SetDotAnimation("Squeezing ({0})", abcTag.Name);
-
-            for (int i = 1; i < constants.Strings.Count; i++)
-            {
-                string constant = constants.Strings[i];
-                if (constant.Length > 256 || constant.Length < 2) continue;
-
-                if (constant.Length > 2 && constant.Length < 6)
-                {
-                    ushort possiblePort = 0;
-                    if (ushort.TryParse(constant, out possiblePort))
-                    {
-                        if (!_possiblePorts.Contains(possiblePort))
-                            _possiblePorts.Add(possiblePort);
-
-                        if (constant != "10001") continue;
-                    }
-                }
-
-                constants.Strings[i] =
-                    ReplaceConstant(constant);
-            }
-        }
-        private void ModifyTags(IEnumerable<FlashTag> tags)
-        {
-            if (ConnectionMngr.PublicExponent != 0)
-                MainUI.HandshakeMngr.RealExponent = ConnectionMngr.PublicExponent;
-
-            if (!string.IsNullOrWhiteSpace(ConnectionMngr.PublicModulus))
-                MainUI.HandshakeMngr.RealModulus = ConnectionMngr.PublicModulus;
-
-            foreach (FlashTag tag in tags)
-            {
-                switch (tag.Header.TagType)
-                {
-                    case FlashTagType.DefineBinaryData:
-                    {
-                        ModifyBin((DefineBinaryDataTag)tag);
-                        break;
-                    }
-
-                    case FlashTagType.DoABC:
-                    {
-                        ModifyAbc((DoABCTag)tag);
-                        break;
-                    }
-                }
-            }
-        }
-        private void ModifyBin(DefineBinaryDataTag binaryTag)
-        {
-            string binaryDataBody = Encoding.UTF8
-                .GetString(binaryTag.BinaryData);
-
-            if (binaryDataBody.Contains("habbo_login_dialog"))
-            {
-                string realRsaKeys = binaryDataBody
-                    .GetChild("name=\"dummy_field\" caption=\"", '"');
-
-                if (string.IsNullOrWhiteSpace(realRsaKeys)) return;
-                ExtractRsaKeys(realRsaKeys);
-
-                string fakeRsaKeys = EncodeRsaKeys(
-                    HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
-
-                binaryTag.BinaryData = Encoding.UTF8.GetBytes(
-                    binaryDataBody.Replace(realRsaKeys, fakeRsaKeys));
+                break;
             }
         }
 
@@ -400,6 +274,7 @@ namespace Tanji.Dialogs
         private void DoConnectCleanup()
         {
             Eavesdropper.Terminate();
+            HConnection.RestoreHosts();
 
             Eavesdropper.EavesdropperRequest -= InjectClient;
             Eavesdropper.EavesdropperResponse -= ReplaceClient;
@@ -407,8 +282,6 @@ namespace Tanji.Dialogs
 
             ConnectBtn.Text = "Connect";
             StatusTxt.StopDotAnimation("Standing By...");
-
-            HConnection.RestoreHosts();
         }
         private void DoAutomaticConnect()
         {

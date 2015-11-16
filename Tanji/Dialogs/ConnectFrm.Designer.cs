@@ -270,11 +270,6 @@
             this.CTProxyPortTxt.Size = new System.Drawing.Size(71, 20);
             this.CTProxyPortTxt.TabIndex = 87;
             this.CTProxyPortTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.CTProxyPortTxt.Value = new decimal(new int[] {
-            8080,
-            0,
-            0,
-            0});
             // 
             // CTRemoteProxyLbl
             // 
