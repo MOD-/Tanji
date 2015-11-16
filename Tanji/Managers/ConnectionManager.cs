@@ -49,7 +49,7 @@ namespace Tanji.Managers
             }
         }
 
-        private ushort _proxyPort = 8080;
+        private ushort _proxyPort = 8686;
         public ushort ProxyPort
         {
             get { return _proxyPort; }
