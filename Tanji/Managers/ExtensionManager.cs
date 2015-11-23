@@ -94,10 +94,13 @@ namespace Tanji.Managers
             }
         }
 
-        private void DataIncoming(object sender, InterceptedEventArgs e) =>
+        private void DataIncoming(object sender, InterceptedEventArgs e)
+        {
             HandleIncoming(e);
-
-        private void DataOutgoing(object sender, InterceptedEventArgs e) =>
+        }
+        private void DataOutgoing(object sender, InterceptedEventArgs e)
+        {
             HandleOutgoing(e);
+        }
     }
 }

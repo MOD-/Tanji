@@ -51,15 +51,13 @@ namespace Tanji.Dialogs
 
         private async void ConnectFrm_Shown(object sender, EventArgs e)
         {
-            CTBrowseBtn.Enabled =
-                ConnectBtn.Enabled = false;
-            StatusTxt.SetDotAnimation("Checking for updates");
+            CTBrowseBtn.Enabled = ConnectBtn.Enabled = false;
+            StatusTxt.SetDotAnimation("Checking for Updates...");
 
             try
             {
                 if (await MainUI.UpdateUI.CheckForUpdatesAsync())
                 {
-                    WindowState = FormWindowState.Minimized;
                     StatusTxt.StopDotAnimation("Update Found!");
                     MainUI.UpdateUI.ShowDialog();
                 }
@@ -67,11 +65,8 @@ namespace Tanji.Dialogs
             catch { /* Update check failed. */ }
             finally
             {
-                CTBrowseBtn.Enabled =
-                    ConnectBtn.Enabled = true;
-
+                CTBrowseBtn.Enabled = ConnectBtn.Enabled = true;
                 StatusTxt.StopDotAnimation("Standing By...");
-                WindowState = FormWindowState.Normal;
             }
         }
         private void ConnectFrm_FormClosed(object sender, FormClosedEventArgs e)
@@ -138,7 +133,7 @@ namespace Tanji.Dialogs
                             // Overwrite the "connection.info.host" variable with "tanji.connection.info.host".
                             HandleConstants(abcTags);
                         }
-
+                        
                         MainUI.Game.RemoveLocalUseRestrictions();
                         MainUI.Game.ReplaceRSA(HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
 

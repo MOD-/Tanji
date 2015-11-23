@@ -53,7 +53,7 @@ namespace Extension_Demo
                 }
             }
         }
-        
+
         private byte[] GetInputPacket()
         {
             return PacketTxt.TextLength > 0 ?

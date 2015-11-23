@@ -37,6 +37,12 @@ namespace Tanji.Managers
                 {
                     case 1:
                     {
+                        if (e.Packet.Length < 8)
+                        {
+                            _inStepOffset++;
+                            return;
+                        }
+
                         int remoteE = DEFAULT_REAL_EXPONENT;
                         if (!string.IsNullOrWhiteSpace(MainUI.Game.Exponent))
                         {

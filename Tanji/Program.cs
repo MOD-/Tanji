@@ -3,9 +3,9 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Security.Principal;
 
-using Eavesdrop;
-
 using Sulakore.Communication;
+
+using Eavesdrop;
 
 namespace Tanji
 {
@@ -28,7 +28,7 @@ namespace Tanji
             else
             {
                 AppDomain.CurrentDomain.UnhandledException +=
-                    CurrentDomain_UnhandledException;
+                    UnhandledException;
 
                 Eavesdropper.Terminate();
                 HConnection.RestoreHosts();
@@ -38,8 +38,7 @@ namespace Tanji
                 Application.Run(new MainFrm());
             }
         }
-
-        static void CurrentDomain_UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var exception = (Exception)e.ExceptionObject;
             MessageBox.Show($"Message: {exception.Message}\r\n\r\n{exception.StackTrace.Trim()}",
