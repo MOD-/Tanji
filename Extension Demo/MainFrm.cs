@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading;
+using System.Windows.Forms;
 
 using Sulakore.Protocol;
 using Sulakore.Extensions;
@@ -15,6 +16,12 @@ namespace Extension_Demo
 
             // Attach - Block/Replace examaple.
             Triggers.InAttach(1000, AttachedIncoming);
+        }
+
+        private byte[] GetInputPacket()
+        {
+            return PacketTxt.TextLength > 0 ?
+                HMessage.ToBytes(PacketTxt.Text) : null;
         }
 
         private void AttachedIncoming(InterceptedEventArgs e)
@@ -54,11 +61,6 @@ namespace Extension_Demo
             }
         }
 
-        private byte[] GetInputPacket()
-        {
-            return PacketTxt.TextLength > 0 ?
-                HMessage.ToBytes(PacketTxt.Text) : null;
-        }
         private async void ToClientBtn_Click(object sender, EventArgs e)
         {
             byte[] data = GetInputPacket();
