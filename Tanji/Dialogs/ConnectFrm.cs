@@ -104,6 +104,8 @@ namespace Tanji.Dialogs
 
         private void InjectClient(object sender, EavesdropperRequestEventArgs e)
         {
+            // This is here to speed-up the loading process of the client,
+            // instead of having it to re-download the client everytime.
             if (e.Request.RequestUri.OriginalString.Contains(".swf?Tanji-"))
             {
                 Eavesdropper.EavesdropperRequest -= InjectClient;
@@ -133,7 +135,7 @@ namespace Tanji.Dialogs
                             // Overwrite the "connection.info.host" variable with "tanji.connection.info.host".
                             HandleConstants(abcTags);
                         }
-                        
+
                         MainUI.Game.RemoveLocalUseRestrictions();
                         MainUI.Game.ReplaceRSA(HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
 
@@ -182,15 +184,16 @@ namespace Tanji.Dialogs
                 }
                 else
                 {
-                    responseBody =
-                        responseBody.Replace(".swf", ".swf?Tanji-" + ticks);
+                    // Force all swf objects to return a non-cached version.
+                    responseBody = responseBody.Replace(
+                        ".swf", ".swf?Tanji-" + ticks);
                 }
                 if (MainUI.IsRetro)
                 {
                     // TODO: Possibly randomize the variable name?
                     // Add custom variable that will replace "connection.info.host" in the client.
-                    responseBody = responseBody.Replace(MainUI.GameData.Host,
-                        (MainUI.GameData.Host + "\", \"tanji.connection.info.host\":\"127.0.0.1"));
+                    responseBody = responseBody.Replace("\"connection.info.host",
+                        "\"tanji.connection.info.host\" : \"127.0.0.1\", \r\n\"connection.info.host");
                 }
                 else if (MainUI.Game == null) TryLoadModdedClient();
                 e.Payload = Encoding.UTF8.GetBytes(responseBody);
@@ -225,7 +228,6 @@ namespace Tanji.Dialogs
 
                 ABCFile abc = abcTag.ABC;
                 ASConstants constants = abc.Constants;
-
                 for (int i = 1; i < constants.Strings.Count; i++)
                 {
                     string cString = constants.Strings[i];
