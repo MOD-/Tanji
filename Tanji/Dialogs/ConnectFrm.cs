@@ -25,7 +25,7 @@ namespace Tanji.Dialogs
     public partial class ConnectFrm : Form
     {
         private readonly Regex _ipMatcher;
-        private readonly IList<ushort> _possiblePorts;
+        private readonly List<ushort> _possiblePorts;
 
         public MainFrm MainUI { get; }
         public AboutManager AboutMngr { get; }
@@ -154,6 +154,11 @@ namespace Tanji.Dialogs
                 e.Payload = MainUI.Game.ToArray();
                 Eavesdropper.EavesdropperResponse -= ReplaceClient;
                 Eavesdropper.Terminate();
+
+                // Apply custom connection parameters(if any).
+                _possiblePorts.AddRange(ConnectionMngr.GamePorts);
+                if (!string.IsNullOrWhiteSpace(ConnectionMngr.GameHost))
+                    MainUI.GameData.Host = ConnectionMngr.GameHost;
 
                 Task connectTask = MainUI.Connection.ConnectAsync(
                     MainUI.GameData.Host, _possiblePorts.ToArray());
