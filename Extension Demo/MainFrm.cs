@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Threading;
-using System.Windows.Forms;
 
 using Sulakore.Protocol;
 using Sulakore.Extensions;
@@ -14,7 +13,7 @@ namespace Extension_Demo
         {
             InitializeComponent();
 
-            // Attach - Block/Replace examaple.
+            /* Attach - Block/Replace examaple. */
             Triggers.InAttach(1000, AttachedIncoming);
         }
 
@@ -23,7 +22,6 @@ namespace Extension_Demo
             return PacketTxt.TextLength > 0 ?
                 HMessage.ToBytes(PacketTxt.Text) : null;
         }
-
         private void AttachedIncoming(InterceptedEventArgs e)
         {
             // If we can't read a string, leave this method.
