@@ -179,6 +179,9 @@ namespace Tanji.Dialogs
                 MainUI.ExtensionMngr.Hotel = SKore.ToHotel(MainUI.GameData.Host);
                 MainUI.IsRetro = (MainUI.ExtensionMngr.Hotel == HHotel.Unknown);
 
+                if (!MainUI.IsRetro && e.Response.ResponseUri.Segments.Length > 2)
+                    MainUI.GameData.UniqueId = e.Response.ResponseUri.Segments[2].TrimEnd('/');
+
                 string ticks = DateTime.Now.Ticks.ToString();
                 if (responseBody.Contains("embedSWF("))
                 {
