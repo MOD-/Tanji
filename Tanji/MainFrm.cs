@@ -68,6 +68,7 @@ namespace Tanji
         private void MainFrm_Shown(object sender, EventArgs e)
         {
             PacketLoggerUI.Show();
+            BringToFront();
         }
 
         private void Connected(object sender, EventArgs e)

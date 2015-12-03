@@ -50,8 +50,10 @@
             this.ETExtensionMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ETOpenMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ETUninstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.ETMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
+            this.ETTopMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
             this.ETInstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ETMiddleMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
+            this.ETGrabMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ICTypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ICValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ICEncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -65,7 +67,6 @@
             this.InjectionTabs = new Sulakore.Components.SKoreTabControl();
             this.ConstructerTab = new System.Windows.Forms.TabPage();
             this.CTHeaderLbl = new System.Windows.Forms.Label();
-            this.CTLiveEditingChckbx = new System.Windows.Forms.CheckBox();
             this.CTValueTxt = new System.Windows.Forms.ComboBox();
             this.CTCountLbl = new System.Windows.Forms.Label();
             this.CTPacketTxt = new System.Windows.Forms.TextBox();
@@ -85,6 +86,7 @@
             this.CTAppendIntegerBtn = new Sulakore.Components.SKoreButton();
             this.CTHeaderTxt = new System.Windows.Forms.TextBox();
             this.CTValueLbl = new System.Windows.Forms.Label();
+            this.CTLiveEditingChckbx = new System.Windows.Forms.CheckBox();
             this.SchedulerTab = new System.Windows.Forms.TabPage();
             this.STIntervalLbl = new System.Windows.Forms.Label();
             this.STClearBtn = new Sulakore.Components.SKoreButton();
@@ -133,7 +135,7 @@
             this.ExtensionsTab = new System.Windows.Forms.TabPage();
             this.ETExtensionAOTChckbx = new System.Windows.Forms.CheckBox();
             this.ETUninstallExtensionBtn = new Sulakore.Components.SKoreButton();
-            this.ContractorVw = new Sulakore.Components.SKoreExtensionView();
+            this.ETContractorVw = new Sulakore.Components.SKoreExtensionView();
             this.ETIdentifierCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ETCreatorCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ETDescriptionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
@@ -312,10 +314,12 @@
             this.ETExtensionMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.ETOpenMenuBtn,
             this.ETUninstallMenuBtn,
-            this.ETMenuSplitter,
-            this.ETInstallMenuBtn});
+            this.ETTopMenuSplitter,
+            this.ETInstallMenuBtn,
+            this.ETMiddleMenuSplitter,
+            this.ETGrabMenuBtn});
             this.ETExtensionMenu.Name = "ConstructMenu";
-            this.ETExtensionMenu.Size = new System.Drawing.Size(159, 76);
+            this.ETExtensionMenu.Size = new System.Drawing.Size(159, 104);
             // 
             // ETOpenMenuBtn
             // 
@@ -331,16 +335,27 @@
             this.ETUninstallMenuBtn.Size = new System.Drawing.Size(158, 22);
             this.ETUninstallMenuBtn.Text = "Uninstall";
             // 
-            // ETMenuSplitter
+            // ETTopMenuSplitter
             // 
-            this.ETMenuSplitter.Name = "ETMenuSplitter";
-            this.ETMenuSplitter.Size = new System.Drawing.Size(155, 6);
+            this.ETTopMenuSplitter.Name = "ETTopMenuSplitter";
+            this.ETTopMenuSplitter.Size = new System.Drawing.Size(155, 6);
             // 
             // ETInstallMenuBtn
             // 
             this.ETInstallMenuBtn.Name = "ETInstallMenuBtn";
             this.ETInstallMenuBtn.Size = new System.Drawing.Size(158, 22);
             this.ETInstallMenuBtn.Text = "Install Extension";
+            // 
+            // ETMiddleMenuSplitter
+            // 
+            this.ETMiddleMenuSplitter.Name = "ETMiddleMenuSplitter";
+            this.ETMiddleMenuSplitter.Size = new System.Drawing.Size(155, 6);
+            // 
+            // ETGrabMenuBtn
+            // 
+            this.ETGrabMenuBtn.Name = "ETGrabMenuBtn";
+            this.ETGrabMenuBtn.Size = new System.Drawing.Size(158, 22);
+            this.ETGrabMenuBtn.Text = "Grab Extension";
             // 
             // ICTypeCol
             // 
@@ -481,17 +496,6 @@
             this.CTHeaderLbl.Size = new System.Drawing.Size(42, 13);
             this.CTHeaderLbl.TabIndex = 31;
             this.CTHeaderLbl.Text = "Header";
-            // 
-            // CTLiveEditingChckbx
-            // 
-            this.CTLiveEditingChckbx.AutoSize = true;
-            this.CTLiveEditingChckbx.Enabled = false;
-            this.CTLiveEditingChckbx.Location = new System.Drawing.Point(211, -1);
-            this.CTLiveEditingChckbx.Name = "CTLiveEditingChckbx";
-            this.CTLiveEditingChckbx.Size = new System.Drawing.Size(114, 17);
-            this.CTLiveEditingChckbx.TabIndex = 47;
-            this.CTLiveEditingChckbx.Text = "Update On {Enter}";
-            this.CTLiveEditingChckbx.UseVisualStyleBackColor = true;
             // 
             // CTValueTxt
             // 
@@ -702,6 +706,17 @@
             this.CTValueLbl.Size = new System.Drawing.Size(34, 13);
             this.CTValueLbl.TabIndex = 29;
             this.CTValueLbl.Text = "Value";
+            // 
+            // CTLiveEditingChckbx
+            // 
+            this.CTLiveEditingChckbx.AutoSize = true;
+            this.CTLiveEditingChckbx.Enabled = false;
+            this.CTLiveEditingChckbx.Location = new System.Drawing.Point(211, -1);
+            this.CTLiveEditingChckbx.Name = "CTLiveEditingChckbx";
+            this.CTLiveEditingChckbx.Size = new System.Drawing.Size(114, 17);
+            this.CTLiveEditingChckbx.TabIndex = 47;
+            this.CTLiveEditingChckbx.Text = "Update On {Enter}";
+            this.CTLiveEditingChckbx.UseVisualStyleBackColor = true;
             // 
             // SchedulerTab
             // 
@@ -1204,7 +1219,7 @@
             // 
             this.ExtensionsTab.Controls.Add(this.ETExtensionAOTChckbx);
             this.ExtensionsTab.Controls.Add(this.ETUninstallExtensionBtn);
-            this.ExtensionsTab.Controls.Add(this.ContractorVw);
+            this.ExtensionsTab.Controls.Add(this.ETContractorVw);
             this.ExtensionsTab.Controls.Add(this.ETInstallExtensionBtn);
             this.ExtensionsTab.Location = new System.Drawing.Point(4, 28);
             this.ExtensionsTab.Name = "ExtensionsTab";
@@ -1237,29 +1252,29 @@
             this.ETUninstallExtensionBtn.TabIndex = 2;
             this.ETUninstallExtensionBtn.Text = "Uninstall Extension";
             // 
-            // ContractorVw
+            // ETContractorVw
             // 
-            this.ContractorVw.AutoOpen = false;
-            this.ContractorVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.ETContractorVw.AutoOpen = false;
+            this.ETContractorVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ETIdentifierCol,
             this.ETCreatorCol,
             this.ETDescriptionCol,
             this.ETVersionCol,
             this.ETStatusCol});
-            this.ContractorVw.ContextMenuStrip = this.ETExtensionMenu;
-            this.ContractorVw.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ContractorVw.FullRowSelect = true;
-            this.ContractorVw.GridLines = true;
-            this.ContractorVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.ContractorVw.HideSelection = false;
-            this.ContractorVw.Location = new System.Drawing.Point(3, 3);
-            this.ContractorVw.MultiSelect = false;
-            this.ContractorVw.Name = "ContractorVw";
-            this.ContractorVw.ShowItemToolTips = true;
-            this.ContractorVw.Size = new System.Drawing.Size(467, 276);
-            this.ContractorVw.TabIndex = 0;
-            this.ContractorVw.UseCompatibleStateImageBehavior = false;
-            this.ContractorVw.View = System.Windows.Forms.View.Details;
+            this.ETContractorVw.ContextMenuStrip = this.ETExtensionMenu;
+            this.ETContractorVw.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ETContractorVw.FullRowSelect = true;
+            this.ETContractorVw.GridLines = true;
+            this.ETContractorVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.ETContractorVw.HideSelection = false;
+            this.ETContractorVw.Location = new System.Drawing.Point(3, 3);
+            this.ETContractorVw.MultiSelect = false;
+            this.ETContractorVw.Name = "ETContractorVw";
+            this.ETContractorVw.ShowItemToolTips = true;
+            this.ETContractorVw.Size = new System.Drawing.Size(467, 276);
+            this.ETContractorVw.TabIndex = 0;
+            this.ETContractorVw.UseCompatibleStateImageBehavior = false;
+            this.ETContractorVw.View = System.Windows.Forms.View.Details;
             // 
             // ETIdentifierCol
             // 
@@ -1348,11 +1363,11 @@
         private System.Windows.Forms.ColumnHeader ETVersionCol;
         private System.Windows.Forms.ColumnHeader ETStatusCol;
         public Sulakore.Components.SKoreButton ETInstallExtensionBtn;
-        public Sulakore.Components.SKoreExtensionView ContractorVw;
+        public Sulakore.Components.SKoreExtensionView ETContractorVw;
         public System.Windows.Forms.ToolStripStatusLabel ExtensionsActiveTxt;
         public Sulakore.Components.SKoreButton ETUninstallExtensionBtn;
         public System.Windows.Forms.CheckBox ETExtensionAOTChckbx;
-        private System.Windows.Forms.ToolStripSeparator ETMenuSplitter;
+        private System.Windows.Forms.ToolStripSeparator ETTopMenuSplitter;
         public System.Windows.Forms.ContextMenuStrip ETExtensionMenu;
         public System.Windows.Forms.ToolStripMenuItem ETOpenMenuBtn;
         public System.Windows.Forms.ToolStripMenuItem ETUninstallMenuBtn;
@@ -1450,5 +1465,7 @@
         public System.Windows.Forms.ToolStripStatusLabel SchedulesActiveTxt;
         public System.Windows.Forms.ToolStripStatusLabel TanjiVersionTxt;
         private System.Windows.Forms.ToolStripStatusLabel TanjiInfoTxt;
+        private System.Windows.Forms.ToolStripSeparator ETMiddleMenuSplitter;
+        public System.Windows.Forms.ToolStripMenuItem ETGrabMenuBtn;
     }
 }
