@@ -43,7 +43,7 @@ namespace Tanji.Managers.Injection
             if (packet.IsCorrupted)
             {
                 MessageBox.Show("The given data seems corrupted, the schedule will not be created.",
-                    "Tanji ~ Alert!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    "Tanji ~ Alert!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
             }
             else
             {

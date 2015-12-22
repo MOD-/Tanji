@@ -15,6 +15,7 @@ namespace Tanji.Applications
     public partial class PacketLoggerFrm : Form
     {
         private Task _readQueueTask;
+        private readonly IDictionary<HDestination, IList<ushort>> _invalidStructures;
 
         private readonly RefreshLogCallback _refreshLog;
         private delegate void RefreshLogCallback();
@@ -26,8 +27,8 @@ namespace Tanji.Applications
         public bool IsHalted { get; private set; }
         public Queue<InterceptedEventArgs> Intercepted { get; }
 
-        public Color BlockHighlight { get; set; } = Color.FromArgb(105, 105, 105);
-        public Color ReplaceHighlight { get; set; } = Color.FromArgb(0, 139, 139);
+        public Color BlockHighlight { get; set; } = Color.DarkGray;
+        public Color ReplaceHighlight { get; set; } = Color.DarkCyan;
         public Color IncomingHighlight { get; set; } = Color.FromArgb(178, 34, 34);
         public Color OutgoingHighlight { get; set; } = Color.FromArgb(0, 102, 204);
         public Color PacketStructHighlight { get; set; } = Color.FromArgb(0, 204, 136);
@@ -45,12 +46,17 @@ namespace Tanji.Applications
             InitializeComponent();
             MainUI = main;
 
+            Intercepted = new Queue<InterceptedEventArgs>();
+
             _refreshLog = RefreshLog;
             _writeHighlight = WriteHighlight;
 
+            _invalidStructures = new Dictionary<HDestination, IList<ushort>>(2);
+            _invalidStructures[HDestination.Client] = new List<ushort>();
+            _invalidStructures[HDestination.Server] = new List<ushort>();
+
             MainUI.Connection.DataIncoming += DataIncoming;
             MainUI.Connection.DataOutgoing += DataOutgoing;
-            Intercepted = new Queue<InterceptedEventArgs>();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -173,6 +179,7 @@ namespace Tanji.Applications
 
                         if (args.IsBlocked) WriteHighlight("Blocked ", BlockHighlight);
                         else if (args.WasReplaced) WriteHighlight("Replaced ", ReplaceHighlight);
+                        if (args.IsBlocked || args.WasReplaced) WriteHighlight("| ", Color.White);
 
                         WriteHighlight(packetLog + "\r\n", packetLogHighlight);
                         if (DisplayStructures)
@@ -181,6 +188,16 @@ namespace Tanji.Applications
 
                             if (!string.IsNullOrWhiteSpace(structureLog))
                                 WriteHighlight(structureLog + "\r\n", PacketStructHighlight);
+                        }
+
+                        if (args.Executions.Count > 0)
+                        {
+                            WriteHighlight("\r\n", BackColor);
+                            for (int i = 0; i < args.Executions.Count; i++)
+                            {
+                                HMessage packet = args.Executions[i];
+                                WriteHighlight(ExtractPacketLog(packet, toServer) + "\r\n", packetLogHighlight);
+                            }
                         }
 
                         if (DisplaySplitter)
@@ -228,8 +245,12 @@ namespace Tanji.Applications
         }
         public string ExtractStructureLog(HMessage packet, bool toServer)
         {
-            if (!toServer)
+            // Incoming structure support MAY come, when it does remove 'toServer' condition.
+            if (!toServer || _invalidStructures[packet.Destination]
+                .Contains(packet.Header))
+            {
                 return string.Empty;
+            }
 
             ASInstance messageInstance = (toServer ?
                 MainUI.Game.OutgoingTypes : MainUI.Game.IncomingTypes)[packet.Header];
@@ -260,7 +281,11 @@ namespace Tanji.Applications
                     }
                     arguments += "}";
                 }
-                catch { return string.Empty; }
+                catch
+                {
+                    _invalidStructures[packet.Destination]
+                        .Add(packet.Header);
+                }
             }
 
             if (packet.Readable != 0)

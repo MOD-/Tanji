@@ -29,6 +29,7 @@ namespace Tanji.Dialogs
 
         public MainFrm MainUI { get; }
         public AboutManager AboutMngr { get; }
+        public VariablesManager VariablesMngr { get; }
         public ConnectionManager ConnectionMngr { get; }
 
         public ConnectFrm(MainFrm main)
@@ -36,6 +37,7 @@ namespace Tanji.Dialogs
             InitializeComponent();
             MainUI = main;
 
+            VariablesMngr = new VariablesManager(this);
             ConnectionMngr = new ConnectionManager(this);
             AboutMngr = new AboutManager(main, AboutTab);
 
@@ -53,7 +55,6 @@ namespace Tanji.Dialogs
         {
             CTBrowseBtn.Enabled = ConnectBtn.Enabled = false;
             StatusTxt.SetDotAnimation("Checking for Updates...");
-
             try
             {
                 if (await MainUI.UpdateUI.CheckForUpdatesAsync())
@@ -204,6 +205,19 @@ namespace Tanji.Dialogs
                         "\"tanji.connection.info.host\" : \"127.0.0.1\", \r\n\"connection.info.host");
                 }
                 else if (MainUI.Game == null) TryLoadModdedClient();
+
+                string[] uriKeys = VariablesMngr.UriReplacements.Keys.ToArray();
+                foreach (string name in uriKeys)
+                {
+                    string originalValue = MainUI.GameData[name]
+                        .Replace("\\/", "/");
+
+                    string replacementValue =
+                        VariablesMngr.UriReplacements[name];
+
+                    VariablesMngr.UriReplacements.Remove(name);
+                    VariablesMngr.UriReplacements[originalValue] = replacementValue;
+                }
                 e.Payload = Encoding.UTF8.GetBytes(responseBody);
 
                 if (MainUI.Game != null) Eavesdropper.EavesdropperRequest += InjectClient;
@@ -268,6 +282,8 @@ namespace Tanji.Dialogs
 
         private void DoCancelConnect()
         {
+            VariablesMngr.DisableReplacements();
+
             DoConnectCleanup();
             MainUI.Connection.Disconnect();
 
@@ -287,6 +303,8 @@ namespace Tanji.Dialogs
 
             ConnectBtn.Text = "Connect";
             StatusTxt.StopDotAnimation("Standing By...");
+
+            VariablesMngr.InitiateReplacing(ConnectionMngr.ProxyPort);
         }
         private void DoAutomaticConnect()
         {

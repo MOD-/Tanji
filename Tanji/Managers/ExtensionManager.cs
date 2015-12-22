@@ -74,10 +74,7 @@ namespace Tanji.Managers
                 var connectionMessage = new HMessage(2);
                 connectionMessage.WriteShort(Connection.Port);
                 connectionMessage.WriteString(Connection.Host);
-
-                connectionMessage.WriteInteger(Connection.Addresses.Length);
-                foreach (string address in Connection.Addresses)
-                    connectionMessage.WriteString(address);
+                connectionMessage.WriteString(Connection.Address);
 
                 await externalExtension.SendAsync(connectionMessage.ToBytes());
             }

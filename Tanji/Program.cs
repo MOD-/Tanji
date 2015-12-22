@@ -3,16 +3,18 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Security.Principal;
 
-using Sulakore.Communication;
-
 using Eavesdrop;
+
+using Sulakore.Communication;
 
 namespace Tanji
 {
-    static class Program
+    public static class Program
     {
+        public static bool IsDebugging { get; } //= true;
+
         [STAThread]
-        static void Main()
+        private static void Main()
         {
             var windowsPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
             if (!windowsPrincipal.IsInRole(WindowsBuiltInRole.Administrator))
@@ -35,10 +37,13 @@ namespace Tanji
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new MainFrm());
+                Application.Run(new MainFrm(IsDebugging));
+
+                Eavesdropper.Terminate();
+                HConnection.RestoreHosts();
             }
         }
-        static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
+        private static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {
             var exception = (Exception)e.ExceptionObject;
             MessageBox.Show($"Message: {exception.Message}\r\n\r\n{exception.StackTrace.Trim()}",

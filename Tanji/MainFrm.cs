@@ -1,6 +1,4 @@
-﻿//#define UI_DEBUG
-
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Windows.Forms;
 
@@ -23,6 +21,8 @@ namespace Tanji
 
         public HConnection Connection { get; }
         public EncoderManager EncoderMngr { get; }
+        public ToolboxManager ToolboxMngr { get; }
+        public FiltersManager FiltersMngr { get; }
         public HandshakeManager HandshakeMngr { get; }
         public ExtensionManager ExtensionMngr { get; }
         public InjectionManager InjectionMngr { get; }
@@ -31,7 +31,7 @@ namespace Tanji
         public ConnectFrm ConnectUI { get; }
         public PacketLoggerFrm PacketLoggerUI { get; }
 
-        public MainFrm()
+        public MainFrm(bool isDebugging)
         {
             InitializeComponent();
 
@@ -39,29 +39,32 @@ namespace Tanji
             UpdateUI = new UpdateFrm(this);
             ConnectUI = new ConnectFrm(this);
 
-            Shown += MainFrm_Shown;
-#if !UI_DEBUG
-            Load += MainFrm_Load;
-
-            Connection.Connected += Connected;
-            Connection.Disconnected += Disconnected;
-#endif
+            if (!Program.IsDebugging)
+            {
+                Load += MainFrm_Load;
+                Connection.Connected += Connected;
+                Connection.Disconnected += Disconnected;
+            }
 
             // Data Receive Order - #1 | Notify Extensions
             ExtensionMngr = new ExtensionManager(this);
-            // Data Receive Order - #2 | Process Handshake
+            // Data Receive Order - #2 | Process Filters
+            FiltersMngr = new FiltersManager(this);
+            // Data Receive Order - #3 | Process Handshake
             HandshakeMngr = new HandshakeManager(this);
-            // Data Receive Order - #3 | Display Data
+            // Data Receive Order - #4 | Display Data
             PacketLoggerUI = new PacketLoggerFrm(this);
 
             EncoderMngr = new EncoderManager(this);
             InjectionMngr = new InjectionManager(this);
+
+            // TODO: Remove on version: 1.4
+            InjectionTabs.TabPages.Remove(FiltersTab);
         }
 
         private void MainFrm_Load(object sender, EventArgs e)
         {
             ConnectUI.ShowDialog();
-
             if (!Connection.IsConnected) Close();
             else Text = $"Tanji ~ Connected[{Connection.Host}:{Connection.Port}]";
         }

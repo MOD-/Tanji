@@ -62,6 +62,17 @@
             this.HTPublicExponentTxt = new System.Windows.Forms.TextBox();
             this.HTPublicModulusGrpbx = new System.Windows.Forms.GroupBox();
             this.HTPublicModulusTxt = new System.Windows.Forms.TextBox();
+            this.VariablesTab = new System.Windows.Forms.TabPage();
+            this.panel4 = new System.Windows.Forms.Panel();
+            this.VTClearResetVariableBtn = new Sulakore.Components.SKoreButton();
+            this.VTReplacementValueTxt = new System.Windows.Forms.TextBox();
+            this.VTReplacementValueLbl = new System.Windows.Forms.Label();
+            this.VTNameTxt = new System.Windows.Forms.TextBox();
+            this.VTNameLbl = new System.Windows.Forms.Label();
+            this.VTUpdateVariableBtn = new Sulakore.Components.SKoreButton();
+            this.VTVariablesVw = new Sulakore.Components.SKoreListView();
+            this.VTNameCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.VTReplacementValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.AboutTab = new System.Windows.Forms.TabPage();
             this.panel3 = new System.Windows.Forms.Panel();
             this.ATReleasesBtn = new Sulakore.Components.SKoreButton();
@@ -94,6 +105,7 @@
             this.HTRSAReplaceGrpbx.SuspendLayout();
             this.HTPublicExponentGrpbx.SuspendLayout();
             this.HTPublicModulusGrpbx.SuspendLayout();
+            this.VariablesTab.SuspendLayout();
             this.AboutTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ATLogoPctbx)).BeginInit();
             this.SuspendLayout();
@@ -171,11 +183,12 @@
             // 
             this.ConnectTabs.Controls.Add(this.ConnectionTab);
             this.ConnectTabs.Controls.Add(this.HandshakeTab);
+            this.ConnectTabs.Controls.Add(this.VariablesTab);
             this.ConnectTabs.Controls.Add(this.AboutTab);
             this.ConnectTabs.DisplayBoundary = true;
             this.ConnectTabs.Dock = System.Windows.Forms.DockStyle.Top;
             this.ConnectTabs.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            this.ConnectTabs.ItemSize = new System.Drawing.Size(124, 24);
+            this.ConnectTabs.ItemSize = new System.Drawing.Size(93, 24);
             this.ConnectTabs.Location = new System.Drawing.Point(3, 3);
             this.ConnectTabs.Name = "ConnectTabs";
             this.ConnectTabs.SelectedIndex = 0;
@@ -466,6 +479,119 @@
             this.HTPublicModulusTxt.TabStop = false;
             this.HTPublicModulusTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // VariablesTab
+            // 
+            this.VariablesTab.Controls.Add(this.panel4);
+            this.VariablesTab.Controls.Add(this.VTClearResetVariableBtn);
+            this.VariablesTab.Controls.Add(this.VTReplacementValueTxt);
+            this.VariablesTab.Controls.Add(this.VTReplacementValueLbl);
+            this.VariablesTab.Controls.Add(this.VTNameTxt);
+            this.VariablesTab.Controls.Add(this.VTNameLbl);
+            this.VariablesTab.Controls.Add(this.VTUpdateVariableBtn);
+            this.VariablesTab.Controls.Add(this.VTVariablesVw);
+            this.VariablesTab.Location = new System.Drawing.Point(4, 28);
+            this.VariablesTab.Name = "VariablesTab";
+            this.VariablesTab.Padding = new System.Windows.Forms.Padding(3);
+            this.VariablesTab.Size = new System.Drawing.Size(368, 183);
+            this.VariablesTab.TabIndex = 4;
+            this.VariablesTab.Text = "Variables";
+            this.VariablesTab.UseVisualStyleBackColor = true;
+            // 
+            // panel4
+            // 
+            this.panel4.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.panel4.Location = new System.Drawing.Point(210, 118);
+            this.panel4.Name = "panel4";
+            this.panel4.Size = new System.Drawing.Size(1, 59);
+            this.panel4.TabIndex = 88;
+            // 
+            // VTClearResetVariableBtn
+            // 
+            this.VTClearResetVariableBtn.BackColor = System.Drawing.Color.Transparent;
+            this.VTClearResetVariableBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.VTClearResetVariableBtn.Enabled = false;
+            this.VTClearResetVariableBtn.Location = new System.Drawing.Point(217, 151);
+            this.VTClearResetVariableBtn.Name = "VTClearResetVariableBtn";
+            this.VTClearResetVariableBtn.Size = new System.Drawing.Size(145, 22);
+            this.VTClearResetVariableBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.VTClearResetVariableBtn.TabIndex = 87;
+            this.VTClearResetVariableBtn.Text = "Clear/Reset Variable";
+            // 
+            // VTReplacementValueTxt
+            // 
+            this.VTReplacementValueTxt.Location = new System.Drawing.Point(6, 157);
+            this.VTReplacementValueTxt.Name = "VTReplacementValueTxt";
+            this.VTReplacementValueTxt.Size = new System.Drawing.Size(198, 20);
+            this.VTReplacementValueTxt.TabIndex = 86;
+            // 
+            // VTReplacementValueLbl
+            // 
+            this.VTReplacementValueLbl.AutoSize = true;
+            this.VTReplacementValueLbl.Location = new System.Drawing.Point(3, 141);
+            this.VTReplacementValueLbl.Name = "VTReplacementValueLbl";
+            this.VTReplacementValueLbl.Size = new System.Drawing.Size(100, 13);
+            this.VTReplacementValueLbl.TabIndex = 85;
+            this.VTReplacementValueLbl.Text = "Replacement Value";
+            // 
+            // VTNameTxt
+            // 
+            this.VTNameTxt.Location = new System.Drawing.Point(6, 118);
+            this.VTNameTxt.Name = "VTNameTxt";
+            this.VTNameTxt.ReadOnly = true;
+            this.VTNameTxt.Size = new System.Drawing.Size(198, 20);
+            this.VTNameTxt.TabIndex = 84;
+            // 
+            // VTNameLbl
+            // 
+            this.VTNameLbl.AutoSize = true;
+            this.VTNameLbl.Location = new System.Drawing.Point(3, 102);
+            this.VTNameLbl.Name = "VTNameLbl";
+            this.VTNameLbl.Size = new System.Drawing.Size(35, 13);
+            this.VTNameLbl.TabIndex = 83;
+            this.VTNameLbl.Text = "Name";
+            // 
+            // VTUpdateVariableBtn
+            // 
+            this.VTUpdateVariableBtn.BackColor = System.Drawing.Color.Transparent;
+            this.VTUpdateVariableBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.VTUpdateVariableBtn.Enabled = false;
+            this.VTUpdateVariableBtn.Location = new System.Drawing.Point(217, 120);
+            this.VTUpdateVariableBtn.Name = "VTUpdateVariableBtn";
+            this.VTUpdateVariableBtn.Size = new System.Drawing.Size(145, 22);
+            this.VTUpdateVariableBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.VTUpdateVariableBtn.TabIndex = 81;
+            this.VTUpdateVariableBtn.Text = "Update Variable";
+            // 
+            // VTVariablesVw
+            // 
+            this.VTVariablesVw.CheckBoxes = true;
+            this.VTVariablesVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.VTNameCol,
+            this.VTReplacementValueCol});
+            this.VTVariablesVw.Dock = System.Windows.Forms.DockStyle.Top;
+            this.VTVariablesVw.FullRowSelect = true;
+            this.VTVariablesVw.GridLines = true;
+            this.VTVariablesVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.VTVariablesVw.HideSelection = false;
+            this.VTVariablesVw.Location = new System.Drawing.Point(3, 3);
+            this.VTVariablesVw.MultiSelect = false;
+            this.VTVariablesVw.Name = "VTVariablesVw";
+            this.VTVariablesVw.ShowItemToolTips = true;
+            this.VTVariablesVw.Size = new System.Drawing.Size(362, 96);
+            this.VTVariablesVw.TabIndex = 0;
+            this.VTVariablesVw.UseCompatibleStateImageBehavior = false;
+            this.VTVariablesVw.View = System.Windows.Forms.View.Details;
+            // 
+            // VTNameCol
+            // 
+            this.VTNameCol.Text = "Name";
+            this.VTNameCol.Width = 131;
+            // 
+            // VTReplacementValueCol
+            // 
+            this.VTReplacementValueCol.Text = "Replacement Value";
+            this.VTReplacementValueCol.Width = 192;
+            // 
             // AboutTab
             // 
             this.AboutTab.Controls.Add(this.panel3);
@@ -741,6 +867,8 @@
             this.HTPublicExponentGrpbx.PerformLayout();
             this.HTPublicModulusGrpbx.ResumeLayout(false);
             this.HTPublicModulusGrpbx.PerformLayout();
+            this.VariablesTab.ResumeLayout(false);
+            this.VariablesTab.PerformLayout();
             this.AboutTab.ResumeLayout(false);
             this.AboutTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.ATLogoPctbx)).EndInit();
@@ -804,5 +932,16 @@
         private System.Windows.Forms.Panel panel2;
         public System.Windows.Forms.Label ATDownloadsLbl;
         private System.Windows.Forms.Panel panel3;
+        private System.Windows.Forms.TabPage VariablesTab;
+        private System.Windows.Forms.ColumnHeader VTNameCol;
+        private System.Windows.Forms.ColumnHeader VTReplacementValueCol;
+        private System.Windows.Forms.Label VTNameLbl;
+        private System.Windows.Forms.Label VTReplacementValueLbl;
+        public Sulakore.Components.SKoreListView VTVariablesVw;
+        public Sulakore.Components.SKoreButton VTUpdateVariableBtn;
+        public System.Windows.Forms.TextBox VTNameTxt;
+        public System.Windows.Forms.TextBox VTReplacementValueTxt;
+        public Sulakore.Components.SKoreButton VTClearResetVariableBtn;
+        private System.Windows.Forms.Panel panel4;
     }
 }

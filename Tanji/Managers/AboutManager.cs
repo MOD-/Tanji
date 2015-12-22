@@ -41,7 +41,7 @@ namespace Tanji.Managers
                 ("Downloads: " + (MainUI.UpdateUI.CurrentRelease?.Assets[0].DownloadCount ?? 0));
 
             aboutTab.Controls["ATReleasesBtn"].Text =
-                ("Release(s): " + (MainUI.UpdateUI?.TanjiReleases.Count ?? 0));
+                ("Release(s): " + (MainUI.UpdateUI?.TanjiReleases?.Count ?? 0));
         }
 
         private void ATGitHubBtn_Click(object sender, EventArgs e)

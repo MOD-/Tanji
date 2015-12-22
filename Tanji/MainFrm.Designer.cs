@@ -54,12 +54,6 @@
             this.ETInstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ETMiddleMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
             this.ETGrabMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.ICTypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ICValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ICEncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader2 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.columnHeader3 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.TanjiTabs = new Sulakore.Components.SKoreTabControl();
             this.InjectionTab = new System.Windows.Forms.TabPage();
             this.ITSendToClientBtn = new Sulakore.Components.SKoreButton();
@@ -114,6 +108,13 @@
             this.PTIsCorruptedLbl = new System.Windows.Forms.Label();
             this.PTPacketInfoLbl = new System.Windows.Forms.Label();
             this.PTPacketTxt = new System.Windows.Forms.TextBox();
+            this.FiltersTab = new System.Windows.Forms.TabPage();
+            this.IFActionLbl = new System.Windows.Forms.Label();
+            this.IFActionTxt = new System.Windows.Forms.ComboBox();
+            this.FTFiltersVw = new Sulakore.Components.SKoreListView();
+            this.IFActionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.IFHeaderCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.IFInvocationCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ITPacketTxt = new System.Windows.Forms.ComboBox();
             this.EncoderDecoderTab = new System.Windows.Forms.TabPage();
             this.EDTIntegerInputTxt = new System.Windows.Forms.NumericUpDown();
@@ -121,17 +122,17 @@
             this.EDTDecodeValuesBtn = new Sulakore.Components.SKoreButton();
             this.EDTEncodedValuesLbl = new System.Windows.Forms.Label();
             this.EDTEncodedValuesTxt = new System.Windows.Forms.TextBox();
-            this.EDTTopGlowPnl = new System.Windows.Forms.Panel();
             this.EDTShortOutputTxt = new System.Windows.Forms.TextBox();
             this.EDTIntegerOutputTxt = new System.Windows.Forms.TextBox();
             this.EDTEncodeShortBtn = new Sulakore.Components.SKoreButton();
             this.EDTEncodeIntegerBtn = new Sulakore.Components.SKoreButton();
             this.EDTDecodeShortBtn = new Sulakore.Components.SKoreButton();
             this.EDTDecodeIntegerBtn = new Sulakore.Components.SKoreButton();
+            this.EDTTopGlowPnl = new System.Windows.Forms.Panel();
             this.EDTDecodedVw = new Sulakore.Components.SKoreListView();
-            this.ValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.EncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.PositionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.EDTValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.EDTEncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.EDTPositionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ExtensionsTab = new System.Windows.Forms.TabPage();
             this.ETExtensionAOTChckbx = new System.Windows.Forms.CheckBox();
             this.ETUninstallExtensionBtn = new Sulakore.Components.SKoreButton();
@@ -142,6 +143,9 @@
             this.ETVersionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ETStatusCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ETInstallExtensionBtn = new Sulakore.Components.SKoreButton();
+            this.IFTypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.IFTypeLbl = new System.Windows.Forms.Label();
+            this.IFTypeTxt = new System.Windows.Forms.ComboBox();
             this.TanjiStrip.SuspendLayout();
             this.PTPrimitiveContextMenu.SuspendLayout();
             this.ETExtensionMenu.SuspendLayout();
@@ -154,6 +158,7 @@
             ((System.ComponentModel.ISupportInitialize)(this.STBurstTxt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.STIntervalTxt)).BeginInit();
             this.PrimitiveTab.SuspendLayout();
+            this.FiltersTab.SuspendLayout();
             this.EncoderDecoderTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.EDTIntegerInputTxt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.EDTShortInputTxt)).BeginInit();
@@ -207,7 +212,7 @@
             this.TanjiInfoTxt.Name = "TanjiInfoTxt";
             this.TanjiInfoTxt.Size = new System.Drawing.Size(168, 19);
             this.TanjiInfoTxt.Spring = true;
-            this.TanjiInfoTxt.Text = "GitHub/ArachisH/Tanji";
+            this.TanjiInfoTxt.Text = "GitHub | ArachisH/Tanji";
             this.TanjiInfoTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TanjiInfoTxt.Click += new System.EventHandler(this.TanjiInfoTxt_Click);
             // 
@@ -357,36 +362,6 @@
             this.ETGrabMenuBtn.Size = new System.Drawing.Size(158, 22);
             this.ETGrabMenuBtn.Text = "Grab Extension";
             // 
-            // ICTypeCol
-            // 
-            this.ICTypeCol.Text = "Type";
-            this.ICTypeCol.Width = 72;
-            // 
-            // ICValueCol
-            // 
-            this.ICValueCol.Text = "Value";
-            this.ICValueCol.Width = 137;
-            // 
-            // ICEncodedCol
-            // 
-            this.ICEncodedCol.Text = "Encoded";
-            this.ICEncodedCol.Width = 150;
-            // 
-            // columnHeader1
-            // 
-            this.columnHeader1.Text = "Type";
-            this.columnHeader1.Width = 72;
-            // 
-            // columnHeader2
-            // 
-            this.columnHeader2.Text = "Value";
-            this.columnHeader2.Width = 137;
-            // 
-            // columnHeader3
-            // 
-            this.columnHeader3.Text = "Encoded";
-            this.columnHeader3.Width = 150;
-            // 
             // TanjiTabs
             // 
             this.TanjiTabs.Controls.Add(this.InjectionTab);
@@ -448,6 +423,7 @@
             this.InjectionTabs.Controls.Add(this.ConstructerTab);
             this.InjectionTabs.Controls.Add(this.SchedulerTab);
             this.InjectionTabs.Controls.Add(this.PrimitiveTab);
+            this.InjectionTabs.Controls.Add(this.FiltersTab);
             this.InjectionTabs.DisplayBoundary = true;
             this.InjectionTabs.Dock = System.Windows.Forms.DockStyle.Top;
             this.InjectionTabs.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
@@ -1022,6 +998,80 @@
             this.PTPacketTxt.Size = new System.Drawing.Size(386, 246);
             this.PTPacketTxt.TabIndex = 3;
             // 
+            // FiltersTab
+            // 
+            this.FiltersTab.Controls.Add(this.IFTypeLbl);
+            this.FiltersTab.Controls.Add(this.IFTypeTxt);
+            this.FiltersTab.Controls.Add(this.IFActionLbl);
+            this.FiltersTab.Controls.Add(this.IFActionTxt);
+            this.FiltersTab.Controls.Add(this.FTFiltersVw);
+            this.FiltersTab.Location = new System.Drawing.Point(4, 4);
+            this.FiltersTab.Name = "FiltersTab";
+            this.FiltersTab.Padding = new System.Windows.Forms.Padding(3);
+            this.FiltersTab.Size = new System.Drawing.Size(394, 268);
+            this.FiltersTab.TabIndex = 3;
+            this.FiltersTab.Text = "Filters";
+            this.FiltersTab.UseVisualStyleBackColor = true;
+            // 
+            // IFActionLbl
+            // 
+            this.IFActionLbl.AutoSize = true;
+            this.IFActionLbl.Location = new System.Drawing.Point(3, 177);
+            this.IFActionLbl.Name = "IFActionLbl";
+            this.IFActionLbl.Size = new System.Drawing.Size(37, 13);
+            this.IFActionLbl.TabIndex = 2;
+            this.IFActionLbl.Text = "Action";
+            // 
+            // IFActionTxt
+            // 
+            this.IFActionTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.IFActionTxt.FormattingEnabled = true;
+            this.IFActionTxt.Items.AddRange(new object[] {
+            "Block",
+            "Replace",
+            "Execute"});
+            this.IFActionTxt.Location = new System.Drawing.Point(6, 193);
+            this.IFActionTxt.Name = "IFActionTxt";
+            this.IFActionTxt.Size = new System.Drawing.Size(89, 21);
+            this.IFActionTxt.TabIndex = 1;
+            // 
+            // FTFiltersVw
+            // 
+            this.FTFiltersVw.CheckBoxes = true;
+            this.FTFiltersVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.IFActionCol,
+            this.IFTypeCol,
+            this.IFHeaderCol,
+            this.IFInvocationCol});
+            this.FTFiltersVw.Dock = System.Windows.Forms.DockStyle.Top;
+            this.FTFiltersVw.FullRowSelect = true;
+            this.FTFiltersVw.GridLines = true;
+            this.FTFiltersVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.FTFiltersVw.HideSelection = false;
+            this.FTFiltersVw.Location = new System.Drawing.Point(3, 3);
+            this.FTFiltersVw.MultiSelect = false;
+            this.FTFiltersVw.Name = "FTFiltersVw";
+            this.FTFiltersVw.ShowItemToolTips = true;
+            this.FTFiltersVw.Size = new System.Drawing.Size(388, 171);
+            this.FTFiltersVw.TabIndex = 0;
+            this.FTFiltersVw.UseCompatibleStateImageBehavior = false;
+            this.FTFiltersVw.View = System.Windows.Forms.View.Details;
+            // 
+            // IFActionCol
+            // 
+            this.IFActionCol.Text = "Action";
+            this.IFActionCol.Width = 68;
+            // 
+            // IFHeaderCol
+            // 
+            this.IFHeaderCol.Text = "Header";
+            this.IFHeaderCol.Width = 55;
+            // 
+            // IFInvocationCol
+            // 
+            this.IFInvocationCol.Text = "Invocation";
+            this.IFInvocationCol.Width = 176;
+            // 
             // ITPacketTxt
             // 
             this.ITPacketTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
@@ -1038,13 +1088,13 @@
             this.EncoderDecoderTab.Controls.Add(this.EDTDecodeValuesBtn);
             this.EncoderDecoderTab.Controls.Add(this.EDTEncodedValuesLbl);
             this.EncoderDecoderTab.Controls.Add(this.EDTEncodedValuesTxt);
-            this.EncoderDecoderTab.Controls.Add(this.EDTTopGlowPnl);
             this.EncoderDecoderTab.Controls.Add(this.EDTShortOutputTxt);
             this.EncoderDecoderTab.Controls.Add(this.EDTIntegerOutputTxt);
             this.EncoderDecoderTab.Controls.Add(this.EDTEncodeShortBtn);
             this.EncoderDecoderTab.Controls.Add(this.EDTEncodeIntegerBtn);
             this.EncoderDecoderTab.Controls.Add(this.EDTDecodeShortBtn);
             this.EncoderDecoderTab.Controls.Add(this.EDTDecodeIntegerBtn);
+            this.EncoderDecoderTab.Controls.Add(this.EDTTopGlowPnl);
             this.EncoderDecoderTab.Controls.Add(this.EDTDecodedVw);
             this.EncoderDecoderTab.Location = new System.Drawing.Point(4, 28);
             this.EncoderDecoderTab.Name = "EncoderDecoderTab";
@@ -1112,14 +1162,6 @@
             this.EDTEncodedValuesTxt.TabIndex = 41;
             this.EDTEncodedValuesTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // EDTTopGlowPnl
-            // 
-            this.EDTTopGlowPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.EDTTopGlowPnl.Location = new System.Drawing.Point(0, 61);
-            this.EDTTopGlowPnl.Name = "EDTTopGlowPnl";
-            this.EDTTopGlowPnl.Size = new System.Drawing.Size(471, 1);
-            this.EDTTopGlowPnl.TabIndex = 39;
-            // 
             // EDTShortOutputTxt
             // 
             this.EDTShortOutputTxt.Location = new System.Drawing.Point(240, 34);
@@ -1180,12 +1222,20 @@
             this.EDTDecodeIntegerBtn.TabIndex = 34;
             this.EDTDecodeIntegerBtn.Text = "Decode Integer";
             // 
+            // EDTTopGlowPnl
+            // 
+            this.EDTTopGlowPnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.EDTTopGlowPnl.Location = new System.Drawing.Point(0, 61);
+            this.EDTTopGlowPnl.Name = "EDTTopGlowPnl";
+            this.EDTTopGlowPnl.Size = new System.Drawing.Size(471, 1);
+            this.EDTTopGlowPnl.TabIndex = 39;
+            // 
             // EDTDecodedVw
             // 
             this.EDTDecodedVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ValueCol,
-            this.EncodedCol,
-            this.PositionCol});
+            this.EDTValueCol,
+            this.EDTEncodedCol,
+            this.EDTPositionCol});
             this.EDTDecodedVw.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.EDTDecodedVw.FullRowSelect = true;
             this.EDTDecodedVw.GridLines = true;
@@ -1200,20 +1250,20 @@
             this.EDTDecodedVw.UseCompatibleStateImageBehavior = false;
             this.EDTDecodedVw.View = System.Windows.Forms.View.Details;
             // 
-            // ValueCol
+            // EDTValueCol
             // 
-            this.ValueCol.Text = "Value";
-            this.ValueCol.Width = 84;
+            this.EDTValueCol.Text = "Value";
+            this.EDTValueCol.Width = 84;
             // 
-            // EncodedCol
+            // EDTEncodedCol
             // 
-            this.EncodedCol.Text = "Encoded";
-            this.EncodedCol.Width = 109;
+            this.EDTEncodedCol.Text = "Encoded";
+            this.EDTEncodedCol.Width = 109;
             // 
-            // PositionCol
+            // EDTPositionCol
             // 
-            this.PositionCol.Text = "Position";
-            this.PositionCol.Width = 71;
+            this.EDTPositionCol.Text = "Position";
+            this.EDTPositionCol.Width = 80;
             // 
             // ExtensionsTab
             // 
@@ -1311,6 +1361,32 @@
             this.ETInstallExtensionBtn.TabIndex = 1;
             this.ETInstallExtensionBtn.Text = "Install Extension";
             // 
+            // IFTypeCol
+            // 
+            this.IFTypeCol.Text = "Type";
+            this.IFTypeCol.Width = 68;
+            // 
+            // IFTypeLbl
+            // 
+            this.IFTypeLbl.AutoSize = true;
+            this.IFTypeLbl.Location = new System.Drawing.Point(98, 177);
+            this.IFTypeLbl.Name = "IFTypeLbl";
+            this.IFTypeLbl.Size = new System.Drawing.Size(31, 13);
+            this.IFTypeLbl.TabIndex = 4;
+            this.IFTypeLbl.Text = "Type";
+            // 
+            // IFTypeTxt
+            // 
+            this.IFTypeTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.IFTypeTxt.FormattingEnabled = true;
+            this.IFTypeTxt.Items.AddRange(new object[] {
+            "Incoming",
+            "Outgoing"});
+            this.IFTypeTxt.Location = new System.Drawing.Point(101, 193);
+            this.IFTypeTxt.Name = "IFTypeTxt";
+            this.IFTypeTxt.Size = new System.Drawing.Size(89, 21);
+            this.IFTypeTxt.TabIndex = 3;
+            // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1325,6 +1401,7 @@
             this.Name = "MainFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ Connected[Host:Port]";
+            this.Shown += new System.EventHandler(this.MainFrm_Shown);
             this.TanjiStrip.ResumeLayout(false);
             this.TanjiStrip.PerformLayout();
             this.PTPrimitiveContextMenu.ResumeLayout(false);
@@ -1341,6 +1418,8 @@
             ((System.ComponentModel.ISupportInitialize)(this.STIntervalTxt)).EndInit();
             this.PrimitiveTab.ResumeLayout(false);
             this.PrimitiveTab.PerformLayout();
+            this.FiltersTab.ResumeLayout(false);
+            this.FiltersTab.PerformLayout();
             this.EncoderDecoderTab.ResumeLayout(false);
             this.EncoderDecoderTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.EDTIntegerInputTxt)).EndInit();
@@ -1355,92 +1434,15 @@
         #endregion
 
         private System.Windows.Forms.StatusStrip TanjiStrip;
-        private Sulakore.Components.SKoreTabControl TanjiTabs;
-        private System.Windows.Forms.TabPage ExtensionsTab;
-        private System.Windows.Forms.ColumnHeader ETIdentifierCol;
-        private System.Windows.Forms.ColumnHeader ETCreatorCol;
-        private System.Windows.Forms.ColumnHeader ETDescriptionCol;
-        private System.Windows.Forms.ColumnHeader ETVersionCol;
-        private System.Windows.Forms.ColumnHeader ETStatusCol;
-        public Sulakore.Components.SKoreButton ETInstallExtensionBtn;
-        public Sulakore.Components.SKoreExtensionView ETContractorVw;
         public System.Windows.Forms.ToolStripStatusLabel ExtensionsActiveTxt;
-        public Sulakore.Components.SKoreButton ETUninstallExtensionBtn;
-        public System.Windows.Forms.CheckBox ETExtensionAOTChckbx;
         private System.Windows.Forms.ToolStripSeparator ETTopMenuSplitter;
         public System.Windows.Forms.ContextMenuStrip ETExtensionMenu;
         public System.Windows.Forms.ToolStripMenuItem ETOpenMenuBtn;
         public System.Windows.Forms.ToolStripMenuItem ETUninstallMenuBtn;
         public System.Windows.Forms.ToolStripMenuItem ETInstallMenuBtn;
-        private System.Windows.Forms.TabPage InjectionTab;
-        private System.Windows.Forms.TabPage SchedulerTab;
-        private System.Windows.Forms.ColumnHeader STPacketCol;
-        private System.Windows.Forms.ColumnHeader STDestinationCol;
-        private System.Windows.Forms.ColumnHeader STBurstCol;
-        private System.Windows.Forms.ColumnHeader STIntervalCol;
-        private System.Windows.Forms.ColumnHeader STStatusCol;
-        public Sulakore.Components.SKoreScheduleView STSchedulerVw;
-        public System.Windows.Forms.CheckBox STAutoStartChckbx;
-        public System.Windows.Forms.Label STBurstLbl;
-        public System.Windows.Forms.NumericUpDown STBurstTxt;
-        public System.Windows.Forms.Label STIntervalLbl;
-        public System.Windows.Forms.NumericUpDown STIntervalTxt;
-        public System.Windows.Forms.Label STDestinationLbl;
-        public System.Windows.Forms.ComboBox STDestinationTxt;
-        public System.Windows.Forms.Label STPacketLbl;
-        public System.Windows.Forms.TextBox STPacketTxt;
-        public System.Windows.Forms.Label STDescriptionLbl;
-        public System.Windows.Forms.TextBox STDescriptionTxt;
-        public System.Windows.Forms.ComboBox ITPacketTxt;
-        public Sulakore.Components.SKoreButton ITSendToClientBtn;
-        public Sulakore.Components.SKoreButton ITSendToServerBtn;
-        public Sulakore.Components.SKoreButton STClearBtn;
-        public Sulakore.Components.SKoreButton STStopAllBtn;
-        public Sulakore.Components.SKoreButton STStartAllBtn;
-        public Sulakore.Components.SKoreButton STRemoveBtn;
-        public Sulakore.Components.SKoreButton STCreateBtn;
-        private System.Windows.Forms.TabPage ConstructerTab;
-        private System.Windows.Forms.Label CTCountLbl;
-        private System.Windows.Forms.Label CTHeaderLbl;
-        private System.Windows.Forms.Label CTValueLbl;
-        private System.Windows.Forms.TabPage EncoderDecoderTab;
-        private System.Windows.Forms.ColumnHeader ICTypeCol;
-        private System.Windows.Forms.ColumnHeader ICValueCol;
-        private System.Windows.Forms.ColumnHeader ICEncodedCol;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
-        private System.Windows.Forms.ColumnHeader columnHeader3;
-        private System.Windows.Forms.ColumnHeader ValueCol;
-        private System.Windows.Forms.ColumnHeader EncodedCol;
-        private System.Windows.Forms.ColumnHeader PositionCol;
-        private System.Windows.Forms.Label EDTEncodedValuesLbl;
-        private System.Windows.Forms.Panel EDTTopGlowPnl;
-        private System.Windows.Forms.ColumnHeader ICSTypeCol;
-        private System.Windows.Forms.ColumnHeader ICSValueCol;
-        private System.Windows.Forms.ColumnHeader ICSEncodedCol;
         private System.Windows.Forms.ContextMenuStrip PTPrimitiveContextMenu;
-        public Sulakore.Components.SKoreTabControl InjectionTabs;
-        public System.Windows.Forms.NumericUpDown CTCountTxt;
-        public Sulakore.Components.SKoreButton CTRemoveBtn;
-        public Sulakore.Components.SKoreButton CTMoveDownBtn;
-        public Sulakore.Components.SKoreButton CTMoveUpBtn;
-        public Sulakore.Components.SKoreButton CTClearBtn;
-        public Sulakore.Components.SKoreButton CTAppendBooleanBtn;
-        public Sulakore.Components.SKoreButton CTAppendStringBtn;
-        public Sulakore.Components.SKoreButton CTAppendIntegerBtn;
-        public System.Windows.Forms.TextBox CTHeaderTxt;
-        public System.Windows.Forms.ComboBox CTValueTxt;
-        public Sulakore.Components.SKoreConstructView CTConstructerVw;
-        public Sulakore.Components.SKoreLabel CTChunkCountLbl;
-        public Sulakore.Components.SKoreButton CTTransferBelowBtn;
-        public System.Windows.Forms.TextBox CTPacketTxt;
-        public System.Windows.Forms.CheckBox CTLiveEditingChckbx;
-        public System.Windows.Forms.Label PTIsCorruptedLbl;
-        public System.Windows.Forms.Label PTPacketInfoLbl;
-        public System.Windows.Forms.TextBox PTPacketTxt;
         private System.Windows.Forms.ToolStripMenuItem PTInsertFormatParameterBtn;
         private System.Windows.Forms.ToolStripSeparator PTMenuSeparatorTop;
-        public System.Windows.Forms.TabPage PrimitiveTab;
         public System.Windows.Forms.ToolStripMenuItem PTIntegerBtn;
         public System.Windows.Forms.ToolStripMenuItem PTStringBtn;
         public System.Windows.Forms.ToolStripMenuItem PTBooleanBtn;
@@ -1451,8 +1453,26 @@
         public System.Windows.Forms.ToolStripMenuItem PTCutBtn;
         private System.Windows.Forms.ToolStripSeparator PTMenuSeperatorBottom;
         public System.Windows.Forms.ToolStripMenuItem PTUndoBtn;
-        public Sulakore.Components.SKoreListView EDTDecodedVw;
+        public System.Windows.Forms.ToolStripStatusLabel SchedulesActiveTxt;
+        public System.Windows.Forms.ToolStripStatusLabel TanjiVersionTxt;
+        private System.Windows.Forms.ToolStripStatusLabel TanjiInfoTxt;
+        private System.Windows.Forms.ToolStripSeparator ETMiddleMenuSplitter;
+        public System.Windows.Forms.ToolStripMenuItem ETGrabMenuBtn;
+        private System.Windows.Forms.TabPage ExtensionsTab;
+        public System.Windows.Forms.CheckBox ETExtensionAOTChckbx;
+        public Sulakore.Components.SKoreButton ETUninstallExtensionBtn;
+        public Sulakore.Components.SKoreExtensionView ETContractorVw;
+        private System.Windows.Forms.ColumnHeader ETIdentifierCol;
+        private System.Windows.Forms.ColumnHeader ETCreatorCol;
+        private System.Windows.Forms.ColumnHeader ETDescriptionCol;
+        private System.Windows.Forms.ColumnHeader ETVersionCol;
+        private System.Windows.Forms.ColumnHeader ETStatusCol;
+        public Sulakore.Components.SKoreButton ETInstallExtensionBtn;
+        private System.Windows.Forms.TabPage EncoderDecoderTab;
+        public System.Windows.Forms.NumericUpDown EDTIntegerInputTxt;
+        public System.Windows.Forms.NumericUpDown EDTShortInputTxt;
         public Sulakore.Components.SKoreButton EDTDecodeValuesBtn;
+        private System.Windows.Forms.Label EDTEncodedValuesLbl;
         public System.Windows.Forms.TextBox EDTEncodedValuesTxt;
         public System.Windows.Forms.TextBox EDTShortOutputTxt;
         public System.Windows.Forms.TextBox EDTIntegerOutputTxt;
@@ -1460,12 +1480,75 @@
         public Sulakore.Components.SKoreButton EDTEncodeIntegerBtn;
         public Sulakore.Components.SKoreButton EDTDecodeShortBtn;
         public Sulakore.Components.SKoreButton EDTDecodeIntegerBtn;
-        public System.Windows.Forms.NumericUpDown EDTIntegerInputTxt;
-        public System.Windows.Forms.NumericUpDown EDTShortInputTxt;
-        public System.Windows.Forms.ToolStripStatusLabel SchedulesActiveTxt;
-        public System.Windows.Forms.ToolStripStatusLabel TanjiVersionTxt;
-        private System.Windows.Forms.ToolStripStatusLabel TanjiInfoTxt;
-        private System.Windows.Forms.ToolStripSeparator ETMiddleMenuSplitter;
-        public System.Windows.Forms.ToolStripMenuItem ETGrabMenuBtn;
+        private System.Windows.Forms.Panel EDTTopGlowPnl;
+        public Sulakore.Components.SKoreListView EDTDecodedVw;
+        private System.Windows.Forms.ColumnHeader EDTValueCol;
+        private System.Windows.Forms.ColumnHeader EDTEncodedCol;
+        private System.Windows.Forms.ColumnHeader EDTPositionCol;
+        private System.Windows.Forms.TabPage InjectionTab;
+        public Sulakore.Components.SKoreButton ITSendToClientBtn;
+        public Sulakore.Components.SKoreButton ITSendToServerBtn;
+        public Sulakore.Components.SKoreTabControl InjectionTabs;
+        private System.Windows.Forms.TabPage ConstructerTab;
+        private System.Windows.Forms.Label CTHeaderLbl;
+        public System.Windows.Forms.ComboBox CTValueTxt;
+        private System.Windows.Forms.Label CTCountLbl;
+        public System.Windows.Forms.TextBox CTPacketTxt;
+        public Sulakore.Components.SKoreButton CTTransferBelowBtn;
+        public Sulakore.Components.SKoreLabel CTChunkCountLbl;
+        public Sulakore.Components.SKoreConstructView CTConstructerVw;
+        private System.Windows.Forms.ColumnHeader ICSTypeCol;
+        private System.Windows.Forms.ColumnHeader ICSValueCol;
+        private System.Windows.Forms.ColumnHeader ICSEncodedCol;
+        public System.Windows.Forms.NumericUpDown CTCountTxt;
+        public Sulakore.Components.SKoreButton CTRemoveBtn;
+        public Sulakore.Components.SKoreButton CTMoveDownBtn;
+        public Sulakore.Components.SKoreButton CTMoveUpBtn;
+        public Sulakore.Components.SKoreButton CTClearBtn;
+        public Sulakore.Components.SKoreButton CTAppendBooleanBtn;
+        public Sulakore.Components.SKoreButton CTAppendStringBtn;
+        public Sulakore.Components.SKoreButton CTAppendIntegerBtn;
+        public System.Windows.Forms.TextBox CTHeaderTxt;
+        private System.Windows.Forms.Label CTValueLbl;
+        public System.Windows.Forms.CheckBox CTLiveEditingChckbx;
+        private System.Windows.Forms.TabPage SchedulerTab;
+        public System.Windows.Forms.Label STIntervalLbl;
+        public Sulakore.Components.SKoreButton STClearBtn;
+        public Sulakore.Components.SKoreButton STStopAllBtn;
+        public Sulakore.Components.SKoreButton STStartAllBtn;
+        public Sulakore.Components.SKoreButton STRemoveBtn;
+        public Sulakore.Components.SKoreButton STCreateBtn;
+        public System.Windows.Forms.Label STBurstLbl;
+        public System.Windows.Forms.NumericUpDown STBurstTxt;
+        public System.Windows.Forms.NumericUpDown STIntervalTxt;
+        public System.Windows.Forms.Label STDestinationLbl;
+        public System.Windows.Forms.ComboBox STDestinationTxt;
+        public System.Windows.Forms.Label STPacketLbl;
+        public System.Windows.Forms.TextBox STPacketTxt;
+        public System.Windows.Forms.Label STDescriptionLbl;
+        public System.Windows.Forms.TextBox STDescriptionTxt;
+        public System.Windows.Forms.CheckBox STAutoStartChckbx;
+        public Sulakore.Components.SKoreScheduleView STSchedulerVw;
+        private System.Windows.Forms.ColumnHeader STPacketCol;
+        private System.Windows.Forms.ColumnHeader STDestinationCol;
+        private System.Windows.Forms.ColumnHeader STBurstCol;
+        private System.Windows.Forms.ColumnHeader STIntervalCol;
+        private System.Windows.Forms.ColumnHeader STStatusCol;
+        public System.Windows.Forms.TabPage PrimitiveTab;
+        public System.Windows.Forms.Label PTIsCorruptedLbl;
+        public System.Windows.Forms.Label PTPacketInfoLbl;
+        public System.Windows.Forms.TextBox PTPacketTxt;
+        public System.Windows.Forms.ComboBox ITPacketTxt;
+        private Sulakore.Components.SKoreTabControl TanjiTabs;
+        private System.Windows.Forms.TabPage FiltersTab;
+        private System.Windows.Forms.ColumnHeader IFActionCol;
+        private System.Windows.Forms.ColumnHeader IFHeaderCol;
+        private System.Windows.Forms.ColumnHeader IFInvocationCol;
+        public System.Windows.Forms.ComboBox IFActionTxt;
+        public Sulakore.Components.SKoreListView FTFiltersVw;
+        private System.Windows.Forms.ColumnHeader IFTypeCol;
+        private System.Windows.Forms.Label IFTypeLbl;
+        public System.Windows.Forms.ComboBox IFTypeTxt;
+        private System.Windows.Forms.Label IFActionLbl;
     }
 }
