@@ -17,17 +17,20 @@ namespace Tanji.Pages.About
             : base(ui, tab)
         {
             LocalVersion = new Version(Application.ProductVersion);
-            TanjiRepo = new GitRepository("ArachisH", "Tanji");
+            UI.TanjiVersionTxt.Text = ("v" + LocalVersion);
 
+            TanjiRepo = new GitRepository("ArachisH", "Tanji");
+            
             TanjiRepo.GetLatestReleaseAsync().ContinueWith(
                 LatestReleaseGrabbed, TaskScheduler.FromCurrentSynchronizationContext());
         }
-        
+
         private void LatestReleaseGrabbed(Task<GitRelease> getLatestReleaseTask)
         {
             LatestVersion = new Version(TanjiRepo
                 .LatestRelease.TagName.Substring(1));
 
+            UI.TanjiVersionTxt.IsLink = true;
             IsNotifying = (LatestVersion > LocalVersion);
         }
     }
