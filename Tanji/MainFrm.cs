@@ -38,7 +38,8 @@ namespace Tanji
         }
         private void TanjiVersionTxt_Click(object sender, EventArgs e)
         {
-            // TODO: Version info link.
+            if (AboutPg.TanjiRepo.LatestRelease != null)
+                Process.Start(AboutPg.TanjiRepo.LatestRelease.HtmlUrl);
         }
     }
 }

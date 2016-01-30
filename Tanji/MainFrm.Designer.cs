@@ -182,7 +182,6 @@ namespace Tanji
             // TanjiVersionTxt
             // 
             this.TanjiVersionTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.TanjiVersionTxt.IsLink = true;
             this.TanjiVersionTxt.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.TanjiVersionTxt.Name = "TanjiVersionTxt";
             this.TanjiVersionTxt.Size = new System.Drawing.Size(50, 19);
