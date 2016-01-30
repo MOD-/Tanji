@@ -6,6 +6,7 @@ namespace Tanji.Pages
     public abstract class TanjiPage
     {
         private readonly TabControl _tabControl;
+        private readonly MethodInvoker _onNotifyingChanged;
 
         public MainFrm UI { get; }
         public TabPage Tab { get; }
@@ -21,11 +22,7 @@ namespace Tanji.Pages
                 if (_isNotifying != value)
                 {
                     _isNotifying = value;
-                    Tab.Invoke(new MethodInvoker(() =>
-                    {
-                        Tab.Text =
-                            (Title + (value ? "(!)" : string.Empty));
-                    }));
+                    Tab.Invoke(_onNotifyingChanged);
                 }
             }
         }
@@ -37,16 +34,17 @@ namespace Tanji.Pages
             Name = tab.Name;
             Title = tab.Text;
 
-            Tab.Enter += Tab_Enter;
+            Tab.Enter += TabEnter;
 
             _tabControl = (TabControl)tab.Parent;
+            _onNotifyingChanged = OnNotifyingChanged;
         }
 
         protected virtual void OnTabEnter()
         {
             WriteLog(nameof(OnTabEnter), $"'{Name}' has accquired focus.");
         }
-        private void Tab_Enter(object sender, EventArgs e)
+        private void TabEnter(object sender, EventArgs e)
         {
             IsNotifying = false;
             OnTabEnter();
@@ -63,6 +61,12 @@ namespace Tanji.Pages
 
             string log = (title + ": " + message);
             // TODO: Write this log somewhere.
+        }
+
+        protected virtual void OnNotifyingChanged()
+        {
+            Tab.Text = (Title +
+                (IsNotifying ? "(!)" : string.Empty));
         }
     }
 }
