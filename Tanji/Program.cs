@@ -3,16 +3,12 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Security.Principal;
 
-using Eavesdrop;
-
 using Sulakore.Communication;
 
 namespace Tanji
 {
     public static class Program
     {
-        public static bool IsDebugging { get; } //= true;
-
         [STAThread]
         private static void Main()
         {
@@ -37,7 +33,7 @@ namespace Tanji
 
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new MainFrm(IsDebugging));
+                Application.Run(new MainFrm());
 
                 Eavesdropper.Terminate();
                 HConnection.RestoreHosts();

@@ -1,4 +1,6 @@
-﻿namespace Tanji.Applications
+﻿using Tanji.Properties;
+
+namespace Tanji.Applications
 {
     partial class PacketLoggerFrm
     {
@@ -253,10 +255,10 @@
             this.Controls.Add(this.LoggerTxt);
             this.Controls.Add(this.PacketLoggerStrip);
             this.Controls.Add(this.PacketLoggerMenu);
-            this.Icon = global::Tanji.Properties.Resources.Tanji;
             this.Name = "PacketLoggerFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Tanji ~ PacketLogger";
+            this.Text = "Tanji ~ Packet Logger";
+            this.Icon = Resources.Tanji_128;
             this.PacketLoggerContextMenu.ResumeLayout(false);
             this.PacketLoggerMenu.ResumeLayout(false);
             this.PacketLoggerMenu.PerformLayout();

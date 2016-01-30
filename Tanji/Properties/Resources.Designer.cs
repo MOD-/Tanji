@@ -61,11 +61,21 @@ namespace Tanji.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap Avatar {
+            get {
+                object obj = ResourceManager.GetObject("Avatar", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Icon similar to (Icon).
         /// </summary>
-        internal static System.Drawing.Icon Tanji {
+        internal static System.Drawing.Icon Tanji_128 {
             get {
-                object obj = ResourceManager.GetObject("Tanji", resourceCulture);
+                object obj = ResourceManager.GetObject("Tanji_128", resourceCulture);
                 return ((System.Drawing.Icon)(obj));
             }
         }
@@ -73,9 +83,9 @@ namespace Tanji.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap Tanji64 {
+        internal static System.Drawing.Bitmap Tanji_512 {
             get {
-                object obj = ResourceManager.GetObject("Tanji64", resourceCulture);
+                object obj = ResourceManager.GetObject("Tanji_512", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

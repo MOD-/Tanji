@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Tanji.Utilities
+namespace Tanji.GitHub
 {
-    [DataContract(Name = "release")]
-    public class GitRelease
+    [DataContract]
+    public sealed class GitRelease
     {
         [DataMember(Name = "url")]
         public string Url { get; set; }
@@ -33,6 +33,9 @@ namespace Tanji.Utilities
         [DataMember(Name = "draft")]
         public bool IsDraft { get; set; }
 
+        [DataMember(Name = "author")]
+        public GitProfile Author { get; set; }
+
         [DataMember(Name = "prerelease")]
         public bool IsPrerelease { get; set; }
 
@@ -42,6 +45,9 @@ namespace Tanji.Utilities
         [DataMember(Name = "published_at")]
         public string PublishedOn { get; set; }
 
+        [DataMember(Name = "assets")]
+        public List<GitAsset> Assets { get; set; }
+
         [DataMember(Name = "tarball_url")]
         public string TarballUrl { get; set; }
 
@@ -50,9 +56,6 @@ namespace Tanji.Utilities
 
         [DataMember(Name = "body")]
         public string Body { get; set; }
-
-        [DataMember(Name = "assets")]
-        public List<GitAsset> Assets { get; set; }
 
         public override string ToString()
         {

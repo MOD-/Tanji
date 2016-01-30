@@ -26,7 +26,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>1.3.794.0</AssemblyVersion>
+    <AssemblyVersion>1.3.1073.0</AssemblyVersion>
     <TargetFrameworkProfile />
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
     <AssemblyInfoFilePath>
@@ -58,7 +58,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <ApplicationIcon>Tanji.ico</ApplicationIcon>
+    <ApplicationIcon>Resources\Tanji_128.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -95,53 +95,39 @@
     <Compile Include="Applications\PacketLoggerFrm.Designer.cs">
       <DependentUpon>PacketLoggerFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Converters\GamePortsConverter.cs" />
-    <Compile Include="Converters\RemoteProxyConverter.cs" />
-    <Compile Include="Dialogs\UpdateFrm.cs">
+    <Compile Include="Components\TanjiForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Dialogs\UpdateFrm.Designer.cs">
-      <DependentUpon>UpdateFrm.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Managers\AboutManager.cs" />
-    <Compile Include="Managers\ConnectionManager.cs" />
-    <Compile Include="Managers\EncoderManager.cs" />
-    <Compile Include="Managers\ExtensionManager.cs" />
-    <Compile Include="Managers\FiltersManager.cs" />
-    <Compile Include="Managers\HandshakeManager.cs" />
-    <Compile Include="Managers\Injection\ConstructerManager.cs" />
-    <Compile Include="Managers\InjectionManager.cs" />
-    <Compile Include="Managers\Injection\PrimitiveManager.cs" />
-    <Compile Include="Managers\Injection\SchedulerManager.cs" />
-    <Compile Include="Dialogs\ConnectFrm.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Dialogs\ConnectFrm.Designer.cs">
-      <DependentUpon>ConnectFrm.cs</DependentUpon>
-    </Compile>
+    <Compile Include="GitHub\GitProfile.cs" />
+    <Compile Include="GitHub\GitRepository.cs" />
     <Compile Include="MainFrm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainFrm.Designer.cs">
       <DependentUpon>MainFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Managers\ToolboxManager.cs" />
-    <Compile Include="Managers\VariablesManager.cs" />
+    <Compile Include="Pages\About\AboutPage.cs" />
+    <Compile Include="Pages\Connection\ConnectionPage.cs" />
+    <Compile Include="Pages\Extensions\ExtensionsPage.cs" />
+    <Compile Include="Pages\Injection\ConstructerPage.cs" />
+    <Compile Include="Pages\Injection\FiltersPage.cs" />
+    <Compile Include="Pages\Injection\InjectionPage.cs" />
+    <Compile Include="Pages\Injection\PrimitivePage.cs" />
+    <Compile Include="Pages\Injection\SchedulerPage.cs" />
+    <Compile Include="Pages\TanjiPage.cs" />
+    <Compile Include="Pages\TanjiSubPage.cs" />
+    <Compile Include="Pages\Toolbox\ToolboxPage.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Utilities\GitAsset.cs" />
-    <Compile Include="Utilities\GitRelease.cs" />
-    <Compile Include="Utilities\GitReleases.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="GitHub\GitAsset.cs" />
+    <Compile Include="GitHub\GitRelease.cs" />
     <EmbeddedResource Include="Applications\PacketLoggerFrm.resx">
       <DependentUpon>PacketLoggerFrm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\ConnectFrm.resx">
-      <DependentUpon>ConnectFrm.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Dialogs\UpdateFrm.resx">
-      <DependentUpon>UpdateFrm.cs</DependentUpon>
       <SubType>Designer</SubType>
     </EmbeddedResource>
     <EmbeddedResource Include="MainFrm.resx">
@@ -149,14 +135,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
       <SubType>Designer</SubType>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DependentUpon>Resources.resx</DependentUpon>
-      <DesignTime>True</DesignTime>
-    </Compile>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -169,11 +150,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Tanji.ico" />
-    <None Include="Resources\Tanji64.png" />
-    <Content Include="Tanji.ico" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Sulakore\Sulakore\Sulakore.csproj">
@@ -197,6 +173,16 @@
       <ProductName>.NET Framework 3.5 SP1</ProductName>
       <Install>false</Install>
     </BootstrapperPackage>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <None Include="Resources\Tanji_128.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Tanji_512.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Avatar.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

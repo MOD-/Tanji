@@ -8,11 +8,13 @@ using System.Collections.Generic;
 using Sulakore.Protocol;
 using Sulakore.Communication;
 
-using FlashInspect.ActionScript;
+using Tanji.Components;
+using Tanji.Pages.Connection;
+using Sulakore.Disassembler.ActionScript;
 
 namespace Tanji.Applications
 {
-    public partial class PacketLoggerFrm : Form
+    public partial class PacketLoggerFrm : TanjiForm
     {
         private Task _readQueueTask;
         private readonly IDictionary<HDestination, IList<ushort>> _invalidStructures;
@@ -23,8 +25,7 @@ namespace Tanji.Applications
         private readonly WriteHighlightCallback _writeHighlight;
         private delegate void WriteHighlightCallback(string value, Color highlight);
 
-        public MainFrm MainUI { get; }
-        public bool IsHalted { get; private set; }
+        public ConnectionPage ConnectionPg { get; }
         public Queue<InterceptedEventArgs> Intercepted { get; }
 
         public Color BlockHighlight { get; set; } = Color.DarkGray;
@@ -33,6 +34,7 @@ namespace Tanji.Applications
         public Color OutgoingHighlight { get; set; } = Color.FromArgb(0, 102, 204);
         public Color PacketStructHighlight { get; set; } = Color.FromArgb(0, 204, 136);
 
+        public bool IsHalted { get; private set; }
         public bool ViewOutgoing { get; private set; } = true;
         public bool ViewIncoming { get; private set; } = true;
 
@@ -41,22 +43,20 @@ namespace Tanji.Applications
         public bool DisplaySplitter { get; private set; } = true;
         public bool DisplayStructures { get; private set; } = true;
 
-        public PacketLoggerFrm(MainFrm main)
+        public PacketLoggerFrm(MainFrm ui)
         {
             InitializeComponent();
-            MainUI = main;
-
-            Intercepted = new Queue<InterceptedEventArgs>();
 
             _refreshLog = RefreshLog;
             _writeHighlight = WriteHighlight;
+            Intercepted = new Queue<InterceptedEventArgs>();
 
             _invalidStructures = new Dictionary<HDestination, IList<ushort>>(2);
             _invalidStructures[HDestination.Client] = new List<ushort>();
             _invalidStructures[HDestination.Server] = new List<ushort>();
 
-            MainUI.Connection.DataIncoming += DataIncoming;
-            MainUI.Connection.DataOutgoing += DataOutgoing;
+            ConnectionPg.Connection.DataIncoming += DataIncoming;
+            ConnectionPg.Connection.DataOutgoing += DataOutgoing;
         }
 
         protected override void OnLoad(EventArgs e)
@@ -103,26 +103,30 @@ namespace Tanji.Applications
                 }
 
                 case nameof(DisplayStructuresBtn):
-                DisplayStructures = isChecked;
-                break;
-
+                {
+                    DisplayStructures = isChecked;
+                    break;
+                }
                 case nameof(BlockedBtn):
-                DisplayBlocked = isChecked;
-                break;
-
+                {
+                    DisplayBlocked = isChecked;
+                    break;
+                }
                 case nameof(ReplacedBtn):
-                DisplayReplaced = isChecked;
-                break;
-
+                {
+                    DisplayReplaced = isChecked;
+                    break;
+                }
                 case nameof(DisplaySplitterBtn):
-                DisplaySplitter = isChecked;
-                break;
-
+                {
+                    DisplaySplitter = isChecked;
+                    break;
+                }
                 case nameof(AlwaysOnTopBtn):
                 {
                     TopMost = isChecked;
 
-                    Text = "Tanji ~ PacketLogger" +
+                    Text = "Tanji ~ Packet Logger" +
                         (TopMost ? " | TopMost" : string.Empty);
 
                     break;
@@ -237,15 +241,14 @@ namespace Tanji.Applications
         public string ExtractPacketLog(HMessage packet, bool toServer)
         {
             ASInstance messageInstance = (toServer ?
-                MainUI.Game.OutgoingTypes : MainUI.Game.IncomingTypes)[packet.Header];
+                ConnectionPg.Game.OutgoingTypes : ConnectionPg.Game.IncomingTypes)[packet.Header].Instance;
 
             string arrow = (toServer ? "->" : "<-");
             string type = (toServer ? "Outgoing" : "Incoming");
-            return $"{type}({packet.Header}, {packet.Length}, {messageInstance.Name.ObjName}) {arrow} {packet}";
+            return $"{type}({packet.Header}, {packet.Length}, {messageInstance.Type.ObjName}) {arrow} {packet}";
         }
         public string ExtractStructureLog(HMessage packet, bool toServer)
         {
-            // Incoming structure support MAY come, when it does remove 'toServer' condition.
             if (!toServer || _invalidStructures[packet.Destination]
                 .Contains(packet.Header))
             {
@@ -253,7 +256,7 @@ namespace Tanji.Applications
             }
 
             ASInstance messageInstance = (toServer ?
-                MainUI.Game.OutgoingTypes : MainUI.Game.IncomingTypes)[packet.Header];
+                ConnectionPg.Game.OutgoingTypes : ConnectionPg.Game.IncomingTypes)[packet.Header].Instance;
 
             string arguments = $"{{l}}{{u:{packet.Header}}}";
             ASMethod messageCtor = messageInstance.Constructor;
