@@ -32,6 +32,11 @@ namespace Tanji
             ExtensionsPg = new ExtensionsPage(this, ExtensionsTab);
         }
 
+        private void MainFrm_Load(object sender, EventArgs e)
+        {
+            ConnectionPg.CreateTrustedRootCertificate();
+        }
+
         private void TanjiInfoTxt_Click(object sender, EventArgs e)
         {
             Process.Start("https://GitHub.com/ArachisH/Tanji");

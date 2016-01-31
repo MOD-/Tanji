@@ -14,7 +14,7 @@ namespace Tanji.Pages.Connection
 {
     public class ConnectionPage : TanjiPage
     {
-        private const string ROOT_CERTIFICATE_NAME = "EavesdropRoot.cer";
+        public const string ROOT_CERTIFICATE_NAME = "EavesdropRoot.cer";
 
         public HConnection Connection { get; }
         public IDictionary<string, string> UriReplacements { get; }
@@ -26,20 +26,14 @@ namespace Tanji.Pages.Connection
         public ConnectionPage(MainFrm ui, TabPage tab)
             : base(ui, tab)
         {
-            Eavesdropper.IsSslSupported = true;
-            CreateTrustedRootCertificate();
-
             Connection = new HConnection();
+            Eavesdropper.IsSslSupported = true;
 
-            UI.CoTConnectBtn.Click += CTConnectBtn_Click;
-            
-            UI.CoTDestroyCertificatesBtn.Click += STDestroyCertificatesBtn_Click;
-            UI.CoTExportRootCertificateBtn.Click += STExportRootCertificateAuthorityBtn_Click;
-            
-            UI.CoTClearVariableBtn.Click += VTClearVariableBtn_Click;
-            UI.CoTUpdateVariableBtn.Click += VTUpdateVariableBtn_Click;
+            UI.CoTConnectBtn.Click += CoTConnectBtn_Click;
 
-            UI.CoTVariablesVw.Add("furnidata.load.url", "");
+            UI.CoTDestroyCertificatesBtn.Click += CoTDestroyCertificatesBtn_Click;
+            UI.CoTExportRootCertificateBtn.Click += CoTExportRootCertificateBtn_Click;
+            
             UI.CoTVariablesVw.Add("productdata.load.url", "");
             UI.CoTVariablesVw.Add("external.texts.txt", "");
             UI.CoTVariablesVw.Add("external.variables.txt", "");
@@ -47,15 +41,95 @@ namespace Tanji.Pages.Connection
             UI.CoTVariablesVw.Add("external.figurepartlist.txt", "");
             UI.CoTVariablesVw.Add("external.override.variables.txt", "");
 
-            int capcity = UI.CoTVariablesVw.Items.Count;
-            UriReplacements = new Dictionary<string, string>(capcity);
+            UI.CoTClearVariableBtn.Click += CoTClearVariableBtn_Click;
+            UI.CoTUpdateVariableBtn.Click += CoTUpdateVariableBtn_Click;
 
-            UI.CoTVariablesVw.ItemChecked += VTVariablesVw_ItemChecked;
-            UI.CoTVariablesVw.ItemSelected += VTVariablesVw_ItemSelected;
-            UI.CoTVariablesVw.ItemsDeselected += VTVariablesVw_ItemsDeselected;
+            UI.CoTVariablesVw.ItemChecked += CoTVariablesVw_ItemChecked;
+            UI.CoTVariablesVw.ItemSelected += CoTVariablesVw_ItemSelected;
+            UI.CoTVariablesVw.ItemsDeselected += CoTVariablesVw_ItemsDeselected;
 
+            UriReplacements = new Dictionary<string, string>(
+                UI.CoTVariablesVw.Items.Count);
         }
-        
+
+        private void CoTConnectBtn_Click(object sender, EventArgs e)
+        {
+            Connect();
+        }
+
+        private void CoTClearVariableBtn_Click(object sender, EventArgs e)
+        {
+            ListViewItem item =
+                UI.CoTVariablesVw.GetSelectedItem();
+
+            item.SubItems[1].Text = string.Empty;
+            UI.CoTClearVariableBtn.Enabled = false;
+            UI.CoTValueTxt.Text = string.Empty;
+            item.Checked = false;
+        }
+        private void CoTUpdateVariableBtn_Click(object sender, EventArgs e)
+        {
+            ListViewItem item =
+                UI.CoTVariablesVw.GetSelectedItem();
+
+            item.SubItems[1].Text =
+                UI.CoTValueTxt.Text;
+
+            ToggleClearResetButton(item);
+
+            if (!item.Checked) item.Checked = true;
+            else CoTVariablesVw_ItemChecked(this, new ItemCheckedEventArgs(item));
+        }
+
+        private void CoTDestroyCertificatesBtn_Click(object sender, EventArgs e)
+        {
+            DestroySignedCertificates();
+        }
+        private void CoTExportRootCertificateBtn_Click(object sender, EventArgs e)
+        {
+            ExportTrustedRootCertificate();
+        }
+
+        private void CoTVariablesVw_ItemsDeselected(object sender, EventArgs e)
+        {
+            UI.CoTUpdateVariableBtn.Enabled =
+                (UI.CoTClearVariableBtn.Enabled = false);
+
+            UI.CoTNameTxt.Text =
+               (UI.CoTValueTxt.Text = string.Empty);
+        }
+        private void CoTVariablesVw_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            string name = e.Item.Text;
+            string value = e.Item.SubItems[1].Text;
+            bool updateValue = (e.Item.Checked && !string.IsNullOrWhiteSpace(value));
+
+            if (updateValue) UriReplacements[name] = value;
+            else if (UriReplacements.ContainsKey(name)) UriReplacements.Remove(name);
+        }
+        private void CoTVariablesVw_ItemSelected(object sender, ListViewItemSelectionChangedEventArgs e)
+        {
+            ToggleClearResetButton(e.Item);
+            UI.CoTUpdateVariableBtn.Enabled = true;
+
+            UI.CoTNameTxt.Text = e.Item.Text;
+            UI.CoTValueTxt.Text = e.Item.SubItems[1].Text;
+        }
+
+        public void Connect()
+        {
+            SetStatus("Extracting Host/Port");
+            UI.CoTConnectBtn.Text = "Cancel";
+        }
+        public void ResetStatus()
+        {
+            UI.CoTStatusTxt.StopDotAnimation("Standing By...");
+        }
+        public void SetStatus(string text)
+        {
+            UI.CoTStatusTxt.SetDotAnimation(text);
+        }
+
         public void TerminateReplacing()
         {
             Eavesdropper.EavesdropperResponse -= ReplaceResources;
@@ -108,60 +182,6 @@ namespace Tanji.Pages.Connection
             }
         }
 
-        private void VTClearVariableBtn_Click(object sender, EventArgs e)
-        {
-            ListViewItem item =
-                UI.CoTVariablesVw.GetSelectedItem();
-
-            item.SubItems[1].Text = string.Empty;
-
-            UI.CoTClearVariableBtn.Enabled = false;
-            UI.CoTValueTxt.Text = string.Empty;
-
-            item.Checked = false;
-        }
-        private void VTUpdateVariableBtn_Click(object sender, EventArgs e)
-        {
-            ListViewItem item =
-                UI.CoTVariablesVw.GetSelectedItem();
-
-            item.SubItems[1].Text =
-                UI.CoTValueTxt.Text;
-
-            ToggleClearResetButton(item);
-
-            if (!item.Checked) item.Checked = true;
-            else VTVariablesVw_ItemChecked(this, new ItemCheckedEventArgs(item));
-        }
-
-        private void VTVariablesVw_ItemsDeselected(object sender, EventArgs e)
-        {
-            UI.CoTUpdateVariableBtn.Enabled =
-                UI.CoTClearVariableBtn.Enabled = false;
-
-            UI.CoTNameTxt.Text =
-                UI.CoTValueTxt.Text = string.Empty;
-        }
-        private void VTVariablesVw_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            string name = e.Item.Text;
-            string value = e.Item.SubItems[1].Text;
-            bool updateValue = (e.Item.Checked && !string.IsNullOrWhiteSpace(value));
-
-            if (updateValue) UriReplacements[name] = value;
-            else if (UriReplacements.ContainsKey(name)) UriReplacements.Remove(name);
-        }
-        private void VTVariablesVw_ItemSelected(object sender, ListViewItemSelectionChangedEventArgs e)
-        {
-            ToggleClearResetButton(e.Item);
-            UI.CoTUpdateVariableBtn.Enabled = true;
-
-            ListViewItem item = UI.CoTVariablesVw.GetSelectedItem();
-
-            UI.CoTNameTxt.Text = item.Text;
-            UI.CoTValueTxt.Text = item.SubItems[1].Text;
-        }
-
         public void DestroySignedCertificates()
         {
             Eavesdropper.Certificates.DestroySignedCertificates();
@@ -184,9 +204,10 @@ namespace Tanji.Pages.Connection
         }
         public void CreateTrustedRootCertificate()
         {
+            // WARNING: Do not call this method within a constructor.
+            UI.BringToFront();
             while (!Eavesdropper.Certificates.CreateTrustedRootCertificate())
             {
-                UI.BringToFront();
                 var result = MessageBox.Show(
                     "Eavesdrop requires a self-signed certificate in the root store to intercept HTTPS traffic.\r\n\r\nWould you like to retry the process?",
                     "Tanji ~ Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
@@ -194,9 +215,10 @@ namespace Tanji.Pages.Connection
                 if (result != DialogResult.Yes)
                 {
                     UI.Close();
-                    break;
+                    return;
                 }
             }
+            UI.BringToFront();
         }
 
         public async Task<bool> VerifyGameClientAsync(string path)
@@ -204,24 +226,27 @@ namespace Tanji.Pages.Connection
             if (!File.Exists(path)) return false;
             byte[] data = File.ReadAllBytes(path);
 
-            await VerifyGameClientAsync(path, data).ConfigureAwait(false);
+            await VerifyGameClientAsync(path, data)
+                .ConfigureAwait(false);
+
             return (Game != null);
         }
         public async Task<bool> VerifyGameClientAsync(byte[] data)
         {
-            await VerifyGameClientAsync(null, data).ConfigureAwait(false);
+            await VerifyGameClientAsync(null, data)
+                .ConfigureAwait(false);
+
             return (Game != null);
         }
         protected virtual async Task<bool> VerifyGameClientAsync(string path, byte[] data)
         {
             var game = new HFlash(data);
             game.Location = path;
-
             try
             {
                 if (game.IsCompressed)
                 {
-                    SetStatus("Decompressing");
+                    SetStatus("Decompressing Client");
 
                     await Task.Factory.StartNew(game.Decompress)
                         .ConfigureAwait(false);
@@ -230,10 +255,8 @@ namespace Tanji.Pages.Connection
                 if (game.IsCompressed) return false;
                 else Game = game;
 
-                SetStatus("Disassembling");
+                SetStatus("Disassembling Client");
                 Game.ReadTags();
-
-                ResetStatus();
                 return true;
             }
             catch (Exception ex)
@@ -243,37 +266,10 @@ namespace Tanji.Pages.Connection
             }
             finally
             {
+                ResetStatus();
                 if (Game != game)
                     game.Dispose();
             }
-        }
-
-        private void STDestroyCertificatesBtn_Click(object sender, EventArgs e)
-        {
-            DestroySignedCertificates();
-        }
-        private void STExportRootCertificateAuthorityBtn_Click(object sender, EventArgs e)
-        {
-            ExportTrustedRootCertificate();
-        }
-
-        public void Connect()
-        {
-            SetStatus("Extracting Host/Port");
-            UI.CoTConnectBtn.Text = "Cancel";
-        }
-        public void ResetStatus()
-        {
-            UI.CoTStatusTxt.StopDotAnimation("Standing By...");
-        }
-        public void SetStatus(string text)
-        {
-            UI.CoTStatusTxt.SetDotAnimation(text);
-        }
-
-        private void CTConnectBtn_Click(object sender, EventArgs e)
-        {
-            Connect();
         }
     }
 }

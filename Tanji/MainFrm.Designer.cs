@@ -41,8 +41,6 @@ namespace Tanji
             this.ETUninstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ETTopMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
             this.ETInstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.ETMiddleMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
-            this.ETGrabMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.TanjiTabs = new Sulakore.Components.SKoreTabControl();
             this.ConnectionTab = new System.Windows.Forms.TabPage();
             this.CoTGlow2Pnl = new System.Windows.Forms.Panel();
@@ -220,11 +218,9 @@ namespace Tanji
             this.ETOpenMenuBtn,
             this.ETUninstallMenuBtn,
             this.ETTopMenuSplitter,
-            this.ETInstallMenuBtn,
-            this.ETMiddleMenuSplitter,
-            this.ETGrabMenuBtn});
+            this.ETInstallMenuBtn});
             this.ETExtensionMenu.Name = "ConstructMenu";
-            this.ETExtensionMenu.Size = new System.Drawing.Size(159, 104);
+            this.ETExtensionMenu.Size = new System.Drawing.Size(159, 76);
             // 
             // ETOpenMenuBtn
             // 
@@ -250,17 +246,6 @@ namespace Tanji
             this.ETInstallMenuBtn.Name = "ETInstallMenuBtn";
             this.ETInstallMenuBtn.Size = new System.Drawing.Size(158, 22);
             this.ETInstallMenuBtn.Text = "Install Extension";
-            // 
-            // ETMiddleMenuSplitter
-            // 
-            this.ETMiddleMenuSplitter.Name = "ETMiddleMenuSplitter";
-            this.ETMiddleMenuSplitter.Size = new System.Drawing.Size(155, 6);
-            // 
-            // ETGrabMenuBtn
-            // 
-            this.ETGrabMenuBtn.Name = "ETGrabMenuBtn";
-            this.ETGrabMenuBtn.Size = new System.Drawing.Size(158, 22);
-            this.ETGrabMenuBtn.Text = "Grab Extension";
             // 
             // TanjiTabs
             // 
@@ -1414,6 +1399,7 @@ namespace Tanji
             this.Name = "MainFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ Status: Disconnected";
+            this.Load += new System.EventHandler(this.MainFrm_Load);
             this.TanjiStrip.ResumeLayout(false);
             this.TanjiStrip.PerformLayout();
             this.ETExtensionMenu.ResumeLayout(false);
@@ -1449,7 +1435,6 @@ namespace Tanji
         private System.Windows.Forms.StatusStrip TanjiStrip;
         private System.Windows.Forms.ToolStripSeparator ETTopMenuSplitter;
         private System.Windows.Forms.ToolStripStatusLabel TanjiInfoTxt;
-        private System.Windows.Forms.ToolStripSeparator ETMiddleMenuSplitter;
         private System.Windows.Forms.TabPage ExtensionsTab;
         private System.Windows.Forms.ColumnHeader ETIdentifierCol;
         private System.Windows.Forms.ColumnHeader ETCreatorCol;
@@ -1524,7 +1509,6 @@ namespace Tanji
         internal System.Windows.Forms.ToolStripMenuItem ETOpenMenuBtn;
         internal System.Windows.Forms.ToolStripMenuItem ETUninstallMenuBtn;
         internal System.Windows.Forms.ToolStripMenuItem ETInstallMenuBtn;
-        internal System.Windows.Forms.ToolStripMenuItem ETGrabMenuBtn;
         internal Sulakore.Components.SKoreTabControl InjectionTabs;
         internal System.Windows.Forms.TabPage PrimitiveTab;
         internal System.Windows.Forms.ToolStripStatusLabel ExtensionsActiveTxt;
