@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.ComponentModel;
 
 namespace Tanji.Pages
 {
-    public abstract class TanjiPage
+    public abstract class TanjiPage : INotifyPropertyChanged
     {
         private readonly TabControl _tabControl;
         private readonly MethodInvoker _onNotifyingChanged;
+        private readonly Action<PropertyChangedEventArgs> _onPropertyChanged;
 
         public MainFrm UI { get; }
         public TabPage Tab { get; }
@@ -25,6 +27,19 @@ namespace Tanji.Pages
                     Tab.Invoke(_onNotifyingChanged);
                 }
             }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void RaiseOnPropertyChanged(string propertyName)
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
+        }
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            if (UI.InvokeRequired)
+                UI.Invoke(_onPropertyChanged, e);
+            else
+                PropertyChanged?.Invoke(this, e);
         }
 
         public TanjiPage(MainFrm ui, TabPage tab)
