@@ -10,11 +10,11 @@ namespace Tanji.Pages.Toolbox
         public ToolboxPage(MainFrm ui, TabPage tab)
             : base(ui, tab)
         {
-            UI.TTIntInputTxt.ValueChanged += TTIntInputTxt_ValueChanged;
-            UI.TTUShortInputTxt.ValueChanged += TTUShortInputTxt_ValueChanged;
-
             UI.TTDecodeIntBtn.Click += TTDecodeIntBtn_Click;
             UI.TTDecodeUShortBtn.Click += TTDecodeUShortBtn_Click;
+
+            UI.TTIntInputTxt.ValueChanged += TTIntInputTxt_ValueChanged;
+            UI.TTUShortInputTxt.ValueChanged += TTUShortInputTxt_ValueChanged;
         }
 
         public string EncodeInt32(int value)
@@ -63,6 +63,9 @@ namespace Tanji.Pages.Toolbox
         }
         protected virtual T Decode<T>(Func<byte[], int, T> decoder, string value)
         {
+            if (string.IsNullOrWhiteSpace(value))
+                return default(T);
+
             byte[] data = HMessage.ToBytes(value);
             return decoder(data, 0);
         }
