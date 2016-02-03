@@ -422,6 +422,7 @@ namespace Tanji
             // 
             // CoTStatusTxt
             // 
+            this.CoTStatusTxt.AnimationInterval = 500;
             this.CoTStatusTxt.BorderWidth = 1;
             this.CoTStatusTxt.DisplayBoundary = true;
             this.CoTStatusTxt.Location = new System.Drawing.Point(3, 288);
@@ -1258,6 +1259,7 @@ namespace Tanji
             this.TTUShortOutputTxt.Name = "TTUShortOutputTxt";
             this.TTUShortOutputTxt.Size = new System.Drawing.Size(126, 22);
             this.TTUShortOutputTxt.TabIndex = 38;
+            this.TTUShortOutputTxt.Text = "[0][0]";
             this.TTUShortOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TTIntOutputTxt
@@ -1267,6 +1269,7 @@ namespace Tanji
             this.TTIntOutputTxt.Name = "TTIntOutputTxt";
             this.TTIntOutputTxt.Size = new System.Drawing.Size(126, 22);
             this.TTIntOutputTxt.TabIndex = 37;
+            this.TTIntOutputTxt.Text = "[0][0][0][0]";
             this.TTIntOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TTDecodeUShortBtn
