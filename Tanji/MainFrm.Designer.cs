@@ -285,8 +285,8 @@ namespace Tanji
             this.ConnectionTab.Controls.Add(this.CoTConnectBtn);
             this.ConnectionTab.Controls.Add(this.CoTCustomClientTxt);
             this.ConnectionTab.Controls.Add(this.CoTNameTxt);
-            this.ConnectionTab.Controls.Add(this.CoTVariablesVw);
             this.ConnectionTab.Controls.Add(this.CoTProxyPortTxt);
+            this.ConnectionTab.Controls.Add(this.CoTVariablesVw);
             this.ConnectionTab.Location = new System.Drawing.Point(4, 28);
             this.ConnectionTab.Name = "ConnectionTab";
             this.ConnectionTab.Padding = new System.Windows.Forms.Padding(3);
@@ -336,7 +336,7 @@ namespace Tanji
             // CoTProxyPortLbl
             // 
             this.CoTProxyPortLbl.AutoSize = true;
-            this.CoTProxyPortLbl.Location = new System.Drawing.Point(0, 229);
+            this.CoTProxyPortLbl.Location = new System.Drawing.Point(326, 229);
             this.CoTProxyPortLbl.Name = "CoTProxyPortLbl";
             this.CoTProxyPortLbl.Size = new System.Drawing.Size(58, 13);
             this.CoTProxyPortLbl.TabIndex = 91;
@@ -346,7 +346,7 @@ namespace Tanji
             // 
             this.CoTExportRootCertificateBtn.BackColor = System.Drawing.Color.Transparent;
             this.CoTExportRootCertificateBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.CoTExportRootCertificateBtn.Location = new System.Drawing.Point(313, 225);
+            this.CoTExportRootCertificateBtn.Location = new System.Drawing.Point(163, 225);
             this.CoTExportRootCertificateBtn.Name = "CoTExportRootCertificateBtn";
             this.CoTExportRootCertificateBtn.Size = new System.Drawing.Size(160, 22);
             this.CoTExportRootCertificateBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
@@ -357,7 +357,7 @@ namespace Tanji
             // 
             this.CoTDestroyCertificatesBtn.BackColor = System.Drawing.Color.Transparent;
             this.CoTDestroyCertificatesBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.CoTDestroyCertificatesBtn.Location = new System.Drawing.Point(153, 225);
+            this.CoTDestroyCertificatesBtn.Location = new System.Drawing.Point(3, 225);
             this.CoTDestroyCertificatesBtn.Name = "CoTDestroyCertificatesBtn";
             this.CoTDestroyCertificatesBtn.Size = new System.Drawing.Size(154, 22);
             this.CoTDestroyCertificatesBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
@@ -370,6 +370,7 @@ namespace Tanji
             this.CoTValueTxt.Name = "CoTValueTxt";
             this.CoTValueTxt.Size = new System.Drawing.Size(312, 20);
             this.CoTValueTxt.TabIndex = 100;
+            this.CoTValueTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // CoTValueLbl
             // 
@@ -461,6 +462,7 @@ namespace Tanji
             this.CoTNameTxt.ReadOnly = true;
             this.CoTNameTxt.Size = new System.Drawing.Size(312, 20);
             this.CoTNameTxt.TabIndex = 98;
+            this.CoTNameTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // CoTVariablesVw
             // 
@@ -494,7 +496,7 @@ namespace Tanji
             // 
             // CoTProxyPortTxt
             // 
-            this.CoTProxyPortTxt.Location = new System.Drawing.Point(58, 227);
+            this.CoTProxyPortTxt.Location = new System.Drawing.Point(384, 227);
             this.CoTProxyPortTxt.Maximum = new decimal(new int[] {
             65535,
             0,
