@@ -1,6 +1,8 @@
 ﻿using System;
 using System.IO;
 using System.Net;
+using System.Text;
+using System.Linq;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -9,15 +11,45 @@ using Sulakore;
 using Sulakore.Habbo;
 using Sulakore.Habbo.Web;
 using Sulakore.Communication;
+using Tanji.Pages.Connection.Managers;
 
 namespace Tanji.Pages.Connection
 {
+    public enum TanjiState
+    {
+        StandingBy = 0,
+        ExtractingGameData = 1,
+        InjectingClient = 2,
+        ReplacingClient = 3,
+        InterceptingClient = 4,
+        DecompressingClient = 5,
+        DisassemblingClient = 6,
+        ReplacingResources = 7,
+        ReconstructingClient = 8,
+        InterceptingConnection = 9,
+        ModifyingClient = 10
+    }
+
     public class ConnectionPage : TanjiPage
     {
-        public const string ROOT_CERTIFICATE_NAME = "EavesdropRoot.cer";
+        private const string EAVESDROPPER_ROOT_CERTIFICATE_NAME = "EavesdropperRoot.cer";
+
+        private readonly Action<TanjiState> _setStatus;
+
+        private ushort _proxyPort = 8081;
+        public ushort ProxyPort
+        {
+            get { return _proxyPort; }
+            set
+            {
+                _proxyPort = value;
+                RaiseOnPropertyChanged(nameof(ProxyPort));
+            }
+        }
 
         public HConnection Connection { get; }
-        public IDictionary<string, string> UriReplacements { get; }
+        public HandshakeManager HandshakeMngr { get; }
+        public Dictionary<string, string> ResourceReplacements { get; }
 
         public HFlash Game { get; private set; }
         public HHotel Hotel { get; private set; }
@@ -26,14 +58,12 @@ namespace Tanji.Pages.Connection
         public ConnectionPage(MainFrm ui, TabPage tab)
             : base(ui, tab)
         {
-            Connection = new HConnection();
+            _setStatus = SetStatus;
             Eavesdropper.IsSslSupported = true;
 
-            UI.CoTConnectBtn.Click += CoTConnectBtn_Click;
+            Connection = new HConnection();
+            HandshakeMngr = new HandshakeManager(Connection);
 
-            UI.CoTDestroyCertificatesBtn.Click += CoTDestroyCertificatesBtn_Click;
-            UI.CoTExportRootCertificateBtn.Click += CoTExportRootCertificateBtn_Click;
-            
             UI.CoTVariablesVw.Add("productdata.load.url", "");
             UI.CoTVariablesVw.Add("external.texts.txt", "");
             UI.CoTVariablesVw.Add("external.variables.txt", "");
@@ -41,20 +71,32 @@ namespace Tanji.Pages.Connection
             UI.CoTVariablesVw.Add("external.figurepartlist.txt", "");
             UI.CoTVariablesVw.Add("external.override.variables.txt", "");
 
+            ResourceReplacements = new Dictionary<string, string>(
+                UI.CoTVariablesVw.Items.Count);
+
+            UI.CoTProxyPortTxt.DataBindings.Add("Value", this,
+                nameof(ProxyPort), false, DataSourceUpdateMode.OnPropertyChanged);
+
+            UI.CoTConnectBtn.Click += CoTConnectBtn_Click;
+
+            UI.CoTDestroyCertificatesBtn.Click += CoTDestroyCertificatesBtn_Click;
+            UI.CoTExportRootCertificateBtn.Click += CoTExportRootCertificateBtn_Click;
+
             UI.CoTClearVariableBtn.Click += CoTClearVariableBtn_Click;
             UI.CoTUpdateVariableBtn.Click += CoTUpdateVariableBtn_Click;
 
             UI.CoTVariablesVw.ItemChecked += CoTVariablesVw_ItemChecked;
             UI.CoTVariablesVw.ItemSelected += CoTVariablesVw_ItemSelected;
             UI.CoTVariablesVw.ItemsDeselected += CoTVariablesVw_ItemsDeselected;
-
-            UriReplacements = new Dictionary<string, string>(
-                UI.CoTVariablesVw.Items.Count);
         }
 
         private void CoTConnectBtn_Click(object sender, EventArgs e)
         {
-            Connect();
+            if (Eavesdropper.IsRunning)
+            {
+                Cancel();
+            }
+            else Connect();
         }
 
         private void CoTClearVariableBtn_Click(object sender, EventArgs e)
@@ -75,7 +117,7 @@ namespace Tanji.Pages.Connection
             item.SubItems[1].Text =
                 UI.CoTValueTxt.Text;
 
-            ToggleClearResetButton(item);
+            ToggleClearVariableButton(item);
 
             if (!item.Checked) item.Checked = true;
             else CoTVariablesVw_ItemChecked(this, new ItemCheckedEventArgs(item));
@@ -104,68 +146,134 @@ namespace Tanji.Pages.Connection
             string value = e.Item.SubItems[1].Text;
             bool updateValue = (e.Item.Checked && !string.IsNullOrWhiteSpace(value));
 
-            if (updateValue) UriReplacements[name] = value;
-            else if (UriReplacements.ContainsKey(name)) UriReplacements.Remove(name);
+            if (updateValue) ResourceReplacements[name] = value;
+            else if (ResourceReplacements.ContainsKey(name)) ResourceReplacements.Remove(name);
         }
         private void CoTVariablesVw_ItemSelected(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            ToggleClearResetButton(e.Item);
+            ToggleClearVariableButton(e.Item);
             UI.CoTUpdateVariableBtn.Enabled = true;
 
             UI.CoTNameTxt.Text = e.Item.Text;
             UI.CoTValueTxt.Text = e.Item.SubItems[1].Text;
         }
 
-        public void Connect()
+        private void InjectClient(object sender, EavesdropperRequestEventArgs e)
         {
-            SetStatus("Extracting Host/Port");
-            UI.CoTConnectBtn.Text = "Cancel";
+            if (e.Request.RequestUri.OriginalString.EndsWith(".swf?Tanji-"))
+            {
+                Eavesdropper.EavesdropperRequest -= InjectClient;
+                e.Request = WebRequest.Create(new Uri(Game.Location));
+                Eavesdropper.EavesdropperResponse += ReplaceClient;
+            }
         }
-        public void ResetStatus()
+        private void ReplaceClient(object sender, EavesdropperResponseEventArgs e)
         {
-            UI.CoTStatusTxt.StopDotAnimation("Standing By...");
-        }
-        public void SetStatus(string text)
-        {
-            UI.CoTStatusTxt.SetDotAnimation(text);
-        }
+            if (e.Response.ContentType != "application/x-shockwave-flash" &&
+                !File.Exists(e.Response.ResponseUri.LocalPath)) return;
 
-        public void TerminateReplacing()
-        {
-            Eavesdropper.EavesdropperResponse -= ReplaceResources;
-            Eavesdropper.Terminate();
-        }
-        public void DisableReplacements()
-        {
-            foreach (ListViewItem item in UI.CoTVariablesVw.Items)
-                item.Checked = false;
-        }
-        public void InitiateReplacing(int port)
-        {
-            if (UriReplacements.Count < 1) return;
+            ushort[] ports = GameData.Port.Split(',')
+                .Select(s => ushort.Parse(s)).ToArray();
 
-            Eavesdropper.EavesdropperResponse += ReplaceResources;
-            Eavesdropper.Initiate(port);
-        }
+            if (Game == null)
+            {
+                VerifyGameClientAsync(e.Payload).Wait();
+                SetStatus(TanjiState.ModifyingClient);
 
-        private void ToggleClearResetButton(ListViewItem item)
+                Game.FindMessageInstances();
+                Game.BypassRemoteHostCheck();
+                Game.RemoveLocalUseRestrictions();
+                Game.DisableExpirationDateCheck();
+                Game.ReplaceRSA(HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
+
+                SetStatus(TanjiState.ReconstructingClient);
+                Game.Reconstruct();
+
+                File.WriteAllBytes(
+                    $"Modified Clients\\{GameData.MovieName}.swf", Game.ToByteArray());
+            }
+
+            e.Payload = Game.ToByteArray();
+            Halt();
+        }
+        private void ExtractGameData(object sender, EavesdropperResponseEventArgs e)
         {
-            UI.CoTClearVariableBtn.Enabled =
-                (!string.IsNullOrWhiteSpace(item.SubItems[1].Text));
+            if (e.Response.ContentType != "text/html") return;
+            if (GameData != null) return;
+
+            string responseBody = Encoding.UTF8.GetString(e.Payload);
+            if (responseBody.Contains("swfobject.embedSWF") &&
+                responseBody.Contains("connection.info.host"))
+            {
+                Eavesdropper.EavesdropperResponse -= ExtractGameData;
+                try
+                {
+                    GameData = new HGameData(responseBody);
+                    Hotel = SKore.ToHotel(GameData.Host);
+
+                    Task<bool> gameClientVerifierTask =
+                        VerifyGameClientAsync($"Modified Clients\\{GameData.MovieName}.swf");
+
+                    if (e.Response.ResponseUri.Segments.Length > 2)
+                    {
+                        GameData.UniqueId =
+                            e.Response.ResponseUri.Segments[2].TrimEnd('/');
+                    }
+
+                    string embeddedSwf = responseBody.GetChild("embedSWF(", ',');
+                    string nonCachedSwf = $"{embeddedSwf} + \"?Tanji-{DateTime.Now.Ticks}\"";
+
+                    responseBody = responseBody.Replace(
+                        "embedSWF(" + embeddedSwf, "embedSWF(" + nonCachedSwf);
+                    e.Payload = Encoding.UTF8.GetBytes(responseBody);
+
+                    var resourceKeys = ResourceReplacements.Keys.ToArray();
+                    foreach (string resourceKey in resourceKeys)
+                    {
+                        string realValue = GameData[resourceKey]
+                            .Replace("\\/", "/");
+
+                        string fakeValue =
+                            ResourceReplacements[resourceKey];
+
+                        ResourceReplacements.Remove(resourceKey);
+                        ResourceReplacements[realValue] = fakeValue;
+                    }
+                    if (gameClientVerifierTask.Result)
+                    {
+                        SetStatus(TanjiState.InjectingClient);
+                        Eavesdropper.EavesdropperRequest += InjectClient;
+                    }
+                    else
+                    {
+                        SetStatus(TanjiState.InterceptingClient);
+                        Eavesdropper.EavesdropperResponse += ReplaceClient;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    WriteLog(nameof(ExtractGameData), ex.ToString());
+                }
+                finally
+                {
+                    if (GameData == null)
+                        Eavesdropper.EavesdropperResponse += ExtractGameData;
+                }
+            }
         }
         private void ReplaceResources(object sender, EavesdropperResponseEventArgs e)
         {
             string absoluteUri = e.Response.ResponseUri.AbsoluteUri;
-            if (UriReplacements.ContainsKey(absoluteUri))
+            if (ResourceReplacements.ContainsKey(absoluteUri))
             {
                 var httpResponse = (HttpWebResponse)e.Response;
-                string replacementUrl = UriReplacements[absoluteUri];
+                string replacementUrl = ResourceReplacements[absoluteUri];
 
                 if (httpResponse.StatusCode == HttpStatusCode.TemporaryRedirect)
                 {
-                    UriReplacements.Remove(absoluteUri);
-                    absoluteUri = httpResponse.Headers["Location"];
-                    UriReplacements[absoluteUri] = replacementUrl;
+                    ResourceReplacements.Remove(absoluteUri);
+                    absoluteUri = httpResponse.Headers[HttpResponseHeader.Location];
+                    ResourceReplacements[absoluteUri] = replacementUrl;
                     return;
                 }
 
@@ -176,9 +284,95 @@ namespace Tanji.Pages.Connection
                 }
                 else e.Payload = File.ReadAllBytes(replacementUrl);
 
-                UriReplacements.Remove(absoluteUri);
-                if (UriReplacements.Count < 1)
-                    TerminateReplacing();
+                ResourceReplacements.Remove(absoluteUri);
+                Halt();
+            }
+        }
+
+        /// <summary>
+        /// Terminates the Eavesdropper proxy, and un-hooks from all request/response event handlers.
+        /// </summary>
+        public void Halt()
+        {
+            Eavesdropper.Terminate();
+            Eavesdropper.EavesdropperRequest -= InjectClient;
+            Eavesdropper.EavesdropperResponse -= ReplaceClient;
+            Eavesdropper.EavesdropperResponse -= ExtractGameData;
+            Eavesdropper.EavesdropperResponse -= ReplaceResources;
+        }
+        public void Reset()
+        {
+            DisableReplacements();
+            Connection.Disconnect();
+
+            Game = null;
+            GameData = null;
+        }
+        public void Cancel()
+        {
+            Reset();
+            HConnection.RestoreHosts();
+
+
+            UI.CoTConnectBtn.Text = "Connect";
+            SetStatus(TanjiState.StandingBy);
+        }
+        public void Connect()
+        {
+            Eavesdropper.EavesdropperResponse += ExtractGameData;
+            Eavesdropper.Initiate(ProxyPort);
+
+            UI.CoTConnectBtn.Text = "Cancel";
+            SetStatus(TanjiState.ExtractingGameData);
+        }
+        public void SetStatus(TanjiState state)
+        {
+            if (UI.InvokeRequired)
+            {
+                UI.Invoke(_setStatus, state);
+                return;
+            }
+            switch (state)
+            {
+                case TanjiState.StandingBy:
+                UI.CoTStatusTxt.StopDotAnimation("Standing By...");
+                break;
+
+                case TanjiState.ExtractingGameData:
+                UI.CoTStatusTxt.SetDotAnimation("Extracting Game Data");
+                break;
+
+                case TanjiState.InjectingClient:
+                UI.CoTStatusTxt.SetDotAnimation("Injecting Client");
+                break;
+
+                case TanjiState.ReplacingClient:
+                UI.CoTStatusTxt.SetDotAnimation("Replacing Client");
+                break;
+
+                case TanjiState.DecompressingClient:
+                UI.CoTStatusTxt.SetDotAnimation("Decompressing Client");
+                break;
+
+                case TanjiState.DisassemblingClient:
+                UI.CoTStatusTxt.SetDotAnimation("Disassembling Client");
+                break;
+
+                case TanjiState.ReplacingResources:
+                UI.CoTStatusTxt.SetDotAnimation("Replacing Resources");
+                break;
+
+                case TanjiState.InterceptingConnection:
+                UI.CoTStatusTxt.SetDotAnimation("Intercepting Connection");
+                break;
+
+                case TanjiState.ReconstructingClient:
+                UI.CoTStatusTxt.SetDotAnimation("Reconstructing Client");
+                break;
+
+                case TanjiState.ModifyingClient:
+                UI.CoTStatusTxt.SetDotAnimation("Modifying Client");
+                break;
             }
         }
 
@@ -190,14 +384,14 @@ namespace Tanji.Pages.Connection
         public void ExportTrustedRootCertificate()
         {
             string certificatePath =
-                Path.GetFullPath(ROOT_CERTIFICATE_NAME);
+                Path.GetFullPath(EAVESDROPPER_ROOT_CERTIFICATE_NAME);
 
             bool exportSuccess = Eavesdropper.Certificates
                 .ExportTrustedRootCertificate(certificatePath);
 
             string message = (exportSuccess
-                ? $"Successfully exported '{ROOT_CERTIFICATE_NAME}' to:\r\n\r\n" + certificatePath
-                : $"Failed to export '{ROOT_CERTIFICATE_NAME}' root certificate.");
+                ? $"Successfully exported '{EAVESDROPPER_ROOT_CERTIFICATE_NAME}' to:\r\n\r\n" + certificatePath
+                : $"Failed to export '{EAVESDROPPER_ROOT_CERTIFICATE_NAME}' root certificate.");
 
             MessageBox.Show(message,
                 "Tanji ~ Alert!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -246,7 +440,7 @@ namespace Tanji.Pages.Connection
             {
                 if (game.IsCompressed)
                 {
-                    SetStatus("Decompressing Client");
+                    SetStatus(TanjiState.DecompressingClient);
 
                     await Task.Factory.StartNew(game.Decompress)
                         .ConfigureAwait(false);
@@ -255,7 +449,7 @@ namespace Tanji.Pages.Connection
                 if (game.IsCompressed) return false;
                 else Game = game;
 
-                SetStatus("Disassembling Client");
+                SetStatus(TanjiState.DisassemblingClient);
                 Game.ReadTags();
                 return true;
             }
@@ -266,10 +460,20 @@ namespace Tanji.Pages.Connection
             }
             finally
             {
-                ResetStatus();
                 if (Game != game)
                     game.Dispose();
             }
+        }
+
+        protected void DisableReplacements()
+        {
+            foreach (ListViewItem item in UI.CoTVariablesVw.Items)
+                item.Checked = false;
+        }
+        protected void ToggleClearVariableButton(ListViewItem item)
+        {
+            UI.CoTClearVariableBtn.Enabled =
+                (!string.IsNullOrWhiteSpace(item.SubItems[1].Text));
         }
     }
 }
