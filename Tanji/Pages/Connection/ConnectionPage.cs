@@ -53,6 +53,7 @@ namespace Tanji.Pages.Connection
 
         public HFlash Game { get; private set; }
         public HHotel Hotel { get; private set; }
+        public TanjiState State { get; private set; }
         public HGameData GameData { get; private set; }
 
         public ConnectionPage(MainFrm ui, TabPage tab)
@@ -92,7 +93,7 @@ namespace Tanji.Pages.Connection
 
         private void CoTConnectBtn_Click(object sender, EventArgs e)
         {
-            if (Eavesdropper.IsRunning)
+            if (State != TanjiState.StandingBy)
             {
                 Cancel();
             }
@@ -172,6 +173,8 @@ namespace Tanji.Pages.Connection
             if (e.Response.ContentType != "application/x-shockwave-flash" &&
                 !File.Exists(e.Response.ResponseUri.LocalPath)) return;
 
+            Eavesdropper.EavesdropperResponse -= ReplaceClient;
+
             ushort[] ports = GameData.Port.Split(',')
                 .Select(s => ushort.Parse(s)).ToArray();
 
@@ -194,7 +197,15 @@ namespace Tanji.Pages.Connection
             }
 
             e.Payload = Game.ToByteArray();
-            Halt();
+            if (ResourceReplacements.Count > 0)
+            {
+                Eavesdropper.EavesdropperResponse += ReplaceResources;
+            }
+            else Halt();
+
+            SetStatus(TanjiState.InterceptingConnection);
+            Connection.ConnectAsync(GameData.Host, ports)
+                .ContinueWith(ConnectTaskCompleted);
         }
         private void ExtractGameData(object sender, EavesdropperResponseEventArgs e)
         {
@@ -311,8 +322,6 @@ namespace Tanji.Pages.Connection
         public void Cancel()
         {
             Reset();
-            HConnection.RestoreHosts();
-
 
             UI.CoTConnectBtn.Text = "Connect";
             SetStatus(TanjiState.StandingBy);
@@ -332,7 +341,7 @@ namespace Tanji.Pages.Connection
                 UI.Invoke(_setStatus, state);
                 return;
             }
-            switch (state)
+            switch (State = state)
             {
                 case TanjiState.StandingBy:
                 UI.CoTStatusTxt.StopDotAnimation("Standing By...");
@@ -374,6 +383,13 @@ namespace Tanji.Pages.Connection
                 UI.CoTStatusTxt.SetDotAnimation("Modifying Client");
                 break;
             }
+        }
+
+        protected virtual void ConnectTaskCompleted(Task connectTask)
+        {
+            // I forgot what I was going to do here.
+            if (Connection.IsConnected)
+            { }
         }
 
         public void DestroySignedCertificates()
