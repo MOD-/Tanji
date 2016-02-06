@@ -24,8 +24,8 @@ namespace Tanji.Pages.Connection.Managers
     {
         private byte[] _localSharedKey, _remoteSharedKey;
 
-        public bool IsHandlingOutgoing { get; private set; }
-        public bool IsHandlingIncoming { get; private set; }
+        public bool IsHandlingOutgoing { get; private set; } = true;
+        public bool IsHandlingIncoming { get; private set; } = true;
 
         public IDataManager DataManager { get; }
         public HNode Local => DataManager.Connection.Local;
@@ -41,8 +41,6 @@ namespace Tanji.Pages.Connection.Managers
         public HandshakeManager(IDataManager dataManager)
         {
             DataManager = dataManager;
-            IsHandlingOutgoing = true;
-            IsHandlingIncoming = true;
         }
 
         private void InitializeKeys()
