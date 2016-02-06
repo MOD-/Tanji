@@ -7,11 +7,12 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+using Tanji.Pages.Connection.Managers;
+
 using Sulakore;
 using Sulakore.Habbo;
 using Sulakore.Habbo.Web;
 using Sulakore.Communication;
-using Tanji.Pages.Connection.Managers;
 
 namespace Tanji.Pages.Connection
 {
@@ -20,14 +21,13 @@ namespace Tanji.Pages.Connection
         StandingBy = 0,
         ExtractingGameData = 1,
         InjectingClient = 2,
-        ReplacingClient = 3,
-        InterceptingClient = 4,
-        DecompressingClient = 5,
-        DisassemblingClient = 6,
-        ReplacingResources = 7,
-        ReconstructingClient = 8,
-        InterceptingConnection = 9,
-        ModifyingClient = 10
+        InterceptingClient = 3,
+        DecompressingClient = 4,
+        DisassemblingClient = 5,
+        ModifyingClient = 6,
+        ReconstructingClient = 7,
+        InterceptingConnection = 8,
+        ReplacingResources = 9
     }
 
     public class ConnectionPage : TanjiPage
@@ -47,7 +47,6 @@ namespace Tanji.Pages.Connection
             }
         }
 
-        public HConnection Connection { get; }
         public HandshakeManager HandshakeMngr { get; }
         public Dictionary<string, string> ResourceReplacements { get; }
 
@@ -61,9 +60,7 @@ namespace Tanji.Pages.Connection
         {
             _setStatus = SetStatus;
             Eavesdropper.IsSslSupported = true;
-
-            Connection = new HConnection();
-            HandshakeMngr = new HandshakeManager(Connection);
+            HandshakeMngr = new HandshakeManager(ui);
 
             UI.CoTVariablesVw.Add("productdata.load.url", "");
             UI.CoTVariablesVw.Add("external.texts.txt", "");
@@ -95,7 +92,14 @@ namespace Tanji.Pages.Connection
         {
             if (State != TanjiState.StandingBy)
             {
-                Cancel();
+                // We only want to cancel the resource replacing at this point,
+                // since a connection has already been established.
+                if (State == TanjiState.ReplacingResources)
+                {
+                    Halt();
+                    DisableReplacements();
+                }
+                else Cancel();
             }
             else Connect();
         }
@@ -204,8 +208,8 @@ namespace Tanji.Pages.Connection
             else Halt();
 
             SetStatus(TanjiState.InterceptingConnection);
-            Connection.ConnectAsync(GameData.Host, ports)
-                .ContinueWith(ConnectTaskCompleted);
+            UI.Connection.ConnectAsync(GameData.Host, ports) // Does this mean the current thread calling this code? I should google.
+                .ContinueWith(ConnectTaskCompleted, TaskScheduler.FromCurrentSynchronizationContext());
         }
         private void ExtractGameData(object sender, EavesdropperResponseEventArgs e)
         {
@@ -296,7 +300,11 @@ namespace Tanji.Pages.Connection
                 else e.Payload = File.ReadAllBytes(replacementUrl);
 
                 ResourceReplacements.Remove(absoluteUri);
-                Halt();
+                if (ResourceReplacements.Count < 1)
+                {
+                    Halt();
+                    SetStatus(TanjiState.StandingBy);
+                }
             }
         }
 
@@ -313,8 +321,9 @@ namespace Tanji.Pages.Connection
         }
         public void Reset()
         {
+            Halt();
             DisableReplacements();
-            Connection.Disconnect();
+            UI.Connection.Disconnect();
 
             Game = null;
             GameData = null;
@@ -322,8 +331,6 @@ namespace Tanji.Pages.Connection
         public void Cancel()
         {
             Reset();
-
-            UI.CoTConnectBtn.Text = "Connect";
             SetStatus(TanjiState.StandingBy);
         }
         public void Connect()
@@ -331,7 +338,6 @@ namespace Tanji.Pages.Connection
             Eavesdropper.EavesdropperResponse += ExtractGameData;
             Eavesdropper.Initiate(ProxyPort);
 
-            UI.CoTConnectBtn.Text = "Cancel";
             SetStatus(TanjiState.ExtractingGameData);
         }
         public void SetStatus(TanjiState state)
@@ -341,6 +347,11 @@ namespace Tanji.Pages.Connection
                 UI.Invoke(_setStatus, state);
                 return;
             }
+
+            UI.CoTConnectBtn.Text =
+                (state == TanjiState.StandingBy ? "Connect" : "Cancel");
+
+            #region Switch: state
             switch (State = state)
             {
                 case TanjiState.StandingBy:
@@ -355,8 +366,8 @@ namespace Tanji.Pages.Connection
                 UI.CoTStatusTxt.SetDotAnimation("Injecting Client");
                 break;
 
-                case TanjiState.ReplacingClient:
-                UI.CoTStatusTxt.SetDotAnimation("Replacing Client");
+                case TanjiState.InterceptingClient:
+                UI.CoTStatusTxt.SetDotAnimation("Intercepting Client");
                 break;
 
                 case TanjiState.DecompressingClient:
@@ -367,29 +378,36 @@ namespace Tanji.Pages.Connection
                 UI.CoTStatusTxt.SetDotAnimation("Disassembling Client");
                 break;
 
-                case TanjiState.ReplacingResources:
-                UI.CoTStatusTxt.SetDotAnimation("Replacing Resources");
-                break;
-
-                case TanjiState.InterceptingConnection:
-                UI.CoTStatusTxt.SetDotAnimation("Intercepting Connection");
+                case TanjiState.ModifyingClient:
+                UI.CoTStatusTxt.SetDotAnimation("Modifying Client");
                 break;
 
                 case TanjiState.ReconstructingClient:
                 UI.CoTStatusTxt.SetDotAnimation("Reconstructing Client");
                 break;
 
-                case TanjiState.ModifyingClient:
-                UI.CoTStatusTxt.SetDotAnimation("Modifying Client");
+                case TanjiState.InterceptingConnection:
+                UI.CoTStatusTxt.SetDotAnimation("Intercepting Connection");
+                break;
+
+                case TanjiState.ReplacingResources:
+                UI.CoTStatusTxt.SetDotAnimation("Replacing Resources");
                 break;
             }
+            #endregion
         }
 
         protected virtual void ConnectTaskCompleted(Task connectTask)
         {
-            // I forgot what I was going to do here.
-            if (Connection.IsConnected)
-            { }
+            if (UI.Connection.IsConnected)
+            {
+                UI.PacketLoggerUI.Show();
+                if (ResourceReplacements.Count > 0)
+                {
+                    SetStatus(TanjiState.ReplacingResources);
+                }
+                else SetStatus(TanjiState.StandingBy);
+            }
         }
 
         public void DestroySignedCertificates()
