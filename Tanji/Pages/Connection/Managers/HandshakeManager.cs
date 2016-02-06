@@ -1,5 +1,5 @@
-﻿using Sulakore.Communication;
-using Sulakore.Protocol;
+﻿using Sulakore.Protocol;
+using Sulakore.Communication;
 using Sulakore.Protocol.Encryption;
 
 namespace Tanji.Pages.Connection.Managers
@@ -20,13 +20,16 @@ namespace Tanji.Pages.Connection.Managers
         Note that the "exploit" Tanji utilizes requires two handshake processes to take place.
     */
     #endregion
-    public class HandshakeManager
+    public class HandshakeManager : IDataHandler
     {
-        private readonly HConnection _connection;
         private byte[] _localSharedKey, _remoteSharedKey;
 
-        public HNode Local { get; }
-        public HNode Remote { get; }
+        public bool IsHandlingOutgoing { get; private set; }
+        public bool IsHandlingIncoming { get; private set; }
+
+        public IDataManager DataManager { get; }
+        public HNode Local => DataManager.Connection.Local;
+        public HNode Remote => DataManager.Connection.Remote;
 
         public const int FAKE_EXPONENT = 3;
         public const string FAKE_MODULUS = "86851dd364d5c5cece3c883171cc6ddc5760779b992482bd1e20dd296888df91b33b936a7b93f06d29e8870f703a216257dec7c81de0058fea4cc5116f75e6efc4e9113513e45357dc3fd43d4efab5963ef178b78bd61e81a14c603b24c8bcce0a12230b320045498edc29282ff0603bc7b7dae8fc1b05b52b2f301a9dc783b7";
@@ -35,15 +38,11 @@ namespace Tanji.Pages.Connection.Managers
         public const int REAL_EXPONENT = 65537;
         public const string REAL_MODULUS = "e052808c1abef69a1a62c396396b85955e2ff522f5157639fa6a19a98b54e0e4d6e44f44c4c0390fee8ccf642a22b6d46d7228b10e34ae6fffb61a35c11333780af6dd1aaafa7388fa6c65b51e8225c6b57cf5fbac30856e896229512e1f9af034895937b2cb6637eb6edf768c10189df30c10d8a3ec20488a198063599ca6ad";
 
-        public HandshakeManager(HConnection connection)
+        public HandshakeManager(IDataManager dataManager)
         {
-            _connection = connection;
-
-            Local = connection.Local;
-            Remote = connection.Remote;
-
-            connection.DataOutgoing += DataOutgoing;
-            connection.DataIncoming += DataIncoming;
+            DataManager = dataManager;
+            IsHandlingOutgoing = true;
+            IsHandlingIncoming = true;
         }
 
         private void InitializeKeys()
@@ -53,8 +52,7 @@ namespace Tanji.Pages.Connection.Managers
         }
         private void FinalizeHandshake()
         {
-            _connection.DataOutgoing -= DataOutgoing;
-            _connection.DataIncoming -= DataIncoming;
+            DataManager.RemoveDataHandler(this);
         }
         private void ReplaceLocalPublicKey(InterceptedEventArgs e)
         {
@@ -98,52 +96,49 @@ namespace Tanji.Pages.Connection.Managers
             e.Replacement = new HMessage(e.Packet.Header, localP, localG);
         }
 
-        private void HandleOutgoing(InterceptedEventArgs e)
-        {
-            switch (e.Step)
-            {
-                case 3:
-                {
-                    ReplaceLocalPublicKey(e);
-                    break;
-                }
-                case 4:
-                {
-                    FinalizeHandshake();
-                    break;
-                }
-            }
-        }
-        private void DataOutgoing(object sender, InterceptedEventArgs e)
+        public void HandleOutgoing(InterceptedEventArgs e)
         {
             bool threwException = false;
-            try { HandleOutgoing(e); }
+            try
+            {
+                switch (e.Step)
+                {
+                    case 3:
+                    {
+                        ReplaceLocalPublicKey(e);
+                        break;
+                    }
+                    case 4:
+                    {
+                        FinalizeHandshake();
+                        break;
+                    }
+                }
+            }
             catch { threwException = true; }
             finally { FinalizeInterception(threwException, e); }
         }
-
-        private void HandleIncoming(InterceptedEventArgs e)
-        {
-            switch (e.Step)
-            {
-                case 1:
-                {
-                    InitializeKeys();
-                    ReplaceRemoteSignedPrimes(e);
-                    break;
-                }
-                case 2:
-                {
-                    ReplaceRemotePublicKey(e);
-                    _connection.DataIncoming -= DataIncoming;
-                    break;
-                }
-            }
-        }
-        private void DataIncoming(object sender, InterceptedEventArgs e)
+        public void HandleIncoming(InterceptedEventArgs e)
         {
             bool threwException = false;
-            try { HandleIncoming(e); }
+            try
+            {
+                switch (e.Step)
+                {
+                    case 1:
+                    {
+                        InitializeKeys();
+                        ReplaceRemoteSignedPrimes(e);
+                        break;
+                    }
+                    case 2:
+                    {
+                        ReplaceRemotePublicKey(e);
+                        IsHandlingIncoming = false;
+                        break;
+                    }
+                }
+            }
             catch { threwException = true; }
             finally { FinalizeInterception(threwException, e); }
         }
@@ -166,8 +161,7 @@ namespace Tanji.Pages.Connection.Managers
                 Local.Exchange.Dispose();
                 Remote.Exchange.Dispose();
 
-                _connection.DataOutgoing -= DataOutgoing;
-                _connection.DataIncoming -= DataIncoming;
+                DataManager.RemoveDataHandler(this);
             }
         }
     }
