@@ -60,10 +60,10 @@ namespace Tanji
             this.CoTConnectBtn = new Sulakore.Components.SKoreButton();
             this.CoTCustomClientTxt = new System.Windows.Forms.TextBox();
             this.CoTNameTxt = new System.Windows.Forms.TextBox();
+            this.CoTProxyPortTxt = new System.Windows.Forms.NumericUpDown();
             this.CoTVariablesVw = new Sulakore.Components.SKoreListView();
             this.VTVariableCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.VTValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.CoTProxyPortTxt = new System.Windows.Forms.NumericUpDown();
             this.InjectionTab = new System.Windows.Forms.TabPage();
             this.ITSendToClientBtn = new Sulakore.Components.SKoreButton();
             this.ITSendToServerBtn = new Sulakore.Components.SKoreButton();
@@ -464,6 +464,19 @@ namespace Tanji
             this.CoTNameTxt.TabIndex = 98;
             this.CoTNameTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // CoTProxyPortTxt
+            // 
+            this.CoTProxyPortTxt.Location = new System.Drawing.Point(384, 227);
+            this.CoTProxyPortTxt.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.CoTProxyPortTxt.Name = "CoTProxyPortTxt";
+            this.CoTProxyPortTxt.Size = new System.Drawing.Size(89, 20);
+            this.CoTProxyPortTxt.TabIndex = 92;
+            this.CoTProxyPortTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // CoTVariablesVw
             // 
             this.CoTVariablesVw.CheckBoxes = true;
@@ -493,19 +506,6 @@ namespace Tanji
             // 
             this.VTValueCol.Text = "Value";
             this.VTValueCol.Width = 225;
-            // 
-            // CoTProxyPortTxt
-            // 
-            this.CoTProxyPortTxt.Location = new System.Drawing.Point(384, 227);
-            this.CoTProxyPortTxt.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.CoTProxyPortTxt.Name = "CoTProxyPortTxt";
-            this.CoTProxyPortTxt.Size = new System.Drawing.Size(89, 20);
-            this.CoTProxyPortTxt.TabIndex = 92;
-            this.CoTProxyPortTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // InjectionTab
             // 
@@ -1404,6 +1404,7 @@ namespace Tanji
             this.Name = "MainFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ Status: Disconnected";
+            this.TopMost = true;
             this.Load += new System.EventHandler(this.MainFrm_Load);
             this.TanjiStrip.ResumeLayout(false);
             this.TanjiStrip.PerformLayout();
@@ -1458,7 +1459,6 @@ namespace Tanji
         private System.Windows.Forms.ColumnHeader STDestinationCol;
         private System.Windows.Forms.ColumnHeader STIntervalCol;
         private System.Windows.Forms.ColumnHeader STStatusCol;
-        private Sulakore.Components.SKoreTabControl TanjiTabs;
         private System.Windows.Forms.ColumnHeader IFActionCol;
         private System.Windows.Forms.ColumnHeader IFHeaderCol;
         private System.Windows.Forms.ColumnHeader IFInvocationCol;
@@ -1548,5 +1548,6 @@ namespace Tanji
         internal System.Windows.Forms.NumericUpDown TTIntInputTxt;
         private System.Windows.Forms.Label TTIntInputLbl;
         private System.Windows.Forms.Label label1;
+        internal Sulakore.Components.SKoreTabControl TanjiTabs;
     }
 }

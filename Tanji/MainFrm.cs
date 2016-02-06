@@ -18,6 +18,7 @@ namespace Tanji
     public partial class MainFrm : TanjiForm, IDataManager
     {
         private readonly IList<IDataHandler> _dataHandlers;
+        private readonly IList<IDataHandler> _toRemoveList;
 
         public HConnection Connection { get; }
 
@@ -33,11 +34,12 @@ namespace Tanji
         {
             InitializeComponent();
 
+            _toRemoveList = new List<IDataHandler>();
+            _dataHandlers = new List<IDataHandler>();
+
             Connection = new HConnection();
             Connection.DataOutgoing += DataOutgoing;
             Connection.DataIncoming += DataIncoming;
-
-            PacketLoggerUI = new PacketLoggerFrm(this);
 
             AboutPg = new AboutPage(this, AboutTab);
             ToolboxPg = new ToolboxPage(this, ToolboxTab);
@@ -45,16 +47,15 @@ namespace Tanji
             ExtensionsPg = new ExtensionsPage(this, ExtensionsTab);
             ConnectionPg = new ConnectionPage(this, ConnectionTab);
 
-            _dataHandlers = new List<IDataHandler>();
-            _dataHandlers.Add(ConnectionPg.HandshakeMngr);
-            _dataHandlers.Add(PacketLoggerUI); // Final say on what to do with data.
+            PacketLoggerUI = new PacketLoggerFrm(this);
+
+            AttachDataHandlers();
         }
 
         private void MainFrm_Load(object sender, EventArgs e)
         {
             ConnectionPg.CreateTrustedRootCertificate();
         }
-
         private void TanjiInfoTxt_Click(object sender, EventArgs e)
         {
             Process.Start("https://GitHub.com/ArachisH/Tanji");
@@ -65,19 +66,56 @@ namespace Tanji
                 Process.Start(AboutPg.TanjiRepo.LatestRelease.HtmlUrl);
         }
 
+        public void AttachDataHandlers()
+        {
+            _toRemoveList.Clear();
+            _dataHandlers.Clear();
+
+            _dataHandlers.Add(ExtensionsPg);
+            _dataHandlers.Add(InjectionPg.FiltersPg);
+            // TODO: Implement toolbox functionality, unsure if
+            // we'll need block/replacing capabilities.
+            //_dataHandlers.Add(ToolboxPg);
+            _dataHandlers.Add(ConnectionPg.HandshakeMngr);
+            _dataHandlers.Add(PacketLoggerUI);
+        }
+        protected void ProcessRemoveQueue()
+        {
+            if (_toRemoveList.Count < 1) return;
+            lock (_dataHandlers)
+            {
+                foreach (IDataHandler dataHandler in _toRemoveList)
+                {
+                    if (_dataHandlers.Contains(dataHandler))
+                        _dataHandlers.Remove(dataHandler);
+                }
+                _toRemoveList.Clear();
+            }
+        }
+
         public void AddDataHandler(IDataHandler dataHandler)
         {
-            if (!_dataHandlers.Contains(dataHandler))
-                _dataHandlers.Add(dataHandler);
+            lock (_dataHandlers)
+            {
+                if (!_dataHandlers.Contains(dataHandler))
+                    _dataHandlers.Add(dataHandler);
+            }
         }
         public void RemoveDataHandler(IDataHandler dataHandler)
         {
-            if (_dataHandlers.Contains(dataHandler))
-                _dataHandlers.Remove(dataHandler);
+            lock (_dataHandlers)
+            {
+                if (_dataHandlers.Contains(dataHandler) &&
+                    !_toRemoveList.Contains(dataHandler))
+                {
+                    _toRemoveList.Add(dataHandler);
+                }
+            }
         }
 
         private void DataOutgoing(object sender, InterceptedEventArgs e)
         {
+            ProcessRemoveQueue();
             foreach (IDataHandler dataHandler in _dataHandlers)
             {
                 if (dataHandler.IsHandlingOutgoing)
@@ -86,6 +124,7 @@ namespace Tanji
         }
         private void DataIncoming(object sender, InterceptedEventArgs e)
         {
+            ProcessRemoveQueue();
             foreach (IDataHandler dataHandler in _dataHandlers)
             {
                 if (dataHandler.IsHandlingIncoming)
