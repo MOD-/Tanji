@@ -7,7 +7,6 @@ using System.Collections.Generic;
 
 using Tanji.Pages;
 using Tanji.Components;
-using Tanji.Pages.Connection;
 
 using Sulakore.Protocol;
 using Sulakore.Communication;
@@ -15,7 +14,6 @@ using Sulakore.Disassembler.ActionScript;
 
 namespace Tanji.Applications
 {
-    // TODO: Properly "utilize" the stuff in the ctor argument: IDataManager
     public partial class PacketLoggerFrm : TanjiForm, IDataHandler
     {
         private Task _readQueueTask;
@@ -27,8 +25,7 @@ namespace Tanji.Applications
         private readonly WriteHighlightCallback _writeHighlight;
         private delegate void WriteHighlightCallback(string value, Color highlight);
 
-        public IDataManager DataManager { get; }
-        public ConnectionPage ConnectionPg { get; }
+        public MainFrm MainUI { get; }
         public Queue<InterceptedEventArgs> Intercepted { get; }
 
         public Color BlockHighlight { get; set; } = Color.DarkGray;
@@ -45,7 +42,7 @@ namespace Tanji.Applications
         public bool DisplayReplaced { get; private set; } = true;
         public bool DisplayStructures { get; private set; } = true;
 
-        public PacketLoggerFrm(IDataManager dataManager)
+        public PacketLoggerFrm(MainFrm mainUI)
         {
             InitializeComponent();
 
@@ -56,7 +53,7 @@ namespace Tanji.Applications
             _invalidStructures[HDestination.Client] = new List<ushort>();
             _invalidStructures[HDestination.Server] = new List<ushort>();
 
-            DataManager = dataManager;
+            MainUI = mainUI;
             Intercepted = new Queue<InterceptedEventArgs>();
         }
 
@@ -234,7 +231,7 @@ namespace Tanji.Applications
         public string ExtractPacketLog(HMessage packet, bool toServer)
         {
             ASInstance messageInstance = (toServer ?
-                ConnectionPg.Game.OutgoingTypes : ConnectionPg.Game.IncomingTypes)[packet.Header].Instance;
+                MainUI.ConnectionPg.Game.OutgoingTypes : MainUI.ConnectionPg.Game.IncomingTypes)[packet.Header].Instance;
 
             string arrow = (toServer ? "->" : "<-");
             string type = (toServer ? "Outgoing" : "Incoming");
@@ -249,7 +246,7 @@ namespace Tanji.Applications
             }
 
             ASInstance messageInstance = (toServer ?
-                ConnectionPg.Game.OutgoingTypes : ConnectionPg.Game.IncomingTypes)[packet.Header].Instance;
+                MainUI.ConnectionPg.Game.OutgoingTypes : MainUI.ConnectionPg.Game.IncomingTypes)[packet.Header].Instance;
 
             string arguments = $"{{l}}{{u:{packet.Header}}}";
             ASMethod messageCtor = messageInstance.Constructor;
