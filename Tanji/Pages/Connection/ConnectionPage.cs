@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Linq;
+using System.Drawing;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -35,6 +36,8 @@ namespace Tanji.Pages.Connection
         private const string EAVESDROPPER_ROOT_CERTIFICATE_NAME = "EavesdropperRoot.cer";
 
         private readonly Action<TanjiState> _setStatus;
+        private readonly DirectoryInfo _modifiedClientsDir;
+        private readonly Action<Task> _connectTaskCompleted;
 
         private ushort _proxyPort = 8081;
         public ushort ProxyPort
@@ -59,6 +62,9 @@ namespace Tanji.Pages.Connection
             : base(ui, tab)
         {
             _setStatus = SetStatus;
+            _connectTaskCompleted = ConnectTaskCompleted;
+            _modifiedClientsDir = Directory.CreateDirectory("Modified Clients");
+
             Eavesdropper.IsSslSupported = true;
             HandshakeMngr = new HandshakeManager(ui);
 
@@ -165,7 +171,7 @@ namespace Tanji.Pages.Connection
 
         private void InjectClient(object sender, EavesdropperRequestEventArgs e)
         {
-            if (e.Request.RequestUri.OriginalString.EndsWith(".swf?Tanji-"))
+            if (e.Request.RequestUri.OriginalString.EndsWith("-Tanji"))
             {
                 Eavesdropper.EavesdropperRequest -= InjectClient;
                 e.Request = WebRequest.Create(new Uri(Game.Location));
@@ -187,7 +193,6 @@ namespace Tanji.Pages.Connection
                 VerifyGameClientAsync(e.Payload).Wait();
                 SetStatus(TanjiState.ModifyingClient);
 
-                Game.FindMessageInstances();
                 Game.BypassRemoteHostCheck();
                 Game.RemoveLocalUseRestrictions();
                 Game.DisableExpirationDateCheck();
@@ -197,7 +202,8 @@ namespace Tanji.Pages.Connection
                 Game.Reconstruct();
 
                 File.WriteAllBytes(
-                    $"Modified Clients\\{GameData.MovieName}.swf", Game.ToByteArray());
+                    $"{_modifiedClientsDir.FullName}\\{GameData.MovieName}.swf",
+                    Game.ToByteArray());
             }
 
             e.Payload = Game.ToByteArray();
@@ -208,8 +214,8 @@ namespace Tanji.Pages.Connection
             else Halt();
 
             SetStatus(TanjiState.InterceptingConnection);
-            UI.Connection.ConnectAsync(GameData.Host, ports) // Does this mean the current thread calling this code? I should google.
-                .ContinueWith(ConnectTaskCompleted, TaskScheduler.FromCurrentSynchronizationContext());
+            UI.Connection.ConnectAsync(GameData.Host, ports)
+                .ContinueWith(ConnectTaskCompleted);
         }
         private void ExtractGameData(object sender, EavesdropperResponseEventArgs e)
         {
@@ -227,7 +233,7 @@ namespace Tanji.Pages.Connection
                     Hotel = SKore.ToHotel(GameData.Host);
 
                     Task<bool> gameClientVerifierTask =
-                        VerifyGameClientAsync($"Modified Clients\\{GameData.MovieName}.swf");
+                        VerifyGameClientAsync($"{_modifiedClientsDir.FullName}\\{GameData.MovieName}.swf");
 
                     if (e.Response.ResponseUri.Segments.Length > 2)
                     {
@@ -236,7 +242,7 @@ namespace Tanji.Pages.Connection
                     }
 
                     string embeddedSwf = responseBody.GetChild("embedSWF(", ',');
-                    string nonCachedSwf = $"{embeddedSwf} + \"?Tanji-{DateTime.Now.Ticks}\"";
+                    string nonCachedSwf = $"{embeddedSwf} + \"?{DateTime.Now.Ticks}-Tanji\"";
 
                     responseBody = responseBody.Replace(
                         "embedSWF(" + embeddedSwf, "embedSWF(" + nonCachedSwf);
@@ -399,8 +405,18 @@ namespace Tanji.Pages.Connection
 
         protected virtual void ConnectTaskCompleted(Task connectTask)
         {
+            if (UI.InvokeRequired)
+            {
+                UI.Invoke(_connectTaskCompleted, connectTask);
+                return;
+            }
             if (UI.Connection.IsConnected)
             {
+                // I'm not so sure of this, we'll see.
+                UI.TopMost = false;
+                UI.TanjiTabs.TabPages.Remove(Tab);
+                UI.TanjiTabs.ItemSize = new Size(120, UI.TanjiTabs.ItemSize.Height);
+
                 UI.PacketLoggerUI.Show();
                 if (ResourceReplacements.Count > 0)
                 {
@@ -485,6 +501,8 @@ namespace Tanji.Pages.Connection
 
                 SetStatus(TanjiState.DisassemblingClient);
                 Game.ReadTags();
+
+                Game.FindMessageInstances();
                 return true;
             }
             catch (Exception ex)
