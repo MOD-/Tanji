@@ -44,7 +44,6 @@ namespace Tanji.Applications
             this.DisplayFiltersBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.BlockedBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ReplacedBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.DisplaySplitterBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.DisplayStructuresBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.SettingsSeperator = new System.Windows.Forms.ToolStripSeparator();
             this.AlwaysOnTopBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -148,7 +147,6 @@ namespace Tanji.Applications
             // 
             this.SettingsBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.DisplayFiltersBtn,
-            this.DisplaySplitterBtn,
             this.DisplayStructuresBtn,
             this.SettingsSeperator,
             this.AlwaysOnTopBtn});
@@ -186,16 +184,6 @@ namespace Tanji.Applications
             this.ReplacedBtn.Size = new System.Drawing.Size(163, 22);
             this.ReplacedBtn.Text = "Replaced";
             this.ReplacedBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
-            // 
-            // DisplaySplitterBtn
-            // 
-            this.DisplaySplitterBtn.Checked = true;
-            this.DisplaySplitterBtn.CheckOnClick = true;
-            this.DisplaySplitterBtn.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.DisplaySplitterBtn.Name = "DisplaySplitterBtn";
-            this.DisplaySplitterBtn.Size = new System.Drawing.Size(208, 22);
-            this.DisplaySplitterBtn.Text = "Display Splitter";
-            this.DisplaySplitterBtn.CheckedChanged += new System.EventHandler(this.ItemChecked);
             // 
             // DisplayStructuresBtn
             // 
@@ -255,10 +243,10 @@ namespace Tanji.Applications
             this.Controls.Add(this.LoggerTxt);
             this.Controls.Add(this.PacketLoggerStrip);
             this.Controls.Add(this.PacketLoggerMenu);
+            this.Icon = global::Tanji.Properties.Resources.Tanji_128;
             this.Name = "PacketLoggerFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ Packet Logger";
-            this.Icon = Resources.Tanji_128;
             this.PacketLoggerContextMenu.ResumeLayout(false);
             this.PacketLoggerMenu.ResumeLayout(false);
             this.PacketLoggerMenu.PerformLayout();
@@ -282,7 +270,6 @@ namespace Tanji.Applications
         private System.Windows.Forms.ToolStripMenuItem DisplayFiltersBtn;
         private System.Windows.Forms.ToolStripMenuItem BlockedBtn;
         private System.Windows.Forms.ToolStripMenuItem ReplacedBtn;
-        private System.Windows.Forms.ToolStripMenuItem DisplaySplitterBtn;
         private System.Windows.Forms.ToolStripSeparator SettingsSeperator;
         private System.Windows.Forms.ToolStripMenuItem AlwaysOnTopBtn;
         private System.Windows.Forms.StatusStrip PacketLoggerStrip;

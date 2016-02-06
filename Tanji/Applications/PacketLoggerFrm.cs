@@ -5,16 +5,18 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using Sulakore.Protocol;
-using Sulakore.Communication;
-
+using Tanji.Pages;
 using Tanji.Components;
 using Tanji.Pages.Connection;
+
+using Sulakore.Protocol;
+using Sulakore.Communication;
 using Sulakore.Disassembler.ActionScript;
 
 namespace Tanji.Applications
 {
-    public partial class PacketLoggerFrm : TanjiForm
+    // TODO: Properly "utilize" the stuff in the ctor argument: IDataManager
+    public partial class PacketLoggerFrm : TanjiForm, IDataHandler
     {
         private Task _readQueueTask;
         private readonly IDictionary<HDestination, IList<ushort>> _invalidStructures;
@@ -25,6 +27,7 @@ namespace Tanji.Applications
         private readonly WriteHighlightCallback _writeHighlight;
         private delegate void WriteHighlightCallback(string value, Color highlight);
 
+        public IDataManager DataManager { get; }
         public ConnectionPage ConnectionPg { get; }
         public Queue<InterceptedEventArgs> Intercepted { get; }
 
@@ -34,29 +37,27 @@ namespace Tanji.Applications
         public Color OutgoingHighlight { get; set; } = Color.FromArgb(0, 102, 204);
         public Color PacketStructHighlight { get; set; } = Color.FromArgb(0, 204, 136);
 
-        public bool IsHalted { get; private set; }
-        public bool ViewOutgoing { get; private set; } = true;
-        public bool ViewIncoming { get; private set; } = true;
+        public bool IsHalted { get; private set; } = false;
+        public bool IsHandlingOutgoing { get; private set; } = true;
+        public bool IsHandlingIncoming { get; private set; } = true;
 
         public bool DisplayBlocked { get; private set; } = true;
         public bool DisplayReplaced { get; private set; } = true;
-        public bool DisplaySplitter { get; private set; } = true;
         public bool DisplayStructures { get; private set; } = true;
 
-        public PacketLoggerFrm(MainFrm ui)
+        public PacketLoggerFrm(IDataManager dataManager)
         {
             InitializeComponent();
 
             _refreshLog = RefreshLog;
             _writeHighlight = WriteHighlight;
-            Intercepted = new Queue<InterceptedEventArgs>();
 
             _invalidStructures = new Dictionary<HDestination, IList<ushort>>(2);
             _invalidStructures[HDestination.Client] = new List<ushort>();
             _invalidStructures[HDestination.Server] = new List<ushort>();
 
-            ConnectionPg.Connection.DataIncoming += DataIncoming;
-            ConnectionPg.Connection.DataOutgoing += DataOutgoing;
+            DataManager = dataManager;
+            Intercepted = new Queue<InterceptedEventArgs>();
         }
 
         protected override void OnLoad(EventArgs e)
@@ -91,17 +92,16 @@ namespace Tanji.Applications
             {
                 case nameof(ViewIncomingBtn):
                 {
-                    CaptureIncomingLbl.Text = "Capture Incoming: " + isChecked;
-                    ViewIncoming = isChecked;
+                    CaptureIncomingLbl.Text = ("Capture Incoming: " + isChecked);
+                    IsHandlingIncoming = isChecked;
                     break;
                 }
                 case nameof(ViewOutgoingBtn):
                 {
-                    CaptureOutgoingLbl.Text = "Capture Outgoing: " + isChecked;
-                    ViewOutgoing = isChecked;
+                    CaptureOutgoingLbl.Text = ("Capture Outgoing: " + isChecked);
+                    IsHandlingOutgoing = isChecked;
                     break;
                 }
-
                 case nameof(DisplayStructuresBtn):
                 {
                     DisplayStructures = isChecked;
@@ -115,11 +115,6 @@ namespace Tanji.Applications
                 case nameof(ReplacedBtn):
                 {
                     DisplayReplaced = isChecked;
-                    break;
-                }
-                case nameof(DisplaySplitterBtn):
-                {
-                    DisplaySplitter = isChecked;
                     break;
                 }
                 case nameof(AlwaysOnTopBtn):
@@ -143,14 +138,14 @@ namespace Tanji.Applications
             LoggerTxt.Clear();
         }
 
-        private void DataIncoming(object sender, InterceptedEventArgs e)
+        public void HandleOutgoing(InterceptedEventArgs e)
         {
-            if (!IsHalted && ViewIncoming)
+            if (!IsHalted)
                 PushToQueue(e);
         }
-        private void DataOutgoing(object sender, InterceptedEventArgs e)
+        public void HandleIncoming(InterceptedEventArgs e)
         {
-            if (!IsHalted && ViewOutgoing)
+            if (!IsHalted)
                 PushToQueue(e);
         }
 
@@ -175,8 +170,8 @@ namespace Tanji.Applications
                         bool toServer = (args.Packet.Destination == HDestination.Server);
 
                         if (args.IsBlocked && !DisplayBlocked) continue;
-                        if (toServer && !ViewOutgoing) continue;
-                        if (!toServer && !ViewIncoming) continue;
+                        if (toServer && !IsHandlingOutgoing) continue;
+                        if (!toServer && !IsHandlingIncoming) continue;
 
                         string packetLog = ExtractPacketLog(args.Replacement, toServer);
                         Color packetLogHighlight = (toServer ? OutgoingHighlight : IncomingHighlight);
@@ -204,9 +199,7 @@ namespace Tanji.Applications
                             }
                         }
 
-                        if (DisplaySplitter)
-                            WriteHighlight("--------------------\r\n", packetLogHighlight);
-
+                        WriteHighlight("--------------------\r\n", packetLogHighlight);
                         RefreshLog();
                     }
                 }
