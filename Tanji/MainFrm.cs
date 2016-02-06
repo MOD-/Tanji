@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Collections.Generic;
 
+using Tanji.Pages;
 using Tanji.Components;
 using Tanji.Pages.About;
 using Tanji.Applications;
@@ -9,10 +11,16 @@ using Tanji.Pages.Injection;
 using Tanji.Pages.Extensions;
 using Tanji.Pages.Connection;
 
+using Sulakore.Communication;
+
 namespace Tanji
 {
-    public partial class MainFrm : TanjiForm
+    public partial class MainFrm : TanjiForm, IDataManager
     {
+        private readonly IList<IDataHandler> _dataHandlers;
+
+        public HConnection Connection { get; }
+
         public AboutPage AboutPg { get; }
         public ToolboxPage ToolboxPg { get; }
         public InjectionPage InjectionPg { get; }
@@ -25,20 +33,21 @@ namespace Tanji
         {
             InitializeComponent();
 
-            // Initialize this first, since it carries the important HConnection instance
-            // that many other pages will need for hooking onto the data interception events.
-            ConnectionPg = new ConnectionPage(this, ConnectionTab);
-            
-            // Everything here should be initialized by their data priority from least to greatest.
-            ExtensionsPg = new ExtensionsPage(this, ExtensionsTab);
-            InjectionPg = new InjectionPage(this, InjectionTab);
-            ToolboxPg = new ToolboxPage(this, ToolboxTab);
-            AboutPg = new AboutPage(this, AboutTab);
+            Connection = new HConnection();
+            Connection.DataOutgoing += DataOutgoing;
+            Connection.DataIncoming += DataIncoming;
 
-            // This instance/form currently has top priority,
-            // since we want to display the final true intentions
-            // of a packet whether is was replaced/blocked.
             PacketLoggerUI = new PacketLoggerFrm(this);
+
+            AboutPg = new AboutPage(this, AboutTab);
+            ToolboxPg = new ToolboxPage(this, ToolboxTab);
+            InjectionPg = new InjectionPage(this, InjectionTab);
+            ExtensionsPg = new ExtensionsPage(this, ExtensionsTab);
+            ConnectionPg = new ConnectionPage(this, ConnectionTab);
+
+            _dataHandlers = new List<IDataHandler>();
+            _dataHandlers.Add(ConnectionPg.HandshakeMngr);
+            _dataHandlers.Add(PacketLoggerUI); // Final say on what to do with data.
         }
 
         private void MainFrm_Load(object sender, EventArgs e)
@@ -54,6 +63,34 @@ namespace Tanji
         {
             if (AboutPg.TanjiRepo.LatestRelease != null)
                 Process.Start(AboutPg.TanjiRepo.LatestRelease.HtmlUrl);
+        }
+
+        public void AddDataHandler(IDataHandler dataHandler)
+        {
+            if (!_dataHandlers.Contains(dataHandler))
+                _dataHandlers.Add(dataHandler);
+        }
+        public void RemoveDataHandler(IDataHandler dataHandler)
+        {
+            if (_dataHandlers.Contains(dataHandler))
+                _dataHandlers.Remove(dataHandler);
+        }
+
+        private void DataOutgoing(object sender, InterceptedEventArgs e)
+        {
+            foreach (IDataHandler dataHandler in _dataHandlers)
+            {
+                if (dataHandler.IsHandlingOutgoing)
+                    dataHandler.HandleOutgoing(e);
+            }
+        }
+        private void DataIncoming(object sender, InterceptedEventArgs e)
+        {
+            foreach (IDataHandler dataHandler in _dataHandlers)
+            {
+                if (dataHandler.IsHandlingIncoming)
+                    dataHandler.HandleIncoming(e);
+            }
         }
     }
 }
