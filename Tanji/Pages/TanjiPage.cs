@@ -75,7 +75,8 @@ namespace Tanji.Pages
             title = $"[{title}, {Name}, {DateTime.Now}]";
 
             string log = (title + ": " + message);
-            // TODO: Write this log somewhere.
+            Console.WriteLine(log);
+            // TODO: We still need to write this somewhere.
         }
 
         protected virtual void OnNotifyingChanged()
