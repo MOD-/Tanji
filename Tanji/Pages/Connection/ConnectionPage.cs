@@ -13,7 +13,8 @@ using Tanji.Pages.Connection.Managers;
 using Sulakore;
 using Sulakore.Habbo;
 using Sulakore.Habbo.Web;
-using Sulakore.Communication;
+
+using Eavesdrop;
 
 namespace Tanji.Pages.Connection
 {
@@ -33,7 +34,7 @@ namespace Tanji.Pages.Connection
 
     public class ConnectionPage : TanjiPage
     {
-        private const string EAVESDROPPER_ROOT_CERTIFICATE_NAME = "EavesdropperRoot.cer";
+        private const string EAVESDROP_ROOT_CERTIFICATE_NAME = "EavesdropRoot.cer";
 
         private readonly Action<TanjiState> _setStatus;
         private readonly DirectoryInfo _modifiedClientsDir;
@@ -50,13 +51,13 @@ namespace Tanji.Pages.Connection
             }
         }
 
+        public HFlash Game { get; set; }
+        public HHotel Hotel { get; set; }
+        public HGameData GameData { get; set; }
         public HandshakeManager HandshakeMngr { get; }
         public Dictionary<string, string> ResourceReplacements { get; }
 
-        public HFlash Game { get; private set; }
-        public HHotel Hotel { get; private set; }
         public TanjiState State { get; private set; }
-        public HGameData GameData { get; private set; }
 
         public ConnectionPage(MainFrm ui, TabPage tab)
             : base(ui, tab)
@@ -65,7 +66,6 @@ namespace Tanji.Pages.Connection
             _connectTaskCompleted = ConnectTaskCompleted;
             _modifiedClientsDir = Directory.CreateDirectory("Modified Clients");
 
-            Eavesdropper.IsSslSupported = true;
             HandshakeMngr = new HandshakeManager(ui);
 
             UI.CoTVariablesVw.Add("productdata.load.url", "");
@@ -104,10 +104,24 @@ namespace Tanji.Pages.Connection
                 {
                     Halt();
                     DisableReplacements();
+                    SetStatus(TanjiState.StandingBy);
                 }
                 else Cancel();
             }
-            else Connect();
+            else
+            {
+                if (UI.Connection.IsConnected)
+                {
+                    DialogResult result = MessageBox.Show(
+                        "Are you sure you want to disconnect from the current session?\r\nDon't worry, all of your current options/settings will still be intact.",
+                        "Tanji ~ Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
+
+                    if (result == DialogResult.Yes)
+                        UI.Connection.Disconnect();
+                    else return;
+                }
+                Connect();
+            }
         }
 
         private void CoTClearVariableBtn_Click(object sender, EventArgs e)
@@ -169,21 +183,21 @@ namespace Tanji.Pages.Connection
             UI.CoTValueTxt.Text = e.Item.SubItems[1].Text;
         }
 
-        private void InjectClient(object sender, EavesdropperRequestEventArgs e)
+        private void InjectClient(object sender, RequestInterceptedEventArgs e)
         {
             if (e.Request.RequestUri.OriginalString.EndsWith("-Tanji"))
             {
-                Eavesdropper.EavesdropperRequest -= InjectClient;
+                Eavesdropper.RequestIntercepted -= InjectClient;
                 e.Request = WebRequest.Create(new Uri(Game.Location));
-                Eavesdropper.EavesdropperResponse += ReplaceClient;
+                Eavesdropper.ResponseIntercepted += ReplaceClient;
             }
         }
-        private void ReplaceClient(object sender, EavesdropperResponseEventArgs e)
+        private void ReplaceClient(object sender, ResponseInterceptedEventArgs e)
         {
             if (e.Response.ContentType != "application/x-shockwave-flash" &&
                 !File.Exists(e.Response.ResponseUri.LocalPath)) return;
 
-            Eavesdropper.EavesdropperResponse -= ReplaceClient;
+            Eavesdropper.ResponseIntercepted -= ReplaceClient;
 
             ushort[] ports = GameData.Port.Split(',')
                 .Select(s => ushort.Parse(s)).ToArray();
@@ -209,7 +223,7 @@ namespace Tanji.Pages.Connection
             e.Payload = Game.ToByteArray();
             if (ResourceReplacements.Count > 0)
             {
-                Eavesdropper.EavesdropperResponse += ReplaceResources;
+                Eavesdropper.ResponseIntercepted += ReplaceResources;
             }
             else Halt();
 
@@ -217,7 +231,7 @@ namespace Tanji.Pages.Connection
             UI.Connection.ConnectAsync(GameData.Host, ports)
                 .ContinueWith(ConnectTaskCompleted);
         }
-        private void ExtractGameData(object sender, EavesdropperResponseEventArgs e)
+        private void ExtractGameData(object sender, ResponseInterceptedEventArgs e)
         {
             if (e.Response.ContentType != "text/html") return;
             if (GameData != null) return;
@@ -226,7 +240,7 @@ namespace Tanji.Pages.Connection
             if (responseBody.Contains("swfobject.embedSWF") &&
                 responseBody.Contains("connection.info.host"))
             {
-                Eavesdropper.EavesdropperResponse -= ExtractGameData;
+                Eavesdropper.ResponseIntercepted -= ExtractGameData;
                 try
                 {
                     GameData = new HGameData(responseBody);
@@ -263,12 +277,12 @@ namespace Tanji.Pages.Connection
                     if (gameClientVerifierTask.Result)
                     {
                         SetStatus(TanjiState.InjectingClient);
-                        Eavesdropper.EavesdropperRequest += InjectClient;
+                        Eavesdropper.RequestIntercepted += InjectClient;
                     }
                     else
                     {
                         SetStatus(TanjiState.InterceptingClient);
-                        Eavesdropper.EavesdropperResponse += ReplaceClient;
+                        Eavesdropper.ResponseIntercepted += ReplaceClient;
                     }
                 }
                 catch (Exception ex)
@@ -278,11 +292,11 @@ namespace Tanji.Pages.Connection
                 finally
                 {
                     if (GameData == null)
-                        Eavesdropper.EavesdropperResponse += ExtractGameData;
+                        Eavesdropper.ResponseIntercepted += ExtractGameData;
                 }
             }
         }
-        private void ReplaceResources(object sender, EavesdropperResponseEventArgs e)
+        private void ReplaceResources(object sender, ResponseInterceptedEventArgs e)
         {
             string absoluteUri = e.Response.ResponseUri.AbsoluteUri;
             if (ResourceReplacements.ContainsKey(absoluteUri))
@@ -314,16 +328,13 @@ namespace Tanji.Pages.Connection
             }
         }
 
-        /// <summary>
-        /// Terminates the Eavesdropper proxy, and un-hooks from all request/response event handlers.
-        /// </summary>
         public void Halt()
         {
             Eavesdropper.Terminate();
-            Eavesdropper.EavesdropperRequest -= InjectClient;
-            Eavesdropper.EavesdropperResponse -= ReplaceClient;
-            Eavesdropper.EavesdropperResponse -= ExtractGameData;
-            Eavesdropper.EavesdropperResponse -= ReplaceResources;
+            Eavesdropper.RequestIntercepted -= InjectClient;
+            Eavesdropper.ResponseIntercepted -= ReplaceClient;
+            Eavesdropper.ResponseIntercepted -= ExtractGameData;
+            Eavesdropper.ResponseIntercepted -= ReplaceResources;
         }
         public void Reset()
         {
@@ -341,7 +352,7 @@ namespace Tanji.Pages.Connection
         }
         public void Connect()
         {
-            Eavesdropper.EavesdropperResponse += ExtractGameData;
+            Eavesdropper.ResponseIntercepted += ExtractGameData;
             Eavesdropper.Initiate(ProxyPort);
 
             SetStatus(TanjiState.ExtractingGameData);
@@ -405,19 +416,8 @@ namespace Tanji.Pages.Connection
 
         protected virtual void ConnectTaskCompleted(Task connectTask)
         {
-            if (UI.InvokeRequired)
-            {
-                UI.Invoke(_connectTaskCompleted, connectTask);
-                return;
-            }
             if (UI.Connection.IsConnected)
             {
-                // I'm not so sure of this, we'll see.
-                UI.TopMost = false;
-                UI.TanjiTabs.TabPages.Remove(Tab);
-                UI.TanjiTabs.ItemSize = new Size(120, UI.TanjiTabs.ItemSize.Height);
-
-                UI.PacketLoggerUI.Show();
                 if (ResourceReplacements.Count > 0)
                 {
                     SetStatus(TanjiState.ReplacingResources);
@@ -428,20 +428,20 @@ namespace Tanji.Pages.Connection
 
         public void DestroySignedCertificates()
         {
-            Eavesdropper.Certificates.DestroySignedCertificates();
+            Eavesdropper.Certifier.DestroySignedCertificates();
             CreateTrustedRootCertificate();
         }
         public void ExportTrustedRootCertificate()
         {
             string certificatePath =
-                Path.GetFullPath(EAVESDROPPER_ROOT_CERTIFICATE_NAME);
+                Path.GetFullPath(EAVESDROP_ROOT_CERTIFICATE_NAME);
 
-            bool exportSuccess = Eavesdropper.Certificates
+            bool exportSuccess = Eavesdropper.Certifier
                 .ExportTrustedRootCertificate(certificatePath);
 
             string message = (exportSuccess
-                ? $"Successfully exported '{EAVESDROPPER_ROOT_CERTIFICATE_NAME}' to:\r\n\r\n" + certificatePath
-                : $"Failed to export '{EAVESDROPPER_ROOT_CERTIFICATE_NAME}' root certificate.");
+                ? $"Successfully exported '{EAVESDROP_ROOT_CERTIFICATE_NAME}' to:\r\n\r\n" + certificatePath
+                : $"Failed to export '{EAVESDROP_ROOT_CERTIFICATE_NAME}' root certificate.");
 
             MessageBox.Show(message,
                 "Tanji ~ Alert!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
@@ -450,7 +450,7 @@ namespace Tanji.Pages.Connection
         {
             // WARNING: Do not call this method within a constructor.
             UI.BringToFront();
-            while (!Eavesdropper.Certificates.CreateTrustedRootCertificate())
+            while (!Eavesdropper.Certifier.CreateTrustedRootCertificate())
             {
                 var result = MessageBox.Show(
                     "Eavesdrop requires a self-signed certificate in the root store to intercept HTTPS traffic.\r\n\r\nWould you like to retry the process?",
