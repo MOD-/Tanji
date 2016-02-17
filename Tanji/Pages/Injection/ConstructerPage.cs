@@ -1,14 +1,199 @@
-﻿using System.Windows.Forms;
+﻿using System;
+using System.Windows.Forms;
 
 namespace Tanji.Pages.Injection
 {
     public class ConstructerPage : TanjiSubPage<InjectionPage>
     {
-        private const string INVALID_INTEGER_VALUE =
+        private const string INVALID_SINT32_VALUE =
             "The given value is either too large, or too small to be identified as a 32-bit signed integer.";
+
+        private ushort _header = 0;
+        public ushort Header
+        {
+            get { return _header; }
+            set
+            {
+                _header = value;
+                RaiseOnPropertyChanged(nameof(Header));
+                UpdateUI();
+            }
+        }
 
         public ConstructerPage(InjectionPage parent, TabPage tab)
             : base(parent, tab)
-        { }
+        {
+            UI.CTHeaderTxt.DataBindings.Add("Value", this,
+                nameof(Header), false, DataSourceUpdateMode.OnPropertyChanged);
+
+            UI.CTValueTxt.KeyDown += CTValueTxt_KeyDown;
+
+            UI.CTClearBtn.Click += CTClearBtn_Click;
+            UI.CTMoveUpBtn.Click += CTMoveUpBtn_Click;
+            UI.CTRemoveBtn.Click += CTRemoveBtn_Click;
+            UI.CTMoveDownBtn.Click += CTMoveDownBtn_Click;
+            UI.CTTransferBelowBtn.Click += CTTransferBelowBtn_Click;
+
+            UI.CTWriteStringBtn.Click += CTWriteStringBtn_Click;
+            UI.CTWriteIntegerBtn.Click += CTWriteIntegerBtn_Click;
+            UI.CTWriteBooleanBtn.Click += CTWriteBooleanBtn_Click;
+
+            UI.CTConstructerVw.ItemActivate += CTConstructerVw_ItemActivate;
+            UI.CTConstructerVw.ItemSelected += CTConstructerVw_ItemSelected;
+            UI.CTConstructerVw.ItemSelectionStateChanged += CTConstructerVw_ItemSelectionStateChanged;
+        }
+
+
+        public void WriteInteger(int value)
+        {
+            WriteInteger(value, 1);
+        }
+        public virtual void WriteInteger(int value, int amount)
+        {
+            UI.CTConstructerVw.WriteInteger(value, amount);
+            AddAutoCompleteValue(value);
+            UpdateUI();
+        }
+
+        public void WriteBoolean(bool value)
+        {
+            WriteBoolean(value, 1);
+        }
+        public virtual void WriteBoolean(bool value, int amount)
+        {
+            UI.CTConstructerVw.WriteBoolean(value, amount);
+            AddAutoCompleteValue(value);
+            UpdateUI();
+        }
+
+        public void WriteString(string value)
+        {
+            WriteString(value, 1);
+        }
+        public void WriteString(string value, int amount)
+        {
+            UI.CTConstructerVw.WriteString(value, amount);
+            AddAutoCompleteValue(value);
+            UpdateUI();
+        }
+
+        private void UpdateUI()
+        {
+            UI.CTChunkCountLbl.Text =
+                ("Chunk Count: " + UI.CTConstructerVw.Values.Count);
+
+            UI.CTStructureTxt.Text =
+                UI.CTConstructerVw.GetStructure(Header);
+        }
+        private void AddAutoCompleteValue(object value)
+        {
+            string sValue = value.ToString();
+            if (!UI.CTValueTxt.Items.Contains(sValue))
+                UI.CTValueTxt.Items.Add(sValue);
+        }
+        private object TryParseObject(string type, string value)
+        {
+            switch (type)
+            {
+                default:
+                case "String":
+                return value;
+
+                case "Boolean":
+                return (value == "true" || value == "1");
+
+                case "Integer":
+                {
+                    int iValue = 0;
+                    int.TryParse(value, out iValue);
+                    return iValue;
+                }
+            }
+        }
+
+        private void CTValueTxt_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode != Keys.Enter) return;
+
+            ListViewItem item = UI.CTConstructerVw.SelectedItem;
+            string type = item.SubItems[0].Text;
+
+            string sValue = UI.CTValueTxt.Text;
+            object value = TryParseObject(type, sValue);
+
+            UI.CTConstructerVw.UpdateSelectedValue(value);
+            UI.CTValueTxt.Text = value.ToString();
+
+            AddAutoCompleteValue(value);
+            UpdateUI();
+        }
+
+        private void CTClearBtn_Click(object sender, EventArgs e)
+        {
+            UI.CTConstructerVw.ClearItems();
+            UpdateUI();
+        }
+        private void CTRemoveBtn_Click(object sender, EventArgs e)
+        {
+            UI.CTConstructerVw.RemoveSelectedItem();
+            UpdateUI();
+        }
+        private void CTMoveUpBtn_Click(object sender, EventArgs e)
+        {
+            UI.CTConstructerVw.MoveSelectedItemUp();
+            UpdateUI();
+        }
+        private void CTMoveDownBtn_Click(object sender, EventArgs e)
+        {
+            UI.CTConstructerVw.MoveSelectedItemDown();
+            UpdateUI();
+        }
+        private void CTTransferBelowBtn_Click(object sender, EventArgs e)
+        {
+            UI.ITPacketTxt.Text =
+                UI.CTConstructerVw.GetPacket(Header).ToString();
+        }
+
+        private void CTWriteStringBtn_Click(object sender, EventArgs e)
+        {
+            WriteString(UI.CTValueTxt.Text, (int)UI.CTAmountTxt.Value);
+        }
+        private void CTWriteIntegerBtn_Click(object sender, EventArgs e)
+        {
+            int value = 0;
+            string vString = UI.CTValueTxt.Text;
+            if (!string.IsNullOrWhiteSpace(vString) &&
+                !int.TryParse(vString, out value))
+            {
+                MessageBox.Show(INVALID_SINT32_VALUE,
+                    "Tanji ~ Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+            else WriteInteger(value, (int)UI.CTAmountTxt.Value);
+        }
+        private void CTWriteBooleanBtn_Click(object sender, EventArgs e)
+        {
+            string sValue = UI.CTValueTxt.Text.ToLower();
+            WriteBoolean(sValue == "true" || sValue == "1", (int)UI.CTAmountTxt.Value);
+        }
+
+        private void CTConstructerVw_ItemActivate(object sender, EventArgs e)
+        {
+            UI.CTValueTxt.Text = UI.CTConstructerVw.
+                SelectedItem.SubItems[1].Text;
+
+            UI.CTValueTxt.Focus();
+        }
+        private void CTConstructerVw_ItemSelected(object sender, EventArgs e)
+        {
+            UI.CTMoveUpBtn.Enabled = UI.CTConstructerVw.CanMoveSelectedItemUp;
+            UI.CTMoveDownBtn.Enabled = UI.CTConstructerVw.CanMoveSelectedItemDown;
+        }
+        private void CTConstructerVw_ItemSelectionStateChanged(object sender, EventArgs e)
+        {
+            UI.CTRemoveBtn.Enabled = UI.CTConstructerVw.HasSelectedItem;
+
+            if (!UI.CTConstructerVw.HasSelectedItem)
+                CTConstructerVw_ItemSelected(sender, e);
+        }
     }
 }
