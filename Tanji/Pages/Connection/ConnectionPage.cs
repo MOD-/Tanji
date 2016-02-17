@@ -90,8 +90,7 @@ namespace Tanji.Pages.Connection
             UI.CoTUpdateVariableBtn.Click += CoTUpdateVariableBtn_Click;
 
             UI.CoTVariablesVw.ItemChecked += CoTVariablesVw_ItemChecked;
-            UI.CoTVariablesVw.ItemSelected += CoTVariablesVw_ItemSelected;
-            UI.CoTVariablesVw.ItemsDeselected += CoTVariablesVw_ItemsDeselected;
+            UI.CoTVariablesVw.ItemSelectionStateChanged += CoTVariablesVw_ItemSelectionStateChanged;
         }
 
         private void CoTConnectBtn_Click(object sender, EventArgs e)
@@ -127,7 +126,7 @@ namespace Tanji.Pages.Connection
         private void CoTClearVariableBtn_Click(object sender, EventArgs e)
         {
             ListViewItem item =
-                UI.CoTVariablesVw.GetSelectedItem();
+                UI.CoTVariablesVw.SelectedItem;
 
             item.SubItems[1].Text = string.Empty;
             UI.CoTClearVariableBtn.Enabled = false;
@@ -137,7 +136,7 @@ namespace Tanji.Pages.Connection
         private void CoTUpdateVariableBtn_Click(object sender, EventArgs e)
         {
             ListViewItem item =
-                UI.CoTVariablesVw.GetSelectedItem();
+                UI.CoTVariablesVw.SelectedItem;
 
             item.SubItems[1].Text =
                 UI.CoTValueTxt.Text;
@@ -157,14 +156,6 @@ namespace Tanji.Pages.Connection
             ExportTrustedRootCertificate();
         }
 
-        private void CoTVariablesVw_ItemsDeselected(object sender, EventArgs e)
-        {
-            UI.CoTUpdateVariableBtn.Enabled =
-                (UI.CoTClearVariableBtn.Enabled = false);
-
-            UI.CoTNameTxt.Text =
-               (UI.CoTValueTxt.Text = string.Empty);
-        }
         private void CoTVariablesVw_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
             string name = e.Item.Text;
@@ -174,13 +165,26 @@ namespace Tanji.Pages.Connection
             if (updateValue) ResourceReplacements[name] = value;
             else if (ResourceReplacements.ContainsKey(name)) ResourceReplacements.Remove(name);
         }
-        private void CoTVariablesVw_ItemSelected(object sender, ListViewItemSelectionChangedEventArgs e)
+        private void CoTVariablesVw_ItemSelectionStateChanged(object sender, EventArgs e)
         {
-            ToggleClearVariableButton(e.Item);
-            UI.CoTUpdateVariableBtn.Enabled = true;
+            if (UI.CoTVariablesVw.HasSelectedItem)
+            {
+                ListViewItem item = UI.CoTVariablesVw.SelectedItem;
 
-            UI.CoTNameTxt.Text = e.Item.Text;
-            UI.CoTValueTxt.Text = e.Item.SubItems[1].Text;
+                ToggleClearVariableButton(item);
+                UI.CoTUpdateVariableBtn.Enabled = true;
+
+                UI.CoTNameTxt.Text = item.Text;
+                UI.CoTValueTxt.Text = item.SubItems[1].Text;
+            }
+            else
+            {
+                UI.CoTUpdateVariableBtn.Enabled =
+                    (UI.CoTClearVariableBtn.Enabled = false);
+
+                UI.CoTNameTxt.Text =
+                   (UI.CoTValueTxt.Text = string.Empty);
+            }
         }
 
         private void InjectClient(object sender, RequestInterceptedEventArgs e)
@@ -414,6 +418,18 @@ namespace Tanji.Pages.Connection
             #endregion
         }
 
+        protected override void OnTabEnter()
+        {
+            if (!UI.Connection.IsConnected)
+                UI.TopMost = true;
+
+            base.OnTabEnter();
+        }
+        protected override void OnTabLeave()
+        {
+            UI.TopMost = false;
+            base.OnTabLeave();
+        }
         protected virtual void ConnectTaskCompleted(Task connectTask)
         {
             if (UI.Connection.IsConnected)
