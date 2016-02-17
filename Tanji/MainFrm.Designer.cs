@@ -1403,7 +1403,7 @@ namespace Tanji
             this.MaximizeBox = false;
             this.Name = "MainFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
-            this.Text = "Tanji ~ Status: Disconnected";
+            this.Text = "Tanji ~ Disconnected";
             this.TopMost = true;
             this.Load += new System.EventHandler(this.MainFrm_Load);
             this.TanjiStrip.ResumeLayout(false);

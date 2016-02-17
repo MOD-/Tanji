@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Diagnostics;
+using System.Windows.Forms;
 using System.Collections.Generic;
 
 using Tanji.Pages;
@@ -17,6 +18,8 @@ namespace Tanji
 {
     public partial class MainFrm : TanjiForm, IDataManager
     {
+        private readonly EventHandler _connected, _disconnected;
+
         private readonly IList<IDataHandler> _dataHandlers;
         private readonly IList<IDataHandler> _toRemoveList;
 
@@ -34,10 +37,14 @@ namespace Tanji
         {
             InitializeComponent();
 
+            _connected = Connected;
+            _disconnected = Disconnected;
             _toRemoveList = new List<IDataHandler>();
             _dataHandlers = new List<IDataHandler>();
 
             Connection = new HConnection();
+            Connection.Connected += Connected;
+            Connection.Disconnected += Disconnected;
             Connection.DataOutgoing += DataOutgoing;
             Connection.DataIncoming += DataIncoming;
 
@@ -111,6 +118,43 @@ namespace Tanji
                     _toRemoveList.Add(dataHandler);
                 }
             }
+        }
+
+        private void Connected(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(_connected, sender, e);
+                return;
+            }
+
+            AttachDataHandlers();
+
+            TopMost = false;
+            Text = $"Tanji ~ Connected[{Connection.Host}:{Connection.Port}]";
+
+            PacketLoggerUI.Show();
+            PacketLoggerUI.WindowState = FormWindowState.Normal;
+
+            BringToFront();
+        }
+        private void Disconnected(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(_disconnected, sender, e);
+                return;
+            }
+
+            ConnectionPg.Game = null;
+            ConnectionPg.GameData = null;
+
+            TopMost = true;
+            Text = "Tanji ~ Disconnected";
+            // TODO: Stop all services(schedulers/injections/filters).
+
+            PacketLoggerUI.Close();
+            PacketLoggerUI.Hide();
         }
 
         private void DataOutgoing(object sender, InterceptedEventArgs e)
