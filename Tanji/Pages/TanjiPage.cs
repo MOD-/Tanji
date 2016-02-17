@@ -49,17 +49,27 @@ namespace Tanji.Pages
             Name = tab.Name;
             Title = tab.Text;
 
-            Tab.Enter += TabEnter;
+            Tab.Enter += Tab_Enter;
+            Tab.Leave += Tab_Leave;
 
             _tabControl = (TabControl)tab.Parent;
             _onNotifyingChanged = OnNotifyingChanged;
+        }
+
+        protected virtual void OnTabLeave()
+        {
+            WriteLog(nameof(OnTabLeave), $"'{Name}' has lost focus.");
+        }
+        private void Tab_Leave(object sender, EventArgs e)
+        {
+            OnTabLeave();
         }
 
         protected virtual void OnTabEnter()
         {
             WriteLog(nameof(OnTabEnter), $"'{Name}' has accquired focus.");
         }
-        private void TabEnter(object sender, EventArgs e)
+        private void Tab_Enter(object sender, EventArgs e)
         {
             IsNotifying = false;
             OnTabEnter();
