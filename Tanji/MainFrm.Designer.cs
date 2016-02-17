@@ -69,20 +69,20 @@ namespace Tanji
             this.ITSendToServerBtn = new Sulakore.Components.SKoreButton();
             this.InjectionTabs = new Sulakore.Components.SKoreTabControl();
             this.ConstructerTab = new System.Windows.Forms.TabPage();
+            this.CTHeaderTxt = new System.Windows.Forms.NumericUpDown();
             this.CTHeaderLbl = new System.Windows.Forms.Label();
-            this.CTCountLbl = new System.Windows.Forms.Label();
-            this.CTPacketTxt = new System.Windows.Forms.TextBox();
+            this.CTAmountLbl = new System.Windows.Forms.Label();
+            this.CTStructureTxt = new System.Windows.Forms.TextBox();
             this.CTTransferBelowBtn = new Sulakore.Components.SKoreButton();
             this.CTChunkCountLbl = new Sulakore.Components.SKoreLabel();
-            this.CTCountTxt = new System.Windows.Forms.NumericUpDown();
+            this.CTAmountTxt = new System.Windows.Forms.NumericUpDown();
             this.CTRemoveBtn = new Sulakore.Components.SKoreButton();
             this.CTMoveDownBtn = new Sulakore.Components.SKoreButton();
             this.CTMoveUpBtn = new Sulakore.Components.SKoreButton();
             this.CTClearBtn = new Sulakore.Components.SKoreButton();
-            this.CTAppendBooleanBtn = new Sulakore.Components.SKoreButton();
-            this.CTAppendStringBtn = new Sulakore.Components.SKoreButton();
-            this.CTAppendIntegerBtn = new Sulakore.Components.SKoreButton();
-            this.CTHeaderTxt = new System.Windows.Forms.TextBox();
+            this.CTWriteBooleanBtn = new Sulakore.Components.SKoreButton();
+            this.CTWriteStringBtn = new Sulakore.Components.SKoreButton();
+            this.CTWriteIntegerBtn = new Sulakore.Components.SKoreButton();
             this.CTValueLbl = new System.Windows.Forms.Label();
             this.CTValueTxt = new System.Windows.Forms.ComboBox();
             this.CTConstructerVw = new Sulakore.Components.SKoreConstructView();
@@ -150,7 +150,8 @@ namespace Tanji
             this.InjectionTab.SuspendLayout();
             this.InjectionTabs.SuspendLayout();
             this.ConstructerTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.CTCountTxt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CTHeaderTxt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CTAmountTxt)).BeginInit();
             this.SchedulerTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.STIntervalTxt)).BeginInit();
             this.PrimitiveTab.SuspendLayout();
@@ -567,20 +568,20 @@ namespace Tanji
             // 
             // ConstructerTab
             // 
+            this.ConstructerTab.Controls.Add(this.CTHeaderTxt);
             this.ConstructerTab.Controls.Add(this.CTHeaderLbl);
-            this.ConstructerTab.Controls.Add(this.CTCountLbl);
-            this.ConstructerTab.Controls.Add(this.CTPacketTxt);
+            this.ConstructerTab.Controls.Add(this.CTAmountLbl);
+            this.ConstructerTab.Controls.Add(this.CTStructureTxt);
             this.ConstructerTab.Controls.Add(this.CTTransferBelowBtn);
             this.ConstructerTab.Controls.Add(this.CTChunkCountLbl);
-            this.ConstructerTab.Controls.Add(this.CTCountTxt);
+            this.ConstructerTab.Controls.Add(this.CTAmountTxt);
             this.ConstructerTab.Controls.Add(this.CTRemoveBtn);
             this.ConstructerTab.Controls.Add(this.CTMoveDownBtn);
             this.ConstructerTab.Controls.Add(this.CTMoveUpBtn);
             this.ConstructerTab.Controls.Add(this.CTClearBtn);
-            this.ConstructerTab.Controls.Add(this.CTAppendBooleanBtn);
-            this.ConstructerTab.Controls.Add(this.CTAppendStringBtn);
-            this.ConstructerTab.Controls.Add(this.CTAppendIntegerBtn);
-            this.ConstructerTab.Controls.Add(this.CTHeaderTxt);
+            this.ConstructerTab.Controls.Add(this.CTWriteBooleanBtn);
+            this.ConstructerTab.Controls.Add(this.CTWriteStringBtn);
+            this.ConstructerTab.Controls.Add(this.CTWriteIntegerBtn);
             this.ConstructerTab.Controls.Add(this.CTValueLbl);
             this.ConstructerTab.Controls.Add(this.CTValueTxt);
             this.ConstructerTab.Controls.Add(this.CTConstructerVw);
@@ -591,6 +592,19 @@ namespace Tanji
             this.ConstructerTab.Text = "Constructer";
             this.ConstructerTab.UseVisualStyleBackColor = true;
             // 
+            // CTHeaderTxt
+            // 
+            this.CTHeaderTxt.Location = new System.Drawing.Point(3, 16);
+            this.CTHeaderTxt.Maximum = new decimal(new int[] {
+            4000,
+            0,
+            0,
+            0});
+            this.CTHeaderTxt.Name = "CTHeaderTxt";
+            this.CTHeaderTxt.Size = new System.Drawing.Size(79, 20);
+            this.CTHeaderTxt.TabIndex = 49;
+            this.CTHeaderTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // CTHeaderLbl
             // 
             this.CTHeaderLbl.AutoSize = true;
@@ -600,24 +614,25 @@ namespace Tanji
             this.CTHeaderLbl.TabIndex = 31;
             this.CTHeaderLbl.Text = "Header";
             // 
-            // CTCountLbl
+            // CTAmountLbl
             // 
-            this.CTCountLbl.AutoSize = true;
-            this.CTCountLbl.Location = new System.Drawing.Point(331, 0);
-            this.CTCountLbl.Name = "CTCountLbl";
-            this.CTCountLbl.Size = new System.Drawing.Size(35, 13);
-            this.CTCountLbl.TabIndex = 39;
-            this.CTCountLbl.Text = "Count";
+            this.CTAmountLbl.AutoSize = true;
+            this.CTAmountLbl.Location = new System.Drawing.Point(331, 0);
+            this.CTAmountLbl.Name = "CTAmountLbl";
+            this.CTAmountLbl.Size = new System.Drawing.Size(43, 13);
+            this.CTAmountLbl.TabIndex = 39;
+            this.CTAmountLbl.Text = "Amount";
             // 
-            // CTPacketTxt
+            // CTStructureTxt
             // 
-            this.CTPacketTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.CTStructureTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.CTPacketTxt.Location = new System.Drawing.Point(115, 220);
-            this.CTPacketTxt.Name = "CTPacketTxt";
-            this.CTPacketTxt.ReadOnly = true;
-            this.CTPacketTxt.Size = new System.Drawing.Size(279, 20);
-            this.CTPacketTxt.TabIndex = 48;
+            this.CTStructureTxt.Location = new System.Drawing.Point(115, 220);
+            this.CTStructureTxt.Name = "CTStructureTxt";
+            this.CTStructureTxt.ReadOnly = true;
+            this.CTStructureTxt.Size = new System.Drawing.Size(279, 20);
+            this.CTStructureTxt.TabIndex = 48;
+            this.CTStructureTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // CTTransferBelowBtn
             // 
@@ -643,19 +658,19 @@ namespace Tanji
             this.CTChunkCountLbl.Text = "Chunk Count: 0";
             this.CTChunkCountLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // CTCountTxt
+            // CTAmountTxt
             // 
-            this.CTCountTxt.Location = new System.Drawing.Point(334, 16);
-            this.CTCountTxt.Minimum = new decimal(new int[] {
+            this.CTAmountTxt.Location = new System.Drawing.Point(334, 16);
+            this.CTAmountTxt.Minimum = new decimal(new int[] {
             1,
             0,
             0,
             0});
-            this.CTCountTxt.Name = "CTCountTxt";
-            this.CTCountTxt.Size = new System.Drawing.Size(60, 20);
-            this.CTCountTxt.TabIndex = 40;
-            this.CTCountTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            this.CTCountTxt.Value = new decimal(new int[] {
+            this.CTAmountTxt.Name = "CTAmountTxt";
+            this.CTAmountTxt.Size = new System.Drawing.Size(60, 20);
+            this.CTAmountTxt.TabIndex = 40;
+            this.CTAmountTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CTAmountTxt.Value = new decimal(new int[] {
             1,
             0,
             0,
@@ -712,50 +727,41 @@ namespace Tanji
             this.CTClearBtn.TabIndex = 35;
             this.CTClearBtn.Text = "Clear";
             // 
-            // CTAppendBooleanBtn
+            // CTWriteBooleanBtn
             // 
-            this.CTAppendBooleanBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CTAppendBooleanBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CTAppendBooleanBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.CTAppendBooleanBtn.Location = new System.Drawing.Point(296, 42);
-            this.CTAppendBooleanBtn.Name = "CTAppendBooleanBtn";
-            this.CTAppendBooleanBtn.Size = new System.Drawing.Size(98, 22);
-            this.CTAppendBooleanBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CTAppendBooleanBtn.TabIndex = 34;
-            this.CTAppendBooleanBtn.Text = "Append Boolean";
+            this.CTWriteBooleanBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CTWriteBooleanBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CTWriteBooleanBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.CTWriteBooleanBtn.Location = new System.Drawing.Point(296, 42);
+            this.CTWriteBooleanBtn.Name = "CTWriteBooleanBtn";
+            this.CTWriteBooleanBtn.Size = new System.Drawing.Size(98, 22);
+            this.CTWriteBooleanBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CTWriteBooleanBtn.TabIndex = 34;
+            this.CTWriteBooleanBtn.Text = "Write Boolean";
             // 
-            // CTAppendStringBtn
+            // CTWriteStringBtn
             // 
-            this.CTAppendStringBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CTAppendStringBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CTAppendStringBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.CTAppendStringBtn.Location = new System.Drawing.Point(192, 42);
-            this.CTAppendStringBtn.Name = "CTAppendStringBtn";
-            this.CTAppendStringBtn.Size = new System.Drawing.Size(98, 22);
-            this.CTAppendStringBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CTAppendStringBtn.TabIndex = 33;
-            this.CTAppendStringBtn.Text = "Append String";
+            this.CTWriteStringBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CTWriteStringBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CTWriteStringBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.CTWriteStringBtn.Location = new System.Drawing.Point(192, 42);
+            this.CTWriteStringBtn.Name = "CTWriteStringBtn";
+            this.CTWriteStringBtn.Size = new System.Drawing.Size(98, 22);
+            this.CTWriteStringBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CTWriteStringBtn.TabIndex = 33;
+            this.CTWriteStringBtn.Text = "Write String";
             // 
-            // CTAppendIntegerBtn
+            // CTWriteIntegerBtn
             // 
-            this.CTAppendIntegerBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CTAppendIntegerBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CTAppendIntegerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.CTAppendIntegerBtn.Location = new System.Drawing.Point(88, 42);
-            this.CTAppendIntegerBtn.Name = "CTAppendIntegerBtn";
-            this.CTAppendIntegerBtn.Size = new System.Drawing.Size(98, 22);
-            this.CTAppendIntegerBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CTAppendIntegerBtn.TabIndex = 32;
-            this.CTAppendIntegerBtn.Text = "Append Integer";
-            // 
-            // CTHeaderTxt
-            // 
-            this.CTHeaderTxt.Location = new System.Drawing.Point(3, 16);
-            this.CTHeaderTxt.MaxLength = 4;
-            this.CTHeaderTxt.Name = "CTHeaderTxt";
-            this.CTHeaderTxt.Size = new System.Drawing.Size(79, 20);
-            this.CTHeaderTxt.TabIndex = 30;
-            this.CTHeaderTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CTWriteIntegerBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CTWriteIntegerBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CTWriteIntegerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
+            this.CTWriteIntegerBtn.Location = new System.Drawing.Point(88, 42);
+            this.CTWriteIntegerBtn.Name = "CTWriteIntegerBtn";
+            this.CTWriteIntegerBtn.Size = new System.Drawing.Size(98, 22);
+            this.CTWriteIntegerBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CTWriteIntegerBtn.TabIndex = 32;
+            this.CTWriteIntegerBtn.Text = "Write Integer";
             // 
             // CTValueLbl
             // 
@@ -787,7 +793,6 @@ namespace Tanji
             this.ICSEncodedCol});
             this.CTConstructerVw.FullRowSelect = true;
             this.CTConstructerVw.GridLines = true;
-            this.CTConstructerVw.Header = ((ushort)(0));
             this.CTConstructerVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.CTConstructerVw.HideSelection = false;
             this.CTConstructerVw.Location = new System.Drawing.Point(3, 70);
@@ -1417,7 +1422,8 @@ namespace Tanji
             this.InjectionTabs.ResumeLayout(false);
             this.ConstructerTab.ResumeLayout(false);
             this.ConstructerTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.CTCountTxt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CTHeaderTxt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.CTAmountTxt)).EndInit();
             this.SchedulerTab.ResumeLayout(false);
             this.SchedulerTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.STIntervalTxt)).EndInit();
@@ -1450,7 +1456,7 @@ namespace Tanji
         private System.Windows.Forms.TabPage ToolboxTab;
         private System.Windows.Forms.TabPage InjectionTab;
         private System.Windows.Forms.Label CTHeaderLbl;
-        private System.Windows.Forms.Label CTCountLbl;
+        private System.Windows.Forms.Label CTAmountLbl;
         private System.Windows.Forms.ColumnHeader ICSTypeCol;
         private System.Windows.Forms.ColumnHeader ICSValueCol;
         private System.Windows.Forms.ColumnHeader ICSEncodedCol;
@@ -1480,19 +1486,18 @@ namespace Tanji
         internal Sulakore.Components.SKoreButton ITSendToClientBtn;
         internal Sulakore.Components.SKoreButton ITSendToServerBtn;
         internal System.Windows.Forms.ComboBox CTValueTxt;
-        internal System.Windows.Forms.TextBox CTPacketTxt;
+        internal System.Windows.Forms.TextBox CTStructureTxt;
         internal Sulakore.Components.SKoreButton CTTransferBelowBtn;
         internal Sulakore.Components.SKoreLabel CTChunkCountLbl;
         internal Sulakore.Components.SKoreConstructView CTConstructerVw;
-        internal System.Windows.Forms.NumericUpDown CTCountTxt;
+        internal System.Windows.Forms.NumericUpDown CTAmountTxt;
         internal Sulakore.Components.SKoreButton CTRemoveBtn;
         internal Sulakore.Components.SKoreButton CTMoveDownBtn;
         internal Sulakore.Components.SKoreButton CTMoveUpBtn;
         internal Sulakore.Components.SKoreButton CTClearBtn;
-        internal Sulakore.Components.SKoreButton CTAppendBooleanBtn;
-        internal Sulakore.Components.SKoreButton CTAppendStringBtn;
-        internal Sulakore.Components.SKoreButton CTAppendIntegerBtn;
-        internal System.Windows.Forms.TextBox CTHeaderTxt;
+        internal Sulakore.Components.SKoreButton CTWriteBooleanBtn;
+        internal Sulakore.Components.SKoreButton CTWriteStringBtn;
+        internal Sulakore.Components.SKoreButton CTWriteIntegerBtn;
         internal Sulakore.Components.SKoreButton STClearBtn;
         internal Sulakore.Components.SKoreButton STStopAllBtn;
         internal Sulakore.Components.SKoreButton STStartAllBtn;
@@ -1549,5 +1554,6 @@ namespace Tanji
         private System.Windows.Forms.Label TTIntInputLbl;
         private System.Windows.Forms.Label label1;
         internal Sulakore.Components.SKoreTabControl TanjiTabs;
+        internal System.Windows.Forms.NumericUpDown CTHeaderTxt;
     }
 }
