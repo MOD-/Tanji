@@ -17,13 +17,10 @@ namespace Tanji.Applications
     public partial class PacketLoggerFrm : TanjiForm, IDataHandler
     {
         private Task _readQueueTask;
+
+        private readonly Action _refreshLog;
+        private readonly Action<string, Color> _writeHighlight;
         private readonly IDictionary<HDestination, IList<ushort>> _invalidStructures;
-
-        private readonly RefreshLogCallback _refreshLog;
-        private delegate void RefreshLogCallback();
-
-        private readonly WriteHighlightCallback _writeHighlight;
-        private delegate void WriteHighlightCallback(string value, Color highlight);
 
         public MainFrm MainUI { get; }
         public Queue<InterceptedEventArgs> Intercepted { get; }
@@ -175,7 +172,6 @@ namespace Tanji.Applications
 
                         if (args.IsBlocked) WriteHighlight("Blocked ", BlockHighlight);
                         else if (args.WasReplaced) WriteHighlight("Replaced ", ReplaceHighlight);
-                        if (args.IsBlocked || args.WasReplaced) WriteHighlight("| ", Color.White);
 
                         WriteHighlight(packetLog + "\r\n", packetLogHighlight);
                         if (DisplayStructures)
