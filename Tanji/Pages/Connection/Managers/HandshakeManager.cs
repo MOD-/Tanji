@@ -22,6 +22,7 @@ namespace Tanji.Pages.Connection.Managers
     #endregion
     public class HandshakeManager : IDataHandler
     {
+        private int _incomingOffset;
         private byte[] _localSharedKey, _remoteSharedKey;
 
         public bool IsHandlingOutgoing { get; private set; } = true;
@@ -121,7 +122,12 @@ namespace Tanji.Pages.Connection.Managers
             bool threwException = false;
             try
             {
-                switch (e.Step)
+                if (e.Packet.Length == 2)
+                {
+                    _incomingOffset++;
+                    return;
+                }
+                switch (e.Step - _incomingOffset)
                 {
                     case 1:
                     {
@@ -132,7 +138,6 @@ namespace Tanji.Pages.Connection.Managers
                     case 2:
                     {
                         ReplaceRemotePublicKey(e);
-                        IsHandlingIncoming = false;
                         break;
                     }
                 }
