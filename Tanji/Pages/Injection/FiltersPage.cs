@@ -11,9 +11,7 @@ namespace Tanji.Pages.Injection
 
         public FiltersPage(InjectionPage parent, TabPage tab)
             : base(parent, tab)
-        {
-            UI.InjectionTabs.TabPages.Remove(tab);
-        }
+        { }
 
         public void HandleOutgoing(InterceptedEventArgs e)
         { }
