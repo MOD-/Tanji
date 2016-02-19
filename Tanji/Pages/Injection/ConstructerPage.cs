@@ -6,7 +6,7 @@ namespace Tanji.Pages.Injection
     public class ConstructerPage : TanjiSubPage<InjectionPage>
     {
         private const string INVALID_SINT32_VALUE =
-            "The given value is either too large, or too small to be identified as a 32-bit signed integer.";
+            "The given value is not a valid 32-bit signed integer.";
 
         private ushort _header = 0;
         public ushort Header
@@ -16,6 +16,20 @@ namespace Tanji.Pages.Injection
             {
                 _header = value;
                 RaiseOnPropertyChanged(nameof(Header));
+
+                UpdateUI();
+            }
+        }
+
+        private ushort _amount = 1;
+        public ushort Amount
+        {
+            get { return _amount; }
+            set
+            {
+                _amount = value;
+                RaiseOnPropertyChanged(nameof(Amount));
+
                 UpdateUI();
             }
         }
@@ -23,8 +37,14 @@ namespace Tanji.Pages.Injection
         public ConstructerPage(InjectionPage parent, TabPage tab)
             : base(parent, tab)
         {
+
+            UpdateUI();
+
             UI.CTHeaderTxt.DataBindings.Add("Value", this,
                 nameof(Header), false, DataSourceUpdateMode.OnPropertyChanged);
+
+            UI.CTAmountTxt.DataBindings.Add("Value", this,
+                nameof(Amount), false, DataSourceUpdateMode.OnPropertyChanged);
 
             UI.CTValueTxt.KeyDown += CTValueTxt_KeyDown;
 
@@ -42,7 +62,6 @@ namespace Tanji.Pages.Injection
             UI.CTConstructerVw.ItemSelected += CTConstructerVw_ItemSelected;
             UI.CTConstructerVw.ItemSelectionStateChanged += CTConstructerVw_ItemSelectionStateChanged;
         }
-
 
         public void WriteInteger(int value)
         {
@@ -116,9 +135,10 @@ namespace Tanji.Pages.Injection
             if (e.KeyCode != Keys.Enter) return;
 
             ListViewItem item = UI.CTConstructerVw.SelectedItem;
-            string type = item.SubItems[0].Text;
-
+            if (item == null) return;
+            
             string sValue = UI.CTValueTxt.Text;
+            string type = item.SubItems[0].Text;
             object value = TryParseObject(type, sValue);
 
             UI.CTConstructerVw.UpdateSelectedValue(value);
@@ -156,7 +176,7 @@ namespace Tanji.Pages.Injection
 
         private void CTWriteStringBtn_Click(object sender, EventArgs e)
         {
-            WriteString(UI.CTValueTxt.Text, (int)UI.CTAmountTxt.Value);
+            WriteString(UI.CTValueTxt.Text, Amount);
         }
         private void CTWriteIntegerBtn_Click(object sender, EventArgs e)
         {
@@ -168,12 +188,12 @@ namespace Tanji.Pages.Injection
                 MessageBox.Show(INVALID_SINT32_VALUE,
                     "Tanji ~ Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else WriteInteger(value, (int)UI.CTAmountTxt.Value);
+            else WriteInteger(value, Amount);
         }
         private void CTWriteBooleanBtn_Click(object sender, EventArgs e)
         {
             string sValue = UI.CTValueTxt.Text.ToLower();
-            WriteBoolean(sValue == "true" || sValue == "1", (int)UI.CTAmountTxt.Value);
+            WriteBoolean(sValue == "true" || sValue == "1", Amount);
         }
 
         private void CTConstructerVw_ItemActivate(object sender, EventArgs e)
