@@ -68,12 +68,12 @@ namespace Tanji.Pages.Connection
 
             HandshakeMngr = new HandshakeManager(ui);
 
-            UI.CoTVariablesVw.Add("productdata.load.url", "");
-            UI.CoTVariablesVw.Add("external.texts.txt", "");
-            UI.CoTVariablesVw.Add("external.variables.txt", "");
-            UI.CoTVariablesVw.Add("external.override.texts.txt", "");
-            UI.CoTVariablesVw.Add("external.figurepartlist.txt", "");
-            UI.CoTVariablesVw.Add("external.override.variables.txt", "");
+            UI.CoTVariablesVw.AddItem("productdata.load.url", "");
+            UI.CoTVariablesVw.AddItem("external.texts.txt", "");
+            UI.CoTVariablesVw.AddItem("external.variables.txt", "");
+            UI.CoTVariablesVw.AddItem("external.override.texts.txt", "");
+            UI.CoTVariablesVw.AddItem("external.figurepartlist.txt", "");
+            UI.CoTVariablesVw.AddItem("external.override.variables.txt", "");
 
             ResourceReplacements = new Dictionary<string, string>(
                 UI.CoTVariablesVw.Items.Count);
