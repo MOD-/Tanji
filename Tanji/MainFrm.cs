@@ -19,9 +19,7 @@ namespace Tanji
     public partial class MainFrm : TanjiForm, IDataManager
     {
         private readonly EventHandler _connected, _disconnected;
-
-        private readonly IList<IDataHandler> _dataHandlers;
-        private readonly IList<IDataHandler> _toRemoveList;
+        private readonly IList<IDataHandler> _dataHandlers, _toRemoveList;
 
         public HConnection Connection { get; }
 

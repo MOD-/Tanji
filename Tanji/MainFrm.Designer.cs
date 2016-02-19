@@ -69,6 +69,7 @@ namespace Tanji
             this.ITSendToServerBtn = new Sulakore.Components.SKoreButton();
             this.InjectionTabs = new Sulakore.Components.SKoreTabControl();
             this.ConstructerTab = new System.Windows.Forms.TabPage();
+            this.CTValueTxt = new System.Windows.Forms.ComboBox();
             this.CTHeaderTxt = new System.Windows.Forms.NumericUpDown();
             this.CTHeaderLbl = new System.Windows.Forms.Label();
             this.CTAmountLbl = new System.Windows.Forms.Label();
@@ -84,27 +85,29 @@ namespace Tanji
             this.CTWriteStringBtn = new Sulakore.Components.SKoreButton();
             this.CTWriteIntegerBtn = new Sulakore.Components.SKoreButton();
             this.CTValueLbl = new System.Windows.Forms.Label();
-            this.CTValueTxt = new System.Windows.Forms.ComboBox();
             this.CTConstructerVw = new Sulakore.Components.SKoreConstructView();
             this.ICSTypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ICSValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ICSEncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CTUpdateOnEnterChckbx = new System.Windows.Forms.CheckBox();
             this.SchedulerTab = new System.Windows.Forms.TabPage();
+            this.STUpdateBtn = new Sulakore.Components.SKoreButton();
+            this.STRemoveBtn = new Sulakore.Components.SKoreButton();
             this.STAutoStartChckbx = new System.Windows.Forms.CheckBox();
+            this.STDestinationLbl = new System.Windows.Forms.Label();
+            this.STCyclesLbl = new System.Windows.Forms.Label();
+            this.STCyclesTxt = new System.Windows.Forms.NumericUpDown();
             this.STIntervalLbl = new System.Windows.Forms.Label();
             this.STClearBtn = new Sulakore.Components.SKoreButton();
-            this.STStopAllBtn = new Sulakore.Components.SKoreButton();
-            this.STStartAllBtn = new Sulakore.Components.SKoreButton();
-            this.STRemoveBtn = new Sulakore.Components.SKoreButton();
             this.STCreateBtn = new Sulakore.Components.SKoreButton();
             this.STIntervalTxt = new System.Windows.Forms.NumericUpDown();
-            this.STDestinationLbl = new System.Windows.Forms.Label();
             this.STDestinationTxt = new System.Windows.Forms.ComboBox();
             this.STPacketLbl = new System.Windows.Forms.Label();
             this.STPacketTxt = new System.Windows.Forms.TextBox();
             this.STSchedulerVw = new Sulakore.Components.SKoreScheduleView();
             this.STPacketCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STDestinationCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.STCyclesCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STIntervalCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STStatusCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PrimitiveTab = new System.Windows.Forms.TabPage();
@@ -122,16 +125,16 @@ namespace Tanji
             this.IFInvocationCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ITPacketTxt = new System.Windows.Forms.ComboBox();
             this.ToolboxTab = new System.Windows.Forms.TabPage();
-            this.label1 = new System.Windows.Forms.Label();
-            this.TTIntInputLbl = new System.Windows.Forms.Label();
-            this.TTUShortInputTxt = new System.Windows.Forms.NumericUpDown();
+            this.TT16BitInputLbl = new System.Windows.Forms.Label();
+            this.TT32BitInputLbl = new System.Windows.Forms.Label();
             this.TTIntInputTxt = new System.Windows.Forms.NumericUpDown();
             this.ToolboxTabs = new Sulakore.Components.SKoreTabControl();
             this.ProfileTab = new System.Windows.Forms.TabPage();
-            this.TTUShortOutputTxt = new System.Windows.Forms.TextBox();
             this.TTIntOutputTxt = new System.Windows.Forms.TextBox();
-            this.TTDecodeUShortBtn = new Sulakore.Components.SKoreButton();
             this.TTDecodeIntBtn = new Sulakore.Components.SKoreButton();
+            this.TTDecodeUShortBtn = new Sulakore.Components.SKoreButton();
+            this.TTUShortOutputTxt = new System.Windows.Forms.TextBox();
+            this.TTUShortInputTxt = new System.Windows.Forms.NumericUpDown();
             this.ExtensionsTab = new System.Windows.Forms.TabPage();
             this.ETUninstallExtensionBtn = new Sulakore.Components.SKoreButton();
             this.ETExtensionVw = new Sulakore.Components.SKoreExtensionView();
@@ -153,13 +156,14 @@ namespace Tanji
             ((System.ComponentModel.ISupportInitialize)(this.CTHeaderTxt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.CTAmountTxt)).BeginInit();
             this.SchedulerTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.STCyclesTxt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.STIntervalTxt)).BeginInit();
             this.PrimitiveTab.SuspendLayout();
             this.FiltersTab.SuspendLayout();
             this.ToolboxTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TTUShortInputTxt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TTIntInputTxt)).BeginInit();
             this.ToolboxTabs.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TTUShortInputTxt)).BeginInit();
             this.ExtensionsTab.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -325,7 +329,6 @@ namespace Tanji
             // 
             this.CoTBrowseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CoTBrowseBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTBrowseBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CoTBrowseBtn.Location = new System.Drawing.Point(373, 253);
             this.CoTBrowseBtn.Name = "CoTBrowseBtn";
             this.CoTBrowseBtn.Size = new System.Drawing.Size(100, 22);
@@ -346,7 +349,6 @@ namespace Tanji
             // CoTExportRootCertificateBtn
             // 
             this.CoTExportRootCertificateBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTExportRootCertificateBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CoTExportRootCertificateBtn.Location = new System.Drawing.Point(163, 225);
             this.CoTExportRootCertificateBtn.Name = "CoTExportRootCertificateBtn";
             this.CoTExportRootCertificateBtn.Size = new System.Drawing.Size(160, 22);
@@ -357,7 +359,6 @@ namespace Tanji
             // CoTDestroyCertificatesBtn
             // 
             this.CoTDestroyCertificatesBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTDestroyCertificatesBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CoTDestroyCertificatesBtn.Location = new System.Drawing.Point(3, 225);
             this.CoTDestroyCertificatesBtn.Name = "CoTDestroyCertificatesBtn";
             this.CoTDestroyCertificatesBtn.Size = new System.Drawing.Size(154, 22);
@@ -402,7 +403,6 @@ namespace Tanji
             // CoTClearVariableBtn
             // 
             this.CoTClearVariableBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTClearVariableBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CoTClearVariableBtn.Enabled = false;
             this.CoTClearVariableBtn.Location = new System.Drawing.Point(328, 187);
             this.CoTClearVariableBtn.Name = "CoTClearVariableBtn";
@@ -414,7 +414,6 @@ namespace Tanji
             // CoTUpdateVariableBtn
             // 
             this.CoTUpdateVariableBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTUpdateVariableBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CoTUpdateVariableBtn.Location = new System.Drawing.Point(328, 156);
             this.CoTUpdateVariableBtn.Name = "CoTUpdateVariableBtn";
             this.CoTUpdateVariableBtn.Size = new System.Drawing.Size(145, 22);
@@ -438,7 +437,6 @@ namespace Tanji
             // CoTConnectBtn
             // 
             this.CoTConnectBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTConnectBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CoTConnectBtn.Location = new System.Drawing.Point(359, 288);
             this.CoTConnectBtn.Name = "CoTConnectBtn";
             this.CoTConnectBtn.Size = new System.Drawing.Size(114, 22);
@@ -526,7 +524,6 @@ namespace Tanji
             // 
             this.ITSendToClientBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ITSendToClientBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ITSendToClientBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.ITSendToClientBtn.Location = new System.Drawing.Point(267, 288);
             this.ITSendToClientBtn.Name = "ITSendToClientBtn";
             this.ITSendToClientBtn.Size = new System.Drawing.Size(100, 22);
@@ -538,7 +535,6 @@ namespace Tanji
             // 
             this.ITSendToServerBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.ITSendToServerBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ITSendToServerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.ITSendToServerBtn.Location = new System.Drawing.Point(373, 288);
             this.ITSendToServerBtn.Name = "ITSendToServerBtn";
             this.ITSendToServerBtn.Size = new System.Drawing.Size(100, 22);
@@ -568,6 +564,7 @@ namespace Tanji
             // 
             // ConstructerTab
             // 
+            this.ConstructerTab.Controls.Add(this.CTValueTxt);
             this.ConstructerTab.Controls.Add(this.CTHeaderTxt);
             this.ConstructerTab.Controls.Add(this.CTHeaderLbl);
             this.ConstructerTab.Controls.Add(this.CTAmountLbl);
@@ -583,14 +580,25 @@ namespace Tanji
             this.ConstructerTab.Controls.Add(this.CTWriteStringBtn);
             this.ConstructerTab.Controls.Add(this.CTWriteIntegerBtn);
             this.ConstructerTab.Controls.Add(this.CTValueLbl);
-            this.ConstructerTab.Controls.Add(this.CTValueTxt);
             this.ConstructerTab.Controls.Add(this.CTConstructerVw);
+            this.ConstructerTab.Controls.Add(this.CTUpdateOnEnterChckbx);
             this.ConstructerTab.Location = new System.Drawing.Point(4, 4);
             this.ConstructerTab.Name = "ConstructerTab";
             this.ConstructerTab.Size = new System.Drawing.Size(397, 271);
             this.ConstructerTab.TabIndex = 2;
             this.ConstructerTab.Text = "Constructer";
             this.ConstructerTab.UseVisualStyleBackColor = true;
+            // 
+            // CTValueTxt
+            // 
+            this.CTValueTxt.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
+            this.CTValueTxt.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
+            this.CTValueTxt.IntegralHeight = false;
+            this.CTValueTxt.ItemHeight = 13;
+            this.CTValueTxt.Location = new System.Drawing.Point(88, 15);
+            this.CTValueTxt.Name = "CTValueTxt";
+            this.CTValueTxt.Size = new System.Drawing.Size(240, 21);
+            this.CTValueTxt.TabIndex = 28;
             // 
             // CTHeaderTxt
             // 
@@ -638,7 +646,6 @@ namespace Tanji
             // 
             this.CTTransferBelowBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CTTransferBelowBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CTTransferBelowBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CTTransferBelowBtn.Location = new System.Drawing.Point(3, 246);
             this.CTTransferBelowBtn.Name = "CTTransferBelowBtn";
             this.CTTransferBelowBtn.Size = new System.Drawing.Size(106, 22);
@@ -661,6 +668,11 @@ namespace Tanji
             // CTAmountTxt
             // 
             this.CTAmountTxt.Location = new System.Drawing.Point(334, 16);
+            this.CTAmountTxt.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
             this.CTAmountTxt.Minimum = new decimal(new int[] {
             1,
             0,
@@ -680,7 +692,6 @@ namespace Tanji
             // 
             this.CTRemoveBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CTRemoveBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CTRemoveBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CTRemoveBtn.Enabled = false;
             this.CTRemoveBtn.Location = new System.Drawing.Point(115, 246);
             this.CTRemoveBtn.Name = "CTRemoveBtn";
@@ -693,7 +704,6 @@ namespace Tanji
             // 
             this.CTMoveDownBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CTMoveDownBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CTMoveDownBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CTMoveDownBtn.Enabled = false;
             this.CTMoveDownBtn.Location = new System.Drawing.Point(305, 246);
             this.CTMoveDownBtn.Name = "CTMoveDownBtn";
@@ -706,7 +716,6 @@ namespace Tanji
             // 
             this.CTMoveUpBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CTMoveUpBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CTMoveUpBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CTMoveUpBtn.Enabled = false;
             this.CTMoveUpBtn.Location = new System.Drawing.Point(210, 246);
             this.CTMoveUpBtn.Name = "CTMoveUpBtn";
@@ -719,7 +728,6 @@ namespace Tanji
             // 
             this.CTClearBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CTClearBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CTClearBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CTClearBtn.Location = new System.Drawing.Point(3, 42);
             this.CTClearBtn.Name = "CTClearBtn";
             this.CTClearBtn.Size = new System.Drawing.Size(79, 22);
@@ -731,7 +739,6 @@ namespace Tanji
             // 
             this.CTWriteBooleanBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CTWriteBooleanBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CTWriteBooleanBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CTWriteBooleanBtn.Location = new System.Drawing.Point(296, 42);
             this.CTWriteBooleanBtn.Name = "CTWriteBooleanBtn";
             this.CTWriteBooleanBtn.Size = new System.Drawing.Size(98, 22);
@@ -743,7 +750,6 @@ namespace Tanji
             // 
             this.CTWriteStringBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CTWriteStringBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CTWriteStringBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CTWriteStringBtn.Location = new System.Drawing.Point(192, 42);
             this.CTWriteStringBtn.Name = "CTWriteStringBtn";
             this.CTWriteStringBtn.Size = new System.Drawing.Size(98, 22);
@@ -755,7 +761,6 @@ namespace Tanji
             // 
             this.CTWriteIntegerBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.CTWriteIntegerBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CTWriteIntegerBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.CTWriteIntegerBtn.Location = new System.Drawing.Point(88, 42);
             this.CTWriteIntegerBtn.Name = "CTWriteIntegerBtn";
             this.CTWriteIntegerBtn.Size = new System.Drawing.Size(98, 22);
@@ -771,17 +776,6 @@ namespace Tanji
             this.CTValueLbl.Size = new System.Drawing.Size(34, 13);
             this.CTValueLbl.TabIndex = 29;
             this.CTValueLbl.Text = "Value";
-            // 
-            // CTValueTxt
-            // 
-            this.CTValueTxt.AutoCompleteMode = System.Windows.Forms.AutoCompleteMode.SuggestAppend;
-            this.CTValueTxt.AutoCompleteSource = System.Windows.Forms.AutoCompleteSource.ListItems;
-            this.CTValueTxt.IntegralHeight = false;
-            this.CTValueTxt.ItemHeight = 13;
-            this.CTValueTxt.Location = new System.Drawing.Point(88, 15);
-            this.CTValueTxt.Name = "CTValueTxt";
-            this.CTValueTxt.Size = new System.Drawing.Size(240, 21);
-            this.CTValueTxt.TabIndex = 28;
             // 
             // CTConstructerVw
             // 
@@ -819,17 +813,31 @@ namespace Tanji
             this.ICSEncodedCol.Text = "Encoded";
             this.ICSEncodedCol.Width = 149;
             // 
+            // CTUpdateOnEnterChckbx
+            // 
+            this.CTUpdateOnEnterChckbx.AutoSize = true;
+            this.CTUpdateOnEnterChckbx.Checked = true;
+            this.CTUpdateOnEnterChckbx.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.CTUpdateOnEnterChckbx.Enabled = false;
+            this.CTUpdateOnEnterChckbx.Location = new System.Drawing.Point(209, -1);
+            this.CTUpdateOnEnterChckbx.Name = "CTUpdateOnEnterChckbx";
+            this.CTUpdateOnEnterChckbx.Size = new System.Drawing.Size(126, 17);
+            this.CTUpdateOnEnterChckbx.TabIndex = 50;
+            this.CTUpdateOnEnterChckbx.Text = "Update On {ENTER}";
+            this.CTUpdateOnEnterChckbx.UseVisualStyleBackColor = true;
+            // 
             // SchedulerTab
             // 
+            this.SchedulerTab.Controls.Add(this.STUpdateBtn);
+            this.SchedulerTab.Controls.Add(this.STRemoveBtn);
             this.SchedulerTab.Controls.Add(this.STAutoStartChckbx);
+            this.SchedulerTab.Controls.Add(this.STDestinationLbl);
+            this.SchedulerTab.Controls.Add(this.STCyclesLbl);
+            this.SchedulerTab.Controls.Add(this.STCyclesTxt);
             this.SchedulerTab.Controls.Add(this.STIntervalLbl);
             this.SchedulerTab.Controls.Add(this.STClearBtn);
-            this.SchedulerTab.Controls.Add(this.STStopAllBtn);
-            this.SchedulerTab.Controls.Add(this.STStartAllBtn);
-            this.SchedulerTab.Controls.Add(this.STRemoveBtn);
             this.SchedulerTab.Controls.Add(this.STCreateBtn);
             this.SchedulerTab.Controls.Add(this.STIntervalTxt);
-            this.SchedulerTab.Controls.Add(this.STDestinationLbl);
             this.SchedulerTab.Controls.Add(this.STDestinationTxt);
             this.SchedulerTab.Controls.Add(this.STPacketLbl);
             this.SchedulerTab.Controls.Add(this.STPacketTxt);
@@ -842,91 +850,105 @@ namespace Tanji
             this.SchedulerTab.Text = "Scheduler";
             this.SchedulerTab.UseVisualStyleBackColor = true;
             // 
+            // STUpdateBtn
+            // 
+            this.STUpdateBtn.BackColor = System.Drawing.Color.Transparent;
+            this.STUpdateBtn.Enabled = false;
+            this.STUpdateBtn.Location = new System.Drawing.Point(82, 246);
+            this.STUpdateBtn.Name = "STUpdateBtn";
+            this.STUpdateBtn.Size = new System.Drawing.Size(73, 22);
+            this.STUpdateBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.STUpdateBtn.TabIndex = 62;
+            this.STUpdateBtn.Text = "Update";
+            // 
+            // STRemoveBtn
+            // 
+            this.STRemoveBtn.BackColor = System.Drawing.Color.Transparent;
+            this.STRemoveBtn.Enabled = false;
+            this.STRemoveBtn.Location = new System.Drawing.Point(161, 246);
+            this.STRemoveBtn.Name = "STRemoveBtn";
+            this.STRemoveBtn.Size = new System.Drawing.Size(73, 22);
+            this.STRemoveBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.STRemoveBtn.TabIndex = 61;
+            this.STRemoveBtn.Text = "Remove";
+            // 
             // STAutoStartChckbx
             // 
             this.STAutoStartChckbx.AutoSize = true;
             this.STAutoStartChckbx.Checked = true;
             this.STAutoStartChckbx.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.STAutoStartChckbx.Location = new System.Drawing.Point(168, 202);
+            this.STAutoStartChckbx.Location = new System.Drawing.Point(168, 192);
             this.STAutoStartChckbx.Name = "STAutoStartChckbx";
             this.STAutoStartChckbx.Size = new System.Drawing.Size(73, 17);
             this.STAutoStartChckbx.TabIndex = 53;
             this.STAutoStartChckbx.Text = "Auto Start";
             this.STAutoStartChckbx.UseVisualStyleBackColor = true;
             // 
+            // STDestinationLbl
+            // 
+            this.STDestinationLbl.AutoSize = true;
+            this.STDestinationLbl.Location = new System.Drawing.Point(237, 193);
+            this.STDestinationLbl.Name = "STDestinationLbl";
+            this.STDestinationLbl.Size = new System.Drawing.Size(60, 13);
+            this.STDestinationLbl.TabIndex = 48;
+            this.STDestinationLbl.Text = "Destination";
+            // 
+            // STCyclesLbl
+            // 
+            this.STCyclesLbl.AutoSize = true;
+            this.STCyclesLbl.Location = new System.Drawing.Point(316, 232);
+            this.STCyclesLbl.Name = "STCyclesLbl";
+            this.STCyclesLbl.Size = new System.Drawing.Size(38, 13);
+            this.STCyclesLbl.TabIndex = 60;
+            this.STCyclesLbl.Text = "Cycles";
+            // 
+            // STCyclesTxt
+            // 
+            this.STCyclesTxt.Location = new System.Drawing.Point(319, 248);
+            this.STCyclesTxt.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.STCyclesTxt.Name = "STCyclesTxt";
+            this.STCyclesTxt.Size = new System.Drawing.Size(75, 20);
+            this.STCyclesTxt.TabIndex = 59;
+            this.STCyclesTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
             // STIntervalLbl
             // 
             this.STIntervalLbl.AutoSize = true;
-            this.STIntervalLbl.Location = new System.Drawing.Point(316, 204);
+            this.STIntervalLbl.Location = new System.Drawing.Point(316, 193);
             this.STIntervalLbl.Name = "STIntervalLbl";
-            this.STIntervalLbl.Size = new System.Drawing.Size(64, 13);
+            this.STIntervalLbl.Size = new System.Drawing.Size(61, 13);
             this.STIntervalLbl.TabIndex = 50;
-            this.STIntervalLbl.Text = "Interval (ms)";
+            this.STIntervalLbl.Text = "Interval(ms)";
             // 
             // STClearBtn
             // 
             this.STClearBtn.BackColor = System.Drawing.Color.Transparent;
-            this.STClearBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.STClearBtn.Enabled = false;
-            this.STClearBtn.Location = new System.Drawing.Point(161, 246);
+            this.STClearBtn.Location = new System.Drawing.Point(240, 246);
             this.STClearBtn.Name = "STClearBtn";
             this.STClearBtn.Size = new System.Drawing.Size(73, 22);
             this.STClearBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.STClearBtn.TabIndex = 58;
             this.STClearBtn.Text = "Clear";
             // 
-            // STStopAllBtn
-            // 
-            this.STStopAllBtn.BackColor = System.Drawing.Color.Transparent;
-            this.STStopAllBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.STStopAllBtn.Enabled = false;
-            this.STStopAllBtn.Location = new System.Drawing.Point(82, 246);
-            this.STStopAllBtn.Name = "STStopAllBtn";
-            this.STStopAllBtn.Size = new System.Drawing.Size(73, 22);
-            this.STStopAllBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.STStopAllBtn.TabIndex = 56;
-            this.STStopAllBtn.Text = "Stop All";
-            // 
-            // STStartAllBtn
-            // 
-            this.STStartAllBtn.BackColor = System.Drawing.Color.Transparent;
-            this.STStartAllBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.STStartAllBtn.Enabled = false;
-            this.STStartAllBtn.Location = new System.Drawing.Point(3, 246);
-            this.STStartAllBtn.Name = "STStartAllBtn";
-            this.STStartAllBtn.Size = new System.Drawing.Size(73, 22);
-            this.STStartAllBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.STStartAllBtn.TabIndex = 57;
-            this.STStartAllBtn.Text = "Start All";
-            // 
-            // STRemoveBtn
-            // 
-            this.STRemoveBtn.BackColor = System.Drawing.Color.Transparent;
-            this.STRemoveBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.STRemoveBtn.Enabled = false;
-            this.STRemoveBtn.Location = new System.Drawing.Point(240, 246);
-            this.STRemoveBtn.Name = "STRemoveBtn";
-            this.STRemoveBtn.Size = new System.Drawing.Size(73, 22);
-            this.STRemoveBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.STRemoveBtn.TabIndex = 55;
-            this.STRemoveBtn.Text = "Remove";
-            // 
             // STCreateBtn
             // 
             this.STCreateBtn.BackColor = System.Drawing.Color.Transparent;
-            this.STCreateBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.STCreateBtn.Location = new System.Drawing.Point(319, 246);
+            this.STCreateBtn.Location = new System.Drawing.Point(3, 246);
             this.STCreateBtn.Name = "STCreateBtn";
-            this.STCreateBtn.Size = new System.Drawing.Size(75, 22);
+            this.STCreateBtn.Size = new System.Drawing.Size(73, 22);
             this.STCreateBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.STCreateBtn.TabIndex = 54;
             this.STCreateBtn.Text = "Create";
             // 
             // STIntervalTxt
             // 
-            this.STIntervalTxt.Location = new System.Drawing.Point(319, 220);
+            this.STIntervalTxt.Location = new System.Drawing.Point(319, 209);
             this.STIntervalTxt.Maximum = new decimal(new int[] {
-            -1,
+            65535,
             0,
             0,
             0});
@@ -945,23 +967,11 @@ namespace Tanji
             0,
             0});
             // 
-            // STDestinationLbl
-            // 
-            this.STDestinationLbl.AutoSize = true;
-            this.STDestinationLbl.Location = new System.Drawing.Point(237, 203);
-            this.STDestinationLbl.Name = "STDestinationLbl";
-            this.STDestinationLbl.Size = new System.Drawing.Size(60, 13);
-            this.STDestinationLbl.TabIndex = 48;
-            this.STDestinationLbl.Text = "Destination";
-            // 
             // STDestinationTxt
             // 
             this.STDestinationTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.STDestinationTxt.FormattingEnabled = true;
-            this.STDestinationTxt.Items.AddRange(new object[] {
-            "Client",
-            "Server"});
-            this.STDestinationTxt.Location = new System.Drawing.Point(240, 219);
+            this.STDestinationTxt.Location = new System.Drawing.Point(240, 208);
             this.STDestinationTxt.Name = "STDestinationTxt";
             this.STDestinationTxt.Size = new System.Drawing.Size(73, 21);
             this.STDestinationTxt.TabIndex = 47;
@@ -969,7 +979,7 @@ namespace Tanji
             // STPacketLbl
             // 
             this.STPacketLbl.AutoSize = true;
-            this.STPacketLbl.Location = new System.Drawing.Point(1, 203);
+            this.STPacketLbl.Location = new System.Drawing.Point(0, 193);
             this.STPacketLbl.Name = "STPacketLbl";
             this.STPacketLbl.Size = new System.Drawing.Size(41, 13);
             this.STPacketLbl.TabIndex = 46;
@@ -977,7 +987,7 @@ namespace Tanji
             // 
             // STPacketTxt
             // 
-            this.STPacketTxt.Location = new System.Drawing.Point(3, 219);
+            this.STPacketTxt.Location = new System.Drawing.Point(3, 209);
             this.STPacketTxt.MaxLength = 2147483647;
             this.STPacketTxt.Name = "STPacketTxt";
             this.STPacketTxt.Size = new System.Drawing.Size(231, 20);
@@ -990,6 +1000,7 @@ namespace Tanji
             this.STPacketCol,
             this.STDestinationCol,
             this.STIntervalCol,
+            this.STCyclesCol,
             this.STStatusCol});
             this.STSchedulerVw.Dock = System.Windows.Forms.DockStyle.Top;
             this.STSchedulerVw.FullRowSelect = true;
@@ -1000,7 +1011,7 @@ namespace Tanji
             this.STSchedulerVw.MultiSelect = false;
             this.STSchedulerVw.Name = "STSchedulerVw";
             this.STSchedulerVw.ShowItemToolTips = true;
-            this.STSchedulerVw.Size = new System.Drawing.Size(391, 193);
+            this.STSchedulerVw.Size = new System.Drawing.Size(391, 183);
             this.STSchedulerVw.TabIndex = 0;
             this.STSchedulerVw.UseCompatibleStateImageBehavior = false;
             this.STSchedulerVw.View = System.Windows.Forms.View.Details;
@@ -1008,22 +1019,27 @@ namespace Tanji
             // STPacketCol
             // 
             this.STPacketCol.Text = "Packet";
-            this.STPacketCol.Width = 198;
+            this.STPacketCol.Width = 155;
             // 
             // STDestinationCol
             // 
             this.STDestinationCol.Text = "Destination";
-            this.STDestinationCol.Width = 65;
+            this.STDestinationCol.Width = 69;
+            // 
+            // STCyclesCol
+            // 
+            this.STCyclesCol.Text = "Cycles";
+            this.STCyclesCol.Width = 45;
             // 
             // STIntervalCol
             // 
             this.STIntervalCol.Text = "Interval";
-            this.STIntervalCol.Width = 48;
+            this.STIntervalCol.Width = 49;
             // 
             // STStatusCol
             // 
             this.STStatusCol.Text = "Status";
-            this.STStatusCol.Width = 59;
+            this.STStatusCol.Width = 52;
             // 
             // PrimitiveTab
             // 
@@ -1165,15 +1181,15 @@ namespace Tanji
             // 
             // ToolboxTab
             // 
-            this.ToolboxTab.Controls.Add(this.label1);
-            this.ToolboxTab.Controls.Add(this.TTIntInputLbl);
-            this.ToolboxTab.Controls.Add(this.TTUShortInputTxt);
+            this.ToolboxTab.Controls.Add(this.TT16BitInputLbl);
+            this.ToolboxTab.Controls.Add(this.TT32BitInputLbl);
             this.ToolboxTab.Controls.Add(this.TTIntInputTxt);
             this.ToolboxTab.Controls.Add(this.ToolboxTabs);
-            this.ToolboxTab.Controls.Add(this.TTUShortOutputTxt);
             this.ToolboxTab.Controls.Add(this.TTIntOutputTxt);
-            this.ToolboxTab.Controls.Add(this.TTDecodeUShortBtn);
             this.ToolboxTab.Controls.Add(this.TTDecodeIntBtn);
+            this.ToolboxTab.Controls.Add(this.TTDecodeUShortBtn);
+            this.ToolboxTab.Controls.Add(this.TTUShortOutputTxt);
+            this.ToolboxTab.Controls.Add(this.TTUShortInputTxt);
             this.ToolboxTab.Location = new System.Drawing.Point(4, 28);
             this.ToolboxTab.Name = "ToolboxTab";
             this.ToolboxTab.Size = new System.Drawing.Size(476, 313);
@@ -1181,42 +1197,28 @@ namespace Tanji
             this.ToolboxTab.Text = "Toolbox";
             this.ToolboxTab.UseVisualStyleBackColor = true;
             // 
-            // label1
+            // TT16BitInputLbl
             // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(3, 291);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(108, 13);
-            this.label1.TabIndex = 50;
-            this.label1.Text = "UShort(UInt16) Input:";
+            this.TT16BitInputLbl.AutoSize = true;
+            this.TT16BitInputLbl.Location = new System.Drawing.Point(5, 263);
+            this.TT16BitInputLbl.Name = "TT16BitInputLbl";
+            this.TT16BitInputLbl.Size = new System.Drawing.Size(100, 13);
+            this.TT16BitInputLbl.TabIndex = 50;
+            this.TT16BitInputLbl.Text = "16-Bit Integer Input:";
             // 
-            // TTIntInputLbl
+            // TT32BitInputLbl
             // 
-            this.TTIntInputLbl.AutoSize = true;
-            this.TTIntInputLbl.Location = new System.Drawing.Point(8, 263);
-            this.TTIntInputLbl.Name = "TTIntInputLbl";
-            this.TTIntInputLbl.Size = new System.Drawing.Size(100, 13);
-            this.TTIntInputLbl.TabIndex = 0;
-            this.TTIntInputLbl.Text = "Integer(Int32) Input:";
-            // 
-            // TTUShortInputTxt
-            // 
-            this.TTUShortInputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.TTUShortInputTxt.Location = new System.Drawing.Point(111, 288);
-            this.TTUShortInputTxt.Maximum = new decimal(new int[] {
-            65535,
-            0,
-            0,
-            0});
-            this.TTUShortInputTxt.Name = "TTUShortInputTxt";
-            this.TTUShortInputTxt.Size = new System.Drawing.Size(126, 22);
-            this.TTUShortInputTxt.TabIndex = 49;
-            this.TTUShortInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.TT32BitInputLbl.AutoSize = true;
+            this.TT32BitInputLbl.Location = new System.Drawing.Point(5, 291);
+            this.TT32BitInputLbl.Name = "TT32BitInputLbl";
+            this.TT32BitInputLbl.Size = new System.Drawing.Size(100, 13);
+            this.TT32BitInputLbl.TabIndex = 0;
+            this.TT32BitInputLbl.Text = "32-Bit Integer Input:";
             // 
             // TTIntInputTxt
             // 
             this.TTIntInputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.TTIntInputTxt.Location = new System.Drawing.Point(111, 260);
+            this.TTIntInputTxt.Location = new System.Drawing.Point(111, 288);
             this.TTIntInputTxt.Maximum = new decimal(new int[] {
             2147483647,
             0,
@@ -1259,47 +1261,59 @@ namespace Tanji
             this.ProfileTab.Text = "Profile";
             this.ProfileTab.UseVisualStyleBackColor = true;
             // 
-            // TTUShortOutputTxt
-            // 
-            this.TTUShortOutputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TTUShortOutputTxt.Location = new System.Drawing.Point(243, 288);
-            this.TTUShortOutputTxt.Name = "TTUShortOutputTxt";
-            this.TTUShortOutputTxt.Size = new System.Drawing.Size(126, 22);
-            this.TTUShortOutputTxt.TabIndex = 38;
-            this.TTUShortOutputTxt.Text = "[0][0]";
-            this.TTUShortOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
             // TTIntOutputTxt
             // 
             this.TTIntOutputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.TTIntOutputTxt.Location = new System.Drawing.Point(243, 260);
+            this.TTIntOutputTxt.Location = new System.Drawing.Point(243, 288);
             this.TTIntOutputTxt.Name = "TTIntOutputTxt";
             this.TTIntOutputTxt.Size = new System.Drawing.Size(126, 22);
             this.TTIntOutputTxt.TabIndex = 37;
             this.TTIntOutputTxt.Text = "[0][0][0][0]";
             this.TTIntOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TTDecodeUShortBtn
-            // 
-            this.TTDecodeUShortBtn.BackColor = System.Drawing.Color.Transparent;
-            this.TTDecodeUShortBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.TTDecodeUShortBtn.Location = new System.Drawing.Point(375, 288);
-            this.TTDecodeUShortBtn.Name = "TTDecodeUShortBtn";
-            this.TTDecodeUShortBtn.Size = new System.Drawing.Size(98, 22);
-            this.TTDecodeUShortBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.TTDecodeUShortBtn.TabIndex = 35;
-            this.TTDecodeUShortBtn.Text = "Decode UShort";
-            // 
             // TTDecodeIntBtn
             // 
             this.TTDecodeIntBtn.BackColor = System.Drawing.Color.Transparent;
-            this.TTDecodeIntBtn.DialogResult = System.Windows.Forms.DialogResult.None;
-            this.TTDecodeIntBtn.Location = new System.Drawing.Point(375, 260);
+            this.TTDecodeIntBtn.Location = new System.Drawing.Point(375, 288);
             this.TTDecodeIntBtn.Name = "TTDecodeIntBtn";
             this.TTDecodeIntBtn.Size = new System.Drawing.Size(98, 22);
             this.TTDecodeIntBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TTDecodeIntBtn.TabIndex = 34;
-            this.TTDecodeIntBtn.Text = "Decode Integer";
+            this.TTDecodeIntBtn.Text = "Decode Int32";
+            // 
+            // TTDecodeUShortBtn
+            // 
+            this.TTDecodeUShortBtn.BackColor = System.Drawing.Color.Transparent;
+            this.TTDecodeUShortBtn.Location = new System.Drawing.Point(375, 260);
+            this.TTDecodeUShortBtn.Name = "TTDecodeUShortBtn";
+            this.TTDecodeUShortBtn.Size = new System.Drawing.Size(98, 22);
+            this.TTDecodeUShortBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.TTDecodeUShortBtn.TabIndex = 35;
+            this.TTDecodeUShortBtn.Text = "Decode UInt16";
+            // 
+            // TTUShortOutputTxt
+            // 
+            this.TTUShortOutputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TTUShortOutputTxt.Location = new System.Drawing.Point(243, 260);
+            this.TTUShortOutputTxt.Name = "TTUShortOutputTxt";
+            this.TTUShortOutputTxt.Size = new System.Drawing.Size(126, 22);
+            this.TTUShortOutputTxt.TabIndex = 38;
+            this.TTUShortOutputTxt.Text = "[0][0]";
+            this.TTUShortOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // TTUShortInputTxt
+            // 
+            this.TTUShortInputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.TTUShortInputTxt.Location = new System.Drawing.Point(111, 260);
+            this.TTUShortInputTxt.Maximum = new decimal(new int[] {
+            65535,
+            0,
+            0,
+            0});
+            this.TTUShortInputTxt.Name = "TTUShortInputTxt";
+            this.TTUShortInputTxt.Size = new System.Drawing.Size(126, 22);
+            this.TTUShortInputTxt.TabIndex = 49;
+            this.TTUShortInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // ExtensionsTab
             // 
@@ -1317,7 +1331,6 @@ namespace Tanji
             // ETUninstallExtensionBtn
             // 
             this.ETUninstallExtensionBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ETUninstallExtensionBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.ETUninstallExtensionBtn.Enabled = false;
             this.ETUninstallExtensionBtn.Location = new System.Drawing.Point(215, 285);
             this.ETUninstallExtensionBtn.Name = "ETUninstallExtensionBtn";
@@ -1377,7 +1390,6 @@ namespace Tanji
             // ETInstallExtensionBtn
             // 
             this.ETInstallExtensionBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ETInstallExtensionBtn.DialogResult = System.Windows.Forms.DialogResult.None;
             this.ETInstallExtensionBtn.Location = new System.Drawing.Point(344, 285);
             this.ETInstallExtensionBtn.Name = "ETInstallExtensionBtn";
             this.ETInstallExtensionBtn.Size = new System.Drawing.Size(123, 22);
@@ -1426,6 +1438,7 @@ namespace Tanji
             ((System.ComponentModel.ISupportInitialize)(this.CTAmountTxt)).EndInit();
             this.SchedulerTab.ResumeLayout(false);
             this.SchedulerTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.STCyclesTxt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.STIntervalTxt)).EndInit();
             this.PrimitiveTab.ResumeLayout(false);
             this.PrimitiveTab.PerformLayout();
@@ -1433,9 +1446,9 @@ namespace Tanji
             this.FiltersTab.PerformLayout();
             this.ToolboxTab.ResumeLayout(false);
             this.ToolboxTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TTUShortInputTxt)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.TTIntInputTxt)).EndInit();
             this.ToolboxTabs.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.TTUShortInputTxt)).EndInit();
             this.ExtensionsTab.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -1499,9 +1512,6 @@ namespace Tanji
         internal Sulakore.Components.SKoreButton CTWriteStringBtn;
         internal Sulakore.Components.SKoreButton CTWriteIntegerBtn;
         internal Sulakore.Components.SKoreButton STClearBtn;
-        internal Sulakore.Components.SKoreButton STStopAllBtn;
-        internal Sulakore.Components.SKoreButton STStartAllBtn;
-        internal Sulakore.Components.SKoreButton STRemoveBtn;
         internal Sulakore.Components.SKoreButton STCreateBtn;
         internal System.Windows.Forms.NumericUpDown STIntervalTxt;
         internal System.Windows.Forms.ComboBox STDestinationTxt;
@@ -1551,9 +1561,15 @@ namespace Tanji
         internal System.Windows.Forms.TabPage ConstructerTab;
         internal System.Windows.Forms.NumericUpDown TTUShortInputTxt;
         internal System.Windows.Forms.NumericUpDown TTIntInputTxt;
-        private System.Windows.Forms.Label TTIntInputLbl;
-        private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.Label TT32BitInputLbl;
+        private System.Windows.Forms.Label TT16BitInputLbl;
         internal Sulakore.Components.SKoreTabControl TanjiTabs;
         internal System.Windows.Forms.NumericUpDown CTHeaderTxt;
+        private System.Windows.Forms.CheckBox CTUpdateOnEnterChckbx;
+        private System.Windows.Forms.Label STCyclesLbl;
+        internal System.Windows.Forms.NumericUpDown STCyclesTxt;
+        private System.Windows.Forms.ColumnHeader STCyclesCol;
+        internal Sulakore.Components.SKoreButton STRemoveBtn;
+        internal Sulakore.Components.SKoreButton STUpdateBtn;
     }
 }
