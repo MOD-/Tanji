@@ -88,7 +88,15 @@ namespace Tanji.Pages.Injection
             UI.STSchedulerVw.ClearItems();
         }
         private void STUpdateBtn_Click(object sender, EventArgs e)
-        { }
+        {
+            UI.STSchedulerVw.SelectedCycles = Cycles;
+            UI.STSchedulerVw.SelectedInterval = Interval;
+            UI.STSchedulerVw.SelectedDestination = Destination;
+
+            var packet = GetPacket();
+            if (Parent.IsInjectionAuthorized(packet))
+                UI.STSchedulerVw.SelectedPacket = GetPacket().ToString();
+        }
         private void STRemoveBtn_Click(object sender, EventArgs e)
         {
             UI.STSchedulerVw.RemoveSelectedItem();
@@ -96,7 +104,7 @@ namespace Tanji.Pages.Injection
         private void STCreateBtn_Click(object sender, EventArgs e)
         {
             HMessage packet = GetPacket();
-            //if (!Parent.IsInjectionAuthorized(packet)) return;
+            if (!Parent.IsInjectionAuthorized(packet)) return;
 
             packet.Destination = Destination;
             UI.STSchedulerVw.AddSchedule(packet, Interval, Cycles, AutoStart);
@@ -104,7 +112,8 @@ namespace Tanji.Pages.Injection
 
         private void STSchedulerVw_ScheduleTick(object sender, ScheduleTickEventArgs e)
         {
-            Console.WriteLine($"Packet: {e.Packet}, Interval: {e.Interval}, Cycles: {e.CurrentCycle}/{e.Cycles}");
+            if (Parent.SendAsync(e.Packet).Result < 6)
+                e.Cancel = true;
         }
         private void STSchedulerVw_ItemSelectionStateChanged(object sender, EventArgs e)
         {
