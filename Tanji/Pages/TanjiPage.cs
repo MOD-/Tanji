@@ -1,19 +1,38 @@
 ﻿using System;
 using System.Windows.Forms;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 
 namespace Tanji.Pages
 {
     public abstract class TanjiPage : INotifyPropertyChanged
     {
-        private readonly TabControl _tabControl;
         private readonly MethodInvoker _onNotifyingChanged;
         private readonly Action<PropertyChangedEventArgs> _onPropertyChanged;
 
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected void RaiseOnPropertyChanged(string propertyName)
+        {
+            OnPropertyChanged(
+                new PropertyChangedEventArgs(propertyName));
+        }
+        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
+        {
+            if (UI.InvokeRequired)
+            {
+                UI.Invoke(_onPropertyChanged, e);
+            }
+            else
+            {
+                PropertyChanged?.Invoke(this, e);
+            }
+        }
+
         public MainFrm UI { get; }
         public TabPage Tab { get; }
-        public string Name { get; }
         public string Title { get; }
+        protected TabControl TabControl { get; }
+        protected bool IsSelectedTab => (TabControl.SelectedTab == Tab);
 
         private bool _isNotifying;
         public bool IsNotifying
@@ -29,64 +48,59 @@ namespace Tanji.Pages
             }
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-        protected void RaiseOnPropertyChanged(string propertyName)
-        {
-            OnPropertyChanged(new PropertyChangedEventArgs(propertyName));
-        }
-        protected virtual void OnPropertyChanged(PropertyChangedEventArgs e)
-        {
-            if (UI.InvokeRequired)
-                UI.Invoke(_onPropertyChanged, e);
-            else
-                PropertyChanged?.Invoke(this, e);
-        }
-
         public TanjiPage(MainFrm ui, TabPage tab)
         {
             UI = ui;
             Tab = tab;
-            Name = tab.Name;
             Title = tab.Text;
 
-            Tab.Enter += Tab_Enter;
-            Tab.Leave += Tab_Leave;
+            TabControl = (TabControl)tab.Parent;
+            TabControl.Selecting += TabControl_Selecting;
+            TabControl.Deselecting += TabControl_Deselecting;
 
-            _tabControl = (TabControl)tab.Parent;
             _onNotifyingChanged = OnNotifyingChanged;
-        }
-
-        protected virtual void OnTabLeave()
-        {
-            WriteLog(nameof(OnTabLeave), $"'{Name}' has lost focus.");
-        }
-        private void Tab_Leave(object sender, EventArgs e)
-        {
-            OnTabLeave();
-        }
-
-        protected virtual void OnTabEnter()
-        {
-            WriteLog(nameof(OnTabEnter), $"'{Name}' has accquired focus.");
-        }
-        private void Tab_Enter(object sender, EventArgs e)
-        {
-            IsNotifying = false;
-            OnTabEnter();
         }
 
         public virtual void Select()
         {
-            _tabControl.SelectedTab = Tab;
+            TabControl.SelectedTab = Tab;
         }
-        public void WriteLog(string title, string message)
-        {
-            title = (string.IsNullOrWhiteSpace(title) ? nameof(WriteLog) : title);
-            title = $"[{title}, {Name}, {DateTime.Now}]";
 
-            string log = (title + ": " + message);
+        protected virtual void OnTabSelecting(TabControlCancelEventArgs e)
+        {
+            IsNotifying = false;
+        }
+        private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (e.TabPage == Tab)
+                OnTabSelecting(e);
+        }
+
+        protected virtual void OnTabDeselecting(TabControlCancelEventArgs e)
+        { }
+        private void TabControl_Deselecting(object sender, TabControlCancelEventArgs e)
+        {
+            if (e.TabPage == Tab)
+                OnTabDeselecting(e);
+        }
+
+        public virtual void WriteLog(string message,
+            [CallerMemberName] string memberName = "",
+            [CallerLineNumber] int sourceLineNumber = 0)
+        {
+            if (string.IsNullOrWhiteSpace(memberName))
+                memberName = Title;
+
+            string log = $"{memberName}[#{sourceLineNumber}, {DateTime.Now}]: {message}";
             Console.WriteLine(log);
-            // TODO: We still need to write this somewhere.
+        }
+
+        public virtual void WriteLog(Exception exception,
+            [CallerMemberName] string memberName = "",
+            [CallerLineNumber] int sourceLineNumber = 0)
+        {
+            WriteLog($"[{exception.GetType()}]" + exception.Message,
+                memberName, sourceLineNumber);
         }
 
         protected virtual void OnNotifyingChanged()

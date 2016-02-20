@@ -107,11 +107,15 @@ namespace Tanji
             this.STSchedulerVw = new Sulakore.Components.SKoreScheduleView();
             this.STPacketCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STDestinationCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.STCyclesCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STIntervalCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.STCyclesCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STStatusCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PrimitiveTab = new System.Windows.Forms.TabPage();
-            this.PTPrimitiveTxt = new System.Windows.Forms.TextBox();
+            this.PTPacketInfoLbl = new System.Windows.Forms.Label();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.PTCorruptedLbl = new System.Windows.Forms.Label();
+            this.PTCorruptedValueLbl = new System.Windows.Forms.Label();
+            this.PTPacketTxt = new System.Windows.Forms.TextBox();
             this.PTInjectionMenu = new Sulakore.Components.SKoreInjectionMenu(this.components);
             this.FiltersTab = new System.Windows.Forms.TabPage();
             this.IFTypeLbl = new System.Windows.Forms.Label();
@@ -1010,6 +1014,10 @@ namespace Tanji
             this.STSchedulerVw.Location = new System.Drawing.Point(3, 3);
             this.STSchedulerVw.MultiSelect = false;
             this.STSchedulerVw.Name = "STSchedulerVw";
+            this.STSchedulerVw.SelectedCycles = -1;
+            this.STSchedulerVw.SelectedDestination = Sulakore.Protocol.HDestination.Client;
+            this.STSchedulerVw.SelectedInterval = -1;
+            this.STSchedulerVw.SelectedPacket = null;
             this.STSchedulerVw.ShowItemToolTips = true;
             this.STSchedulerVw.Size = new System.Drawing.Size(391, 183);
             this.STSchedulerVw.TabIndex = 0;
@@ -1026,15 +1034,15 @@ namespace Tanji
             this.STDestinationCol.Text = "Destination";
             this.STDestinationCol.Width = 69;
             // 
-            // STCyclesCol
-            // 
-            this.STCyclesCol.Text = "Cycles";
-            this.STCyclesCol.Width = 45;
-            // 
             // STIntervalCol
             // 
             this.STIntervalCol.Text = "Interval";
             this.STIntervalCol.Width = 49;
+            // 
+            // STCyclesCol
+            // 
+            this.STCyclesCol.Text = "Cycles";
+            this.STCyclesCol.Width = 45;
             // 
             // STStatusCol
             // 
@@ -1043,7 +1051,11 @@ namespace Tanji
             // 
             // PrimitiveTab
             // 
-            this.PrimitiveTab.Controls.Add(this.PTPrimitiveTxt);
+            this.PrimitiveTab.Controls.Add(this.PTPacketInfoLbl);
+            this.PrimitiveTab.Controls.Add(this.panel1);
+            this.PrimitiveTab.Controls.Add(this.PTCorruptedLbl);
+            this.PrimitiveTab.Controls.Add(this.PTCorruptedValueLbl);
+            this.PrimitiveTab.Controls.Add(this.PTPacketTxt);
             this.PrimitiveTab.Location = new System.Drawing.Point(4, 4);
             this.PrimitiveTab.Name = "PrimitiveTab";
             this.PrimitiveTab.Size = new System.Drawing.Size(397, 271);
@@ -1051,18 +1063,56 @@ namespace Tanji
             this.PrimitiveTab.Text = "Primitive";
             this.PrimitiveTab.UseVisualStyleBackColor = true;
             // 
-            // PTPrimitiveTxt
+            // PTPacketInfoLbl
             // 
-            this.PTPrimitiveTxt.BorderStyle = System.Windows.Forms.BorderStyle.None;
-            this.PTPrimitiveTxt.ContextMenuStrip = this.PTInjectionMenu;
-            this.PTPrimitiveTxt.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.PTPrimitiveTxt.Location = new System.Drawing.Point(0, 0);
-            this.PTPrimitiveTxt.MaxLength = 2147483647;
-            this.PTPrimitiveTxt.Multiline = true;
-            this.PTPrimitiveTxt.Name = "PTPrimitiveTxt";
-            this.PTPrimitiveTxt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            this.PTPrimitiveTxt.Size = new System.Drawing.Size(397, 271);
-            this.PTPrimitiveTxt.TabIndex = 3;
+            this.PTPacketInfoLbl.Dock = System.Windows.Forms.DockStyle.Left;
+            this.PTPacketInfoLbl.Location = new System.Drawing.Point(0, 240);
+            this.PTPacketInfoLbl.Name = "PTPacketInfoLbl";
+            this.PTPacketInfoLbl.Size = new System.Drawing.Size(297, 31);
+            this.PTPacketInfoLbl.TabIndex = 7;
+            this.PTPacketInfoLbl.Text = "Header: 0, Length: 0";
+            this.PTPacketInfoLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.panel1.Location = new System.Drawing.Point(303, 246);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1, 22);
+            this.panel1.TabIndex = 6;
+            // 
+            // PTCorruptedLbl
+            // 
+            this.PTCorruptedLbl.AutoSize = true;
+            this.PTCorruptedLbl.Location = new System.Drawing.Point(310, 250);
+            this.PTCorruptedLbl.Name = "PTCorruptedLbl";
+            this.PTCorruptedLbl.Size = new System.Drawing.Size(56, 13);
+            this.PTCorruptedLbl.TabIndex = 4;
+            this.PTCorruptedLbl.Text = "Corrupted:";
+            this.PTCorruptedLbl.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // PTCorruptedValueLbl
+            // 
+            this.PTCorruptedValueLbl.AutoSize = true;
+            this.PTCorruptedValueLbl.ForeColor = System.Drawing.Color.Firebrick;
+            this.PTCorruptedValueLbl.Location = new System.Drawing.Point(362, 250);
+            this.PTCorruptedValueLbl.Name = "PTCorruptedValueLbl";
+            this.PTCorruptedValueLbl.Size = new System.Drawing.Size(29, 13);
+            this.PTCorruptedValueLbl.TabIndex = 5;
+            this.PTCorruptedValueLbl.Text = "True";
+            this.PTCorruptedValueLbl.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            // 
+            // PTPacketTxt
+            // 
+            this.PTPacketTxt.ContextMenuStrip = this.PTInjectionMenu;
+            this.PTPacketTxt.Dock = System.Windows.Forms.DockStyle.Top;
+            this.PTPacketTxt.Location = new System.Drawing.Point(0, 0);
+            this.PTPacketTxt.MaxLength = 2147483647;
+            this.PTPacketTxt.Multiline = true;
+            this.PTPacketTxt.Name = "PTPacketTxt";
+            this.PTPacketTxt.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            this.PTPacketTxt.Size = new System.Drawing.Size(397, 240);
+            this.PTPacketTxt.TabIndex = 3;
             // 
             // PTInjectionMenu
             // 
@@ -1518,7 +1568,7 @@ namespace Tanji
         internal System.Windows.Forms.TextBox STPacketTxt;
         internal System.Windows.Forms.CheckBox STAutoStartChckbx;
         internal Sulakore.Components.SKoreScheduleView STSchedulerVw;
-        internal System.Windows.Forms.TextBox PTPrimitiveTxt;
+        internal System.Windows.Forms.TextBox PTPacketTxt;
         internal System.Windows.Forms.ComboBox ITPacketTxt;
         internal System.Windows.Forms.ComboBox IFActionTxt;
         internal Sulakore.Components.SKoreListView FTFiltersVw;
@@ -1571,5 +1621,9 @@ namespace Tanji
         private System.Windows.Forms.ColumnHeader STCyclesCol;
         internal Sulakore.Components.SKoreButton STRemoveBtn;
         internal Sulakore.Components.SKoreButton STUpdateBtn;
+        private System.Windows.Forms.Label PTCorruptedLbl;
+        private System.Windows.Forms.Panel panel1;
+        internal System.Windows.Forms.Label PTCorruptedValueLbl;
+        internal System.Windows.Forms.Label PTPacketInfoLbl;
     }
 }

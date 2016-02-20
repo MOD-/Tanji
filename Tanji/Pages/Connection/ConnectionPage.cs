@@ -57,7 +57,16 @@ namespace Tanji.Pages.Connection
         public HandshakeManager HandshakeMngr { get; }
         public Dictionary<string, string> ResourceReplacements { get; }
 
-        public TanjiState State { get; private set; }
+        private TanjiState _state;
+        public TanjiState State
+        {
+            get { return _state; }
+            set
+            {
+                _state = value;
+                WriteLog($"Tanji state changed to '{value}'.");
+            }
+        }
 
         public ConnectionPage(MainFrm ui, TabPage tab)
             : base(ui, tab)
@@ -289,10 +298,7 @@ namespace Tanji.Pages.Connection
                         Eavesdropper.ResponseIntercepted += ReplaceClient;
                     }
                 }
-                catch (Exception ex)
-                {
-                    WriteLog(nameof(ExtractGameData), ex.ToString());
-                }
+                catch (Exception ex) { WriteLog(ex); }
                 finally
                 {
                     if (GameData == null)
@@ -418,18 +424,6 @@ namespace Tanji.Pages.Connection
             #endregion
         }
 
-        protected override void OnTabEnter()
-        {
-            if (!UI.Connection.IsConnected)
-                UI.TopMost = true;
-
-            base.OnTabEnter();
-        }
-        protected override void OnTabLeave()
-        {
-            UI.TopMost = false;
-            base.OnTabLeave();
-        }
         protected virtual void ConnectTaskCompleted(Task connectTask)
         {
             if (UI.Connection.IsConnected)
@@ -440,6 +434,18 @@ namespace Tanji.Pages.Connection
                 }
                 else SetStatus(TanjiState.StandingBy);
             }
+        }
+        protected override void OnTabSelecting(TabControlCancelEventArgs e)
+        {
+            if (!UI.Connection.IsConnected)
+                UI.TopMost = true;
+
+            base.OnTabSelecting(e);
+        }
+        protected override void OnTabDeselecting(TabControlCancelEventArgs e)
+        {
+            UI.TopMost = false;
+            base.OnTabDeselecting(e);
         }
 
         public void DestroySignedCertificates()
@@ -523,7 +529,7 @@ namespace Tanji.Pages.Connection
             }
             catch (Exception ex)
             {
-                WriteLog(nameof(VerifyGameClientAsync), ex.ToString());
+                WriteLog(ex);
                 return false;
             }
             finally

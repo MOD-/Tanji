@@ -41,7 +41,7 @@ namespace Tanji.Pages.Injection
             }
         }
 
-        private HDestination _destination = HDestination.Client;
+        private HDestination _destination = HDestination.Server;
         public HDestination Destination
         {
             get { return _destination; }

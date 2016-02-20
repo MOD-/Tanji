@@ -32,6 +32,10 @@ namespace Tanji.Pages.Injection
             ConstructerPg = new ConstructerPage(this, UI.ConstructerTab);
         }
 
+        public HMessage GetPacket()
+        {
+            return new HMessage(UI.ITPacketTxt.Text);
+        }
         public async Task<int> SendAsync(HMessage packet)
         {
             if (packet.IsCorrupted)
@@ -93,13 +97,34 @@ namespace Tanji.Pages.Injection
             }
         }
 
-        private void ITSendToClientBtn_Click(object sender, EventArgs e)
+        private void AddAutocompleteValue(object value)
         {
-            if (!IsInjectionAuthorized()) return;
+            string sValue = value.ToString();
+            if (!UI.ITPacketTxt.Items.Contains(sValue))
+                UI.ITPacketTxt.Items.Add(sValue);
         }
-        private void ITSendToServerBtn_Click(object sender, EventArgs e)
+
+        private async void ITSendToClientBtn_Click(object sender, EventArgs e)
         {
-            if (!IsInjectionAuthorized()) return;
+            HMessage packet = GetPacket();
+            if (!IsInjectionAuthorized(packet)) return;
+
+            AddAutocompleteValue(packet);
+            packet.Destination = HDestination.Client;
+
+            await SendAsync(packet)
+                .ConfigureAwait(false);
+        }
+        private async void ITSendToServerBtn_Click(object sender, EventArgs e)
+        {
+            HMessage packet = GetPacket();
+            if (!IsInjectionAuthorized(packet)) return;
+
+            AddAutocompleteValue(packet);
+            packet.Destination = HDestination.Server;
+
+            await SendAsync(packet)
+                .ConfigureAwait(false);
         }
     }
 }
