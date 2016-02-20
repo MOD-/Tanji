@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 using Sulakore.Protocol;
+using Sulakore.Communication;
 
 namespace Tanji.Pages.Injection
 {
@@ -11,7 +13,7 @@ namespace Tanji.Pages.Injection
             "Injection functionality is currently disabled, consider connecting before attempting to utilize any of these services.";
 
         private const string PACKET_LENGTH_INVALID =
-            "The packet's head contains an invalid length value that does not match the actual size of the packet.";
+            "The packet's head contains an invalid length value that does not match the actual size of the data present.";
 
         public FiltersPage FiltersPg { get; }
         public PrimitivePage PrimitivePg { get; }
@@ -28,6 +30,23 @@ namespace Tanji.Pages.Injection
             PrimitivePg = new PrimitivePage(this, UI.PrimitiveTab);
             SchedulerPg = new SchedulerPage(this, UI.SchedulerTab);
             ConstructerPg = new ConstructerPage(this, UI.ConstructerTab);
+        }
+
+        public async Task<int> SendAsync(HMessage packet)
+        {
+            if (packet.IsCorrupted)
+                return 0;
+
+            bool toServer =
+                (packet.Destination == HDestination.Server);
+
+            HNode node = (toServer ?
+                UI.Connection.Remote : UI.Connection.Local);
+
+            int sent = await node.SendAsync(
+                packet).ConfigureAwait(false);
+
+            return sent;
         }
 
         public bool IsInjectionAuthorized()
