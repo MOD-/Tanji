@@ -73,33 +73,48 @@ namespace Tanji.Pages.Injection
             UI.STCreateBtn.Click += STCreateBtn_Click;
             UI.STUpdateBtn.Click += STUpdateBtn_Click;
 
+            UI.STSchedulerVw.ItemChecked += STSchedulerVw_ItemChecked;
             UI.STSchedulerVw.ScheduleTick += STSchedulerVw_ScheduleTick;
             UI.STSchedulerVw.ItemSelectionStateChanged += STSchedulerVw_ItemSelectionStateChanged;
         }
 
+        private void UpdateUI()
+        {
+            UI.SchedulesActiveTxt.Text =
+                $"Schedules Active: {UI.STSchedulerVw.CheckedItems.Count}/{UI.STSchedulerVw.Items.Count}";
+        }
         public HMessage GetPacket()
         {
             return new HMessage(
                 UI.STPacketTxt.Text, Destination);
         }
 
+        protected override void OnTabSelecting(TabControlCancelEventArgs e)
+        {
+            UI.InjectionMenu.InputBox = UI.STPacketTxt;
+            base.OnTabSelecting(e);
+        }
+
         private void STClearBtn_Click(object sender, EventArgs e)
         {
             UI.STSchedulerVw.ClearItems();
+            UpdateUI();
         }
         private void STUpdateBtn_Click(object sender, EventArgs e)
         {
-            UI.STSchedulerVw.SelectedCycles = Cycles;
-            UI.STSchedulerVw.SelectedInterval = Interval;
-            UI.STSchedulerVw.SelectedDestination = Destination;
-
-            var packet = GetPacket();
+            HMessage packet = GetPacket();
             if (Parent.IsInjectionAuthorized(packet))
+            {
+                UI.STSchedulerVw.SelectedCycles = Cycles;
+                UI.STSchedulerVw.SelectedInterval = Interval;
+                UI.STSchedulerVw.SelectedDestination = Destination;
                 UI.STSchedulerVw.SelectedPacket = GetPacket().ToString();
+            }
         }
         private void STRemoveBtn_Click(object sender, EventArgs e)
         {
             UI.STSchedulerVw.RemoveSelectedItem();
+            UpdateUI();
         }
         private void STCreateBtn_Click(object sender, EventArgs e)
         {
@@ -110,6 +125,10 @@ namespace Tanji.Pages.Injection
             UI.STSchedulerVw.AddSchedule(packet, Interval, Cycles, AutoStart);
         }
 
+        private void STSchedulerVw_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            UpdateUI();
+        }
         private void STSchedulerVw_ScheduleTick(object sender, ScheduleTickEventArgs e)
         {
             if (Parent.SendAsync(e.Packet).Result < 6)
