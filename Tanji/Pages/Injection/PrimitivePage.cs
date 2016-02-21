@@ -8,9 +8,7 @@ namespace Tanji.Pages.Injection
     {
         public PrimitivePage(InjectionPage parent, TabPage tab)
             : base(parent, tab)
-        {
-            UI.PTInjectionMenu.InputBox = UI.PTPacketTxt;
-        }
+        { }
 
         private void PTPacketTxt_TextChanged(object sender, System.EventArgs e)
         {
@@ -31,8 +29,10 @@ namespace Tanji.Pages.Injection
         protected override void OnTabSelecting(TabControlCancelEventArgs e)
         {
             UI.ITPacketTxt.Enabled = false;
-            UI.PTPacketTxt.Text = UI.ITPacketTxt.Text;
             UI.PTPacketTxt.TextChanged += PTPacketTxt_TextChanged;
+
+            UI.PTPacketTxt.Text = UI.ITPacketTxt.Text;
+            UI.InjectionMenu.InputBox = UI.PTPacketTxt;
 
             base.OnTabSelecting(e);
         }
