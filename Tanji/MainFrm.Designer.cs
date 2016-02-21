@@ -116,7 +116,7 @@ namespace Tanji
             this.PTCorruptedLbl = new System.Windows.Forms.Label();
             this.PTCorruptedValueLbl = new System.Windows.Forms.Label();
             this.PTPacketTxt = new System.Windows.Forms.TextBox();
-            this.PTInjectionMenu = new Sulakore.Components.SKoreInjectionMenu(this.components);
+            this.InjectionMenu = new Sulakore.Components.SKoreInjectionMenu(this.components);
             this.FiltersTab = new System.Windows.Forms.TabPage();
             this.IFTypeLbl = new System.Windows.Forms.Label();
             this.IFTypeTxt = new System.Windows.Forms.ComboBox();
@@ -637,7 +637,7 @@ namespace Tanji
             // 
             // CTStructureTxt
             // 
-            this.CTStructureTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            this.CTStructureTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CTStructureTxt.Location = new System.Drawing.Point(115, 220);
             this.CTStructureTxt.Name = "CTStructureTxt";
@@ -783,7 +783,7 @@ namespace Tanji
             // 
             // CTConstructerVw
             // 
-            this.CTConstructerVw.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.CTConstructerVw.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CTConstructerVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ICSTypeCol,
@@ -1104,7 +1104,6 @@ namespace Tanji
             // 
             // PTPacketTxt
             // 
-            this.PTPacketTxt.ContextMenuStrip = this.PTInjectionMenu;
             this.PTPacketTxt.Dock = System.Windows.Forms.DockStyle.Top;
             this.PTPacketTxt.Location = new System.Drawing.Point(0, 0);
             this.PTPacketTxt.MaxLength = 2147483647;
@@ -1114,11 +1113,11 @@ namespace Tanji
             this.PTPacketTxt.Size = new System.Drawing.Size(397, 240);
             this.PTPacketTxt.TabIndex = 3;
             // 
-            // PTInjectionMenu
+            // InjectionMenu
             // 
-            this.PTInjectionMenu.InputBox = null;
-            this.PTInjectionMenu.Name = "sKoreInjectionMenu1";
-            this.PTInjectionMenu.Size = new System.Drawing.Size(174, 170);
+            this.InjectionMenu.InputBox = null;
+            this.InjectionMenu.Name = "InjectionMenu";
+            this.InjectionMenu.Size = new System.Drawing.Size(174, 170);
             // 
             // FiltersTab
             // 
@@ -1222,7 +1221,7 @@ namespace Tanji
             // 
             // ITPacketTxt
             // 
-            this.ITPacketTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.ITPacketTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ITPacketTxt.Location = new System.Drawing.Point(3, 289);
             this.ITPacketTxt.Name = "ITPacketTxt";
@@ -1605,7 +1604,7 @@ namespace Tanji
         internal Sulakore.Components.SKoreButton CoTUpdateVariableBtn;
         private System.Windows.Forms.Label CoTCustomClientLbl;
         private System.Windows.Forms.Panel CoTGlow2Pnl;
-        public Sulakore.Components.SKoreInjectionMenu PTInjectionMenu;
+        public Sulakore.Components.SKoreInjectionMenu InjectionMenu;
         internal System.Windows.Forms.TabPage FiltersTab;
         internal System.Windows.Forms.TabPage SchedulerTab;
         internal System.Windows.Forms.TabPage ConstructerTab;
