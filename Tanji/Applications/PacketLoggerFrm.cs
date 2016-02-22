@@ -164,6 +164,7 @@ namespace Tanji.Applications
                         bool toServer = (args.Packet.Destination == HDestination.Server);
 
                         if (args.IsBlocked && !DisplayBlocked) continue;
+                        if (args.WasReplaced && !DisplayReplaced) continue;
                         if (toServer && !IsHandlingOutgoing) continue;
                         if (!toServer && !IsHandlingIncoming) continue;
 
@@ -182,12 +183,13 @@ namespace Tanji.Applications
                                 WriteHighlight(structureLog + "\r\n", PacketStructHighlight);
                         }
 
-                        if (args.Executions.Count > 0)
+                        HMessage[] executions = args.GetExecutions();
+                        if (executions.Length > 0)
                         {
                             WriteHighlight("\r\n", BackColor);
-                            for (int i = 0; i < args.Executions.Count; i++)
+                            for (int i = 0; i < executions.Length; i++)
                             {
-                                HMessage packet = args.Executions[i];
+                                HMessage packet = executions[i];
                                 WriteHighlight(ExtractPacketLog(packet, toServer) + "\r\n", packetLogHighlight);
                             }
                         }
