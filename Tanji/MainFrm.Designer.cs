@@ -33,8 +33,9 @@ namespace Tanji
             this.components = new System.ComponentModel.Container();
             this.TanjiStrip = new System.Windows.Forms.StatusStrip();
             this.TanjiVersionTxt = new System.Windows.Forms.ToolStripStatusLabel();
-            this.SchedulesActiveTxt = new System.Windows.Forms.ToolStripStatusLabel();
-            this.ExtensionsActiveTxt = new System.Windows.Forms.ToolStripStatusLabel();
+            this.FiltersTxt = new System.Windows.Forms.ToolStripStatusLabel();
+            this.SchedulesTxt = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ExtensionsTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.TanjiInfoTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.ETExtensionMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
             this.ETOpenMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
@@ -116,17 +117,22 @@ namespace Tanji
             this.PTCorruptedLbl = new System.Windows.Forms.Label();
             this.PTCorruptedValueLbl = new System.Windows.Forms.Label();
             this.PTPacketTxt = new System.Windows.Forms.TextBox();
-            this.InjectionMenu = new Sulakore.Components.SKoreInjectionMenu(this.components);
             this.FiltersTab = new System.Windows.Forms.TabPage();
-            this.IFTypeLbl = new System.Windows.Forms.Label();
-            this.IFTypeTxt = new System.Windows.Forms.ComboBox();
-            this.IFActionLbl = new System.Windows.Forms.Label();
-            this.IFActionTxt = new System.Windows.Forms.ComboBox();
+            this.FTDestinationLbl = new System.Windows.Forms.Label();
+            this.FTDestinationTxt = new System.Windows.Forms.ComboBox();
+            this.FTHeaderTxt = new System.Windows.Forms.NumericUpDown();
+            this.FTHeaderLbl = new System.Windows.Forms.Label();
+            this.FTRemoveBtn = new Sulakore.Components.SKoreButton();
+            this.FTCreateBtn = new Sulakore.Components.SKoreButton();
+            this.FTReplacementLbl = new System.Windows.Forms.Label();
+            this.FTReplacementTxt = new System.Windows.Forms.TextBox();
+            this.FTActionLbl = new System.Windows.Forms.Label();
+            this.FTActionTxt = new System.Windows.Forms.ComboBox();
             this.FTFiltersVw = new Sulakore.Components.SKoreListView();
-            this.IFActionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.IFTypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.IFHeaderCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.IFInvocationCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.FTHeaderCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.FTDestinationCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.FTActionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.FTReplacementCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ITPacketTxt = new System.Windows.Forms.ComboBox();
             this.ToolboxTab = new System.Windows.Forms.TabPage();
             this.TT16BitInputLbl = new System.Windows.Forms.Label();
@@ -149,6 +155,7 @@ namespace Tanji
             this.ETStatusCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ETInstallExtensionBtn = new Sulakore.Components.SKoreButton();
             this.AboutTab = new System.Windows.Forms.TabPage();
+            this.InjectionMenu = new Sulakore.Components.SKoreInjectionMenu(this.components);
             this.TanjiStrip.SuspendLayout();
             this.ETExtensionMenu.SuspendLayout();
             this.TanjiTabs.SuspendLayout();
@@ -164,6 +171,7 @@ namespace Tanji
             ((System.ComponentModel.ISupportInitialize)(this.STIntervalTxt)).BeginInit();
             this.PrimitiveTab.SuspendLayout();
             this.FiltersTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FTHeaderTxt)).BeginInit();
             this.ToolboxTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TTIntInputTxt)).BeginInit();
             this.ToolboxTabs.SuspendLayout();
@@ -176,15 +184,16 @@ namespace Tanji
             this.TanjiStrip.BackColor = System.Drawing.Color.White;
             this.TanjiStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TanjiVersionTxt,
-            this.SchedulesActiveTxt,
-            this.ExtensionsActiveTxt,
+            this.FiltersTxt,
+            this.SchedulesTxt,
+            this.ExtensionsTxt,
             this.TanjiInfoTxt});
             this.TanjiStrip.Location = new System.Drawing.Point(0, 345);
             this.TanjiStrip.Name = "TanjiStrip";
             this.TanjiStrip.Size = new System.Drawing.Size(484, 24);
             this.TanjiStrip.SizingGrip = false;
             this.TanjiStrip.TabIndex = 5;
-            this.TanjiStrip.Text = "statusStrip1";
+            this.TanjiStrip.Text = "TanjiStrip";
             // 
             // TanjiVersionTxt
             // 
@@ -196,26 +205,33 @@ namespace Tanji
             this.TanjiVersionTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TanjiVersionTxt.Click += new System.EventHandler(this.TanjiVersionTxt_Click);
             // 
-            // SchedulesActiveTxt
+            // FiltersTxt
             // 
-            this.SchedulesActiveTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.SchedulesActiveTxt.Name = "SchedulesActiveTxt";
-            this.SchedulesActiveTxt.Size = new System.Drawing.Size(123, 19);
-            this.SchedulesActiveTxt.Text = "Schedules Active: 0/0";
+            this.FiltersTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.FiltersTxt.Name = "FiltersTxt";
+            this.FiltersTxt.Size = new System.Drawing.Size(65, 19);
+            this.FiltersTxt.Text = "Filters: 0/0";
             // 
-            // ExtensionsActiveTxt
+            // SchedulesTxt
             // 
-            this.ExtensionsActiveTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.ExtensionsActiveTxt.Name = "ExtensionsActiveTxt";
-            this.ExtensionsActiveTxt.Size = new System.Drawing.Size(125, 19);
-            this.ExtensionsActiveTxt.Text = "Extensions Active: 0/0";
+            this.SchedulesTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.SchedulesTxt.Name = "SchedulesTxt";
+            this.SchedulesTxt.Size = new System.Drawing.Size(87, 19);
+            this.SchedulesTxt.Text = "Schedules: 0/0";
+            // 
+            // ExtensionsTxt
+            // 
+            this.ExtensionsTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.ExtensionsTxt.Name = "ExtensionsTxt";
+            this.ExtensionsTxt.Size = new System.Drawing.Size(89, 19);
+            this.ExtensionsTxt.Text = "Extensions: 0/0";
             // 
             // TanjiInfoTxt
             // 
             this.TanjiInfoTxt.IsLink = true;
             this.TanjiInfoTxt.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.TanjiInfoTxt.Name = "TanjiInfoTxt";
-            this.TanjiInfoTxt.Size = new System.Drawing.Size(171, 19);
+            this.TanjiInfoTxt.Size = new System.Drawing.Size(178, 19);
             this.TanjiInfoTxt.Spring = true;
             this.TanjiInfoTxt.Text = "GitHub | ArachisH/Tanji";
             this.TanjiInfoTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
@@ -456,7 +472,6 @@ namespace Tanji
             this.CoTCustomClientTxt.Size = new System.Drawing.Size(293, 20);
             this.CoTCustomClientTxt.TabIndex = 0;
             this.CoTCustomClientTxt.TabStop = false;
-            this.CoTCustomClientTxt.Text = "\r\n";
             // 
             // CoTNameTxt
             // 
@@ -637,7 +652,7 @@ namespace Tanji
             // 
             // CTStructureTxt
             // 
-            this.CTStructureTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+            this.CTStructureTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CTStructureTxt.Location = new System.Drawing.Point(115, 220);
             this.CTStructureTxt.Name = "CTStructureTxt";
@@ -783,7 +798,7 @@ namespace Tanji
             // 
             // CTConstructerVw
             // 
-            this.CTConstructerVw.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.CTConstructerVw.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CTConstructerVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.ICSTypeCol,
@@ -1113,18 +1128,18 @@ namespace Tanji
             this.PTPacketTxt.Size = new System.Drawing.Size(397, 240);
             this.PTPacketTxt.TabIndex = 3;
             // 
-            // InjectionMenu
-            // 
-            this.InjectionMenu.InputBox = null;
-            this.InjectionMenu.Name = "InjectionMenu";
-            this.InjectionMenu.Size = new System.Drawing.Size(174, 170);
-            // 
             // FiltersTab
             // 
-            this.FiltersTab.Controls.Add(this.IFTypeLbl);
-            this.FiltersTab.Controls.Add(this.IFTypeTxt);
-            this.FiltersTab.Controls.Add(this.IFActionLbl);
-            this.FiltersTab.Controls.Add(this.IFActionTxt);
+            this.FiltersTab.Controls.Add(this.FTDestinationLbl);
+            this.FiltersTab.Controls.Add(this.FTDestinationTxt);
+            this.FiltersTab.Controls.Add(this.FTHeaderTxt);
+            this.FiltersTab.Controls.Add(this.FTHeaderLbl);
+            this.FiltersTab.Controls.Add(this.FTRemoveBtn);
+            this.FiltersTab.Controls.Add(this.FTCreateBtn);
+            this.FiltersTab.Controls.Add(this.FTReplacementLbl);
+            this.FiltersTab.Controls.Add(this.FTReplacementTxt);
+            this.FiltersTab.Controls.Add(this.FTActionLbl);
+            this.FiltersTab.Controls.Add(this.FTActionTxt);
             this.FiltersTab.Controls.Add(this.FTFiltersVw);
             this.FiltersTab.Location = new System.Drawing.Point(4, 4);
             this.FiltersTab.Name = "FiltersTab";
@@ -1134,57 +1149,113 @@ namespace Tanji
             this.FiltersTab.Text = "Filters";
             this.FiltersTab.UseVisualStyleBackColor = true;
             // 
-            // IFTypeLbl
+            // FTDestinationLbl
             // 
-            this.IFTypeLbl.AutoSize = true;
-            this.IFTypeLbl.Location = new System.Drawing.Point(98, 177);
-            this.IFTypeLbl.Name = "IFTypeLbl";
-            this.IFTypeLbl.Size = new System.Drawing.Size(31, 13);
-            this.IFTypeLbl.TabIndex = 4;
-            this.IFTypeLbl.Text = "Type";
+            this.FTDestinationLbl.AutoSize = true;
+            this.FTDestinationLbl.Location = new System.Drawing.Point(0, 231);
+            this.FTDestinationLbl.Name = "FTDestinationLbl";
+            this.FTDestinationLbl.Size = new System.Drawing.Size(60, 13);
+            this.FTDestinationLbl.TabIndex = 53;
+            this.FTDestinationLbl.Text = "Destination";
             // 
-            // IFTypeTxt
+            // FTDestinationTxt
             // 
-            this.IFTypeTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.IFTypeTxt.FormattingEnabled = true;
-            this.IFTypeTxt.Items.AddRange(new object[] {
-            "Incoming",
-            "Outgoing"});
-            this.IFTypeTxt.Location = new System.Drawing.Point(101, 193);
-            this.IFTypeTxt.Name = "IFTypeTxt";
-            this.IFTypeTxt.Size = new System.Drawing.Size(89, 21);
-            this.IFTypeTxt.TabIndex = 3;
+            this.FTDestinationTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.FTDestinationTxt.FormattingEnabled = true;
+            this.FTDestinationTxt.Location = new System.Drawing.Point(3, 247);
+            this.FTDestinationTxt.Name = "FTDestinationTxt";
+            this.FTDestinationTxt.Size = new System.Drawing.Size(73, 21);
+            this.FTDestinationTxt.TabIndex = 52;
             // 
-            // IFActionLbl
+            // FTHeaderTxt
             // 
-            this.IFActionLbl.AutoSize = true;
-            this.IFActionLbl.Location = new System.Drawing.Point(3, 177);
-            this.IFActionLbl.Name = "IFActionLbl";
-            this.IFActionLbl.Size = new System.Drawing.Size(37, 13);
-            this.IFActionLbl.TabIndex = 2;
-            this.IFActionLbl.Text = "Action";
+            this.FTHeaderTxt.Location = new System.Drawing.Point(3, 209);
+            this.FTHeaderTxt.Maximum = new decimal(new int[] {
+            4000,
+            0,
+            0,
+            0});
+            this.FTHeaderTxt.Name = "FTHeaderTxt";
+            this.FTHeaderTxt.Size = new System.Drawing.Size(73, 20);
+            this.FTHeaderTxt.TabIndex = 51;
+            this.FTHeaderTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // IFActionTxt
+            // FTHeaderLbl
             // 
-            this.IFActionTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.IFActionTxt.FormattingEnabled = true;
-            this.IFActionTxt.Items.AddRange(new object[] {
+            this.FTHeaderLbl.AutoSize = true;
+            this.FTHeaderLbl.Location = new System.Drawing.Point(0, 193);
+            this.FTHeaderLbl.Name = "FTHeaderLbl";
+            this.FTHeaderLbl.Size = new System.Drawing.Size(42, 13);
+            this.FTHeaderLbl.TabIndex = 50;
+            this.FTHeaderLbl.Text = "Header";
+            // 
+            // FTRemoveBtn
+            // 
+            this.FTRemoveBtn.BackColor = System.Drawing.Color.Transparent;
+            this.FTRemoveBtn.Enabled = false;
+            this.FTRemoveBtn.Location = new System.Drawing.Point(279, 246);
+            this.FTRemoveBtn.Name = "FTRemoveBtn";
+            this.FTRemoveBtn.Size = new System.Drawing.Size(115, 22);
+            this.FTRemoveBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.FTRemoveBtn.TabIndex = 8;
+            this.FTRemoveBtn.Text = "Remove";
+            // 
+            // FTCreateBtn
+            // 
+            this.FTCreateBtn.BackColor = System.Drawing.Color.Transparent;
+            this.FTCreateBtn.Location = new System.Drawing.Point(158, 246);
+            this.FTCreateBtn.Name = "FTCreateBtn";
+            this.FTCreateBtn.Size = new System.Drawing.Size(115, 22);
+            this.FTCreateBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.FTCreateBtn.TabIndex = 7;
+            this.FTCreateBtn.Text = "Create";
+            // 
+            // FTReplacementLbl
+            // 
+            this.FTReplacementLbl.AutoSize = true;
+            this.FTReplacementLbl.Location = new System.Drawing.Point(79, 193);
+            this.FTReplacementLbl.Name = "FTReplacementLbl";
+            this.FTReplacementLbl.Size = new System.Drawing.Size(70, 13);
+            this.FTReplacementLbl.TabIndex = 6;
+            this.FTReplacementLbl.Text = "Replacement";
+            // 
+            // FTReplacementTxt
+            // 
+            this.FTReplacementTxt.Location = new System.Drawing.Point(82, 209);
+            this.FTReplacementTxt.Name = "FTReplacementTxt";
+            this.FTReplacementTxt.Size = new System.Drawing.Size(312, 20);
+            this.FTReplacementTxt.TabIndex = 5;
+            // 
+            // FTActionLbl
+            // 
+            this.FTActionLbl.AutoSize = true;
+            this.FTActionLbl.Location = new System.Drawing.Point(79, 231);
+            this.FTActionLbl.Name = "FTActionLbl";
+            this.FTActionLbl.Size = new System.Drawing.Size(37, 13);
+            this.FTActionLbl.TabIndex = 2;
+            this.FTActionLbl.Text = "Action";
+            // 
+            // FTActionTxt
+            // 
+            this.FTActionTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.FTActionTxt.FormattingEnabled = true;
+            this.FTActionTxt.Items.AddRange(new object[] {
             "Block",
             "Replace",
             "Execute"});
-            this.IFActionTxt.Location = new System.Drawing.Point(6, 193);
-            this.IFActionTxt.Name = "IFActionTxt";
-            this.IFActionTxt.Size = new System.Drawing.Size(89, 21);
-            this.IFActionTxt.TabIndex = 1;
+            this.FTActionTxt.Location = new System.Drawing.Point(82, 247);
+            this.FTActionTxt.Name = "FTActionTxt";
+            this.FTActionTxt.Size = new System.Drawing.Size(70, 21);
+            this.FTActionTxt.TabIndex = 1;
             // 
             // FTFiltersVw
             // 
             this.FTFiltersVw.CheckBoxes = true;
             this.FTFiltersVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.IFActionCol,
-            this.IFTypeCol,
-            this.IFHeaderCol,
-            this.IFInvocationCol});
+            this.FTHeaderCol,
+            this.FTDestinationCol,
+            this.FTActionCol,
+            this.FTReplacementCol});
             this.FTFiltersVw.Dock = System.Windows.Forms.DockStyle.Top;
             this.FTFiltersVw.FullRowSelect = true;
             this.FTFiltersVw.GridLines = true;
@@ -1194,34 +1265,34 @@ namespace Tanji
             this.FTFiltersVw.MultiSelect = false;
             this.FTFiltersVw.Name = "FTFiltersVw";
             this.FTFiltersVw.ShowItemToolTips = true;
-            this.FTFiltersVw.Size = new System.Drawing.Size(391, 171);
+            this.FTFiltersVw.Size = new System.Drawing.Size(391, 187);
             this.FTFiltersVw.TabIndex = 0;
             this.FTFiltersVw.UseCompatibleStateImageBehavior = false;
             this.FTFiltersVw.View = System.Windows.Forms.View.Details;
             // 
-            // IFActionCol
+            // FTHeaderCol
             // 
-            this.IFActionCol.Text = "Action";
-            this.IFActionCol.Width = 68;
+            this.FTHeaderCol.Text = "Header";
+            this.FTHeaderCol.Width = 55;
             // 
-            // IFTypeCol
+            // FTDestinationCol
             // 
-            this.IFTypeCol.Text = "Type";
-            this.IFTypeCol.Width = 68;
+            this.FTDestinationCol.Text = "Destination";
+            this.FTDestinationCol.Width = 68;
             // 
-            // IFHeaderCol
+            // FTActionCol
             // 
-            this.IFHeaderCol.Text = "Header";
-            this.IFHeaderCol.Width = 55;
+            this.FTActionCol.Text = "Action";
+            this.FTActionCol.Width = 68;
             // 
-            // IFInvocationCol
+            // FTReplacementCol
             // 
-            this.IFInvocationCol.Text = "Invocation";
-            this.IFInvocationCol.Width = 176;
+            this.FTReplacementCol.Text = "Replacement";
+            this.FTReplacementCol.Width = 176;
             // 
             // ITPacketTxt
             // 
-            this.ITPacketTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.ITPacketTxt.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.ITPacketTxt.Location = new System.Drawing.Point(3, 289);
             this.ITPacketTxt.Name = "ITPacketTxt";
@@ -1456,6 +1527,12 @@ namespace Tanji
             this.AboutTab.Text = "About";
             this.AboutTab.UseVisualStyleBackColor = true;
             // 
+            // InjectionMenu
+            // 
+            this.InjectionMenu.InputBox = null;
+            this.InjectionMenu.Name = "InjectionMenu";
+            this.InjectionMenu.Size = new System.Drawing.Size(174, 170);
+            // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1493,6 +1570,7 @@ namespace Tanji
             this.PrimitiveTab.PerformLayout();
             this.FiltersTab.ResumeLayout(false);
             this.FiltersTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.FTHeaderTxt)).EndInit();
             this.ToolboxTab.ResumeLayout(false);
             this.ToolboxTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TTIntInputTxt)).EndInit();
@@ -1527,12 +1605,11 @@ namespace Tanji
         private System.Windows.Forms.ColumnHeader STDestinationCol;
         private System.Windows.Forms.ColumnHeader STIntervalCol;
         private System.Windows.Forms.ColumnHeader STStatusCol;
-        private System.Windows.Forms.ColumnHeader IFActionCol;
-        private System.Windows.Forms.ColumnHeader IFHeaderCol;
-        private System.Windows.Forms.ColumnHeader IFInvocationCol;
-        private System.Windows.Forms.ColumnHeader IFTypeCol;
-        private System.Windows.Forms.Label IFTypeLbl;
-        private System.Windows.Forms.Label IFActionLbl;
+        private System.Windows.Forms.ColumnHeader FTActionCol;
+        private System.Windows.Forms.ColumnHeader FTHeaderCol;
+        private System.Windows.Forms.ColumnHeader FTReplacementCol;
+        private System.Windows.Forms.ColumnHeader FTDestinationCol;
+        private System.Windows.Forms.Label FTActionLbl;
         private System.Windows.Forms.TabPage ConnectionTab;
         private System.Windows.Forms.TabPage AboutTab;
         private System.Windows.Forms.Label STIntervalLbl;
@@ -1569,9 +1646,8 @@ namespace Tanji
         internal Sulakore.Components.SKoreScheduleView STSchedulerVw;
         internal System.Windows.Forms.TextBox PTPacketTxt;
         internal System.Windows.Forms.ComboBox ITPacketTxt;
-        internal System.Windows.Forms.ComboBox IFActionTxt;
+        internal System.Windows.Forms.ComboBox FTActionTxt;
         internal Sulakore.Components.SKoreListView FTFiltersVw;
-        internal System.Windows.Forms.ComboBox IFTypeTxt;
         internal Sulakore.Components.SKoreButton CoTConnectBtn;
         internal Sulakore.Components.SKoreLabel CoTStatusTxt;
         internal System.Windows.Forms.ContextMenuStrip ETExtensionMenu;
@@ -1580,8 +1656,8 @@ namespace Tanji
         internal System.Windows.Forms.ToolStripMenuItem ETInstallMenuBtn;
         internal Sulakore.Components.SKoreTabControl InjectionTabs;
         internal System.Windows.Forms.TabPage PrimitiveTab;
-        internal System.Windows.Forms.ToolStripStatusLabel ExtensionsActiveTxt;
-        internal System.Windows.Forms.ToolStripStatusLabel SchedulesActiveTxt;
+        internal System.Windows.Forms.ToolStripStatusLabel ExtensionsTxt;
+        internal System.Windows.Forms.ToolStripStatusLabel SchedulesTxt;
         internal System.Windows.Forms.ToolStripStatusLabel TanjiVersionTxt;
         private Sulakore.Components.SKoreTabControl ToolboxTabs;
         private System.Windows.Forms.TabPage ProfileTab;
@@ -1624,5 +1700,14 @@ namespace Tanji
         private System.Windows.Forms.Panel panel1;
         internal System.Windows.Forms.Label PTCorruptedValueLbl;
         internal System.Windows.Forms.Label PTPacketInfoLbl;
+        private System.Windows.Forms.Label FTReplacementLbl;
+        internal System.Windows.Forms.TextBox FTReplacementTxt;
+        private System.Windows.Forms.Label FTDestinationLbl;
+        internal System.Windows.Forms.ComboBox FTDestinationTxt;
+        internal System.Windows.Forms.NumericUpDown FTHeaderTxt;
+        private System.Windows.Forms.Label FTHeaderLbl;
+        internal Sulakore.Components.SKoreButton FTRemoveBtn;
+        internal Sulakore.Components.SKoreButton FTCreateBtn;
+        internal System.Windows.Forms.ToolStripStatusLabel FiltersTxt;
     }
 }
