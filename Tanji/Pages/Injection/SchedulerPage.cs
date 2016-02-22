@@ -80,8 +80,8 @@ namespace Tanji.Pages.Injection
 
         private void UpdateUI()
         {
-            UI.SchedulesActiveTxt.Text =
-                $"Schedules Active: {UI.STSchedulerVw.CheckedItems.Count}/{UI.STSchedulerVw.Items.Count}";
+            UI.SchedulesTxt.Text =
+                $"Schedules: {UI.STSchedulerVw.CheckedItems.Count}/{UI.STSchedulerVw.Items.Count}";
         }
         public HMessage GetPacket()
         {
