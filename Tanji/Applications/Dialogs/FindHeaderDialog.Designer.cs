@@ -34,7 +34,7 @@
             this.HeadersVw = new Sulakore.Components.SKoreListView();
             this.TypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.HeaderCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ClassNameCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.ClassParserNameCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.SuspendLayout();
             // 
             // HashLbl
@@ -50,14 +50,14 @@
             // 
             this.HashTxt.Location = new System.Drawing.Point(47, 14);
             this.HashTxt.Name = "HashTxt";
-            this.HashTxt.Size = new System.Drawing.Size(176, 20);
+            this.HashTxt.Size = new System.Drawing.Size(215, 20);
             this.HashTxt.TabIndex = 1;
             this.HashTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // FindBtn
             // 
             this.FindBtn.BackColor = System.Drawing.Color.Transparent;
-            this.FindBtn.Location = new System.Drawing.Point(229, 12);
+            this.FindBtn.Location = new System.Drawing.Point(268, 12);
             this.FindBtn.Name = "FindBtn";
             this.FindBtn.Size = new System.Drawing.Size(66, 22);
             this.FindBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
@@ -70,16 +70,17 @@
             this.HeadersVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.TypeCol,
             this.HeaderCol,
-            this.ClassNameCol});
+            this.ClassParserNameCol});
+            this.HeadersVw.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.HeadersVw.FullRowSelect = true;
             this.HeadersVw.GridLines = true;
             this.HeadersVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.HeadersVw.HideSelection = false;
-            this.HeadersVw.Location = new System.Drawing.Point(15, 40);
+            this.HeadersVw.Location = new System.Drawing.Point(0, 40);
             this.HeadersVw.MultiSelect = false;
             this.HeadersVw.Name = "HeadersVw";
             this.HeadersVw.ShowItemToolTips = true;
-            this.HeadersVw.Size = new System.Drawing.Size(280, 114);
+            this.HeadersVw.Size = new System.Drawing.Size(346, 126);
             this.HeadersVw.TabIndex = 3;
             this.HeadersVw.UseCompatibleStateImageBehavior = false;
             this.HeadersVw.View = System.Windows.Forms.View.Details;
@@ -87,24 +88,22 @@
             // TypeCol
             // 
             this.TypeCol.Text = "Type";
-            this.TypeCol.Width = 53;
             // 
             // HeaderCol
             // 
             this.HeaderCol.Text = "Header";
-            this.HeaderCol.Width = 49;
             // 
-            // ClassNameCol
+            // ClassParserNameCol
             // 
-            this.ClassNameCol.Text = "Class Name";
-            this.ClassNameCol.Width = 157;
+            this.ClassParserNameCol.Text = "Class/Parser Name";
+            this.ClassParserNameCol.Width = 205;
             // 
             // FindHeaderDialog
             // 
             this.AcceptButton = this.FindBtn;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(307, 166);
+            this.ClientSize = new System.Drawing.Size(346, 166);
             this.Controls.Add(this.HashLbl);
             this.Controls.Add(this.HeadersVw);
             this.Controls.Add(this.FindBtn);
@@ -127,7 +126,7 @@
         private Sulakore.Components.SKoreListView HeadersVw;
         private System.Windows.Forms.ColumnHeader TypeCol;
         private System.Windows.Forms.ColumnHeader HeaderCol;
-        private System.Windows.Forms.ColumnHeader ClassNameCol;
+        private System.Windows.Forms.ColumnHeader ClassParserNameCol;
         internal System.Windows.Forms.TextBox HashTxt;
     }
 }
