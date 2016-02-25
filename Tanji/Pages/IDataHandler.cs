@@ -7,7 +7,7 @@ namespace Tanji.Pages
         bool IsHandlingOutgoing { get; }
         bool IsHandlingIncoming { get; }
 
-        void HandleOutgoing(InterceptedEventArgs e);
-        void HandleIncoming(InterceptedEventArgs e);
+        void HandleOutgoing(DataInterceptedEventArgs e);
+        void HandleIncoming(DataInterceptedEventArgs e);
     }
 }

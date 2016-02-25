@@ -26,7 +26,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>1.3.1500.0</AssemblyVersion>
+    <AssemblyVersion>1.3.1660.0</AssemblyVersion>
     <TargetFrameworkProfile />
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
     <AssemblyInfoFilePath>
@@ -90,6 +90,12 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Applications\Dialogs\FindHeaderDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\Dialogs\FindHeaderDialog.Designer.cs">
+      <DependentUpon>FindHeaderDialog.cs</DependentUpon>
+    </Compile>
     <Compile Include="Applications\PacketLoggerFrm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -118,6 +124,7 @@
     <Compile Include="Pages\Injection\InjectionPage.cs" />
     <Compile Include="Pages\Injection\PrimitivePage.cs" />
     <Compile Include="Pages\Injection\SchedulerPage.cs" />
+    <Compile Include="Pages\ITanjiService.cs" />
     <Compile Include="Pages\TanjiPage.cs" />
     <Compile Include="Pages\TanjiSubPage.cs" />
     <Compile Include="Pages\Toolbox\ToolboxPage.cs" />
@@ -130,6 +137,10 @@
     </Compile>
     <Compile Include="GitHub\GitAsset.cs" />
     <Compile Include="GitHub\GitRelease.cs" />
+    <Compile Include="Utilities\HFlash.cs" />
+    <EmbeddedResource Include="Applications\Dialogs\FindHeaderDialog.resx">
+      <DependentUpon>FindHeaderDialog.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Applications\PacketLoggerFrm.resx">
       <DependentUpon>PacketLoggerFrm.cs</DependentUpon>
       <SubType>Designer</SubType>
@@ -159,6 +170,10 @@
     <ProjectReference Include="..\..\Eavesdrop\Eavesdrop\Eavesdrop.csproj">
       <Project>{ced1943a-e9b4-46b6-a887-54bcb0dd406b}</Project>
       <Name>Eavesdrop</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\FlashInspect\FlashInspect\FlashInspect.csproj">
+      <Project>{9afa47df-2f06-4d45-81f6-23840cb64ad9}</Project>
+      <Name>FlashInspect</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Sulakore\Sulakore\Sulakore.csproj">
       <Project>{15e841ec-2411-4f1b-a3ee-07e86cdb32c7}</Project>

@@ -6,38 +6,46 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 
 using Tanji.Pages;
+using Tanji.Utilities;
 using Tanji.Components;
+using Tanji.Applications.Dialogs;
 
 using Sulakore.Protocol;
 using Sulakore.Communication;
-using Sulakore.Disassembler.ActionScript;
+
+using FlashInspect.ActionScript;
 
 namespace Tanji.Applications
 {
     public partial class PacketLoggerFrm : TanjiForm, IDataHandler
     {
         private Task _readQueueTask;
+        private FindHeaderDialog _currentFindHeaderUI;
 
         private readonly Action _refreshLog;
+        private readonly object _pushToQueueLock;
         private readonly Action<string, Color> _writeHighlight;
-        private readonly IDictionary<HDestination, IList<ushort>> _invalidStructures;
+        private readonly List<ushort> _invalidParsers, _invalidStructures;
 
         public MainFrm MainUI { get; }
-        public Queue<InterceptedEventArgs> Intercepted { get; }
+        public Queue<DataInterceptedEventArgs> Intercepted { get; }
 
-        public Color BlockHighlight { get; set; } = Color.DarkGray;
-        public Color ReplaceHighlight { get; set; } = Color.DarkCyan;
+        public Color SpecialHighlight { get; set; } = Color.DarkGray;
         public Color IncomingHighlight { get; set; } = Color.FromArgb(178, 34, 34);
         public Color OutgoingHighlight { get; set; } = Color.FromArgb(0, 102, 204);
-        public Color PacketStructHighlight { get; set; } = Color.FromArgb(0, 204, 136);
+        public Color StructureHighlight { get; set; } = Color.FromArgb(0, 204, 136);
 
-        public bool IsHalted { get; private set; } = false;
+        public bool IsHalted { get; private set; }
         public bool IsHandlingOutgoing { get; private set; } = true;
         public bool IsHandlingIncoming { get; private set; } = true;
 
+        public bool DisplayHash { get; private set; }
+        public bool DisplayTimestamp { get; private set; }
         public bool DisplayBlocked { get; private set; } = true;
         public bool DisplayReplaced { get; private set; } = true;
-        public bool DisplayStructures { get; private set; } = true;
+        public bool DisplayStructure { get; private set; } = true;
+        public bool DisplayClassName { get; private set; } = true;
+        public bool DisplayParserName { get; private set; } = true;
 
         public PacketLoggerFrm(MainFrm mainUI)
         {
@@ -46,38 +54,15 @@ namespace Tanji.Applications
             _refreshLog = RefreshLog;
             _writeHighlight = WriteHighlight;
 
-            _invalidStructures = new Dictionary<HDestination, IList<ushort>>(2);
-            _invalidStructures[HDestination.Client] = new List<ushort>();
-            _invalidStructures[HDestination.Server] = new List<ushort>();
+            _pushToQueueLock = new object();
+            _invalidParsers = new List<ushort>();
+            _invalidStructures = new List<ushort>();
 
             MainUI = mainUI;
-            Intercepted = new Queue<InterceptedEventArgs>();
+            Intercepted = new Queue<DataInterceptedEventArgs>();
         }
 
-        protected override void OnLoad(EventArgs e)
-        {
-            _readQueueTask = Task.Factory.StartNew(
-                RunDisplayQueueLoop, TaskCreationOptions.LongRunning);
-
-            base.OnLoad(e);
-        }
-        protected override void OnActivated(EventArgs e)
-        {
-            IsHalted = false;
-            base.OnActivated(e);
-        }
-        protected override void OnFormClosing(FormClosingEventArgs e)
-        {
-            e.Cancel = IsHalted = true;
-            Intercepted.Clear();
-
-            LoggerTxt.Clear();
-            base.OnFormClosing(e);
-
-            WindowState = FormWindowState.Minimized;
-        }
-
-        private void ItemChecked(object sender, EventArgs e)
+        private void Item_Checked(object sender, EventArgs e)
         {
             var item = (ToolStripMenuItem)sender;
             bool isChecked = item.Checked;
@@ -96,9 +81,9 @@ namespace Tanji.Applications
                     IsHandlingOutgoing = isChecked;
                     break;
                 }
-                case nameof(DisplayStructuresBtn):
+                case nameof(DisplayStructureBtn):
                 {
-                    DisplayStructures = isChecked;
+                    DisplayStructure = isChecked;
                     break;
                 }
                 case nameof(BlockedBtn):
@@ -111,9 +96,30 @@ namespace Tanji.Applications
                     DisplayReplaced = isChecked;
                     break;
                 }
+                case nameof(HashBtn):
+                {
+                    DisplayHash = isChecked;
+                    break;
+                }
+                case nameof(TimestampBtn):
+                {
+                    DisplayTimestamp = isChecked;
+                    break;
+                }
+                case nameof(ClassNameBtn):
+                {
+                    DisplayClassName = isChecked;
+                    break;
+                }
+                case nameof(ParserName):
+                {
+                    DisplayParserName = isChecked;
+                    break;
+                }
                 case nameof(AlwaysOnTopBtn):
                 {
                     TopMost = isChecked;
+                    MainUI.TopMost = isChecked;
 
                     Text = "Tanji ~ Packet Logger" +
                         (TopMost ? " | TopMost" : string.Empty);
@@ -131,89 +137,28 @@ namespace Tanji.Applications
         {
             LoggerTxt.Clear();
         }
-
-        public void HandleOutgoing(InterceptedEventArgs e)
+        private void FindHeaderBtn_Click(object sender, EventArgs e)
         {
-            if (!IsHalted)
-                PushToQueue(e);
-        }
-        public void HandleIncoming(InterceptedEventArgs e)
-        {
-            if (!IsHalted)
-                PushToQueue(e);
-        }
-
-        private void RefreshLog()
-        {
-            if (InvokeRequired) Invoke(_refreshLog);
+            if (_currentFindHeaderUI != null &&
+                !_currentFindHeaderUI.IsDisposed)
+            {
+                _currentFindHeaderUI.BringToFront();
+            }
             else
             {
-                LoggerTxt.SelectionStart = LoggerTxt.TextLength;
-                LoggerTxt.ScrollToCaret();
+                _currentFindHeaderUI =
+                    new FindHeaderDialog(MainUI.ConnectionPg.Game);
+
+                _currentFindHeaderUI.Show(this);
             }
+
+            string selTxt = LoggerTxt.SelectedText;
+            if (!string.IsNullOrWhiteSpace(selTxt))
+                _currentFindHeaderUI.Find(selTxt);
         }
-        private void RunDisplayQueueLoop()
-        {
-            if (Monitor.TryEnter(Intercepted))
-            {
-                try
-                {
-                    while (Intercepted.Count > 0)
-                    {
-                        InterceptedEventArgs args = Intercepted.Dequeue();
-                        bool toServer = (args.Packet.Destination == HDestination.Server);
 
-                        if (args.IsBlocked && !DisplayBlocked) continue;
-                        if (args.WasReplaced && !DisplayReplaced) continue;
-                        if (toServer && !IsHandlingOutgoing) continue;
-                        if (!toServer && !IsHandlingIncoming) continue;
-
-                        string packetLog = ExtractPacketLog(args.Replacement, toServer);
-                        Color packetLogHighlight = (toServer ? OutgoingHighlight : IncomingHighlight);
-
-                        if (args.IsBlocked) WriteHighlight("Blocked ", BlockHighlight);
-                        else if (args.WasReplaced) WriteHighlight("Replaced ", ReplaceHighlight);
-
-                        WriteHighlight(packetLog + "\r\n", packetLogHighlight);
-                        if (DisplayStructures)
-                        {
-                            string structureLog = ExtractStructureLog(args.Replacement, toServer);
-
-                            if (!string.IsNullOrWhiteSpace(structureLog))
-                                WriteHighlight(structureLog + "\r\n", PacketStructHighlight);
-                        }
-
-                        HMessage[] executions = args.GetExecutions();
-                        if (executions.Length > 0)
-                        {
-                            WriteHighlight("\r\n", BackColor);
-                            for (int i = 0; i < executions.Length; i++)
-                            {
-                                HMessage packet = executions[i];
-                                WriteHighlight(ExtractPacketLog(packet, toServer) + "\r\n", packetLogHighlight);
-                            }
-                        }
-
-                        WriteHighlight("--------------------\r\n", packetLogHighlight);
-                        RefreshLog();
-                    }
-                }
-                finally
-                {
-                    Monitor.Exit(Intercepted);
-                    Application.DoEvents();
-                }
-            }
-        }
-        private void PushToQueue(InterceptedEventArgs e)
-        {
-            Intercepted.Enqueue(e);
-            if (_readQueueTask != null && _readQueueTask.IsCompleted)
-            {
-                _readQueueTask = Task.Factory.StartNew(
-                    RunDisplayQueueLoop, TaskCreationOptions.LongRunning);
-            }
-        }
+        public void HandleOutgoing(DataInterceptedEventArgs e) => PushToQueue(e);
+        public void HandleIncoming(DataInterceptedEventArgs e) => PushToQueue(e);
 
         public void WriteHighlight(string value, Color highlight)
         {
@@ -226,64 +171,193 @@ namespace Tanji.Applications
                 LoggerTxt.AppendText(value);
             }
         }
-        public string ExtractPacketLog(HMessage packet, bool toServer)
+        public void WriteStructureLog(HMessage packet, ASClass messageClass)
         {
-            ASInstance messageInstance = (toServer ?
-                MainUI.ConnectionPg.Game.OutgoingTypes : MainUI.ConnectionPg.Game.IncomingTypes)[packet.Header].Instance;
+            if (_invalidStructures.Contains(packet.Header))
+                return;
 
-            string arrow = (toServer ? "->" : "<-");
-            string type = (toServer ? "Outgoing" : "Incoming");
-            return $"{type}({packet.Header}, {packet.Length}, {messageInstance.Type.ObjName}) {arrow} {packet}";
+            int position = 0;
+            string structureLog = $"{{l}}{{u:{packet.Header}}}";
+            ASMethod msgCtor = messageClass.Instance.Constructor;
+            foreach (ASParameter parameter in msgCtor.Parameters)
+            {
+                switch (parameter.Type.ObjName.ToLower())
+                {
+                    case "string":
+                    if (!packet.CanReadString(position)) continue;
+                    structureLog += ($"{{s:{packet.ReadString(ref position)}}}");
+                    break;
+
+                    case "boolean":
+                    if (packet.ReadableAt(position) < 1) continue;
+                    structureLog += ($"{{b:{packet.ReadBoolean(ref position)}}}");
+                    break;
+
+                    case "int":
+                    if (packet.ReadableAt(position) < 4) continue;
+                    structureLog += ($"{{i:{packet.ReadInteger(ref position)}}}");
+                    break;
+                }
+            }
+            if (packet.ReadableAt(position) == 0)
+            {
+                WriteHighlight(structureLog + "\r\n", StructureHighlight);
+            }
+            else _invalidStructures.Add(packet.Header);
         }
-        public string ExtractStructureLog(HMessage packet, bool toServer)
+        public void WritePacketLog(DataInterceptedEventArgs args, bool isOutgoing)
         {
-            if (!toServer || _invalidStructures[packet.Destination]
-                .Contains(packet.Header))
+            HMessage pkt = args.Packet;
+            HFlash game = MainUI.ConnectionPg.Game;
+
+            Dictionary<ushort, ASClass> msgClasses = (isOutgoing ?
+                game.OutgoingTypes : game.IncomingTypes);
+
+            ASClass msgClass = null;
+            msgClasses.TryGetValue(pkt.Header, out msgClass);
+
+            Color highlight = (isOutgoing ?
+                OutgoingHighlight : IncomingHighlight);
+
+            if (DisplayTimestamp)
+                WriteHighlight($"[{DateTime.Now.ToLongTimeString()}]\r\n", SpecialHighlight);
+
+            if (DisplayHash)
             {
-                return string.Empty;
+                string hash = game.GetHash(msgClass, true, isOutgoing);
+                WriteHighlight($"[{hash}]\r\n", SpecialHighlight);
             }
 
-            ASInstance messageInstance = (toServer ?
-                MainUI.ConnectionPg.Game.OutgoingTypes : MainUI.ConnectionPg.Game.IncomingTypes)[packet.Header].Instance;
+            WriteHighlight((isOutgoing ?
+                "Outgoing" : "Incoming"), highlight);
 
-            string arguments = $"{{l}}{{u:{packet.Header}}}";
-            ASMethod messageCtor = messageInstance.Constructor;
-            foreach (ASParameter param in messageCtor.Parameters)
+            if (args.IsBlocked && DisplayBlocked)
             {
-                try
-                {
-                    arguments += "{";
-                    switch (param.Type.ObjName.ToLower())
-                    {
-                        default:
-                        return string.Empty;
-
-                        case "string":
-                        arguments += "s:" + packet.ReadString();
-                        break;
-
-                        case "int":
-                        arguments += "i:" + packet.ReadInteger();
-                        break;
-
-                        case "boolean":
-                        arguments += "b:" + packet.ReadBoolean();
-                        break;
-                    }
-                    arguments += "}";
-                }
-                catch
-                {
-                    _invalidStructures[packet.Destination]
-                        .Add(packet.Header);
-                }
+                WriteHighlight("[Blocked]", SpecialHighlight);
+            }
+            else if (!args.IsOriginal)
+            {
+                WriteHighlight("[Replaced]", SpecialHighlight);
             }
 
-            if (packet.Readable != 0)
-                arguments = string.Empty;
+            string arrow = (isOutgoing ? "->" : "<-");
+            WriteHighlight($"({pkt.Header}, {pkt.Length}", highlight);
 
-            packet.Position = 0;
-            return arguments;
+            if (DisplayClassName && msgClass != null)
+            {
+                WriteHighlight(", ", highlight);
+                WriteHighlight((msgClass?.Instance.Type.ObjName) ?? "???", SpecialHighlight);
+            }
+            if (!isOutgoing && DisplayParserName &&
+                msgClass != null && !_invalidParsers.Contains(pkt.Header))
+            {
+                ASClass parserClass = game
+                    .GetIncomingParser(msgClass.Instance);
+
+                if (parserClass != null)
+                {
+                    WriteHighlight($", ", highlight);
+                    WriteHighlight(parserClass.Instance.Type.ObjName, SpecialHighlight);
+                }
+                else _invalidParsers.Add(pkt.Header);
+            }
+            WriteHighlight($") {arrow} {pkt}\r\n", highlight);
+
+            if (DisplayStructure && isOutgoing)
+                WriteStructureLog(pkt, msgClass);
+        }
+
+        private void LogMessageQueue()
+        {
+            if (Intercepted.Count > 0 &&
+                (_readQueueTask?.IsCompleted ?? true))
+            {
+                _readQueueTask = Task.Factory
+                    .StartNew(MessageQueueLogger);
+            }
+        }
+        private void MessageQueueLogger()
+        {
+            bool wasLockTaken = false;
+            try
+            {
+                Monitor.TryEnter(Intercepted, ref wasLockTaken);
+                if (!wasLockTaken) return;
+
+                while (Intercepted.Count > 0)
+                {
+                    DataInterceptedEventArgs args = Intercepted.Dequeue();
+                    bool isOutgoing = (args.Packet.Destination == HDestination.Server);
+                    if (!IsLoggingAuthorized(args, isOutgoing)) continue;
+
+                    WritePacketLog(args, isOutgoing);
+                    WriteHighlight("--------------------\r\n", SpecialHighlight);
+                    RefreshLog();
+                }
+            }
+            finally
+            {
+                if (wasLockTaken)
+                {
+                    Monitor.Exit(Intercepted);
+                    Application.DoEvents();
+                }
+            }
+        }
+        private void PushToQueue(DataInterceptedEventArgs e)
+        {
+            if (IsHalted) return;
+            lock (_pushToQueueLock)
+            {
+                Intercepted.Enqueue(e);
+                LogMessageQueue();
+            }
+        }
+
+        private void RefreshLog()
+        {
+            if (InvokeRequired) Invoke(_refreshLog);
+            else
+            {
+                LoggerTxt.SelectionStart = LoggerTxt.TextLength;
+                LoggerTxt.ScrollToCaret();
+            }
+        }
+        private bool IsLoggingAuthorized(DataInterceptedEventArgs args, bool isOutgoing)
+        {
+            if (!DisplayBlocked && args.IsBlocked) return false;
+            if (!DisplayReplaced && !args.IsOriginal) return false;
+
+            if (!IsHandlingOutgoing && isOutgoing) return false;
+            if (!IsHandlingIncoming && !isOutgoing) return false;
+
+            return true;
+        }
+
+        protected override void OnActivated(EventArgs e)
+        {
+            if (IsHalted)
+            {
+                IsHalted = false;
+                IsHandlingOutgoing = ViewOutgoingBtn.Checked;
+                IsHandlingIncoming = ViewIncomingBtn.Checked;
+                LoggerTxt.Clear();
+            }
+            LogMessageQueue();
+            base.OnActivated(e);
+        }
+        protected override void OnFormClosing(FormClosingEventArgs e)
+        {
+            e.Cancel = IsHalted = true;
+            Intercepted.Clear();
+
+            IsHandlingOutgoing =
+                IsHandlingIncoming = false;
+
+            LoggerTxt.Clear();
+            WindowState = FormWindowState.Minimized;
+
+            base.OnFormClosing(e);
         }
     }
 }

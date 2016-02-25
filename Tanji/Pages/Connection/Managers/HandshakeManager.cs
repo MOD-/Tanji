@@ -53,7 +53,7 @@ namespace Tanji.Pages.Connection.Managers
         {
             DataManager.RemoveDataHandler(this);
         }
-        private void ReplaceLocalPublicKey(InterceptedEventArgs e)
+        private void ReplaceLocalPublicKey(DataInterceptedEventArgs e)
         {
             string localPublicKey = e.Packet.ReadString();
             _localSharedKey = Local.Exchange.GetSharedKey(localPublicKey);
@@ -62,9 +62,9 @@ namespace Tanji.Pages.Connection.Managers
             Remote.Exchange.Padding = Local.Exchange.Padding;
 
             string remotePublicKey = Remote.Exchange.GetPublicKey();
-            e.Replacement.ReplaceString(remotePublicKey, 0);
+            e.Packet.ReplaceString(remotePublicKey, 0);
         }
-        private void ReplaceRemotePublicKey(InterceptedEventArgs e)
+        private void ReplaceRemotePublicKey(DataInterceptedEventArgs e)
         {
             string remotePublicKey = e.Packet.ReadString();
             _remoteSharedKey = Remote.Exchange.GetSharedKey(remotePublicKey);
@@ -73,7 +73,7 @@ namespace Tanji.Pages.Connection.Managers
             Local.Exchange.Padding = Remote.Exchange.Padding;
 
             string localPublicKey = Local.Exchange.GetPublicKey();
-            e.Replacement.ReplaceString(localPublicKey, 0);
+            e.Packet.ReplaceString(localPublicKey, 0);
 
             Local.Exchange.Dispose();
             Remote.Exchange.Dispose();
@@ -81,7 +81,7 @@ namespace Tanji.Pages.Connection.Managers
             Local.Decrypter = new Rc4(_localSharedKey);
             Remote.Encrypter = new Rc4(_remoteSharedKey);
         }
-        private void ReplaceRemoteSignedPrimes(InterceptedEventArgs e)
+        private void ReplaceRemoteSignedPrimes(DataInterceptedEventArgs e)
         {
             string remoteP = e.Packet.ReadString();
             string remoteG = e.Packet.ReadString();
@@ -92,16 +92,17 @@ namespace Tanji.Pages.Connection.Managers
 
             string localP = Local.Exchange.GetSignedP();
             string localG = Local.Exchange.GetSignedG();
-            e.Replacement = new HMessage(e.Packet.Header, localP, localG);
+            e.Packet = new HMessage(e.Packet.Header, localP, localG);
         }
 
-        public void HandleOutgoing(InterceptedEventArgs e)
+        public void HandleOutgoing(DataInterceptedEventArgs e)
         {
             bool threwException = false;
             try
             {
                 switch (e.Step)
                 {
+                    case 2: _incomingOffset = 0; break;
                     case 3:
                     {
                         ReplaceLocalPublicKey(e);
@@ -115,14 +116,14 @@ namespace Tanji.Pages.Connection.Managers
                 }
             }
             catch { threwException = true; }
-            finally { FinalizeInterception(threwException, e); }
+            finally { FinalizeInterception(e, threwException); }
         }
-        public void HandleIncoming(InterceptedEventArgs e)
+        public void HandleIncoming(DataInterceptedEventArgs e)
         {
             bool threwException = false;
             try
             {
-                if (e.Packet.Length == 2)
+                if (e.Step < 3 && e.Packet.Length == 2)
                 {
                     _incomingOffset++;
                     return;
@@ -143,10 +144,10 @@ namespace Tanji.Pages.Connection.Managers
                 }
             }
             catch { threwException = true; }
-            finally { FinalizeInterception(threwException, e); }
+            finally { FinalizeInterception(e, threwException); }
         }
 
-        private void FinalizeInterception(bool threwException, InterceptedEventArgs e)
+        private void FinalizeInterception(DataInterceptedEventArgs e, bool threwException)
         {
             e.IsBlocked = false;
 

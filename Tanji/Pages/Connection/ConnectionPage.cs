@@ -3,18 +3,17 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Linq;
-using System.Drawing;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+using Tanji.Utilities;
 using Tanji.Pages.Connection.Managers;
 
-using Sulakore;
-using Sulakore.Habbo;
-using Sulakore.Habbo.Web;
-
 using Eavesdrop;
+
+using Sulakore;
+using Sulakore.Habbo.Web;
 
 namespace Tanji.Pages.Connection
 {
@@ -25,11 +24,12 @@ namespace Tanji.Pages.Connection
         InjectingClient = 2,
         InterceptingClient = 3,
         DecompressingClient = 4,
-        DisassemblingClient = 5,
-        ModifyingClient = 6,
-        ReconstructingClient = 7,
-        InterceptingConnection = 8,
-        ReplacingResources = 9
+        CompressingClient = 5,
+        DisassemblingClient = 6,
+        ModifyingClient = 7,
+        ReconstructingClient = 8,
+        InterceptingConnection = 9,
+        ReplacingResources = 10
     }
 
     public class ConnectionPage : TanjiPage
@@ -99,9 +99,9 @@ namespace Tanji.Pages.Connection
             UI.CoTUpdateVariableBtn.Click += CoTUpdateVariableBtn_Click;
 
             UI.CoTVariablesVw.ItemChecked += CoTVariablesVw_ItemChecked;
-            UI.CoTVariablesVw.ItemSelectionStateChanged += CoTVariablesVw_ItemSelectionStateChanged;
+            UI.CoTVariablesVw.ItemSelected += CoTVariablesVw_ItemSelected;
         }
-
+        
         private void CoTConnectBtn_Click(object sender, EventArgs e)
         {
             if (State != TanjiState.StandingBy)
@@ -165,16 +165,7 @@ namespace Tanji.Pages.Connection
             ExportTrustedRootCertificate();
         }
 
-        private void CoTVariablesVw_ItemChecked(object sender, ItemCheckedEventArgs e)
-        {
-            string name = e.Item.Text;
-            string value = e.Item.SubItems[1].Text;
-            bool updateValue = (e.Item.Checked && !string.IsNullOrWhiteSpace(value));
-
-            if (updateValue) ResourceReplacements[name] = value;
-            else if (ResourceReplacements.ContainsKey(name)) ResourceReplacements.Remove(name);
-        }
-        private void CoTVariablesVw_ItemSelectionStateChanged(object sender, EventArgs e)
+        private void CoTVariablesVw_ItemSelected(object sender, EventArgs e)
         {
             if (UI.CoTVariablesVw.HasSelectedItem)
             {
@@ -195,6 +186,15 @@ namespace Tanji.Pages.Connection
                    (UI.CoTValueTxt.Text = string.Empty);
             }
         }
+        private void CoTVariablesVw_ItemChecked(object sender, ItemCheckedEventArgs e)
+        {
+            string name = e.Item.Text;
+            string value = e.Item.SubItems[1].Text;
+            bool updateValue = (e.Item.Checked && !string.IsNullOrWhiteSpace(value));
+
+            if (updateValue) ResourceReplacements[name] = value;
+            else if (ResourceReplacements.ContainsKey(name)) ResourceReplacements.Remove(name);
+        }
 
         private void InjectClient(object sender, RequestInterceptedEventArgs e)
         {
@@ -212,7 +212,7 @@ namespace Tanji.Pages.Connection
 
             Eavesdropper.ResponseIntercepted -= ReplaceClient;
 
-            ushort[] ports = GameData.Port.Split(',')
+            ushort[] ports = GameData.InfoPort.Split(',')
                 .Select(s => ushort.Parse(s)).ToArray();
 
             if (Game == null)
@@ -228,12 +228,17 @@ namespace Tanji.Pages.Connection
                 SetStatus(TanjiState.ReconstructingClient);
                 Game.Reconstruct();
 
-                File.WriteAllBytes(
-                    $"{_modifiedClientsDir.FullName}\\{GameData.MovieName}.swf",
-                    Game.ToByteArray());
-            }
+                SetStatus(TanjiState.CompressingClient);
+                e.Payload = Game.Compress();
 
-            e.Payload = Game.ToByteArray();
+                string clientPath = Path.Combine(
+                    _modifiedClientsDir.FullName, Game.Build);
+
+                Directory.CreateDirectory(clientPath);
+                File.WriteAllBytes(clientPath + "\\Habbo.swf", e.Payload);
+            }
+            else e.Payload = Game.ToByteArray();
+
             if (ResourceReplacements.Count > 0)
             {
                 Eavesdropper.ResponseIntercepted += ReplaceResources;
@@ -241,7 +246,7 @@ namespace Tanji.Pages.Connection
             else Halt();
 
             SetStatus(TanjiState.InterceptingConnection);
-            UI.Connection.ConnectAsync(GameData.Host, ports)
+            UI.Connection.ConnectAsync(GameData.InfoHost, ports)
                 .ContinueWith(ConnectTaskCompleted);
         }
         private void ExtractGameData(object sender, ResponseInterceptedEventArgs e)
@@ -257,15 +262,19 @@ namespace Tanji.Pages.Connection
                 try
                 {
                     GameData = new HGameData(responseBody);
-                    Hotel = SKore.ToHotel(GameData.Host);
+                    Hotel = SKore.ToHotel(GameData.InfoHost);
+
+                    var clientUri = new Uri(GameData["flash.client.url"]);
+                    string clientPath = clientUri.Segments[2].TrimEnd('/');
 
                     Task<bool> gameClientVerifierTask =
-                        VerifyGameClientAsync($"{_modifiedClientsDir.FullName}\\{GameData.MovieName}.swf");
+                        VerifyGameClientAsync($"{_modifiedClientsDir.FullName}\\{clientPath}\\Habbo.swf");
 
                     if (e.Response.ResponseUri.Segments.Length > 2)
                     {
-                        GameData.UniqueId =
-                            e.Response.ResponseUri.Segments[2].TrimEnd('/');
+                        // TODO: Set uniqueId somewhere.
+                        //GameData.UniqueId =
+                        //    e.Response.ResponseUri.Segments[2].TrimEnd('/');
                     }
 
                     string embeddedSwf = responseBody.GetChild("embedSWF(", ',');
@@ -376,7 +385,8 @@ namespace Tanji.Pages.Connection
             }
 
             UI.CoTConnectBtn.Text =
-                (state == TanjiState.StandingBy ? "Connect" : "Cancel");
+                (state == TanjiState.StandingBy ?
+                "Connect" : "Cancel");
 
             #region Switch: state
             switch (State = state)
@@ -399,6 +409,10 @@ namespace Tanji.Pages.Connection
 
                 case TanjiState.DecompressingClient:
                 UI.CoTStatusTxt.SetDotAnimation("Decompressing Client");
+                break;
+
+                case TanjiState.CompressingClient:
+                UI.CoTStatusTxt.SetDotAnimation("Compressing Client");
                 break;
 
                 case TanjiState.DisassemblingClient:
@@ -470,7 +484,6 @@ namespace Tanji.Pages.Connection
         }
         public void CreateTrustedRootCertificate()
         {
-            // WARNING: Do not call this method within a constructor.
             UI.BringToFront();
             while (!Eavesdropper.Certifier.CreateTrustedRootCertificate())
             {

@@ -37,34 +37,19 @@ namespace Tanji
             this.SchedulesTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.ExtensionsTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.TanjiInfoTxt = new System.Windows.Forms.ToolStripStatusLabel();
-            this.ETExtensionMenu = new System.Windows.Forms.ContextMenuStrip(this.components);
-            this.ETOpenMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.ETUninstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.ETTopMenuSplitter = new System.Windows.Forms.ToolStripSeparator();
-            this.ETInstallMenuBtn = new System.Windows.Forms.ToolStripMenuItem();
-            this.TanjiTabs = new Sulakore.Components.SKoreTabControl();
-            this.ConnectionTab = new System.Windows.Forms.TabPage();
-            this.CoTGlow2Pnl = new System.Windows.Forms.Panel();
-            this.CoTCustomClientLbl = new System.Windows.Forms.Label();
-            this.CoTGlow3Pnl = new System.Windows.Forms.Panel();
-            this.CoTBrowseBtn = new Sulakore.Components.SKoreButton();
-            this.CoTProxyPortLbl = new System.Windows.Forms.Label();
-            this.CoTExportRootCertificateBtn = new Sulakore.Components.SKoreButton();
-            this.CoTDestroyCertificatesBtn = new Sulakore.Components.SKoreButton();
-            this.CoTValueTxt = new System.Windows.Forms.TextBox();
-            this.CoTValueLbl = new System.Windows.Forms.Label();
-            this.CoTVariableLbl = new System.Windows.Forms.Label();
-            this.CoTGlow1Pnl = new System.Windows.Forms.Panel();
-            this.CoTClearVariableBtn = new Sulakore.Components.SKoreButton();
-            this.CoTUpdateVariableBtn = new Sulakore.Components.SKoreButton();
-            this.CoTStatusTxt = new Sulakore.Components.SKoreLabel();
-            this.CoTConnectBtn = new Sulakore.Components.SKoreButton();
-            this.CoTCustomClientTxt = new System.Windows.Forms.TextBox();
-            this.CoTNameTxt = new System.Windows.Forms.TextBox();
-            this.CoTProxyPortTxt = new System.Windows.Forms.NumericUpDown();
-            this.CoTVariablesVw = new Sulakore.Components.SKoreListView();
-            this.VTVariableCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.VTValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.InjectionMenu = new Sulakore.Components.SKoreInjectionMenu(this.components);
+            this.AboutTab = new System.Windows.Forms.TabPage();
+            this.ExtensionsTab = new System.Windows.Forms.TabPage();
+            this.ToolboxTab = new System.Windows.Forms.TabPage();
+            this.TT16BitInputLbl = new System.Windows.Forms.Label();
+            this.TT32BitInputLbl = new System.Windows.Forms.Label();
+            this.TTIntInputTxt = new System.Windows.Forms.NumericUpDown();
+            this.ToolboxTabs = new Sulakore.Components.SKoreTabControl();
+            this.TTIntOutputTxt = new System.Windows.Forms.TextBox();
+            this.TTUShortOutputTxt = new System.Windows.Forms.TextBox();
+            this.TTDecodeIntBtn = new Sulakore.Components.SKoreButton();
+            this.TTDecodeUShortBtn = new Sulakore.Components.SKoreButton();
+            this.TTUShortInputTxt = new System.Windows.Forms.NumericUpDown();
             this.InjectionTab = new System.Windows.Forms.TabPage();
             this.ITSendToClientBtn = new Sulakore.Components.SKoreButton();
             this.ITSendToServerBtn = new Sulakore.Components.SKoreButton();
@@ -134,33 +119,33 @@ namespace Tanji
             this.FTActionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.FTReplacementCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ITPacketTxt = new System.Windows.Forms.ComboBox();
-            this.ToolboxTab = new System.Windows.Forms.TabPage();
-            this.TT16BitInputLbl = new System.Windows.Forms.Label();
-            this.TT32BitInputLbl = new System.Windows.Forms.Label();
-            this.TTIntInputTxt = new System.Windows.Forms.NumericUpDown();
-            this.ToolboxTabs = new Sulakore.Components.SKoreTabControl();
-            this.ProfileTab = new System.Windows.Forms.TabPage();
-            this.TTIntOutputTxt = new System.Windows.Forms.TextBox();
-            this.TTDecodeIntBtn = new Sulakore.Components.SKoreButton();
-            this.TTDecodeUShortBtn = new Sulakore.Components.SKoreButton();
-            this.TTUShortOutputTxt = new System.Windows.Forms.TextBox();
-            this.TTUShortInputTxt = new System.Windows.Forms.NumericUpDown();
-            this.ExtensionsTab = new System.Windows.Forms.TabPage();
-            this.ETUninstallExtensionBtn = new Sulakore.Components.SKoreButton();
-            this.ETExtensionVw = new Sulakore.Components.SKoreExtensionView();
-            this.ETIdentifierCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ETCreatorCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ETDescriptionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ETVersionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ETStatusCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ETInstallExtensionBtn = new Sulakore.Components.SKoreButton();
-            this.AboutTab = new System.Windows.Forms.TabPage();
-            this.InjectionMenu = new Sulakore.Components.SKoreInjectionMenu(this.components);
+            this.ConnectionTab = new System.Windows.Forms.TabPage();
+            this.CoTGlow2Pnl = new System.Windows.Forms.Panel();
+            this.CoTCustomClientLbl = new System.Windows.Forms.Label();
+            this.CoTGlow3Pnl = new System.Windows.Forms.Panel();
+            this.CoTBrowseBtn = new Sulakore.Components.SKoreButton();
+            this.CoTProxyPortLbl = new System.Windows.Forms.Label();
+            this.CoTExportRootCertificateBtn = new Sulakore.Components.SKoreButton();
+            this.CoTDestroyCertificatesBtn = new Sulakore.Components.SKoreButton();
+            this.CoTValueTxt = new System.Windows.Forms.TextBox();
+            this.CoTCustomClientTxt = new System.Windows.Forms.TextBox();
+            this.CoTNameTxt = new System.Windows.Forms.TextBox();
+            this.CoTValueLbl = new System.Windows.Forms.Label();
+            this.CoTVariableLbl = new System.Windows.Forms.Label();
+            this.CoTGlow1Pnl = new System.Windows.Forms.Panel();
+            this.CoTClearVariableBtn = new Sulakore.Components.SKoreButton();
+            this.CoTUpdateVariableBtn = new Sulakore.Components.SKoreButton();
+            this.CoTStatusTxt = new Sulakore.Components.SKoreLabel();
+            this.CoTConnectBtn = new Sulakore.Components.SKoreButton();
+            this.CoTProxyPortTxt = new System.Windows.Forms.NumericUpDown();
+            this.CoTVariablesVw = new Sulakore.Components.SKoreListView();
+            this.VTVariableCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.VTValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.TanjiTabs = new Sulakore.Components.SKoreTabControl();
             this.TanjiStrip.SuspendLayout();
-            this.ETExtensionMenu.SuspendLayout();
-            this.TanjiTabs.SuspendLayout();
-            this.ConnectionTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.CoTProxyPortTxt)).BeginInit();
+            this.ToolboxTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TTIntInputTxt)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TTUShortInputTxt)).BeginInit();
             this.InjectionTab.SuspendLayout();
             this.InjectionTabs.SuspendLayout();
             this.ConstructerTab.SuspendLayout();
@@ -172,11 +157,9 @@ namespace Tanji
             this.PrimitiveTab.SuspendLayout();
             this.FiltersTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FTHeaderTxt)).BeginInit();
-            this.ToolboxTab.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TTIntInputTxt)).BeginInit();
-            this.ToolboxTabs.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TTUShortInputTxt)).BeginInit();
-            this.ExtensionsTab.SuspendLayout();
+            this.ConnectionTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CoTProxyPortTxt)).BeginInit();
+            this.TanjiTabs.SuspendLayout();
             this.SuspendLayout();
             // 
             // TanjiStrip
@@ -237,293 +220,156 @@ namespace Tanji
             this.TanjiInfoTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TanjiInfoTxt.Click += new System.EventHandler(this.TanjiInfoTxt_Click);
             // 
-            // ETExtensionMenu
+            // InjectionMenu
             // 
-            this.ETExtensionMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
-            this.ETOpenMenuBtn,
-            this.ETUninstallMenuBtn,
-            this.ETTopMenuSplitter,
-            this.ETInstallMenuBtn});
-            this.ETExtensionMenu.Name = "ConstructMenu";
-            this.ETExtensionMenu.Size = new System.Drawing.Size(159, 76);
+            this.InjectionMenu.InputBox = null;
+            this.InjectionMenu.Name = "InjectionMenu";
+            this.InjectionMenu.Size = new System.Drawing.Size(174, 170);
             // 
-            // ETOpenMenuBtn
+            // AboutTab
             // 
-            this.ETOpenMenuBtn.Enabled = false;
-            this.ETOpenMenuBtn.Name = "ETOpenMenuBtn";
-            this.ETOpenMenuBtn.Size = new System.Drawing.Size(158, 22);
-            this.ETOpenMenuBtn.Text = "Open";
+            this.AboutTab.Location = new System.Drawing.Point(4, 28);
+            this.AboutTab.Name = "AboutTab";
+            this.AboutTab.Padding = new System.Windows.Forms.Padding(3);
+            this.AboutTab.Size = new System.Drawing.Size(476, 313);
+            this.AboutTab.TabIndex = 5;
+            this.AboutTab.Text = "About";
+            this.AboutTab.UseVisualStyleBackColor = true;
             // 
-            // ETUninstallMenuBtn
+            // ExtensionsTab
             // 
-            this.ETUninstallMenuBtn.Enabled = false;
-            this.ETUninstallMenuBtn.Name = "ETUninstallMenuBtn";
-            this.ETUninstallMenuBtn.Size = new System.Drawing.Size(158, 22);
-            this.ETUninstallMenuBtn.Text = "Uninstall";
+            this.ExtensionsTab.Location = new System.Drawing.Point(4, 28);
+            this.ExtensionsTab.Name = "ExtensionsTab";
+            this.ExtensionsTab.Padding = new System.Windows.Forms.Padding(3);
+            this.ExtensionsTab.Size = new System.Drawing.Size(476, 313);
+            this.ExtensionsTab.TabIndex = 1;
+            this.ExtensionsTab.Text = "Extensions";
+            this.ExtensionsTab.UseVisualStyleBackColor = true;
             // 
-            // ETTopMenuSplitter
+            // ToolboxTab
             // 
-            this.ETTopMenuSplitter.Name = "ETTopMenuSplitter";
-            this.ETTopMenuSplitter.Size = new System.Drawing.Size(155, 6);
+            this.ToolboxTab.Controls.Add(this.TT16BitInputLbl);
+            this.ToolboxTab.Controls.Add(this.TT32BitInputLbl);
+            this.ToolboxTab.Controls.Add(this.TTIntInputTxt);
+            this.ToolboxTab.Controls.Add(this.ToolboxTabs);
+            this.ToolboxTab.Controls.Add(this.TTIntOutputTxt);
+            this.ToolboxTab.Controls.Add(this.TTUShortOutputTxt);
+            this.ToolboxTab.Controls.Add(this.TTDecodeIntBtn);
+            this.ToolboxTab.Controls.Add(this.TTDecodeUShortBtn);
+            this.ToolboxTab.Controls.Add(this.TTUShortInputTxt);
+            this.ToolboxTab.Location = new System.Drawing.Point(4, 28);
+            this.ToolboxTab.Name = "ToolboxTab";
+            this.ToolboxTab.Size = new System.Drawing.Size(476, 313);
+            this.ToolboxTab.TabIndex = 3;
+            this.ToolboxTab.Text = "Toolbox";
+            this.ToolboxTab.UseVisualStyleBackColor = true;
             // 
-            // ETInstallMenuBtn
+            // TT16BitInputLbl
             // 
-            this.ETInstallMenuBtn.Name = "ETInstallMenuBtn";
-            this.ETInstallMenuBtn.Size = new System.Drawing.Size(158, 22);
-            this.ETInstallMenuBtn.Text = "Install Extension";
+            this.TT16BitInputLbl.AutoSize = true;
+            this.TT16BitInputLbl.Location = new System.Drawing.Point(5, 263);
+            this.TT16BitInputLbl.Name = "TT16BitInputLbl";
+            this.TT16BitInputLbl.Size = new System.Drawing.Size(100, 13);
+            this.TT16BitInputLbl.TabIndex = 50;
+            this.TT16BitInputLbl.Text = "16-Bit Integer Input:";
             // 
-            // TanjiTabs
+            // TT32BitInputLbl
             // 
-            this.TanjiTabs.Controls.Add(this.ConnectionTab);
-            this.TanjiTabs.Controls.Add(this.InjectionTab);
-            this.TanjiTabs.Controls.Add(this.ToolboxTab);
-            this.TanjiTabs.Controls.Add(this.ExtensionsTab);
-            this.TanjiTabs.Controls.Add(this.AboutTab);
-            this.TanjiTabs.DisplayBoundary = true;
-            this.TanjiTabs.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.TanjiTabs.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            this.TanjiTabs.ItemSize = new System.Drawing.Size(96, 24);
-            this.TanjiTabs.Location = new System.Drawing.Point(0, 0);
-            this.TanjiTabs.Name = "TanjiTabs";
-            this.TanjiTabs.SelectedIndex = 0;
-            this.TanjiTabs.Size = new System.Drawing.Size(484, 345);
-            this.TanjiTabs.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
-            this.TanjiTabs.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.TanjiTabs.TabIndex = 6;
+            this.TT32BitInputLbl.AutoSize = true;
+            this.TT32BitInputLbl.Location = new System.Drawing.Point(5, 291);
+            this.TT32BitInputLbl.Name = "TT32BitInputLbl";
+            this.TT32BitInputLbl.Size = new System.Drawing.Size(100, 13);
+            this.TT32BitInputLbl.TabIndex = 0;
+            this.TT32BitInputLbl.Text = "32-Bit Integer Input:";
             // 
-            // ConnectionTab
+            // TTIntInputTxt
             // 
-            this.ConnectionTab.Controls.Add(this.CoTGlow2Pnl);
-            this.ConnectionTab.Controls.Add(this.CoTCustomClientLbl);
-            this.ConnectionTab.Controls.Add(this.CoTGlow3Pnl);
-            this.ConnectionTab.Controls.Add(this.CoTBrowseBtn);
-            this.ConnectionTab.Controls.Add(this.CoTProxyPortLbl);
-            this.ConnectionTab.Controls.Add(this.CoTExportRootCertificateBtn);
-            this.ConnectionTab.Controls.Add(this.CoTDestroyCertificatesBtn);
-            this.ConnectionTab.Controls.Add(this.CoTValueTxt);
-            this.ConnectionTab.Controls.Add(this.CoTValueLbl);
-            this.ConnectionTab.Controls.Add(this.CoTVariableLbl);
-            this.ConnectionTab.Controls.Add(this.CoTGlow1Pnl);
-            this.ConnectionTab.Controls.Add(this.CoTClearVariableBtn);
-            this.ConnectionTab.Controls.Add(this.CoTUpdateVariableBtn);
-            this.ConnectionTab.Controls.Add(this.CoTStatusTxt);
-            this.ConnectionTab.Controls.Add(this.CoTConnectBtn);
-            this.ConnectionTab.Controls.Add(this.CoTCustomClientTxt);
-            this.ConnectionTab.Controls.Add(this.CoTNameTxt);
-            this.ConnectionTab.Controls.Add(this.CoTProxyPortTxt);
-            this.ConnectionTab.Controls.Add(this.CoTVariablesVw);
-            this.ConnectionTab.Location = new System.Drawing.Point(4, 28);
-            this.ConnectionTab.Name = "ConnectionTab";
-            this.ConnectionTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ConnectionTab.Size = new System.Drawing.Size(476, 313);
-            this.ConnectionTab.TabIndex = 4;
-            this.ConnectionTab.Text = "Connection";
-            this.ConnectionTab.UseVisualStyleBackColor = true;
+            this.TTIntInputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.TTIntInputTxt.Location = new System.Drawing.Point(111, 288);
+            this.TTIntInputTxt.Maximum = new decimal(new int[] {
+            2147483647,
+            0,
+            0,
+            0});
+            this.TTIntInputTxt.Minimum = new decimal(new int[] {
+            -2147483648,
+            0,
+            0,
+            -2147483648});
+            this.TTIntInputTxt.Name = "TTIntInputTxt";
+            this.TTIntInputTxt.Size = new System.Drawing.Size(126, 22);
+            this.TTIntInputTxt.TabIndex = 0;
+            this.TTIntInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // CoTGlow2Pnl
+            // ToolboxTabs
             // 
-            this.CoTGlow2Pnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CoTGlow2Pnl.Location = new System.Drawing.Point(3, 218);
-            this.CoTGlow2Pnl.Name = "CoTGlow2Pnl";
-            this.CoTGlow2Pnl.Size = new System.Drawing.Size(470, 1);
-            this.CoTGlow2Pnl.TabIndex = 103;
+            this.ToolboxTabs.Alignment = System.Windows.Forms.TabAlignment.Right;
+            this.ToolboxTabs.DisplayBoundary = true;
+            this.ToolboxTabs.Dock = System.Windows.Forms.DockStyle.Top;
+            this.ToolboxTabs.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+            this.ToolboxTabs.ItemSize = new System.Drawing.Size(50, 24);
+            this.ToolboxTabs.Location = new System.Drawing.Point(0, 0);
+            this.ToolboxTabs.Multiline = true;
+            this.ToolboxTabs.Name = "ToolboxTabs";
+            this.ToolboxTabs.SelectedIndex = 0;
+            this.ToolboxTabs.Size = new System.Drawing.Size(476, 254);
+            this.ToolboxTabs.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.ToolboxTabs.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.ToolboxTabs.TabIndex = 48;
             // 
-            // CoTCustomClientLbl
+            // TTIntOutputTxt
             // 
-            this.CoTCustomClientLbl.AutoSize = true;
-            this.CoTCustomClientLbl.Location = new System.Drawing.Point(0, 258);
-            this.CoTCustomClientLbl.Name = "CoTCustomClientLbl";
-            this.CoTCustomClientLbl.Size = new System.Drawing.Size(74, 13);
-            this.CoTCustomClientLbl.TabIndex = 103;
-            this.CoTCustomClientLbl.Text = "Custom Client:";
+            this.TTIntOutputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.TTIntOutputTxt.Location = new System.Drawing.Point(243, 288);
+            this.TTIntOutputTxt.Name = "TTIntOutputTxt";
+            this.TTIntOutputTxt.Size = new System.Drawing.Size(126, 22);
+            this.TTIntOutputTxt.TabIndex = 37;
+            this.TTIntOutputTxt.Text = "[0][0][0][0]";
+            this.TTIntOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // CoTGlow3Pnl
+            // TTUShortOutputTxt
             // 
-            this.CoTGlow3Pnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CoTGlow3Pnl.Location = new System.Drawing.Point(3, 281);
-            this.CoTGlow3Pnl.Name = "CoTGlow3Pnl";
-            this.CoTGlow3Pnl.Size = new System.Drawing.Size(470, 1);
-            this.CoTGlow3Pnl.TabIndex = 102;
+            this.TTUShortOutputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.TTUShortOutputTxt.Location = new System.Drawing.Point(243, 260);
+            this.TTUShortOutputTxt.Name = "TTUShortOutputTxt";
+            this.TTUShortOutputTxt.Size = new System.Drawing.Size(126, 22);
+            this.TTUShortOutputTxt.TabIndex = 38;
+            this.TTUShortOutputTxt.Text = "[0][0]";
+            this.TTUShortOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // CoTBrowseBtn
+            // TTDecodeIntBtn
             // 
-            this.CoTBrowseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.CoTBrowseBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTBrowseBtn.Location = new System.Drawing.Point(373, 253);
-            this.CoTBrowseBtn.Name = "CoTBrowseBtn";
-            this.CoTBrowseBtn.Size = new System.Drawing.Size(100, 22);
-            this.CoTBrowseBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CoTBrowseBtn.TabIndex = 2;
-            this.CoTBrowseBtn.TabStop = false;
-            this.CoTBrowseBtn.Text = "Browse";
+            this.TTDecodeIntBtn.BackColor = System.Drawing.Color.Transparent;
+            this.TTDecodeIntBtn.Location = new System.Drawing.Point(375, 288);
+            this.TTDecodeIntBtn.Name = "TTDecodeIntBtn";
+            this.TTDecodeIntBtn.Size = new System.Drawing.Size(98, 22);
+            this.TTDecodeIntBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.TTDecodeIntBtn.TabIndex = 34;
+            this.TTDecodeIntBtn.Text = "Decode Int32";
             // 
-            // CoTProxyPortLbl
+            // TTDecodeUShortBtn
             // 
-            this.CoTProxyPortLbl.AutoSize = true;
-            this.CoTProxyPortLbl.Location = new System.Drawing.Point(326, 229);
-            this.CoTProxyPortLbl.Name = "CoTProxyPortLbl";
-            this.CoTProxyPortLbl.Size = new System.Drawing.Size(58, 13);
-            this.CoTProxyPortLbl.TabIndex = 91;
-            this.CoTProxyPortLbl.Text = "Proxy Port:";
+            this.TTDecodeUShortBtn.BackColor = System.Drawing.Color.Transparent;
+            this.TTDecodeUShortBtn.Location = new System.Drawing.Point(375, 260);
+            this.TTDecodeUShortBtn.Name = "TTDecodeUShortBtn";
+            this.TTDecodeUShortBtn.Size = new System.Drawing.Size(98, 22);
+            this.TTDecodeUShortBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.TTDecodeUShortBtn.TabIndex = 35;
+            this.TTDecodeUShortBtn.Text = "Decode UInt16";
             // 
-            // CoTExportRootCertificateBtn
+            // TTUShortInputTxt
             // 
-            this.CoTExportRootCertificateBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTExportRootCertificateBtn.Location = new System.Drawing.Point(163, 225);
-            this.CoTExportRootCertificateBtn.Name = "CoTExportRootCertificateBtn";
-            this.CoTExportRootCertificateBtn.Size = new System.Drawing.Size(160, 22);
-            this.CoTExportRootCertificateBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CoTExportRootCertificateBtn.TabIndex = 3;
-            this.CoTExportRootCertificateBtn.Text = "Export Root Certificate";
-            // 
-            // CoTDestroyCertificatesBtn
-            // 
-            this.CoTDestroyCertificatesBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTDestroyCertificatesBtn.Location = new System.Drawing.Point(3, 225);
-            this.CoTDestroyCertificatesBtn.Name = "CoTDestroyCertificatesBtn";
-            this.CoTDestroyCertificatesBtn.Size = new System.Drawing.Size(154, 22);
-            this.CoTDestroyCertificatesBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CoTDestroyCertificatesBtn.TabIndex = 2;
-            this.CoTDestroyCertificatesBtn.Text = "Destroy Certificate(s)";
-            // 
-            // CoTValueTxt
-            // 
-            this.CoTValueTxt.Location = new System.Drawing.Point(3, 192);
-            this.CoTValueTxt.Name = "CoTValueTxt";
-            this.CoTValueTxt.Size = new System.Drawing.Size(312, 20);
-            this.CoTValueTxt.TabIndex = 100;
-            this.CoTValueTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // CoTValueLbl
-            // 
-            this.CoTValueLbl.AutoSize = true;
-            this.CoTValueLbl.Location = new System.Drawing.Point(0, 176);
-            this.CoTValueLbl.Name = "CoTValueLbl";
-            this.CoTValueLbl.Size = new System.Drawing.Size(34, 13);
-            this.CoTValueLbl.TabIndex = 99;
-            this.CoTValueLbl.Text = "Value";
-            // 
-            // CoTVariableLbl
-            // 
-            this.CoTVariableLbl.AutoSize = true;
-            this.CoTVariableLbl.Location = new System.Drawing.Point(0, 137);
-            this.CoTVariableLbl.Name = "CoTVariableLbl";
-            this.CoTVariableLbl.Size = new System.Drawing.Size(45, 13);
-            this.CoTVariableLbl.TabIndex = 97;
-            this.CoTVariableLbl.Text = "Variable";
-            // 
-            // CoTGlow1Pnl
-            // 
-            this.CoTGlow1Pnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CoTGlow1Pnl.Location = new System.Drawing.Point(321, 153);
-            this.CoTGlow1Pnl.Name = "CoTGlow1Pnl";
-            this.CoTGlow1Pnl.Size = new System.Drawing.Size(1, 59);
-            this.CoTGlow1Pnl.TabIndex = 96;
-            // 
-            // CoTClearVariableBtn
-            // 
-            this.CoTClearVariableBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTClearVariableBtn.Enabled = false;
-            this.CoTClearVariableBtn.Location = new System.Drawing.Point(328, 187);
-            this.CoTClearVariableBtn.Name = "CoTClearVariableBtn";
-            this.CoTClearVariableBtn.Size = new System.Drawing.Size(145, 22);
-            this.CoTClearVariableBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CoTClearVariableBtn.TabIndex = 95;
-            this.CoTClearVariableBtn.Text = "Clear Variable";
-            // 
-            // CoTUpdateVariableBtn
-            // 
-            this.CoTUpdateVariableBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTUpdateVariableBtn.Location = new System.Drawing.Point(328, 156);
-            this.CoTUpdateVariableBtn.Name = "CoTUpdateVariableBtn";
-            this.CoTUpdateVariableBtn.Size = new System.Drawing.Size(145, 22);
-            this.CoTUpdateVariableBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CoTUpdateVariableBtn.TabIndex = 94;
-            this.CoTUpdateVariableBtn.Text = "Update Variable";
-            // 
-            // CoTStatusTxt
-            // 
-            this.CoTStatusTxt.AnimationInterval = 500;
-            this.CoTStatusTxt.BorderWidth = 1;
-            this.CoTStatusTxt.DisplayBoundary = true;
-            this.CoTStatusTxt.Location = new System.Drawing.Point(3, 288);
-            this.CoTStatusTxt.Name = "CoTStatusTxt";
-            this.CoTStatusTxt.Size = new System.Drawing.Size(350, 22);
-            this.CoTStatusTxt.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CoTStatusTxt.TabIndex = 2;
-            this.CoTStatusTxt.Text = "Standing By...";
-            this.CoTStatusTxt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            // 
-            // CoTConnectBtn
-            // 
-            this.CoTConnectBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTConnectBtn.Location = new System.Drawing.Point(359, 288);
-            this.CoTConnectBtn.Name = "CoTConnectBtn";
-            this.CoTConnectBtn.Size = new System.Drawing.Size(114, 22);
-            this.CoTConnectBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CoTConnectBtn.TabIndex = 1;
-            this.CoTConnectBtn.Text = "Connect";
-            // 
-            // CoTCustomClientTxt
-            // 
-            this.CoTCustomClientTxt.Location = new System.Drawing.Point(74, 255);
-            this.CoTCustomClientTxt.Name = "CoTCustomClientTxt";
-            this.CoTCustomClientTxt.ReadOnly = true;
-            this.CoTCustomClientTxt.Size = new System.Drawing.Size(293, 20);
-            this.CoTCustomClientTxt.TabIndex = 0;
-            this.CoTCustomClientTxt.TabStop = false;
-            // 
-            // CoTNameTxt
-            // 
-            this.CoTNameTxt.Location = new System.Drawing.Point(3, 153);
-            this.CoTNameTxt.Name = "CoTNameTxt";
-            this.CoTNameTxt.ReadOnly = true;
-            this.CoTNameTxt.Size = new System.Drawing.Size(312, 20);
-            this.CoTNameTxt.TabIndex = 98;
-            this.CoTNameTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // CoTProxyPortTxt
-            // 
-            this.CoTProxyPortTxt.Location = new System.Drawing.Point(384, 227);
-            this.CoTProxyPortTxt.Maximum = new decimal(new int[] {
+            this.TTUShortInputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            this.TTUShortInputTxt.Location = new System.Drawing.Point(111, 260);
+            this.TTUShortInputTxt.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
-            this.CoTProxyPortTxt.Name = "CoTProxyPortTxt";
-            this.CoTProxyPortTxt.Size = new System.Drawing.Size(89, 20);
-            this.CoTProxyPortTxt.TabIndex = 92;
-            this.CoTProxyPortTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // CoTVariablesVw
-            // 
-            this.CoTVariablesVw.CheckBoxes = true;
-            this.CoTVariablesVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.VTVariableCol,
-            this.VTValueCol});
-            this.CoTVariablesVw.Dock = System.Windows.Forms.DockStyle.Top;
-            this.CoTVariablesVw.FullRowSelect = true;
-            this.CoTVariablesVw.GridLines = true;
-            this.CoTVariablesVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.CoTVariablesVw.HideSelection = false;
-            this.CoTVariablesVw.Location = new System.Drawing.Point(3, 3);
-            this.CoTVariablesVw.MultiSelect = false;
-            this.CoTVariablesVw.Name = "CoTVariablesVw";
-            this.CoTVariablesVw.ShowItemToolTips = true;
-            this.CoTVariablesVw.Size = new System.Drawing.Size(470, 131);
-            this.CoTVariablesVw.TabIndex = 101;
-            this.CoTVariablesVw.UseCompatibleStateImageBehavior = false;
-            this.CoTVariablesVw.View = System.Windows.Forms.View.Details;
-            // 
-            // VTVariableCol
-            // 
-            this.VTVariableCol.Text = "Variable";
-            this.VTVariableCol.Width = 224;
-            // 
-            // VTValueCol
-            // 
-            this.VTValueCol.Text = "Value";
-            this.VTValueCol.Width = 225;
+            this.TTUShortInputTxt.Name = "TTUShortInputTxt";
+            this.TTUShortInputTxt.Size = new System.Drawing.Size(126, 22);
+            this.TTUShortInputTxt.TabIndex = 49;
+            this.TTUShortInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // InjectionTab
             // 
@@ -1299,239 +1145,259 @@ namespace Tanji
             this.ITPacketTxt.Size = new System.Drawing.Size(258, 21);
             this.ITPacketTxt.TabIndex = 8;
             // 
-            // ToolboxTab
+            // ConnectionTab
             // 
-            this.ToolboxTab.Controls.Add(this.TT16BitInputLbl);
-            this.ToolboxTab.Controls.Add(this.TT32BitInputLbl);
-            this.ToolboxTab.Controls.Add(this.TTIntInputTxt);
-            this.ToolboxTab.Controls.Add(this.ToolboxTabs);
-            this.ToolboxTab.Controls.Add(this.TTIntOutputTxt);
-            this.ToolboxTab.Controls.Add(this.TTDecodeIntBtn);
-            this.ToolboxTab.Controls.Add(this.TTDecodeUShortBtn);
-            this.ToolboxTab.Controls.Add(this.TTUShortOutputTxt);
-            this.ToolboxTab.Controls.Add(this.TTUShortInputTxt);
-            this.ToolboxTab.Location = new System.Drawing.Point(4, 28);
-            this.ToolboxTab.Name = "ToolboxTab";
-            this.ToolboxTab.Size = new System.Drawing.Size(476, 313);
-            this.ToolboxTab.TabIndex = 3;
-            this.ToolboxTab.Text = "Toolbox";
-            this.ToolboxTab.UseVisualStyleBackColor = true;
+            this.ConnectionTab.Controls.Add(this.CoTGlow2Pnl);
+            this.ConnectionTab.Controls.Add(this.CoTCustomClientLbl);
+            this.ConnectionTab.Controls.Add(this.CoTGlow3Pnl);
+            this.ConnectionTab.Controls.Add(this.CoTBrowseBtn);
+            this.ConnectionTab.Controls.Add(this.CoTProxyPortLbl);
+            this.ConnectionTab.Controls.Add(this.CoTExportRootCertificateBtn);
+            this.ConnectionTab.Controls.Add(this.CoTDestroyCertificatesBtn);
+            this.ConnectionTab.Controls.Add(this.CoTValueTxt);
+            this.ConnectionTab.Controls.Add(this.CoTCustomClientTxt);
+            this.ConnectionTab.Controls.Add(this.CoTNameTxt);
+            this.ConnectionTab.Controls.Add(this.CoTValueLbl);
+            this.ConnectionTab.Controls.Add(this.CoTVariableLbl);
+            this.ConnectionTab.Controls.Add(this.CoTGlow1Pnl);
+            this.ConnectionTab.Controls.Add(this.CoTClearVariableBtn);
+            this.ConnectionTab.Controls.Add(this.CoTUpdateVariableBtn);
+            this.ConnectionTab.Controls.Add(this.CoTStatusTxt);
+            this.ConnectionTab.Controls.Add(this.CoTConnectBtn);
+            this.ConnectionTab.Controls.Add(this.CoTProxyPortTxt);
+            this.ConnectionTab.Controls.Add(this.CoTVariablesVw);
+            this.ConnectionTab.Location = new System.Drawing.Point(4, 28);
+            this.ConnectionTab.Name = "ConnectionTab";
+            this.ConnectionTab.Padding = new System.Windows.Forms.Padding(3);
+            this.ConnectionTab.Size = new System.Drawing.Size(476, 313);
+            this.ConnectionTab.TabIndex = 4;
+            this.ConnectionTab.Text = "Connection";
+            this.ConnectionTab.UseVisualStyleBackColor = true;
             // 
-            // TT16BitInputLbl
+            // CoTGlow2Pnl
             // 
-            this.TT16BitInputLbl.AutoSize = true;
-            this.TT16BitInputLbl.Location = new System.Drawing.Point(5, 263);
-            this.TT16BitInputLbl.Name = "TT16BitInputLbl";
-            this.TT16BitInputLbl.Size = new System.Drawing.Size(100, 13);
-            this.TT16BitInputLbl.TabIndex = 50;
-            this.TT16BitInputLbl.Text = "16-Bit Integer Input:";
+            this.CoTGlow2Pnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CoTGlow2Pnl.Location = new System.Drawing.Point(3, 218);
+            this.CoTGlow2Pnl.Name = "CoTGlow2Pnl";
+            this.CoTGlow2Pnl.Size = new System.Drawing.Size(470, 1);
+            this.CoTGlow2Pnl.TabIndex = 103;
             // 
-            // TT32BitInputLbl
+            // CoTCustomClientLbl
             // 
-            this.TT32BitInputLbl.AutoSize = true;
-            this.TT32BitInputLbl.Location = new System.Drawing.Point(5, 291);
-            this.TT32BitInputLbl.Name = "TT32BitInputLbl";
-            this.TT32BitInputLbl.Size = new System.Drawing.Size(100, 13);
-            this.TT32BitInputLbl.TabIndex = 0;
-            this.TT32BitInputLbl.Text = "32-Bit Integer Input:";
+            this.CoTCustomClientLbl.AutoSize = true;
+            this.CoTCustomClientLbl.Location = new System.Drawing.Point(0, 258);
+            this.CoTCustomClientLbl.Name = "CoTCustomClientLbl";
+            this.CoTCustomClientLbl.Size = new System.Drawing.Size(74, 13);
+            this.CoTCustomClientLbl.TabIndex = 103;
+            this.CoTCustomClientLbl.Text = "Custom Client:";
             // 
-            // TTIntInputTxt
+            // CoTGlow3Pnl
             // 
-            this.TTIntInputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.TTIntInputTxt.Location = new System.Drawing.Point(111, 288);
-            this.TTIntInputTxt.Maximum = new decimal(new int[] {
-            2147483647,
-            0,
-            0,
-            0});
-            this.TTIntInputTxt.Minimum = new decimal(new int[] {
-            -2147483648,
-            0,
-            0,
-            -2147483648});
-            this.TTIntInputTxt.Name = "TTIntInputTxt";
-            this.TTIntInputTxt.Size = new System.Drawing.Size(126, 22);
-            this.TTIntInputTxt.TabIndex = 0;
-            this.TTIntInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CoTGlow3Pnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CoTGlow3Pnl.Location = new System.Drawing.Point(3, 281);
+            this.CoTGlow3Pnl.Name = "CoTGlow3Pnl";
+            this.CoTGlow3Pnl.Size = new System.Drawing.Size(470, 1);
+            this.CoTGlow3Pnl.TabIndex = 102;
             // 
-            // ToolboxTabs
+            // CoTBrowseBtn
             // 
-            this.ToolboxTabs.Alignment = System.Windows.Forms.TabAlignment.Right;
-            this.ToolboxTabs.Controls.Add(this.ProfileTab);
-            this.ToolboxTabs.DisplayBoundary = true;
-            this.ToolboxTabs.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ToolboxTabs.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            this.ToolboxTabs.ItemSize = new System.Drawing.Size(50, 24);
-            this.ToolboxTabs.Location = new System.Drawing.Point(0, 0);
-            this.ToolboxTabs.Multiline = true;
-            this.ToolboxTabs.Name = "ToolboxTabs";
-            this.ToolboxTabs.SelectedIndex = 0;
-            this.ToolboxTabs.Size = new System.Drawing.Size(476, 254);
-            this.ToolboxTabs.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
-            this.ToolboxTabs.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ToolboxTabs.TabIndex = 48;
+            this.CoTBrowseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CoTBrowseBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CoTBrowseBtn.Enabled = false;
+            this.CoTBrowseBtn.Location = new System.Drawing.Point(373, 253);
+            this.CoTBrowseBtn.Name = "CoTBrowseBtn";
+            this.CoTBrowseBtn.Size = new System.Drawing.Size(100, 22);
+            this.CoTBrowseBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CoTBrowseBtn.TabIndex = 2;
+            this.CoTBrowseBtn.TabStop = false;
+            this.CoTBrowseBtn.Text = "Browse";
             // 
-            // ProfileTab
+            // CoTProxyPortLbl
             // 
-            this.ProfileTab.Location = new System.Drawing.Point(4, 4);
-            this.ProfileTab.Name = "ProfileTab";
-            this.ProfileTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ProfileTab.Size = new System.Drawing.Size(418, 246);
-            this.ProfileTab.TabIndex = 0;
-            this.ProfileTab.Text = "Profile";
-            this.ProfileTab.UseVisualStyleBackColor = true;
+            this.CoTProxyPortLbl.AutoSize = true;
+            this.CoTProxyPortLbl.Location = new System.Drawing.Point(326, 229);
+            this.CoTProxyPortLbl.Name = "CoTProxyPortLbl";
+            this.CoTProxyPortLbl.Size = new System.Drawing.Size(58, 13);
+            this.CoTProxyPortLbl.TabIndex = 91;
+            this.CoTProxyPortLbl.Text = "Proxy Port:";
             // 
-            // TTIntOutputTxt
+            // CoTExportRootCertificateBtn
             // 
-            this.TTIntOutputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.TTIntOutputTxt.Location = new System.Drawing.Point(243, 288);
-            this.TTIntOutputTxt.Name = "TTIntOutputTxt";
-            this.TTIntOutputTxt.Size = new System.Drawing.Size(126, 22);
-            this.TTIntOutputTxt.TabIndex = 37;
-            this.TTIntOutputTxt.Text = "[0][0][0][0]";
-            this.TTIntOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CoTExportRootCertificateBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CoTExportRootCertificateBtn.Location = new System.Drawing.Point(163, 225);
+            this.CoTExportRootCertificateBtn.Name = "CoTExportRootCertificateBtn";
+            this.CoTExportRootCertificateBtn.Size = new System.Drawing.Size(160, 22);
+            this.CoTExportRootCertificateBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CoTExportRootCertificateBtn.TabIndex = 3;
+            this.CoTExportRootCertificateBtn.Text = "Export Root Certificate";
             // 
-            // TTDecodeIntBtn
+            // CoTDestroyCertificatesBtn
             // 
-            this.TTDecodeIntBtn.BackColor = System.Drawing.Color.Transparent;
-            this.TTDecodeIntBtn.Location = new System.Drawing.Point(375, 288);
-            this.TTDecodeIntBtn.Name = "TTDecodeIntBtn";
-            this.TTDecodeIntBtn.Size = new System.Drawing.Size(98, 22);
-            this.TTDecodeIntBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.TTDecodeIntBtn.TabIndex = 34;
-            this.TTDecodeIntBtn.Text = "Decode Int32";
+            this.CoTDestroyCertificatesBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CoTDestroyCertificatesBtn.Location = new System.Drawing.Point(3, 225);
+            this.CoTDestroyCertificatesBtn.Name = "CoTDestroyCertificatesBtn";
+            this.CoTDestroyCertificatesBtn.Size = new System.Drawing.Size(154, 22);
+            this.CoTDestroyCertificatesBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CoTDestroyCertificatesBtn.TabIndex = 2;
+            this.CoTDestroyCertificatesBtn.Text = "Destroy Certificate(s)";
             // 
-            // TTDecodeUShortBtn
+            // CoTValueTxt
             // 
-            this.TTDecodeUShortBtn.BackColor = System.Drawing.Color.Transparent;
-            this.TTDecodeUShortBtn.Location = new System.Drawing.Point(375, 260);
-            this.TTDecodeUShortBtn.Name = "TTDecodeUShortBtn";
-            this.TTDecodeUShortBtn.Size = new System.Drawing.Size(98, 22);
-            this.TTDecodeUShortBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.TTDecodeUShortBtn.TabIndex = 35;
-            this.TTDecodeUShortBtn.Text = "Decode UInt16";
+            this.CoTValueTxt.Location = new System.Drawing.Point(3, 192);
+            this.CoTValueTxt.Name = "CoTValueTxt";
+            this.CoTValueTxt.Size = new System.Drawing.Size(312, 20);
+            this.CoTValueTxt.TabIndex = 100;
+            this.CoTValueTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // TTUShortOutputTxt
+            // CoTCustomClientTxt
             // 
-            this.TTUShortOutputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.TTUShortOutputTxt.Location = new System.Drawing.Point(243, 260);
-            this.TTUShortOutputTxt.Name = "TTUShortOutputTxt";
-            this.TTUShortOutputTxt.Size = new System.Drawing.Size(126, 22);
-            this.TTUShortOutputTxt.TabIndex = 38;
-            this.TTUShortOutputTxt.Text = "[0][0]";
-            this.TTUShortOutputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CoTCustomClientTxt.Location = new System.Drawing.Point(74, 255);
+            this.CoTCustomClientTxt.Name = "CoTCustomClientTxt";
+            this.CoTCustomClientTxt.ReadOnly = true;
+            this.CoTCustomClientTxt.Size = new System.Drawing.Size(293, 20);
+            this.CoTCustomClientTxt.TabIndex = 0;
+            this.CoTCustomClientTxt.TabStop = false;
             // 
-            // TTUShortInputTxt
+            // CoTNameTxt
             // 
-            this.TTUShortInputTxt.Font = new System.Drawing.Font("Segoe UI", 8.25F);
-            this.TTUShortInputTxt.Location = new System.Drawing.Point(111, 260);
-            this.TTUShortInputTxt.Maximum = new decimal(new int[] {
+            this.CoTNameTxt.Location = new System.Drawing.Point(3, 153);
+            this.CoTNameTxt.Name = "CoTNameTxt";
+            this.CoTNameTxt.ReadOnly = true;
+            this.CoTNameTxt.Size = new System.Drawing.Size(312, 20);
+            this.CoTNameTxt.TabIndex = 98;
+            this.CoTNameTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // CoTValueLbl
+            // 
+            this.CoTValueLbl.AutoSize = true;
+            this.CoTValueLbl.Location = new System.Drawing.Point(0, 176);
+            this.CoTValueLbl.Name = "CoTValueLbl";
+            this.CoTValueLbl.Size = new System.Drawing.Size(34, 13);
+            this.CoTValueLbl.TabIndex = 99;
+            this.CoTValueLbl.Text = "Value";
+            // 
+            // CoTVariableLbl
+            // 
+            this.CoTVariableLbl.AutoSize = true;
+            this.CoTVariableLbl.Location = new System.Drawing.Point(0, 137);
+            this.CoTVariableLbl.Name = "CoTVariableLbl";
+            this.CoTVariableLbl.Size = new System.Drawing.Size(45, 13);
+            this.CoTVariableLbl.TabIndex = 97;
+            this.CoTVariableLbl.Text = "Variable";
+            // 
+            // CoTGlow1Pnl
+            // 
+            this.CoTGlow1Pnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CoTGlow1Pnl.Location = new System.Drawing.Point(321, 153);
+            this.CoTGlow1Pnl.Name = "CoTGlow1Pnl";
+            this.CoTGlow1Pnl.Size = new System.Drawing.Size(1, 59);
+            this.CoTGlow1Pnl.TabIndex = 96;
+            // 
+            // CoTClearVariableBtn
+            // 
+            this.CoTClearVariableBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CoTClearVariableBtn.Enabled = false;
+            this.CoTClearVariableBtn.Location = new System.Drawing.Point(328, 187);
+            this.CoTClearVariableBtn.Name = "CoTClearVariableBtn";
+            this.CoTClearVariableBtn.Size = new System.Drawing.Size(145, 22);
+            this.CoTClearVariableBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CoTClearVariableBtn.TabIndex = 95;
+            this.CoTClearVariableBtn.Text = "Clear Variable";
+            // 
+            // CoTUpdateVariableBtn
+            // 
+            this.CoTUpdateVariableBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CoTUpdateVariableBtn.Location = new System.Drawing.Point(328, 156);
+            this.CoTUpdateVariableBtn.Name = "CoTUpdateVariableBtn";
+            this.CoTUpdateVariableBtn.Size = new System.Drawing.Size(145, 22);
+            this.CoTUpdateVariableBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CoTUpdateVariableBtn.TabIndex = 94;
+            this.CoTUpdateVariableBtn.Text = "Update Variable";
+            // 
+            // CoTStatusTxt
+            // 
+            this.CoTStatusTxt.AnimationInterval = 500;
+            this.CoTStatusTxt.BorderWidth = 1;
+            this.CoTStatusTxt.DisplayBoundary = true;
+            this.CoTStatusTxt.Location = new System.Drawing.Point(3, 288);
+            this.CoTStatusTxt.Name = "CoTStatusTxt";
+            this.CoTStatusTxt.Size = new System.Drawing.Size(350, 22);
+            this.CoTStatusTxt.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CoTStatusTxt.TabIndex = 2;
+            this.CoTStatusTxt.Text = "Standing By...";
+            this.CoTStatusTxt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // CoTConnectBtn
+            // 
+            this.CoTConnectBtn.BackColor = System.Drawing.Color.Transparent;
+            this.CoTConnectBtn.Location = new System.Drawing.Point(359, 288);
+            this.CoTConnectBtn.Name = "CoTConnectBtn";
+            this.CoTConnectBtn.Size = new System.Drawing.Size(114, 22);
+            this.CoTConnectBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.CoTConnectBtn.TabIndex = 1;
+            this.CoTConnectBtn.Text = "Connect";
+            // 
+            // CoTProxyPortTxt
+            // 
+            this.CoTProxyPortTxt.Location = new System.Drawing.Point(384, 227);
+            this.CoTProxyPortTxt.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
-            this.TTUShortInputTxt.Name = "TTUShortInputTxt";
-            this.TTUShortInputTxt.Size = new System.Drawing.Size(126, 22);
-            this.TTUShortInputTxt.TabIndex = 49;
-            this.TTUShortInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.CoTProxyPortTxt.Name = "CoTProxyPortTxt";
+            this.CoTProxyPortTxt.Size = new System.Drawing.Size(89, 20);
+            this.CoTProxyPortTxt.TabIndex = 92;
+            this.CoTProxyPortTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
-            // ExtensionsTab
+            // CoTVariablesVw
             // 
-            this.ExtensionsTab.Controls.Add(this.ETUninstallExtensionBtn);
-            this.ExtensionsTab.Controls.Add(this.ETExtensionVw);
-            this.ExtensionsTab.Controls.Add(this.ETInstallExtensionBtn);
-            this.ExtensionsTab.Location = new System.Drawing.Point(4, 28);
-            this.ExtensionsTab.Name = "ExtensionsTab";
-            this.ExtensionsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ExtensionsTab.Size = new System.Drawing.Size(476, 313);
-            this.ExtensionsTab.TabIndex = 1;
-            this.ExtensionsTab.Text = "Extensions";
-            this.ExtensionsTab.UseVisualStyleBackColor = true;
+            this.CoTVariablesVw.CheckBoxes = true;
+            this.CoTVariablesVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.VTVariableCol,
+            this.VTValueCol});
+            this.CoTVariablesVw.Dock = System.Windows.Forms.DockStyle.Top;
+            this.CoTVariablesVw.FullRowSelect = true;
+            this.CoTVariablesVw.GridLines = true;
+            this.CoTVariablesVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.CoTVariablesVw.HideSelection = false;
+            this.CoTVariablesVw.Location = new System.Drawing.Point(3, 3);
+            this.CoTVariablesVw.MultiSelect = false;
+            this.CoTVariablesVw.Name = "CoTVariablesVw";
+            this.CoTVariablesVw.ShowItemToolTips = true;
+            this.CoTVariablesVw.Size = new System.Drawing.Size(470, 131);
+            this.CoTVariablesVw.TabIndex = 101;
+            this.CoTVariablesVw.UseCompatibleStateImageBehavior = false;
+            this.CoTVariablesVw.View = System.Windows.Forms.View.Details;
             // 
-            // ETUninstallExtensionBtn
+            // VTVariableCol
             // 
-            this.ETUninstallExtensionBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ETUninstallExtensionBtn.Enabled = false;
-            this.ETUninstallExtensionBtn.Location = new System.Drawing.Point(215, 285);
-            this.ETUninstallExtensionBtn.Name = "ETUninstallExtensionBtn";
-            this.ETUninstallExtensionBtn.Size = new System.Drawing.Size(123, 22);
-            this.ETUninstallExtensionBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ETUninstallExtensionBtn.TabIndex = 2;
-            this.ETUninstallExtensionBtn.Text = "Uninstall Extension";
+            this.VTVariableCol.Text = "Variable";
+            this.VTVariableCol.Width = 224;
             // 
-            // ETExtensionVw
+            // VTValueCol
             // 
-            this.ETExtensionVw.CheckBoxes = true;
-            this.ETExtensionVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ETIdentifierCol,
-            this.ETCreatorCol,
-            this.ETDescriptionCol,
-            this.ETVersionCol,
-            this.ETStatusCol});
-            this.ETExtensionVw.ContextMenuStrip = this.ETExtensionMenu;
-            this.ETExtensionVw.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ETExtensionVw.FullRowSelect = true;
-            this.ETExtensionVw.GridLines = true;
-            this.ETExtensionVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.ETExtensionVw.HideSelection = false;
-            this.ETExtensionVw.Location = new System.Drawing.Point(3, 3);
-            this.ETExtensionVw.MultiSelect = false;
-            this.ETExtensionVw.Name = "ETExtensionVw";
-            this.ETExtensionVw.ShowItemToolTips = true;
-            this.ETExtensionVw.Size = new System.Drawing.Size(470, 276);
-            this.ETExtensionVw.TabIndex = 0;
-            this.ETExtensionVw.UseCompatibleStateImageBehavior = false;
-            this.ETExtensionVw.View = System.Windows.Forms.View.Details;
+            this.VTValueCol.Text = "Value";
+            this.VTValueCol.Width = 225;
             // 
-            // ETIdentifierCol
+            // TanjiTabs
             // 
-            this.ETIdentifierCol.Text = "Identifier";
-            this.ETIdentifierCol.Width = 87;
-            // 
-            // ETCreatorCol
-            // 
-            this.ETCreatorCol.Text = "Creator";
-            this.ETCreatorCol.Width = 90;
-            // 
-            // ETDescriptionCol
-            // 
-            this.ETDescriptionCol.Text = "Description";
-            this.ETDescriptionCol.Width = 120;
-            // 
-            // ETVersionCol
-            // 
-            this.ETVersionCol.Text = "Version";
-            this.ETVersionCol.Width = 92;
-            // 
-            // ETStatusCol
-            // 
-            this.ETStatusCol.Text = "Status";
-            // 
-            // ETInstallExtensionBtn
-            // 
-            this.ETInstallExtensionBtn.BackColor = System.Drawing.Color.Transparent;
-            this.ETInstallExtensionBtn.Location = new System.Drawing.Point(344, 285);
-            this.ETInstallExtensionBtn.Name = "ETInstallExtensionBtn";
-            this.ETInstallExtensionBtn.Size = new System.Drawing.Size(123, 22);
-            this.ETInstallExtensionBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ETInstallExtensionBtn.TabIndex = 1;
-            this.ETInstallExtensionBtn.Text = "Install Extension";
-            // 
-            // AboutTab
-            // 
-            this.AboutTab.Location = new System.Drawing.Point(4, 28);
-            this.AboutTab.Name = "AboutTab";
-            this.AboutTab.Padding = new System.Windows.Forms.Padding(3);
-            this.AboutTab.Size = new System.Drawing.Size(476, 313);
-            this.AboutTab.TabIndex = 5;
-            this.AboutTab.Text = "About";
-            this.AboutTab.UseVisualStyleBackColor = true;
-            // 
-            // InjectionMenu
-            // 
-            this.InjectionMenu.InputBox = null;
-            this.InjectionMenu.Name = "InjectionMenu";
-            this.InjectionMenu.Size = new System.Drawing.Size(174, 170);
+            this.TanjiTabs.Controls.Add(this.ConnectionTab);
+            this.TanjiTabs.Controls.Add(this.InjectionTab);
+            this.TanjiTabs.Controls.Add(this.ToolboxTab);
+            this.TanjiTabs.Controls.Add(this.ExtensionsTab);
+            this.TanjiTabs.Controls.Add(this.AboutTab);
+            this.TanjiTabs.DisplayBoundary = true;
+            this.TanjiTabs.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.TanjiTabs.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
+            this.TanjiTabs.ItemSize = new System.Drawing.Size(96, 24);
+            this.TanjiTabs.Location = new System.Drawing.Point(0, 0);
+            this.TanjiTabs.Name = "TanjiTabs";
+            this.TanjiTabs.SelectedIndex = 0;
+            this.TanjiTabs.Size = new System.Drawing.Size(484, 345);
+            this.TanjiTabs.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
+            this.TanjiTabs.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.TanjiTabs.TabIndex = 6;
             // 
             // MainFrm
             // 
@@ -1551,11 +1417,10 @@ namespace Tanji
             this.Load += new System.EventHandler(this.MainFrm_Load);
             this.TanjiStrip.ResumeLayout(false);
             this.TanjiStrip.PerformLayout();
-            this.ETExtensionMenu.ResumeLayout(false);
-            this.TanjiTabs.ResumeLayout(false);
-            this.ConnectionTab.ResumeLayout(false);
-            this.ConnectionTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.CoTProxyPortTxt)).EndInit();
+            this.ToolboxTab.ResumeLayout(false);
+            this.ToolboxTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.TTIntInputTxt)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.TTUShortInputTxt)).EndInit();
             this.InjectionTab.ResumeLayout(false);
             this.InjectionTabs.ResumeLayout(false);
             this.ConstructerTab.ResumeLayout(false);
@@ -1571,12 +1436,10 @@ namespace Tanji
             this.FiltersTab.ResumeLayout(false);
             this.FiltersTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.FTHeaderTxt)).EndInit();
-            this.ToolboxTab.ResumeLayout(false);
-            this.ToolboxTab.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.TTIntInputTxt)).EndInit();
-            this.ToolboxTabs.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize)(this.TTUShortInputTxt)).EndInit();
-            this.ExtensionsTab.ResumeLayout(false);
+            this.ConnectionTab.ResumeLayout(false);
+            this.ConnectionTab.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.CoTProxyPortTxt)).EndInit();
+            this.TanjiTabs.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -1585,50 +1448,36 @@ namespace Tanji
         #endregion
 
         private System.Windows.Forms.StatusStrip TanjiStrip;
-        private System.Windows.Forms.ToolStripSeparator ETTopMenuSplitter;
         private System.Windows.Forms.ToolStripStatusLabel TanjiInfoTxt;
-        private System.Windows.Forms.TabPage ExtensionsTab;
-        private System.Windows.Forms.ColumnHeader ETIdentifierCol;
-        private System.Windows.Forms.ColumnHeader ETCreatorCol;
-        private System.Windows.Forms.ColumnHeader ETDescriptionCol;
-        private System.Windows.Forms.ColumnHeader ETVersionCol;
-        private System.Windows.Forms.ColumnHeader ETStatusCol;
-        private System.Windows.Forms.TabPage ToolboxTab;
-        private System.Windows.Forms.TabPage InjectionTab;
-        private System.Windows.Forms.Label CTHeaderLbl;
-        private System.Windows.Forms.Label CTAmountLbl;
-        private System.Windows.Forms.ColumnHeader ICSTypeCol;
-        private System.Windows.Forms.ColumnHeader ICSValueCol;
-        private System.Windows.Forms.ColumnHeader ICSEncodedCol;
-        private System.Windows.Forms.Label CTValueLbl;
-        private System.Windows.Forms.ColumnHeader STPacketCol;
-        private System.Windows.Forms.ColumnHeader STDestinationCol;
-        private System.Windows.Forms.ColumnHeader STIntervalCol;
-        private System.Windows.Forms.ColumnHeader STStatusCol;
-        private System.Windows.Forms.ColumnHeader FTActionCol;
-        private System.Windows.Forms.ColumnHeader FTHeaderCol;
-        private System.Windows.Forms.ColumnHeader FTReplacementCol;
-        private System.Windows.Forms.ColumnHeader FTDestinationCol;
-        private System.Windows.Forms.Label FTActionLbl;
-        private System.Windows.Forms.TabPage ConnectionTab;
+        internal System.Windows.Forms.ToolStripStatusLabel ExtensionsTxt;
+        internal System.Windows.Forms.ToolStripStatusLabel SchedulesTxt;
+        internal System.Windows.Forms.ToolStripStatusLabel TanjiVersionTxt;
+        public Sulakore.Components.SKoreInjectionMenu InjectionMenu;
+        internal System.Windows.Forms.ToolStripStatusLabel FiltersTxt;
         private System.Windows.Forms.TabPage AboutTab;
-        private System.Windows.Forms.Label STIntervalLbl;
-        private System.Windows.Forms.Label STDestinationLbl;
-        private System.Windows.Forms.Label STPacketLbl;
-        internal Sulakore.Components.SKoreButton ETUninstallExtensionBtn;
-        internal Sulakore.Components.SKoreExtensionView ETExtensionVw;
-        internal Sulakore.Components.SKoreButton ETInstallExtensionBtn;
-        internal System.Windows.Forms.TextBox TTUShortOutputTxt;
+        private System.Windows.Forms.TabPage ExtensionsTab;
+        private System.Windows.Forms.TabPage ToolboxTab;
+        private System.Windows.Forms.Label TT16BitInputLbl;
+        private System.Windows.Forms.Label TT32BitInputLbl;
+        internal System.Windows.Forms.NumericUpDown TTIntInputTxt;
+        private Sulakore.Components.SKoreTabControl ToolboxTabs;
         internal System.Windows.Forms.TextBox TTIntOutputTxt;
-        internal Sulakore.Components.SKoreButton TTDecodeUShortBtn;
+        internal System.Windows.Forms.TextBox TTUShortOutputTxt;
         internal Sulakore.Components.SKoreButton TTDecodeIntBtn;
+        internal Sulakore.Components.SKoreButton TTDecodeUShortBtn;
+        internal System.Windows.Forms.NumericUpDown TTUShortInputTxt;
+        private System.Windows.Forms.TabPage InjectionTab;
         internal Sulakore.Components.SKoreButton ITSendToClientBtn;
         internal Sulakore.Components.SKoreButton ITSendToServerBtn;
+        internal Sulakore.Components.SKoreTabControl InjectionTabs;
+        internal System.Windows.Forms.TabPage ConstructerTab;
         internal System.Windows.Forms.ComboBox CTValueTxt;
+        internal System.Windows.Forms.NumericUpDown CTHeaderTxt;
+        private System.Windows.Forms.Label CTHeaderLbl;
+        private System.Windows.Forms.Label CTAmountLbl;
         internal System.Windows.Forms.TextBox CTStructureTxt;
         internal Sulakore.Components.SKoreButton CTTransferBelowBtn;
         internal Sulakore.Components.SKoreLabel CTChunkCountLbl;
-        internal Sulakore.Components.SKoreConstructView CTConstructerVw;
         internal System.Windows.Forms.NumericUpDown CTAmountTxt;
         internal Sulakore.Components.SKoreButton CTRemoveBtn;
         internal Sulakore.Components.SKoreButton CTMoveDownBtn;
@@ -1637,77 +1486,77 @@ namespace Tanji
         internal Sulakore.Components.SKoreButton CTWriteBooleanBtn;
         internal Sulakore.Components.SKoreButton CTWriteStringBtn;
         internal Sulakore.Components.SKoreButton CTWriteIntegerBtn;
+        private System.Windows.Forms.Label CTValueLbl;
+        internal Sulakore.Components.SKoreConstructView CTConstructerVw;
+        private System.Windows.Forms.ColumnHeader ICSTypeCol;
+        private System.Windows.Forms.ColumnHeader ICSValueCol;
+        private System.Windows.Forms.ColumnHeader ICSEncodedCol;
+        private System.Windows.Forms.CheckBox CTUpdateOnEnterChckbx;
+        internal System.Windows.Forms.TabPage SchedulerTab;
+        internal Sulakore.Components.SKoreButton STUpdateBtn;
+        internal Sulakore.Components.SKoreButton STRemoveBtn;
+        internal System.Windows.Forms.CheckBox STAutoStartChckbx;
+        private System.Windows.Forms.Label STDestinationLbl;
+        private System.Windows.Forms.Label STCyclesLbl;
+        internal System.Windows.Forms.NumericUpDown STCyclesTxt;
+        private System.Windows.Forms.Label STIntervalLbl;
         internal Sulakore.Components.SKoreButton STClearBtn;
         internal Sulakore.Components.SKoreButton STCreateBtn;
         internal System.Windows.Forms.NumericUpDown STIntervalTxt;
         internal System.Windows.Forms.ComboBox STDestinationTxt;
+        private System.Windows.Forms.Label STPacketLbl;
         internal System.Windows.Forms.TextBox STPacketTxt;
-        internal System.Windows.Forms.CheckBox STAutoStartChckbx;
         internal Sulakore.Components.SKoreScheduleView STSchedulerVw;
-        internal System.Windows.Forms.TextBox PTPacketTxt;
-        internal System.Windows.Forms.ComboBox ITPacketTxt;
-        internal System.Windows.Forms.ComboBox FTActionTxt;
-        internal Sulakore.Components.SKoreListView FTFiltersVw;
-        internal Sulakore.Components.SKoreButton CoTConnectBtn;
-        internal Sulakore.Components.SKoreLabel CoTStatusTxt;
-        internal System.Windows.Forms.ContextMenuStrip ETExtensionMenu;
-        internal System.Windows.Forms.ToolStripMenuItem ETOpenMenuBtn;
-        internal System.Windows.Forms.ToolStripMenuItem ETUninstallMenuBtn;
-        internal System.Windows.Forms.ToolStripMenuItem ETInstallMenuBtn;
-        internal Sulakore.Components.SKoreTabControl InjectionTabs;
-        internal System.Windows.Forms.TabPage PrimitiveTab;
-        internal System.Windows.Forms.ToolStripStatusLabel ExtensionsTxt;
-        internal System.Windows.Forms.ToolStripStatusLabel SchedulesTxt;
-        internal System.Windows.Forms.ToolStripStatusLabel TanjiVersionTxt;
-        private Sulakore.Components.SKoreTabControl ToolboxTabs;
-        private System.Windows.Forms.TabPage ProfileTab;
-        private System.Windows.Forms.Panel CoTGlow3Pnl;
-        internal Sulakore.Components.SKoreButton CoTBrowseBtn;
-        internal System.Windows.Forms.TextBox CoTCustomClientTxt;
-        private System.Windows.Forms.Label CoTProxyPortLbl;
-        internal Sulakore.Components.SKoreButton CoTExportRootCertificateBtn;
-        internal Sulakore.Components.SKoreButton CoTDestroyCertificatesBtn;
-        internal System.Windows.Forms.NumericUpDown CoTProxyPortTxt;
-        internal Sulakore.Components.SKoreListView CoTVariablesVw;
-        private System.Windows.Forms.ColumnHeader VTVariableCol;
-        private System.Windows.Forms.ColumnHeader VTValueCol;
-        internal System.Windows.Forms.TextBox CoTValueTxt;
-        private System.Windows.Forms.Label CoTValueLbl;
-        internal System.Windows.Forms.TextBox CoTNameTxt;
-        private System.Windows.Forms.Label CoTVariableLbl;
-        private System.Windows.Forms.Panel CoTGlow1Pnl;
-        internal Sulakore.Components.SKoreButton CoTClearVariableBtn;
-        internal Sulakore.Components.SKoreButton CoTUpdateVariableBtn;
-        private System.Windows.Forms.Label CoTCustomClientLbl;
-        private System.Windows.Forms.Panel CoTGlow2Pnl;
-        public Sulakore.Components.SKoreInjectionMenu InjectionMenu;
-        internal System.Windows.Forms.TabPage FiltersTab;
-        internal System.Windows.Forms.TabPage SchedulerTab;
-        internal System.Windows.Forms.TabPage ConstructerTab;
-        internal System.Windows.Forms.NumericUpDown TTUShortInputTxt;
-        internal System.Windows.Forms.NumericUpDown TTIntInputTxt;
-        private System.Windows.Forms.Label TT32BitInputLbl;
-        private System.Windows.Forms.Label TT16BitInputLbl;
-        internal Sulakore.Components.SKoreTabControl TanjiTabs;
-        internal System.Windows.Forms.NumericUpDown CTHeaderTxt;
-        private System.Windows.Forms.CheckBox CTUpdateOnEnterChckbx;
-        private System.Windows.Forms.Label STCyclesLbl;
-        internal System.Windows.Forms.NumericUpDown STCyclesTxt;
+        private System.Windows.Forms.ColumnHeader STPacketCol;
+        private System.Windows.Forms.ColumnHeader STDestinationCol;
+        private System.Windows.Forms.ColumnHeader STIntervalCol;
         private System.Windows.Forms.ColumnHeader STCyclesCol;
-        internal Sulakore.Components.SKoreButton STRemoveBtn;
-        internal Sulakore.Components.SKoreButton STUpdateBtn;
-        private System.Windows.Forms.Label PTCorruptedLbl;
-        private System.Windows.Forms.Panel panel1;
-        internal System.Windows.Forms.Label PTCorruptedValueLbl;
+        private System.Windows.Forms.ColumnHeader STStatusCol;
+        internal System.Windows.Forms.TabPage PrimitiveTab;
         internal System.Windows.Forms.Label PTPacketInfoLbl;
-        private System.Windows.Forms.Label FTReplacementLbl;
-        internal System.Windows.Forms.TextBox FTReplacementTxt;
+        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label PTCorruptedLbl;
+        internal System.Windows.Forms.Label PTCorruptedValueLbl;
+        internal System.Windows.Forms.TextBox PTPacketTxt;
+        internal System.Windows.Forms.TabPage FiltersTab;
         private System.Windows.Forms.Label FTDestinationLbl;
         internal System.Windows.Forms.ComboBox FTDestinationTxt;
         internal System.Windows.Forms.NumericUpDown FTHeaderTxt;
         private System.Windows.Forms.Label FTHeaderLbl;
         internal Sulakore.Components.SKoreButton FTRemoveBtn;
         internal Sulakore.Components.SKoreButton FTCreateBtn;
-        internal System.Windows.Forms.ToolStripStatusLabel FiltersTxt;
+        private System.Windows.Forms.Label FTReplacementLbl;
+        internal System.Windows.Forms.TextBox FTReplacementTxt;
+        private System.Windows.Forms.Label FTActionLbl;
+        internal System.Windows.Forms.ComboBox FTActionTxt;
+        internal Sulakore.Components.SKoreListView FTFiltersVw;
+        private System.Windows.Forms.ColumnHeader FTHeaderCol;
+        private System.Windows.Forms.ColumnHeader FTDestinationCol;
+        private System.Windows.Forms.ColumnHeader FTActionCol;
+        private System.Windows.Forms.ColumnHeader FTReplacementCol;
+        internal System.Windows.Forms.ComboBox ITPacketTxt;
+        private System.Windows.Forms.TabPage ConnectionTab;
+        private System.Windows.Forms.Panel CoTGlow2Pnl;
+        private System.Windows.Forms.Label CoTCustomClientLbl;
+        private System.Windows.Forms.Panel CoTGlow3Pnl;
+        internal Sulakore.Components.SKoreButton CoTBrowseBtn;
+        private System.Windows.Forms.Label CoTProxyPortLbl;
+        internal Sulakore.Components.SKoreButton CoTExportRootCertificateBtn;
+        internal Sulakore.Components.SKoreButton CoTDestroyCertificatesBtn;
+        internal System.Windows.Forms.TextBox CoTValueTxt;
+        internal System.Windows.Forms.TextBox CoTCustomClientTxt;
+        internal System.Windows.Forms.TextBox CoTNameTxt;
+        private System.Windows.Forms.Label CoTValueLbl;
+        private System.Windows.Forms.Label CoTVariableLbl;
+        private System.Windows.Forms.Panel CoTGlow1Pnl;
+        internal Sulakore.Components.SKoreButton CoTClearVariableBtn;
+        internal Sulakore.Components.SKoreButton CoTUpdateVariableBtn;
+        internal Sulakore.Components.SKoreLabel CoTStatusTxt;
+        internal Sulakore.Components.SKoreButton CoTConnectBtn;
+        internal System.Windows.Forms.NumericUpDown CoTProxyPortTxt;
+        internal Sulakore.Components.SKoreListView CoTVariablesVw;
+        private System.Windows.Forms.ColumnHeader VTVariableCol;
+        private System.Windows.Forms.ColumnHeader VTValueCol;
+        internal Sulakore.Components.SKoreTabControl TanjiTabs;
     }
 }

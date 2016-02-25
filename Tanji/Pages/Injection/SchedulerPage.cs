@@ -6,7 +6,7 @@ using Sulakore.Components;
 
 namespace Tanji.Pages.Injection
 {
-    public class SchedulerPage : TanjiSubPage<InjectionPage>
+    public class SchedulerPage : TanjiSubPage<InjectionPage>, ITanjiService
     {
         private ushort _interval = 100;
         public ushort Interval
@@ -52,6 +52,7 @@ namespace Tanji.Pages.Injection
             }
         }
 
+        protected bool SuppressUIUpdating { get; private set; }
         public SchedulerPage(InjectionPage parent, TabPage tab)
             : base(parent, tab)
         {
@@ -76,23 +77,6 @@ namespace Tanji.Pages.Injection
             UI.STSchedulerVw.ItemChecked += STSchedulerVw_ItemChecked;
             UI.STSchedulerVw.ScheduleTick += STSchedulerVw_ScheduleTick;
             UI.STSchedulerVw.ItemSelectionStateChanged += STSchedulerVw_ItemSelectionStateChanged;
-        }
-
-        private void UpdateUI()
-        {
-            UI.SchedulesTxt.Text =
-                $"Schedules: {UI.STSchedulerVw.CheckedItems.Count}/{UI.STSchedulerVw.Items.Count}";
-        }
-        public HMessage GetPacket()
-        {
-            return new HMessage(
-                UI.STPacketTxt.Text, Destination);
-        }
-
-        protected override void OnTabSelecting(TabControlCancelEventArgs e)
-        {
-            UI.InjectionMenu.InputBox = UI.STPacketTxt;
-            base.OnTabSelecting(e);
         }
 
         private void STClearBtn_Click(object sender, EventArgs e)
@@ -138,6 +122,43 @@ namespace Tanji.Pages.Injection
         {
             UI.STUpdateBtn.Enabled =
                 UI.STRemoveBtn.Enabled = UI.STSchedulerVw.HasSelectedItem;
+        }
+
+        public void Halt()
+        {
+            try
+            {
+                SuppressUIUpdating = true;
+                foreach (ListViewItem item in UI.STSchedulerVw.Items)
+                {
+                    item.Checked = false;
+                }
+            }
+            finally
+            {
+                SuppressUIUpdating = false;
+                UpdateUI();
+            }
+        }
+        public HMessage GetPacket()
+        {
+            return new HMessage(
+                UI.STPacketTxt.Text, Destination);
+        }
+
+        private void UpdateUI()
+        {
+            if (!SuppressUIUpdating)
+            {
+                UI.SchedulesTxt.Text =
+                    $"Schedules: {UI.STSchedulerVw.CheckedItems.Count}/{UI.STSchedulerVw.Items.Count}";
+            }
+        }
+
+        protected override void OnTabSelecting(TabControlCancelEventArgs e)
+        {
+            UI.InjectionMenu.InputBox = UI.STPacketTxt;
+            base.OnTabSelecting(e);
         }
     }
 }

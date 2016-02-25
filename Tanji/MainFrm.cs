@@ -18,8 +18,9 @@ namespace Tanji
 {
     public partial class MainFrm : TanjiForm, IDataManager
     {
+        private readonly List<ITanjiService> _services;
         private readonly EventHandler _connected, _disconnected;
-        private readonly IList<IDataHandler> _dataHandlers, _toRemoveList;
+        private readonly List<IDataHandler> _dataHandlers, _toRemoveList;
 
         public HConnection Connection { get; }
 
@@ -37,6 +38,7 @@ namespace Tanji
 
             _connected = Connected;
             _disconnected = Disconnected;
+            _services = new List<ITanjiService>();
             _toRemoveList = new List<IDataHandler>();
             _dataHandlers = new List<IDataHandler>();
 
@@ -53,8 +55,6 @@ namespace Tanji
             ConnectionPg = new ConnectionPage(this, ConnectionTab);
 
             PacketLoggerUI = new PacketLoggerFrm(this);
-
-            AttachDataHandlers();
         }
 
         private void MainFrm_Load(object sender, EventArgs e)
@@ -71,6 +71,75 @@ namespace Tanji
                 Process.Start(AboutPg.TanjiRepo.LatestRelease.HtmlUrl);
         }
 
+        private void Connected(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(_connected, sender, e);
+                return;
+            }
+
+            AttachServices();
+            AttachDataHandlers();
+
+            Text = $"Tanji ~ Connected[{Connection.Host}:{Connection.Port}]";
+            TopMost = PacketLoggerUI.TopMost;
+
+            PacketLoggerUI.Show();
+            PacketLoggerUI.WindowState = FormWindowState.Normal;
+
+            BringToFront();
+        }
+        private void Disconnected(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(_disconnected, sender, e);
+                return;
+            }
+
+            HaltServices();
+            ConnectionPg.Game = null;
+            ConnectionPg.GameData = null;
+
+            TopMost = true;
+            Text = "Tanji ~ Disconnected";
+
+            PacketLoggerUI.Close();
+            PacketLoggerUI.Hide();
+        }
+
+        private void DataOutgoing(object sender, DataInterceptedEventArgs e)
+        {
+            ProcessRemoveQueue();
+            foreach (IDataHandler dataHandler in _dataHandlers)
+            {
+                if (dataHandler.IsHandlingOutgoing)
+                    dataHandler.HandleOutgoing(e);
+            }
+        }
+        private void DataIncoming(object sender, DataInterceptedEventArgs e)
+        {
+            ProcessRemoveQueue();
+            foreach (IDataHandler dataHandler in _dataHandlers)
+            {
+                if (dataHandler.IsHandlingIncoming)
+                    dataHandler.HandleIncoming(e);
+            }
+        }
+
+        public void HaltServices()
+        {
+            foreach (ITanjiService service in _services)
+                service.Halt();
+        }
+        public void AttachServices()
+        {
+            _services.Clear();
+
+            _services.Add(InjectionPg.FiltersPg);
+            _services.Add(InjectionPg.SchedulerPg);
+        }
         public void AttachDataHandlers()
         {
             _toRemoveList.Clear();
@@ -78,24 +147,8 @@ namespace Tanji
 
             _dataHandlers.Add(ExtensionsPg);
             _dataHandlers.Add(InjectionPg.FiltersPg);
-            // TODO: Implement toolbox functionality, unsure if
-            // we'll need block/replacing capabilities.
-            //_dataHandlers.Add(ToolboxPg);
             _dataHandlers.Add(ConnectionPg.HandshakeMngr);
             _dataHandlers.Add(PacketLoggerUI);
-        }
-        protected void ProcessRemoveQueue()
-        {
-            if (_toRemoveList.Count < 1) return;
-            lock (_dataHandlers)
-            {
-                foreach (IDataHandler dataHandler in _toRemoveList)
-                {
-                    if (_dataHandlers.Contains(dataHandler))
-                        _dataHandlers.Remove(dataHandler);
-                }
-                _toRemoveList.Clear();
-            }
         }
 
         public void AddDataHandler(IDataHandler dataHandler)
@@ -118,59 +171,17 @@ namespace Tanji
             }
         }
 
-        private void Connected(object sender, EventArgs e)
+        private void ProcessRemoveQueue()
         {
-            if (InvokeRequired)
+            if (_toRemoveList.Count < 1) return;
+            lock (_dataHandlers)
             {
-                Invoke(_connected, sender, e);
-                return;
-            }
-
-            AttachDataHandlers();
-
-            TopMost = false;
-            Text = $"Tanji ~ Connected[{Connection.Host}:{Connection.Port}]";
-
-            PacketLoggerUI.Show();
-            PacketLoggerUI.WindowState = FormWindowState.Normal;
-
-            BringToFront();
-        }
-        private void Disconnected(object sender, EventArgs e)
-        {
-            if (InvokeRequired)
-            {
-                Invoke(_disconnected, sender, e);
-                return;
-            }
-
-            ConnectionPg.Game = null;
-            ConnectionPg.GameData = null;
-
-            TopMost = true;
-            Text = "Tanji ~ Disconnected";
-            // TODO: Stop all services(schedulers/injections/filters).
-
-            PacketLoggerUI.Close();
-            PacketLoggerUI.Hide();
-        }
-
-        private void DataOutgoing(object sender, InterceptedEventArgs e)
-        {
-            ProcessRemoveQueue();
-            foreach (IDataHandler dataHandler in _dataHandlers)
-            {
-                if (dataHandler.IsHandlingOutgoing)
-                    dataHandler.HandleOutgoing(e);
-            }
-        }
-        private void DataIncoming(object sender, InterceptedEventArgs e)
-        {
-            ProcessRemoveQueue();
-            foreach (IDataHandler dataHandler in _dataHandlers)
-            {
-                if (dataHandler.IsHandlingIncoming)
-                    dataHandler.HandleIncoming(e);
+                foreach (IDataHandler dataHandler in _toRemoveList)
+                {
+                    if (_dataHandlers.Contains(dataHandler))
+                        _dataHandlers.Remove(dataHandler);
+                }
+                _toRemoveList.Clear();
             }
         }
     }

@@ -20,7 +20,7 @@ namespace Tanji.Pages.About
             UI.TanjiVersionTxt.Text = ("v" + LocalVersion);
 
             TanjiRepo = new GitRepository("ArachisH", "Tanji");
-            
+
             TanjiRepo.GetLatestReleaseAsync().ContinueWith(
                 LatestReleaseGrabbed, TaskScheduler.FromCurrentSynchronizationContext());
         }
@@ -32,6 +32,12 @@ namespace Tanji.Pages.About
 
             UI.TanjiVersionTxt.IsLink = true;
             IsNotifying = (LatestVersion > LocalVersion);
+        }
+
+        protected override void OnTabSelecting(TabControlCancelEventArgs e)
+        {
+            e.Cancel = true;
+            base.OnTabSelecting(e);
         }
     }
 }
