@@ -4,6 +4,7 @@ using System.Threading;
 using Sulakore.Protocol;
 using Sulakore.Extensions;
 using Sulakore.Communication;
+using System.Threading.Tasks;
 
 namespace Extension_Demo
 {
@@ -22,7 +23,7 @@ namespace Extension_Demo
             return PacketTxt.TextLength > 0 ?
                 HMessage.ToBytes(PacketTxt.Text) : null;
         }
-        private void AttachedIncoming(InterceptedEventArgs e)
+        private void AttachedIncoming(DataInterceptedEventArgs e)
         {
             // If we can't read a string, leave this method.
             if (!e.Packet.CanReadString()) return;
@@ -39,8 +40,8 @@ namespace Extension_Demo
                 case "replace":
                 {
                     // Replace the first string found in the packet.
-                    e.Replacement.RemoveString(0);
-                    e.Replacement.WriteString("Replaced!", 0);
+                    e.Packet.RemoveString(0);
+                    e.Packet.WriteString("Replaced!", 0);
                     break;
                 }
 
@@ -49,9 +50,13 @@ namespace Extension_Demo
                     // Tell the contractor to continue reading data from local/remote endpoint.
                     // Does not wait for this method to finish, but the packet being processed
                     // can still be used: blocked/replaced
-                    if (e.IsAsyncCapable)
-                        e.ContinueRead();
-
+                    if (e.IsContinuable)
+                    {
+                        Task continuedTask = e.Continue();
+                        // Uncommenting this code will wait for the continued task to finish,
+                        // in this case, it having processed one other incoming packet.
+                        //continuedTask.Wait();
+                    }
                     // Simulate a long synchronous process for one second(1000ms).
                     Thread.Sleep(1000);
                     break;
