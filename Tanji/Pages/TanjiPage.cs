@@ -58,6 +58,7 @@ namespace Tanji.Pages
             TabControl.Selecting += TabControl_Selecting;
             TabControl.Deselecting += TabControl_Deselecting;
 
+            _onPropertyChanged = OnPropertyChanged;
             _onNotifyingChanged = OnNotifyingChanged;
         }
 
