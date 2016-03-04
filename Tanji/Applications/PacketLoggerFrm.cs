@@ -4,6 +4,7 @@ using System.Threading;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 using Tanji.Pages;
 using Tanji.Utilities;
@@ -152,9 +153,9 @@ namespace Tanji.Applications
                 _currentFindHeaderUI.Show(this);
             }
 
-            string selTxt = LoggerTxt.SelectedText;
-            if (!string.IsNullOrWhiteSpace(selTxt))
-                _currentFindHeaderUI.Find(selTxt);
+            string selectedText = LoggerTxt.SelectedText;
+            if (!string.IsNullOrWhiteSpace(selectedText))
+                _currentFindHeaderUI.Find(selectedText);
         }
 
         public void HandleOutgoing(DataInterceptedEventArgs e) => PushToQueue(e);
@@ -181,7 +182,7 @@ namespace Tanji.Applications
             ASMethod msgCtor = messageClass.Instance.Constructor;
             foreach (ASParameter parameter in msgCtor.Parameters)
             {
-                switch (parameter.Type.ObjName.ToLower())
+                switch (parameter.Type.Name.ToLower())
                 {
                     case "string":
                     if (!packet.CanReadString(position)) continue;
@@ -208,10 +209,10 @@ namespace Tanji.Applications
         public void WritePacketLog(DataInterceptedEventArgs args, bool isOutgoing)
         {
             HMessage pkt = args.Packet;
-            HFlash game = MainUI.ConnectionPg.Game;
+            HGame game = MainUI.ConnectionPg.Game;
 
-            Dictionary<ushort, ASClass> msgClasses = (isOutgoing ?
-                game.OutgoingTypes : game.IncomingTypes);
+            ReadOnlyDictionary<ushort, ASClass> msgClasses = (isOutgoing ?
+                game.OutgoingMessages : game.IncomingMessages);
 
             ASClass msgClass = null;
             msgClasses.TryGetValue(pkt.Header, out msgClass);
@@ -224,7 +225,7 @@ namespace Tanji.Applications
 
             if (DisplayHash)
             {
-                string hash = game.GetHash(msgClass, true, isOutgoing);
+                string hash = game.GetMessageHash(msgClass);
                 WriteHighlight($"[{hash}]\r\n", SpecialHighlight);
             }
 
@@ -246,18 +247,18 @@ namespace Tanji.Applications
             if (DisplayClassName && msgClass != null)
             {
                 WriteHighlight(", ", highlight);
-                WriteHighlight((msgClass?.Instance.Type.ObjName) ?? "???", SpecialHighlight);
+                WriteHighlight((msgClass?.Instance.Name.Name) ?? "???", SpecialHighlight);
             }
             if (!isOutgoing && DisplayParserName &&
                 msgClass != null && !_invalidParsers.Contains(pkt.Header))
             {
                 ASClass parserClass = game
-                    .GetIncomingParser(msgClass.Instance);
+                    .GetIncomingMessageParser(msgClass);
 
                 if (parserClass != null)
                 {
                     WriteHighlight($", ", highlight);
-                    WriteHighlight(parserClass.Instance.Type.ObjName, SpecialHighlight);
+                    WriteHighlight(parserClass.Instance.Name.Name, SpecialHighlight);
                 }
                 else _invalidParsers.Add(pkt.Header);
             }

@@ -127,6 +127,6 @@
         private System.Windows.Forms.ColumnHeader TypeCol;
         private System.Windows.Forms.ColumnHeader HeaderCol;
         private System.Windows.Forms.ColumnHeader ClassParserNameCol;
-        internal System.Windows.Forms.TextBox HashTxt;
+        private System.Windows.Forms.TextBox HashTxt;
     }
 }

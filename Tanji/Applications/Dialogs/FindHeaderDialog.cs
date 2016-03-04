@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows.Forms;
 using System.Collections.Generic;
 
 using Tanji.Utilities;
@@ -10,81 +11,56 @@ namespace Tanji.Applications.Dialogs
 {
     public partial class FindHeaderDialog : TanjiForm
     {
-        private readonly HFlash _game;
+        private readonly HGame _game;
 
-        public FindHeaderDialog(HFlash game)
+        private string _hash = string.Empty;
+        public string Hash
         {
+            get { return _hash; }
+            set
+            {
+                _hash = value;
+                RaiseOnPropertyChanged(nameof(Hash));
+            }
+        }
+
+        public FindHeaderDialog(HGame game)
+        {
+            _game = game;
             InitializeComponent();
 
-            _game = game;
+            HashTxt.DataBindings.Add("Text", this,
+                nameof(Hash), false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
         private void FindBtn_Click(object sender, EventArgs e)
         {
-            HeadersVw.ClearItems();
-
-            List<ASClass> messageClasses =
-                FindClasses(HashTxt.Text);
-
-            if (messageClasses == null) return;
-            foreach (ASClass messageClass in messageClasses)
-            {
-                string className =
-                    messageClass.Instance.Type.ObjName;
-
-                ushort header =
-                    _game.GetHeader(messageClass);
-
-                bool isOutgoing =
-                    _game.IsOutgoing(messageClass);
-
-                if (!isOutgoing)
-                {
-                    className += (", " + _game.GetIncomingParser(
-                        messageClass.Instance).Instance.Type.ObjName);
-                }
-
-                string type = (isOutgoing ?
-                    "Outgoing" : "Incoming");
-
-                HeadersVw.AddFocusedItem(
-                    type, header, className);
-            }
+            Find(HashTxt.Text);
         }
 
         public void Find(string hash)
         {
-            HashTxt.Text = hash;
-            FindBtn_Click(this, EventArgs.Empty);
-        }
+            Hash = hash;
+            HeadersVw.ClearItems();
 
-        private List<ASClass> FindClasses(string hash)
-        {
-            List<ASClass> messageClasses = _game.GetClasses(hash);
-            if ((messageClasses?.Count ?? 0) == 0)
-            {
-                messageClasses = FindClasses(hash,
-                    true, _game.OutgoingTypes);
-            }
-            if ((messageClasses?.Count ?? 0) == 0)
-            {
-                messageClasses = FindClasses(hash,
-                    false, _game.IncomingTypes);
-            }
-            return messageClasses;
-        }
-        protected List<ASClass> FindClasses(string hash, bool isOutgoing, Dictionary<ushort, ASClass> messages)
-        {
-            var messageClasses = new List<ASClass>();
-            foreach (ASClass msgClass in messages.Values)
-            {
-                string outHash = _game
-                    .GetHash(msgClass, true, isOutgoing);
+            IEnumerable<ASClass> messages = _game.GetMessages(HashTxt.Text);
+            if (messages == null) return;
 
-                if (outHash == hash)
-                    messageClasses.Add(msgClass);
+            foreach (ASClass messageClass in messages)
+            {
+                ushort header = _game.GetMessageHeader(messageClass);
+                bool isOutgoing = _game.IsMessageOutgoing(messageClass);
+                string messageName = messageClass.Instance.Name.Name;
+
+                string type = "Outgoing";
+                if (!isOutgoing)
+                {
+                    type = "Incoming";
+                    messageName += (", " + _game.GetIncomingMessageParser(
+                        messageClass).Instance.Name.Name);
+                }
+                HeadersVw.AddFocusedItem(type, header, messageName);
             }
-            return messageClasses;
         }
 
         protected override void OnLoad(EventArgs e)

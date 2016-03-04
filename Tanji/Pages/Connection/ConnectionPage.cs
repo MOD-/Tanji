@@ -51,7 +51,7 @@ namespace Tanji.Pages.Connection
             }
         }
 
-        public HFlash Game { get; set; }
+        public HGame Game { get; set; }
         public HHotel Hotel { get; set; }
         public HGameData GameData { get; set; }
         public HandshakeManager HandshakeMngr { get; }
@@ -101,7 +101,7 @@ namespace Tanji.Pages.Connection
             UI.CoTVariablesVw.ItemChecked += CoTVariablesVw_ItemChecked;
             UI.CoTVariablesVw.ItemSelected += CoTVariablesVw_ItemSelected;
         }
-        
+
         private void CoTConnectBtn_Click(object sender, EventArgs e)
         {
             if (State != TanjiState.StandingBy)
@@ -220,19 +220,18 @@ namespace Tanji.Pages.Connection
                 VerifyGameClientAsync(e.Payload).Wait();
                 SetStatus(TanjiState.ModifyingClient);
 
+                Game.BypassOriginCheck();
                 Game.BypassRemoteHostCheck();
-                Game.RemoveLocalUseRestrictions();
-                Game.DisableExpirationDateCheck();
-                Game.ReplaceRSA(HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
+                Game.ReplaceRSAKeys(HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
 
                 SetStatus(TanjiState.ReconstructingClient);
-                Game.Reconstruct();
+                Game.Assemble();
 
                 SetStatus(TanjiState.CompressingClient);
                 e.Payload = Game.Compress();
 
                 string clientPath = Path.Combine(
-                    _modifiedClientsDir.FullName, Game.Build);
+                    _modifiedClientsDir.FullName, Game.GetClientRevision());
 
                 Directory.CreateDirectory(clientPath);
                 File.WriteAllBytes(clientPath + "\\Habbo.swf", e.Payload);
@@ -519,7 +518,7 @@ namespace Tanji.Pages.Connection
         }
         protected virtual async Task<bool> VerifyGameClientAsync(string path, byte[] data)
         {
-            var game = new HFlash(data);
+            var game = new HGame(data);
             game.Location = path;
             try
             {
@@ -535,9 +534,7 @@ namespace Tanji.Pages.Connection
                 else Game = game;
 
                 SetStatus(TanjiState.DisassemblingClient);
-                Game.ReadTags();
-
-                Game.FindMessageInstances();
+                Game.Disassemble();
                 return true;
             }
             catch (Exception ex)
