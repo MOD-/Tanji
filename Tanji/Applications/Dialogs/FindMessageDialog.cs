@@ -2,14 +2,15 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 
-using Tanji.Utilities;
 using Tanji.Components;
+
+using Tangine.Habbo;
 
 using FlashInspect.ActionScript;
 
 namespace Tanji.Applications.Dialogs
 {
-    public partial class FindHeaderDialog : TanjiForm
+    public partial class FindMessageDialog : TanjiForm
     {
         private readonly HGame _game;
 
@@ -24,7 +25,7 @@ namespace Tanji.Applications.Dialogs
             }
         }
 
-        public FindHeaderDialog(HGame game)
+        public FindMessageDialog(HGame game)
         {
             _game = game;
             InitializeComponent();
@@ -35,31 +36,34 @@ namespace Tanji.Applications.Dialogs
 
         private void FindBtn_Click(object sender, EventArgs e)
         {
-            Find(HashTxt.Text);
-        }
-
-        public void Find(string hash)
-        {
-            Hash = hash;
             HeadersVw.ClearItems();
-
-            IEnumerable<ASClass> messages = _game.GetMessages(HashTxt.Text);
-            if (messages == null) return;
-
-            foreach (ASClass messageClass in messages)
+            _game.GenerateMessageHashes();
+            IEnumerable<ASClass> messages = _game.GetMessages(Hash);
+            if (messages == null)
             {
-                ushort header = _game.GetMessageHeader(messageClass);
-                bool isOutgoing = _game.IsMessageOutgoing(messageClass);
-                string messageName = messageClass.Instance.Name.Name;
+                MessageBox.Show("Cannot find any Outgoing/Incoming messages that are associated with this hash.",
+                    "Tanji ~ Alert!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+
+                HashTxt.Select();
+                HashTxt.SelectAll();
+                return;
+            }
+
+            foreach (ASClass msgClass in messages)
+            {
+                ushort header = _game.GetMessageHeader(msgClass);
+                bool isOutgoing = _game.IsMessageOutgoing(msgClass);
+                string messageName = msgClass.Instance.Name.Name;
 
                 string type = "Outgoing";
                 if (!isOutgoing)
                 {
                     type = "Incoming";
                     messageName += (", " + _game.GetIncomingMessageParser(
-                        messageClass).Instance.Name.Name);
+                        msgClass).Instance.Name.Name);
                 }
-                HeadersVw.AddFocusedItem(type, header, messageName);
+                ListViewItem item = HeadersVw.AddFocusedItem(type, header, messageName);
+                item.Tag = msgClass; // Display the message/class information? GG m8?
             }
         }
 

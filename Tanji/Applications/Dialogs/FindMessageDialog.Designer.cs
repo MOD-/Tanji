@@ -1,6 +1,6 @@
 ﻿namespace Tanji.Applications.Dialogs
 {
-    partial class FindHeaderDialog
+    partial class FindMessageDialog
     {
         /// <summary>
         /// Required designer variable.
@@ -98,7 +98,7 @@
             this.ClassParserNameCol.Text = "Class/Parser Name";
             this.ClassParserNameCol.Width = 205;
             // 
-            // FindHeaderDialog
+            // FindMessageDialog
             // 
             this.AcceptButton = this.FindBtn;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -111,9 +111,9 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
-            this.Name = "FindHeaderDialog";
+            this.Name = "FindMessageDialog";
             this.ShowInTaskbar = false;
-            this.Text = "Tanji ~ Find Header";
+            this.Text = "Tanji ~ Find Message";
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -127,6 +127,6 @@
         private System.Windows.Forms.ColumnHeader TypeCol;
         private System.Windows.Forms.ColumnHeader HeaderCol;
         private System.Windows.Forms.ColumnHeader ClassParserNameCol;
-        private System.Windows.Forms.TextBox HashTxt;
+        internal System.Windows.Forms.TextBox HashTxt;
     }
 }

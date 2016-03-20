@@ -6,9 +6,8 @@ using System.Threading.Tasks;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-using Tanji.Pages;
-using Tanji.Utilities;
 using Tanji.Components;
+using Tanji.Manipulators;
 using Tanji.Applications.Dialogs;
 
 using Sulakore.Protocol;
@@ -18,12 +17,12 @@ using FlashInspect.ActionScript;
 
 namespace Tanji.Applications
 {
-    public partial class PacketLoggerFrm : TanjiForm, IDataHandler
+    public partial class PacketLoggerFrm : TanjiForm, IReceiver, IHaltable
     {
         private Task _readQueueTask;
-        private FindHeaderDialog _currentFindHeaderUI;
+        private FindDialog _currentFindUI;
+        private FindMessageDialog _currentFindMessageUI;
 
-        private readonly Action _refreshLog;
         private readonly object _pushToQueueLock;
         private readonly Action<string, Color> _writeHighlight;
         private readonly List<ushort> _invalidParsers, _invalidStructures;
@@ -36,23 +35,39 @@ namespace Tanji.Applications
         public Color OutgoingHighlight { get; set; } = Color.FromArgb(0, 102, 204);
         public Color StructureHighlight { get; set; } = Color.FromArgb(0, 204, 136);
 
-        public bool IsHalted { get; private set; }
-        public bool IsHandlingOutgoing { get; private set; } = true;
-        public bool IsHandlingIncoming { get; private set; } = true;
+        public bool IsFindDialogOpened
+        {
+            get
+            {
+                return (_currentFindUI != null &&
+                    !_currentFindUI.IsDisposed);
+            }
+        }
+        public bool IsFindMessageDialogOpened
+        {
+            get
+            {
+                return (_currentFindMessageUI != null &&
+                    !_currentFindMessageUI.IsDisposed);
+            }
+        }
 
-        public bool DisplayHash { get; private set; }
-        public bool DisplayTimestamp { get; private set; }
-        public bool DisplayBlocked { get; private set; } = true;
-        public bool DisplayReplaced { get; private set; } = true;
-        public bool DisplayStructure { get; private set; } = true;
-        public bool DisplayClassName { get; private set; } = true;
-        public bool DisplayParserName { get; private set; } = true;
+        public bool IsReceiving { get; set; } = true;
+        public bool IsViewingOutgoing { get; private set; } = true;
+        public bool IsViewingIncoming { get; private set; } = true;
+
+        public bool IsDisplayingHash { get; private set; }
+        public bool IsDisplayingTimestamp { get; private set; }
+        public bool IsDisplayingBlocked { get; private set; } = true;
+        public bool IsDisplayingReplaced { get; private set; } = true;
+        public bool IsDisplayingStructure { get; private set; } = true;
+        public bool IsDisplayingParserName { get; private set; } = true;
+        public bool IsDisplayingMessageName { get; private set; } = true;
 
         public PacketLoggerFrm(MainFrm mainUI)
         {
             InitializeComponent();
 
-            _refreshLog = RefreshLog;
             _writeHighlight = WriteHighlight;
 
             _pushToQueueLock = new object();
@@ -72,59 +87,55 @@ namespace Tanji.Applications
             {
                 case nameof(ViewIncomingBtn):
                 {
-                    CaptureIncomingLbl.Text = ("Capture Incoming: " + isChecked);
-                    IsHandlingIncoming = isChecked;
+                    ViewIncomingLbl.Text = ("Viewing Incoming: " + isChecked);
+                    IsViewingIncoming = isChecked;
                     break;
                 }
                 case nameof(ViewOutgoingBtn):
                 {
-                    CaptureOutgoingLbl.Text = ("Capture Outgoing: " + isChecked);
-                    IsHandlingOutgoing = isChecked;
+                    ViewOutgoingLbl.Text = ("Viewing Outgoing: " + isChecked);
+                    IsViewingOutgoing = isChecked;
                     break;
                 }
                 case nameof(DisplayStructureBtn):
                 {
-                    DisplayStructure = isChecked;
+                    IsDisplayingStructure = isChecked;
                     break;
                 }
                 case nameof(BlockedBtn):
                 {
-                    DisplayBlocked = isChecked;
+                    IsDisplayingBlocked = isChecked;
                     break;
                 }
                 case nameof(ReplacedBtn):
                 {
-                    DisplayReplaced = isChecked;
+                    IsDisplayingReplaced = isChecked;
                     break;
                 }
                 case nameof(HashBtn):
                 {
-                    DisplayHash = isChecked;
+                    IsDisplayingHash = isChecked;
                     break;
                 }
                 case nameof(TimestampBtn):
                 {
-                    DisplayTimestamp = isChecked;
+                    IsDisplayingTimestamp = isChecked;
                     break;
                 }
                 case nameof(ClassNameBtn):
                 {
-                    DisplayClassName = isChecked;
+                    IsDisplayingMessageName = isChecked;
                     break;
                 }
                 case nameof(ParserName):
                 {
-                    DisplayParserName = isChecked;
+                    IsDisplayingParserName = isChecked;
                     break;
                 }
                 case nameof(AlwaysOnTopBtn):
                 {
                     TopMost = isChecked;
                     MainUI.TopMost = isChecked;
-
-                    Text = "Tanji ~ Packet Logger" +
-                        (TopMost ? " | TopMost" : string.Empty);
-
                     break;
                 }
             }
@@ -138,26 +149,41 @@ namespace Tanji.Applications
         {
             LoggerTxt.Clear();
         }
-        private void FindHeaderBtn_Click(object sender, EventArgs e)
+
+        private void FindBtn_Click(object sender, EventArgs e)
         {
-            if (_currentFindHeaderUI != null &&
-                !_currentFindHeaderUI.IsDisposed)
+            if (IsFindDialogOpened)
             {
-                _currentFindHeaderUI.BringToFront();
+                _currentFindUI.BringToFront();
             }
             else
             {
-                _currentFindHeaderUI =
-                    new FindHeaderDialog(MainUI.ConnectionPg.Game);
-
-                _currentFindHeaderUI.Show(this);
+                _currentFindUI = new FindDialog(LoggerTxt);
+                _currentFindUI.Show(this);
             }
-
-            string selectedText = LoggerTxt.SelectedText;
-            if (!string.IsNullOrWhiteSpace(selectedText))
-                _currentFindHeaderUI.Find(selectedText);
+            _currentFindUI.FindWhat = LoggerTxt.SelectedText;
+            _currentFindUI.FindWhatTxt.SelectAll();
+        }
+        private void FindMessageBtn_Click(object sender, EventArgs e)
+        {
+            if (IsFindMessageDialogOpened)
+            {
+                _currentFindMessageUI.BringToFront();
+            }
+            else
+            {
+                _currentFindMessageUI = new FindMessageDialog(MainUI.Game);
+                _currentFindMessageUI.Show(this);
+            }
+            _currentFindMessageUI.Hash = LoggerTxt.SelectedText;
+            _currentFindMessageUI.HashTxt.SelectAll();
         }
 
+        public void Halt()
+        {
+            Close();
+            Hide();
+        }
         public void HandleOutgoing(DataInterceptedEventArgs e) => PushToQueue(e);
         public void HandleIncoming(DataInterceptedEventArgs e) => PushToQueue(e);
 
@@ -171,6 +197,67 @@ namespace Tanji.Applications
                 LoggerTxt.SelectionColor = highlight;
                 LoggerTxt.AppendText(value);
             }
+        }
+        public void WritePacketLog(DataInterceptedEventArgs args)
+        {
+            HMessage packet = args.Packet;
+            bool isOutgoing = (args.Packet.Destination == HDestination.Server);
+
+            ReadOnlyDictionary<ushort, ASClass> msgClasses = (isOutgoing ?
+                MainUI.Game.OutgoingMessages : MainUI.Game.IncomingMessages);
+
+            ASClass msgClass = null;
+            msgClasses.TryGetValue(packet.Header, out msgClass);
+
+            Color highlight = (isOutgoing ?
+                OutgoingHighlight : IncomingHighlight);
+
+            if (IsDisplayingTimestamp)
+                WriteHighlight($"[{DateTime.Now.ToLongTimeString()}]\r\n", SpecialHighlight);
+
+            if (IsDisplayingHash)
+            {
+                string hash = MainUI.Game.GetMessageHash(msgClass);
+                WriteHighlight($"[{hash}]\r\n", SpecialHighlight);
+            }
+
+            WriteHighlight((isOutgoing ?
+                "Outgoing" : "Incoming"), highlight);
+
+            if (args.IsBlocked && IsDisplayingBlocked)
+            {
+                WriteHighlight("[Blocked]", SpecialHighlight);
+            }
+            else if (!args.IsOriginal)
+            {
+                WriteHighlight("[Replaced]", SpecialHighlight);
+            }
+
+            string arrow = (isOutgoing ? "->" : "<-");
+            WriteHighlight($"({packet.Header}, {packet.Length}", highlight);
+
+            if (IsDisplayingMessageName && msgClass != null)
+            {
+                WriteHighlight(", ", highlight);
+                WriteHighlight((msgClass?.Instance.Name.Name) ?? "???", SpecialHighlight);
+            }
+            if (!isOutgoing && IsDisplayingParserName &&
+                msgClass != null && !_invalidParsers.Contains(packet.Header))
+            {
+                ASClass parserClass = MainUI.Game
+                    .GetIncomingMessageParser(msgClass);
+
+                if (parserClass != null)
+                {
+                    WriteHighlight($", ", highlight);
+                    WriteHighlight(parserClass.Instance.Name.Name, SpecialHighlight);
+                }
+                else _invalidParsers.Add(packet.Header);
+            }
+            WriteHighlight($") {arrow} {packet}\r\n", highlight);
+
+            if (IsDisplayingStructure && isOutgoing)
+                WriteStructureLog(packet, msgClass);
         }
         public void WriteStructureLog(HMessage packet, ASClass messageClass)
         {
@@ -206,67 +293,6 @@ namespace Tanji.Applications
             }
             else _invalidStructures.Add(packet.Header);
         }
-        public void WritePacketLog(DataInterceptedEventArgs args, bool isOutgoing)
-        {
-            HMessage pkt = args.Packet;
-            HGame game = MainUI.ConnectionPg.Game;
-
-            ReadOnlyDictionary<ushort, ASClass> msgClasses = (isOutgoing ?
-                game.OutgoingMessages : game.IncomingMessages);
-
-            ASClass msgClass = null;
-            msgClasses.TryGetValue(pkt.Header, out msgClass);
-
-            Color highlight = (isOutgoing ?
-                OutgoingHighlight : IncomingHighlight);
-
-            if (DisplayTimestamp)
-                WriteHighlight($"[{DateTime.Now.ToLongTimeString()}]\r\n", SpecialHighlight);
-
-            if (DisplayHash)
-            {
-                string hash = game.GetMessageHash(msgClass);
-                WriteHighlight($"[{hash}]\r\n", SpecialHighlight);
-            }
-
-            WriteHighlight((isOutgoing ?
-                "Outgoing" : "Incoming"), highlight);
-
-            if (args.IsBlocked && DisplayBlocked)
-            {
-                WriteHighlight("[Blocked]", SpecialHighlight);
-            }
-            else if (!args.IsOriginal)
-            {
-                WriteHighlight("[Replaced]", SpecialHighlight);
-            }
-
-            string arrow = (isOutgoing ? "->" : "<-");
-            WriteHighlight($"({pkt.Header}, {pkt.Length}", highlight);
-
-            if (DisplayClassName && msgClass != null)
-            {
-                WriteHighlight(", ", highlight);
-                WriteHighlight((msgClass?.Instance.Name.Name) ?? "???", SpecialHighlight);
-            }
-            if (!isOutgoing && DisplayParserName &&
-                msgClass != null && !_invalidParsers.Contains(pkt.Header))
-            {
-                ASClass parserClass = game
-                    .GetIncomingMessageParser(msgClass);
-
-                if (parserClass != null)
-                {
-                    WriteHighlight($", ", highlight);
-                    WriteHighlight(parserClass.Instance.Name.Name, SpecialHighlight);
-                }
-                else _invalidParsers.Add(pkt.Header);
-            }
-            WriteHighlight($") {arrow} {pkt}\r\n", highlight);
-
-            if (DisplayStructure && isOutgoing)
-                WriteStructureLog(pkt, msgClass);
-        }
 
         private void LogMessageQueue()
         {
@@ -288,12 +314,10 @@ namespace Tanji.Applications
                 while (Intercepted.Count > 0)
                 {
                     DataInterceptedEventArgs args = Intercepted.Dequeue();
-                    bool isOutgoing = (args.Packet.Destination == HDestination.Server);
-                    if (!IsLoggingAuthorized(args, isOutgoing)) continue;
+                    if (!IsLoggingAuthorized(args)) continue;
 
-                    WritePacketLog(args, isOutgoing);
+                    WritePacketLog(args);
                     WriteHighlight("--------------------\r\n", SpecialHighlight);
-                    RefreshLog();
                 }
             }
             finally
@@ -307,53 +331,47 @@ namespace Tanji.Applications
         }
         private void PushToQueue(DataInterceptedEventArgs e)
         {
-            if (IsHalted) return;
             lock (_pushToQueueLock)
             {
-                Intercepted.Enqueue(e);
-                LogMessageQueue();
+                if (IsLoggingAuthorized(e))
+                {
+                    Intercepted.Enqueue(e);
+                    LogMessageQueue();
+                }
             }
         }
-
-        private void RefreshLog()
+        private bool IsLoggingAuthorized(DataInterceptedEventArgs args)
         {
-            if (InvokeRequired) Invoke(_refreshLog);
-            else
-            {
-                LoggerTxt.SelectionStart = LoggerTxt.TextLength;
-                LoggerTxt.ScrollToCaret();
-            }
-        }
-        private bool IsLoggingAuthorized(DataInterceptedEventArgs args, bool isOutgoing)
-        {
-            if (!DisplayBlocked && args.IsBlocked) return false;
-            if (!DisplayReplaced && !args.IsOriginal) return false;
+            bool isOutgoing =
+                (args.Packet.Destination == HDestination.Server);
 
-            if (!IsHandlingOutgoing && isOutgoing) return false;
-            if (!IsHandlingIncoming && !isOutgoing) return false;
+            if (IsFindDialogOpened) return false;
+            if (IsFindMessageDialogOpened) return false;
+            if (!IsDisplayingBlocked && args.IsBlocked) return false;
+            if (!IsDisplayingReplaced && !args.IsOriginal) return false;
+
+            if (!IsViewingOutgoing && isOutgoing) return false;
+            if (!IsViewingIncoming && !isOutgoing) return false;
 
             return true;
         }
-
+        
         protected override void OnActivated(EventArgs e)
         {
-            if (IsHalted)
+            if (!IsReceiving)
             {
-                IsHalted = false;
-                IsHandlingOutgoing = ViewOutgoingBtn.Checked;
-                IsHandlingIncoming = ViewIncomingBtn.Checked;
                 LoggerTxt.Clear();
+                IsReceiving = true;
             }
             LogMessageQueue();
             base.OnActivated(e);
         }
         protected override void OnFormClosing(FormClosingEventArgs e)
         {
-            e.Cancel = IsHalted = true;
-            Intercepted.Clear();
+            IsReceiving = false;
 
-            IsHandlingOutgoing =
-                IsHandlingIncoming = false;
+            e.Cancel = true;
+            Intercepted.Clear();
 
             LoggerTxt.Clear();
             WindowState = FormWindowState.Minimized;
