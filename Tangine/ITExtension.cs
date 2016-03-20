@@ -1,11 +1,10 @@
 ﻿using Sulakore.Communication;
 
-namespace Tanji.Pages
+namespace Tangine
 {
-    public interface IDataHandler
+    public interface ITExtension : ITService
     {
-        bool IsHandlingOutgoing { get; }
-        bool IsHandlingIncoming { get; }
+        HTriggers Triggers { get; }
 
         void HandleOutgoing(DataInterceptedEventArgs e);
         void HandleIncoming(DataInterceptedEventArgs e);

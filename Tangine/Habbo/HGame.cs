@@ -11,7 +11,7 @@ using FlashInspect.ActionScript.Traits;
 using FlashInspect.ActionScript.Multinames;
 using FlashInspect.ActionScript.Instructions;
 
-namespace Tanji.Utilities
+namespace Tangine.Habbo
 {
     /// <summary>
     ///  Represents the Habbo Hotel flash client.
@@ -212,6 +212,17 @@ namespace Tanji.Utilities
             }
         }
         /// <summary>
+        /// Generates, and caches a unique MD5 hash for every Outgoing/Incoming message class.
+        /// </summary>
+        public void GenerateMessageHashes()
+        {
+            foreach (ASClass msgClass in OutgoingMessages.Values)
+                GetMessageHash(msgClass);
+
+            foreach (ASClass msgClass in IncomingMessages.Values)
+                GetMessageHash(msgClass);
+        }
+        /// <summary>
         /// Injects the specified public RSA keys into the bytecode that handles the verification of the received primes.
         /// </summary>
         /// <param name="exponent">The public exponent.</param>
@@ -353,28 +364,51 @@ namespace Tanji.Utilities
                 throw new ArgumentException(
                     "The specified class is not a valid Outgoing/Incoming message class.", nameof(messageClass));
             }
-
-            if (_messageReferences.Count == 0)
-                FindMessageReferences();
-            else if (_messageHashes.ContainsKey(messageClass))
+            if (_messageHashes.ContainsKey(messageClass))
+            {
                 return _messageHashes[messageClass];
-
+            }
+            else if (_messageReferences.Count == 0)
+            {
+                FindMessageReferences();
+            }
             using (var hashOut = new FlashHasher())
             {
+                hashOut.IsSummarizing = true;
                 bool isOutgoing = IsMessageOutgoing(messageClass);
 
                 hashOut.Write(isOutgoing);
                 Write(hashOut, messageClass, isOutgoing);
-
                 if (!messageClass.Instance.Name.Name.EndsWith("Composer") &&
                     _messageReferences.ContainsKey(messageClass))
                 {
                     List<ASReference> msgReferences = _messageReferences[messageClass];
+                    hashOut.Write(msgReferences.Count);
                     foreach (ASReference msgReference in msgReferences)
                     {
+                        if (!isOutgoing)
+                        {
+                            string fromClassName =
+                                msgReference.FromClass.Instance.Name.Name;
+
+                            if (fromClassName == "IncomingMessages")
+                                hashOut.Write(fromClassName);
+                        }
+
                         hashOut.Write(msgReference.Id);
-                        hashOut.Write(msgReferences.Count);
                         hashOut.Write(msgReference.FromMethod, true);
+
+                        byte[] bytecode = msgReference.FromMethod.Body.Bytecode;
+                        using (var inCode = new FlashReader(bytecode))
+                        {
+                            int lineCount = 0;
+                            while (inCode.IsDataAvailable)
+                            {
+                                OPCode op = inCode.ReadOP();
+                                object[] values = inCode.ReadValues(op); // Avoid common integer values, by starting big...
+                                if (op == OPCode.DebugLine) hashOut.Write(int.MaxValue - (++lineCount));
+                            }
+                        }
                     }
                 }
 
@@ -394,7 +428,7 @@ namespace Tanji.Utilities
         /// </summary>
         /// <param name="hash">The unique MD5 hash of message classes.</param>
         /// <returns></returns>
-        public IEnumerable<ASClass> GetMessages(string hash)
+        public IReadOnlyList<ASClass> GetMessages(string hash)
         {
             if (_messages.ContainsKey(hash))
                 return _messages[hash].AsReadOnly();
@@ -512,8 +546,8 @@ namespace Tanji.Utilities
                 }
                 else if (messageSuperName.EndsWith("Composer"))
                 {
-                    hashOut.Write(messageClass, false);
                     hashOut.Write(messageSuperName);
+                    hashOut.Write(messageClass, false);
                     return;
                 }
             }

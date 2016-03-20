@@ -6,7 +6,7 @@ using System.Runtime.Serialization.Json;
 
 using Sulakore;
 
-namespace Tanji.GitHub
+namespace Tangine.GitHub
 {
     public class GitRepository
     {

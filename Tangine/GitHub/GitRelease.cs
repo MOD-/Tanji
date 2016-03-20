@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Runtime.Serialization;
 
-namespace Tanji.GitHub
+namespace Tangine.GitHub
 {
     [DataContract]
     public sealed class GitRelease
