@@ -26,7 +26,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>1.3.1686.0</AssemblyVersion>
+    <AssemblyVersion>1.3.2059.0</AssemblyVersion>
     <TargetFrameworkProfile />
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
     <AssemblyInfoFilePath>
@@ -90,11 +90,17 @@
     <Reference Include="System.XML" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Applications\Dialogs\FindHeaderDialog.cs">
+    <Compile Include="Applications\Dialogs\FindDialog.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Applications\Dialogs\FindHeaderDialog.Designer.cs">
-      <DependentUpon>FindHeaderDialog.cs</DependentUpon>
+    <Compile Include="Applications\Dialogs\FindDialog.Designer.cs">
+      <DependentUpon>FindDialog.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Applications\Dialogs\FindMessageDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Applications\Dialogs\FindMessageDialog.Designer.cs">
+      <DependentUpon>FindMessageDialog.cs</DependentUpon>
     </Compile>
     <Compile Include="Applications\PacketLoggerFrm.cs">
       <SubType>Form</SubType>
@@ -105,26 +111,24 @@
     <Compile Include="Components\TanjiForm.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="GitHub\GitProfile.cs" />
-    <Compile Include="GitHub\GitRepository.cs" />
-    <Compile Include="Pages\IDataHandler.cs" />
+    <Compile Include="Manipulators\IReceiver.cs" />
     <Compile Include="MainFrm.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="MainFrm.Designer.cs">
       <DependentUpon>MainFrm.cs</DependentUpon>
     </Compile>
+    <Compile Include="Pages\Modules\Managers\ModulesManager.cs" />
     <Compile Include="Pages\About\AboutPage.cs" />
     <Compile Include="Pages\Connection\ConnectionPage.cs" />
     <Compile Include="Pages\Connection\Managers\HandshakeManager.cs" />
-    <Compile Include="Pages\Extensions\ExtensionsPage.cs" />
-    <Compile Include="Pages\IDataManager.cs" />
+    <Compile Include="Pages\Modules\ModulesPage.cs" />
     <Compile Include="Pages\Injection\ConstructerPage.cs" />
     <Compile Include="Pages\Injection\FiltersPage.cs" />
     <Compile Include="Pages\Injection\InjectionPage.cs" />
     <Compile Include="Pages\Injection\PrimitivePage.cs" />
     <Compile Include="Pages\Injection\SchedulerPage.cs" />
-    <Compile Include="Pages\ITanjiService.cs" />
+    <Compile Include="Manipulators\IHaltable.cs" />
     <Compile Include="Pages\TanjiPage.cs" />
     <Compile Include="Pages\TanjiSubPage.cs" />
     <Compile Include="Pages\Toolbox\ToolboxPage.cs" />
@@ -135,11 +139,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="GitHub\GitAsset.cs" />
-    <Compile Include="GitHub\GitRelease.cs" />
-    <Compile Include="Utilities\HGame.cs" />
-    <EmbeddedResource Include="Applications\Dialogs\FindHeaderDialog.resx">
-      <DependentUpon>FindHeaderDialog.cs</DependentUpon>
+    <EmbeddedResource Include="Applications\Dialogs\FindDialog.resx">
+      <DependentUpon>FindDialog.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Applications\Dialogs\FindMessageDialog.resx">
+      <DependentUpon>FindMessageDialog.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Applications\PacketLoggerFrm.resx">
       <DependentUpon>PacketLoggerFrm.cs</DependentUpon>
@@ -179,6 +183,10 @@
       <Project>{15e841ec-2411-4f1b-a3ee-07e86cdb32c7}</Project>
       <Name>Sulakore</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Tangine\Tangine.csproj">
+      <Project>{82f644cd-3896-482c-b47d-e34529e95d52}</Project>
+      <Name>Tangine</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
@@ -197,12 +205,8 @@
       <Install>false</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="Resources\Tanji_128.ico" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\Tanji_512.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Avatar.png" />

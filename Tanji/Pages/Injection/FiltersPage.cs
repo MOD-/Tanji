@@ -2,6 +2,8 @@
 using System.Windows.Forms;
 using System.Collections.Generic;
 
+using Tanji.Manipulators;
+
 using Sulakore.Protocol;
 using Sulakore.Communication;
 
@@ -13,8 +15,10 @@ namespace Tanji.Pages.Injection
         Replace = 1
     }
 
-    public class FiltersPage : TanjiSubPage<InjectionPage>, IDataHandler, ITanjiService
+    public class FiltersPage : TanjiSubPage<InjectionPage>, IReceiver, IHaltable
     {
+        private bool _suppressUIUpdating;
+
         private readonly Dictionary<HDestination, List<ushort>> _blocked, _disabled;
         private readonly Dictionary<HDestination, Dictionary<ushort, HMessage>> _replacements;
 
@@ -51,9 +55,7 @@ namespace Tanji.Pages.Injection
             }
         }
 
-        protected bool SuppressUIUpdating { get; private set; }
-        public bool IsHandlingOutgoing { get; private set; } = true;
-        public bool IsHandlingIncoming { get; private set; } = true;
+        public bool IsReceiving { get; set; } = true;
 
         public FiltersPage(InjectionPage parent, TabPage tab)
             : base(parent, tab)
@@ -160,15 +162,13 @@ namespace Tanji.Pages.Injection
         {
             try
             {
-                SuppressUIUpdating = true;
+                _suppressUIUpdating = true;
                 foreach (ListViewItem item in UI.FTFiltersVw.Items)
-                {
                     item.Checked = false;
-                }
             }
             finally
             {
-                SuppressUIUpdating = false;
+                _suppressUIUpdating = false;
                 UpdateUI();
             }
         }
@@ -177,31 +177,24 @@ namespace Tanji.Pages.Injection
             return new HMessage(
                 UI.FTReplacementTxt.Text, Destination);
         }
-
-        public void HandleOutgoing(DataInterceptedEventArgs e)
-        {
-            HandleFilter(e);
-        }
-        public void HandleIncoming(DataInterceptedEventArgs e)
-        {
-            HandleFilter(e);
-        }
         public bool IsFilterAuthorized(ushort key, HDestination destination, FilterAction action)
         {
             return !_blocked[destination].Contains(key) &&
                 !_replacements[destination].ContainsKey(key);
         }
 
+        public void HandleOutgoing(DataInterceptedEventArgs e) => HandleFilter(e);
+        public void HandleIncoming(DataInterceptedEventArgs e) => HandleFilter(e);
+
         private void UpdateUI()
         {
-            if (!SuppressUIUpdating)
+            if (!_suppressUIUpdating)
             {
                 UI.FiltersTxt.Text =
                     $"Filters: {UI.FTFiltersVw.CheckedItems.Count}/{UI.FTFiltersVw.Items.Count}";
             }
         }
-
-        protected virtual void HandleFilter(DataInterceptedEventArgs e)
+        private void HandleFilter(DataInterceptedEventArgs e)
         {
             HMessage packet = e.Packet;
             List<ushort> blocked = _blocked[packet.Destination];
@@ -215,6 +208,7 @@ namespace Tanji.Pages.Injection
                 e.Packet = replacements[packet.Header];
             }
         }
+
         protected override void OnTabSelecting(TabControlCancelEventArgs e)
         {
             UI.InjectionMenu.InputBox = UI.FTReplacementTxt;

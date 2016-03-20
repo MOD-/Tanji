@@ -32,6 +32,29 @@ namespace Tanji.Pages.Injection
             ConstructerPg = new ConstructerPage(this, UI.ConstructerTab);
         }
 
+        private async void ITSendToClientBtn_Click(object sender, EventArgs e)
+        {
+            HMessage packet = GetPacket();
+            if (!IsInjectionAuthorized(packet)) return;
+
+            AddAutocompleteValue(packet);
+            packet.Destination = HDestination.Client;
+
+            await SendAsync(packet)
+                .ConfigureAwait(false);
+        }
+        private async void ITSendToServerBtn_Click(object sender, EventArgs e)
+        {
+            HMessage packet = GetPacket();
+            if (!IsInjectionAuthorized(packet)) return;
+
+            AddAutocompleteValue(packet);
+            packet.Destination = HDestination.Server;
+
+            await SendAsync(packet)
+                .ConfigureAwait(false);
+        }
+
         public HMessage GetPacket()
         {
             return new HMessage(UI.ITPacketTxt.Text);
@@ -102,29 +125,6 @@ namespace Tanji.Pages.Injection
             string sValue = value.ToString();
             if (!UI.ITPacketTxt.Items.Contains(sValue))
                 UI.ITPacketTxt.Items.Add(sValue);
-        }
-
-        private async void ITSendToClientBtn_Click(object sender, EventArgs e)
-        {
-            HMessage packet = GetPacket();
-            if (!IsInjectionAuthorized(packet)) return;
-
-            AddAutocompleteValue(packet);
-            packet.Destination = HDestination.Client;
-
-            await SendAsync(packet)
-                .ConfigureAwait(false);
-        }
-        private async void ITSendToServerBtn_Click(object sender, EventArgs e)
-        {
-            HMessage packet = GetPacket();
-            if (!IsInjectionAuthorized(packet)) return;
-
-            AddAutocompleteValue(packet);
-            packet.Destination = HDestination.Server;
-
-            await SendAsync(packet)
-                .ConfigureAwait(false);
         }
     }
 }

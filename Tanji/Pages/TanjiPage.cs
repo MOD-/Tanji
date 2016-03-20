@@ -7,7 +7,6 @@ namespace Tanji.Pages
 {
     public abstract class TanjiPage : INotifyPropertyChanged
     {
-        private readonly MethodInvoker _onNotifyingChanged;
         private readonly Action<PropertyChangedEventArgs> _onPropertyChanged;
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -24,6 +23,14 @@ namespace Tanji.Pages
             }
             else
             {
+                if (e.PropertyName == nameof(IsNotifying))
+                {
+                    string alertString =
+                        (IsNotifying ? " (!)" : string.Empty);
+
+                    Tab.Text =
+                        $"{Title}{alertString}";
+                }
                 PropertyChanged?.Invoke(this, e);
             }
         }
@@ -40,11 +47,8 @@ namespace Tanji.Pages
             get { return _isNotifying; }
             set
             {
-                if (_isNotifying != value)
-                {
-                    _isNotifying = value;
-                    Tab.Invoke(_onNotifyingChanged);
-                }
+                _isNotifying = value;
+                RaiseOnPropertyChanged(nameof(IsNotifying));
             }
         }
 
@@ -59,7 +63,6 @@ namespace Tanji.Pages
             TabControl.Deselecting += TabControl_Deselecting;
 
             _onPropertyChanged = OnPropertyChanged;
-            _onNotifyingChanged = OnNotifyingChanged;
         }
 
         public virtual void Select()
@@ -69,7 +72,8 @@ namespace Tanji.Pages
 
         protected virtual void OnTabSelecting(TabControlCancelEventArgs e)
         {
-            IsNotifying = false;
+            if (IsNotifying)
+                IsNotifying = false;
         }
         private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
@@ -102,12 +106,6 @@ namespace Tanji.Pages
         {
             WriteLog($"[{exception.GetType()}]" + exception.Message,
                 memberName, sourceLineNumber);
-        }
-
-        protected virtual void OnNotifyingChanged()
-        {
-            Tab.Text = (Title +
-                (IsNotifying ? "(!)" : string.Empty));
         }
     }
 }

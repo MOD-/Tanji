@@ -2,7 +2,7 @@
 using System.Windows.Forms;
 using System.Threading.Tasks;
 
-using Tanji.GitHub;
+using Tangine.GitHub;
 
 namespace Tanji.Pages.About
 {
@@ -16,13 +16,13 @@ namespace Tanji.Pages.About
         public AboutPage(MainFrm ui, TabPage tab)
             : base(ui, tab)
         {
+            TanjiRepo = new GitRepository("ArachisH", "Tanji");
             LocalVersion = new Version(Application.ProductVersion);
+
             UI.TanjiVersionTxt.Text = ("v" + LocalVersion);
 
-            TanjiRepo = new GitRepository("ArachisH", "Tanji");
-
-            TanjiRepo.GetLatestReleaseAsync().ContinueWith(
-                LatestReleaseGrabbed, TaskScheduler.FromCurrentSynchronizationContext());
+            TanjiRepo.GetLatestReleaseAsync().ContinueWith(LatestReleaseGrabbed,
+                TaskScheduler.FromCurrentSynchronizationContext());
         }
 
         private void LatestReleaseGrabbed(Task<GitRelease> getLatestReleaseTask)
@@ -32,12 +32,6 @@ namespace Tanji.Pages.About
 
             UI.TanjiVersionTxt.IsLink = true;
             IsNotifying = (LatestVersion > LocalVersion);
-        }
-
-        protected override void OnTabSelecting(TabControlCancelEventArgs e)
-        {
-            e.Cancel = true;
-            base.OnTabSelecting(e);
         }
     }
 }

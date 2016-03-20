@@ -33,13 +33,21 @@ namespace Tanji
             this.components = new System.ComponentModel.Container();
             this.TanjiStrip = new System.Windows.Forms.StatusStrip();
             this.TanjiVersionTxt = new System.Windows.Forms.ToolStripStatusLabel();
-            this.FiltersTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.SchedulesTxt = new System.Windows.Forms.ToolStripStatusLabel();
-            this.ExtensionsTxt = new System.Windows.Forms.ToolStripStatusLabel();
+            this.FiltersTxt = new System.Windows.Forms.ToolStripStatusLabel();
+            this.ModulesTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.TanjiInfoTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.InjectionMenu = new Sulakore.Components.SKoreInjectionMenu(this.components);
             this.AboutTab = new System.Windows.Forms.TabPage();
-            this.ExtensionsTab = new System.Windows.Forms.TabPage();
+            this.ModulesTab = new System.Windows.Forms.TabPage();
+            this.MTGlow1 = new System.Windows.Forms.Panel();
+            this.MTUpdateModuleBtn = new Sulakore.Components.SKoreButton();
+            this.MTUninstallModuleBtn = new Sulakore.Components.SKoreButton();
+            this.MTInstallModuleBtn = new Sulakore.Components.SKoreButton();
+            this.MTModulesVw = new Sulakore.Components.SKoreListView();
+            this.MNameCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.MVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.MTAuthorPctbx = new System.Windows.Forms.PictureBox();
             this.ToolboxTab = new System.Windows.Forms.TabPage();
             this.TT16BitInputLbl = new System.Windows.Forms.Label();
             this.TT32BitInputLbl = new System.Windows.Forms.Label();
@@ -98,7 +106,7 @@ namespace Tanji
             this.STStatusCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PrimitiveTab = new System.Windows.Forms.TabPage();
             this.PTPacketInfoLbl = new System.Windows.Forms.Label();
-            this.panel1 = new System.Windows.Forms.Panel();
+            this.PTGlow1 = new System.Windows.Forms.Panel();
             this.PTCorruptedLbl = new System.Windows.Forms.Label();
             this.PTCorruptedValueLbl = new System.Windows.Forms.Label();
             this.PTPacketTxt = new System.Windows.Forms.TextBox();
@@ -142,7 +150,11 @@ namespace Tanji
             this.VTVariableCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.VTValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.TanjiTabs = new Sulakore.Components.SKoreTabControl();
+            this.CustomClientDlg = new System.Windows.Forms.OpenFileDialog();
+            this.InstallModuleDlg = new System.Windows.Forms.OpenFileDialog();
             this.TanjiStrip.SuspendLayout();
+            this.ModulesTab.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.MTAuthorPctbx)).BeginInit();
             this.ToolboxTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TTIntInputTxt)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.TTUShortInputTxt)).BeginInit();
@@ -167,9 +179,9 @@ namespace Tanji
             this.TanjiStrip.BackColor = System.Drawing.Color.White;
             this.TanjiStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TanjiVersionTxt,
-            this.FiltersTxt,
             this.SchedulesTxt,
-            this.ExtensionsTxt,
+            this.FiltersTxt,
+            this.ModulesTxt,
             this.TanjiInfoTxt});
             this.TanjiStrip.Location = new System.Drawing.Point(0, 345);
             this.TanjiStrip.Name = "TanjiStrip";
@@ -188,13 +200,6 @@ namespace Tanji
             this.TanjiVersionTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TanjiVersionTxt.Click += new System.EventHandler(this.TanjiVersionTxt_Click);
             // 
-            // FiltersTxt
-            // 
-            this.FiltersTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.FiltersTxt.Name = "FiltersTxt";
-            this.FiltersTxt.Size = new System.Drawing.Size(65, 19);
-            this.FiltersTxt.Text = "Filters: 0/0";
-            // 
             // SchedulesTxt
             // 
             this.SchedulesTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
@@ -202,19 +207,26 @@ namespace Tanji
             this.SchedulesTxt.Size = new System.Drawing.Size(87, 19);
             this.SchedulesTxt.Text = "Schedules: 0/0";
             // 
-            // ExtensionsTxt
+            // FiltersTxt
             // 
-            this.ExtensionsTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.ExtensionsTxt.Name = "ExtensionsTxt";
-            this.ExtensionsTxt.Size = new System.Drawing.Size(89, 19);
-            this.ExtensionsTxt.Text = "Extensions: 0/0";
+            this.FiltersTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.FiltersTxt.Name = "FiltersTxt";
+            this.FiltersTxt.Size = new System.Drawing.Size(65, 19);
+            this.FiltersTxt.Text = "Filters: 0/0";
+            // 
+            // ModulesTxt
+            // 
+            this.ModulesTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.ModulesTxt.Name = "ModulesTxt";
+            this.ModulesTxt.Size = new System.Drawing.Size(80, 19);
+            this.ModulesTxt.Text = "Modules: 0/0";
             // 
             // TanjiInfoTxt
             // 
             this.TanjiInfoTxt.IsLink = true;
             this.TanjiInfoTxt.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.TanjiInfoTxt.Name = "TanjiInfoTxt";
-            this.TanjiInfoTxt.Size = new System.Drawing.Size(178, 19);
+            this.TanjiInfoTxt.Size = new System.Drawing.Size(187, 19);
             this.TanjiInfoTxt.Spring = true;
             this.TanjiInfoTxt.Text = "GitHub | ArachisH/Tanji";
             this.TanjiInfoTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
@@ -236,15 +248,102 @@ namespace Tanji
             this.AboutTab.Text = "About";
             this.AboutTab.UseVisualStyleBackColor = true;
             // 
-            // ExtensionsTab
+            // ModulesTab
             // 
-            this.ExtensionsTab.Location = new System.Drawing.Point(4, 28);
-            this.ExtensionsTab.Name = "ExtensionsTab";
-            this.ExtensionsTab.Padding = new System.Windows.Forms.Padding(3);
-            this.ExtensionsTab.Size = new System.Drawing.Size(476, 313);
-            this.ExtensionsTab.TabIndex = 1;
-            this.ExtensionsTab.Text = "Extensions";
-            this.ExtensionsTab.UseVisualStyleBackColor = true;
+            this.ModulesTab.AllowDrop = true;
+            this.ModulesTab.Controls.Add(this.MTGlow1);
+            this.ModulesTab.Controls.Add(this.MTUpdateModuleBtn);
+            this.ModulesTab.Controls.Add(this.MTUninstallModuleBtn);
+            this.ModulesTab.Controls.Add(this.MTInstallModuleBtn);
+            this.ModulesTab.Controls.Add(this.MTModulesVw);
+            this.ModulesTab.Controls.Add(this.MTAuthorPctbx);
+            this.ModulesTab.Location = new System.Drawing.Point(4, 28);
+            this.ModulesTab.Name = "ModulesTab";
+            this.ModulesTab.Padding = new System.Windows.Forms.Padding(3);
+            this.ModulesTab.Size = new System.Drawing.Size(476, 313);
+            this.ModulesTab.TabIndex = 1;
+            this.ModulesTab.Text = "Modules";
+            this.ModulesTab.UseVisualStyleBackColor = true;
+            // 
+            // MTGlow1
+            // 
+            this.MTGlow1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.MTGlow1.Location = new System.Drawing.Point(366, 200);
+            this.MTGlow1.Name = "MTGlow1";
+            this.MTGlow1.Size = new System.Drawing.Size(1, 110);
+            this.MTGlow1.TabIndex = 5;
+            // 
+            // MTUpdateModuleBtn
+            // 
+            this.MTUpdateModuleBtn.BackColor = System.Drawing.Color.Transparent;
+            this.MTUpdateModuleBtn.Enabled = false;
+            this.MTUpdateModuleBtn.Location = new System.Drawing.Point(373, 208);
+            this.MTUpdateModuleBtn.Name = "MTUpdateModuleBtn";
+            this.MTUpdateModuleBtn.Size = new System.Drawing.Size(100, 22);
+            this.MTUpdateModuleBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.MTUpdateModuleBtn.TabIndex = 4;
+            this.MTUpdateModuleBtn.Text = "Update Module";
+            // 
+            // MTUninstallModuleBtn
+            // 
+            this.MTUninstallModuleBtn.BackColor = System.Drawing.Color.Transparent;
+            this.MTUninstallModuleBtn.Enabled = false;
+            this.MTUninstallModuleBtn.Location = new System.Drawing.Point(373, 244);
+            this.MTUninstallModuleBtn.Name = "MTUninstallModuleBtn";
+            this.MTUninstallModuleBtn.Size = new System.Drawing.Size(100, 22);
+            this.MTUninstallModuleBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.MTUninstallModuleBtn.TabIndex = 3;
+            this.MTUninstallModuleBtn.Text = "Uninstall Module";
+            // 
+            // MTInstallModuleBtn
+            // 
+            this.MTInstallModuleBtn.BackColor = System.Drawing.Color.Transparent;
+            this.MTInstallModuleBtn.Location = new System.Drawing.Point(373, 280);
+            this.MTInstallModuleBtn.Name = "MTInstallModuleBtn";
+            this.MTInstallModuleBtn.Size = new System.Drawing.Size(100, 22);
+            this.MTInstallModuleBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.MTInstallModuleBtn.TabIndex = 2;
+            this.MTInstallModuleBtn.Text = "Install Module";
+            // 
+            // MTModulesVw
+            // 
+            this.MTModulesVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
+            this.MNameCol,
+            this.MVersion});
+            this.MTModulesVw.Dock = System.Windows.Forms.DockStyle.Top;
+            this.MTModulesVw.FullRowSelect = true;
+            this.MTModulesVw.GridLines = true;
+            this.MTModulesVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            this.MTModulesVw.HideSelection = false;
+            this.MTModulesVw.Location = new System.Drawing.Point(3, 3);
+            this.MTModulesVw.MultiSelect = false;
+            this.MTModulesVw.Name = "MTModulesVw";
+            this.MTModulesVw.ShowItemToolTips = true;
+            this.MTModulesVw.Size = new System.Drawing.Size(470, 191);
+            this.MTModulesVw.TabIndex = 0;
+            this.MTModulesVw.UseCompatibleStateImageBehavior = false;
+            this.MTModulesVw.View = System.Windows.Forms.View.Details;
+            // 
+            // MNameCol
+            // 
+            this.MNameCol.Text = "Name";
+            this.MNameCol.Width = 102;
+            // 
+            // MVersion
+            // 
+            this.MVersion.Text = "Version";
+            // 
+            // MTAuthorPctbx
+            // 
+            this.MTAuthorPctbx.ErrorImage = null;
+            this.MTAuthorPctbx.Image = global::Tanji.Properties.Resources.Avatar;
+            this.MTAuthorPctbx.InitialImage = null;
+            this.MTAuthorPctbx.Location = new System.Drawing.Point(3, 200);
+            this.MTAuthorPctbx.Name = "MTAuthorPctbx";
+            this.MTAuthorPctbx.Size = new System.Drawing.Size(64, 110);
+            this.MTAuthorPctbx.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.MTAuthorPctbx.TabIndex = 1;
+            this.MTAuthorPctbx.TabStop = false;
             // 
             // ToolboxTab
             // 
@@ -913,7 +1012,7 @@ namespace Tanji
             // PrimitiveTab
             // 
             this.PrimitiveTab.Controls.Add(this.PTPacketInfoLbl);
-            this.PrimitiveTab.Controls.Add(this.panel1);
+            this.PrimitiveTab.Controls.Add(this.PTGlow1);
             this.PrimitiveTab.Controls.Add(this.PTCorruptedLbl);
             this.PrimitiveTab.Controls.Add(this.PTCorruptedValueLbl);
             this.PrimitiveTab.Controls.Add(this.PTPacketTxt);
@@ -934,13 +1033,13 @@ namespace Tanji
             this.PTPacketInfoLbl.Text = "Header: 0, Length: 0";
             this.PTPacketInfoLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // panel1
+            // PTGlow1
             // 
-            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.panel1.Location = new System.Drawing.Point(303, 246);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(1, 22);
-            this.panel1.TabIndex = 6;
+            this.PTGlow1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.PTGlow1.Location = new System.Drawing.Point(303, 246);
+            this.PTGlow1.Name = "PTGlow1";
+            this.PTGlow1.Size = new System.Drawing.Size(1, 22);
+            this.PTGlow1.TabIndex = 6;
             // 
             // PTCorruptedLbl
             // 
@@ -1201,15 +1300,14 @@ namespace Tanji
             // 
             // CoTBrowseBtn
             // 
-            this.CoTBrowseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.CoTBrowseBtn.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.CoTBrowseBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTBrowseBtn.Enabled = false;
             this.CoTBrowseBtn.Location = new System.Drawing.Point(373, 253);
             this.CoTBrowseBtn.Name = "CoTBrowseBtn";
             this.CoTBrowseBtn.Size = new System.Drawing.Size(100, 22);
             this.CoTBrowseBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.CoTBrowseBtn.TabIndex = 2;
-            this.CoTBrowseBtn.TabStop = false;
             this.CoTBrowseBtn.Text = "Browse";
             // 
             // CoTProxyPortLbl
@@ -1253,7 +1351,6 @@ namespace Tanji
             // 
             this.CoTCustomClientTxt.Location = new System.Drawing.Point(74, 255);
             this.CoTCustomClientTxt.Name = "CoTCustomClientTxt";
-            this.CoTCustomClientTxt.ReadOnly = true;
             this.CoTCustomClientTxt.Size = new System.Drawing.Size(293, 20);
             this.CoTCustomClientTxt.TabIndex = 0;
             this.CoTCustomClientTxt.TabStop = false;
@@ -1318,7 +1415,6 @@ namespace Tanji
             // 
             this.CoTStatusTxt.AnimationInterval = 500;
             this.CoTStatusTxt.BorderWidth = 1;
-            this.CoTStatusTxt.DisplayBoundary = true;
             this.CoTStatusTxt.Location = new System.Drawing.Point(3, 288);
             this.CoTStatusTxt.Name = "CoTStatusTxt";
             this.CoTStatusTxt.Size = new System.Drawing.Size(350, 22);
@@ -1382,10 +1478,11 @@ namespace Tanji
             // 
             // TanjiTabs
             // 
+            this.TanjiTabs.AllowDrop = true;
             this.TanjiTabs.Controls.Add(this.ConnectionTab);
             this.TanjiTabs.Controls.Add(this.InjectionTab);
             this.TanjiTabs.Controls.Add(this.ToolboxTab);
-            this.TanjiTabs.Controls.Add(this.ExtensionsTab);
+            this.TanjiTabs.Controls.Add(this.ModulesTab);
             this.TanjiTabs.Controls.Add(this.AboutTab);
             this.TanjiTabs.DisplayBoundary = true;
             this.TanjiTabs.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -1399,6 +1496,19 @@ namespace Tanji
             this.TanjiTabs.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TanjiTabs.TabIndex = 6;
             // 
+            // CustomClientDlg
+            // 
+            this.CustomClientDlg.DefaultExt = "swf";
+            this.CustomClientDlg.Filter = "Shockwave Flash File (*.swf)|*.swf";
+            this.CustomClientDlg.Title = "Tanji ~ Custom Client";
+            // 
+            // InstallModuleDlg
+            // 
+            this.InstallModuleDlg.DefaultExt = "dll";
+            this.InstallModuleDlg.Filter = ".NET Assembly (*.dll, *.exe)|*.dll; *.exe|Dynamic Link Library (*.dll)|*.dll|Exec" +
+    "utable (*.exe)|*.exe";
+            this.InstallModuleDlg.Title = "Tanji ~ Install Module";
+            // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1408,15 +1518,16 @@ namespace Tanji
             this.Controls.Add(this.TanjiTabs);
             this.Controls.Add(this.TanjiStrip);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
-            this.Icon = global::Tanji.Properties.Resources.Tanji_128;
             this.MaximizeBox = false;
             this.Name = "MainFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ Disconnected";
-            this.TopMost = true;
+            this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainFrm_FormClosed);
             this.Load += new System.EventHandler(this.MainFrm_Load);
             this.TanjiStrip.ResumeLayout(false);
             this.TanjiStrip.PerformLayout();
+            this.ModulesTab.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.MTAuthorPctbx)).EndInit();
             this.ToolboxTab.ResumeLayout(false);
             this.ToolboxTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.TTIntInputTxt)).EndInit();
@@ -1449,13 +1560,13 @@ namespace Tanji
 
         private System.Windows.Forms.StatusStrip TanjiStrip;
         private System.Windows.Forms.ToolStripStatusLabel TanjiInfoTxt;
-        internal System.Windows.Forms.ToolStripStatusLabel ExtensionsTxt;
+        internal System.Windows.Forms.ToolStripStatusLabel ModulesTxt;
         internal System.Windows.Forms.ToolStripStatusLabel SchedulesTxt;
         internal System.Windows.Forms.ToolStripStatusLabel TanjiVersionTxt;
         public Sulakore.Components.SKoreInjectionMenu InjectionMenu;
         internal System.Windows.Forms.ToolStripStatusLabel FiltersTxt;
         private System.Windows.Forms.TabPage AboutTab;
-        private System.Windows.Forms.TabPage ExtensionsTab;
+        private System.Windows.Forms.TabPage ModulesTab;
         private System.Windows.Forms.TabPage ToolboxTab;
         private System.Windows.Forms.Label TT16BitInputLbl;
         private System.Windows.Forms.Label TT32BitInputLbl;
@@ -1514,7 +1625,7 @@ namespace Tanji
         private System.Windows.Forms.ColumnHeader STStatusCol;
         internal System.Windows.Forms.TabPage PrimitiveTab;
         internal System.Windows.Forms.Label PTPacketInfoLbl;
-        private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Panel PTGlow1;
         private System.Windows.Forms.Label PTCorruptedLbl;
         internal System.Windows.Forms.Label PTCorruptedValueLbl;
         internal System.Windows.Forms.TextBox PTPacketTxt;
@@ -1558,5 +1669,15 @@ namespace Tanji
         private System.Windows.Forms.ColumnHeader VTVariableCol;
         private System.Windows.Forms.ColumnHeader VTValueCol;
         internal Sulakore.Components.SKoreTabControl TanjiTabs;
+        internal System.Windows.Forms.OpenFileDialog CustomClientDlg;
+        internal System.Windows.Forms.OpenFileDialog InstallModuleDlg;
+        internal Sulakore.Components.SKoreListView MTModulesVw;
+        private System.Windows.Forms.ColumnHeader MNameCol;
+        private System.Windows.Forms.ColumnHeader MVersion;
+        private System.Windows.Forms.Panel MTGlow1;
+        internal System.Windows.Forms.PictureBox MTAuthorPctbx;
+        internal Sulakore.Components.SKoreButton MTUpdateModuleBtn;
+        internal Sulakore.Components.SKoreButton MTUninstallModuleBtn;
+        internal Sulakore.Components.SKoreButton MTInstallModuleBtn;
     }
 }

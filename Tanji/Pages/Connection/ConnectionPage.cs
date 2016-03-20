@@ -7,13 +7,13 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using Tanji.Utilities;
 using Tanji.Pages.Connection.Managers;
+
+using Sulakore;
 
 using Eavesdrop;
 
-using Sulakore;
-using Sulakore.Habbo.Web;
+using Tangine.Habbo;
 
 namespace Tanji.Pages.Connection
 {
@@ -27,7 +27,7 @@ namespace Tanji.Pages.Connection
         CompressingClient = 5,
         DisassemblingClient = 6,
         ModifyingClient = 7,
-        ReconstructingClient = 8,
+        AssemblingClient = 8,
         InterceptingConnection = 9,
         ReplacingResources = 10
     }
@@ -36,7 +36,7 @@ namespace Tanji.Pages.Connection
     {
         private const string EAVESDROP_ROOT_CERTIFICATE_NAME = "EavesdropRoot.cer";
 
-        private readonly Action<TanjiState> _setStatus;
+        private readonly Action<TanjiState> _setState;
         private readonly DirectoryInfo _modifiedClientsDir;
         private readonly Action<Task> _connectTaskCompleted;
 
@@ -51,12 +51,6 @@ namespace Tanji.Pages.Connection
             }
         }
 
-        public HGame Game { get; set; }
-        public HHotel Hotel { get; set; }
-        public HGameData GameData { get; set; }
-        public HandshakeManager HandshakeMngr { get; }
-        public Dictionary<string, string> ResourceReplacements { get; }
-
         private TanjiState _state;
         public TanjiState State
         {
@@ -64,18 +58,32 @@ namespace Tanji.Pages.Connection
             set
             {
                 _state = value;
-                WriteLog($"Tanji state changed to '{value}'.");
+                RaiseOnPropertyChanged(nameof(State));
             }
         }
+
+        private string _customClientPath;
+        public string CustomClientPath
+        {
+            get { return _customClientPath; }
+            set
+            {
+                _customClientPath = value;
+                RaiseOnPropertyChanged(nameof(CustomClientPath));
+            }
+        }
+
+        public HandshakeManager HandshakeMngr { get; }
+        public Dictionary<string, string> ResourceReplacements { get; }
 
         public ConnectionPage(MainFrm ui, TabPage tab)
             : base(ui, tab)
         {
-            _setStatus = SetStatus;
+            _setState = SetState;
             _connectTaskCompleted = ConnectTaskCompleted;
             _modifiedClientsDir = Directory.CreateDirectory("Modified Clients");
 
-            HandshakeMngr = new HandshakeManager(ui);
+            HandshakeMngr = new HandshakeManager(ui.Connection);
 
             UI.CoTVariablesVw.AddItem("productdata.load.url", "");
             UI.CoTVariablesVw.AddItem("external.texts.txt", "");
@@ -90,6 +98,10 @@ namespace Tanji.Pages.Connection
             UI.CoTProxyPortTxt.DataBindings.Add("Value", this,
                 nameof(ProxyPort), false, DataSourceUpdateMode.OnPropertyChanged);
 
+            UI.CoTCustomClientTxt.DataBindings.Add("Text", this,
+                nameof(CustomClientPath), false, DataSourceUpdateMode.OnPropertyChanged);
+
+            UI.CoTBrowseBtn.Click += CoTBrowseBtn_Click;
             UI.CoTConnectBtn.Click += CoTConnectBtn_Click;
 
             UI.CoTDestroyCertificatesBtn.Click += CoTDestroyCertificatesBtn_Click;
@@ -102,6 +114,12 @@ namespace Tanji.Pages.Connection
             UI.CoTVariablesVw.ItemSelected += CoTVariablesVw_ItemSelected;
         }
 
+        private void CoTBrowseBtn_Click(object sender, EventArgs e)
+        {
+            UI.CustomClientDlg.FileName = string.Empty;
+            if (UI.CustomClientDlg.ShowDialog() != DialogResult.OK) return;
+            CustomClientPath = UI.CustomClientDlg.FileName;
+        }
         private void CoTConnectBtn_Click(object sender, EventArgs e)
         {
             if (State != TanjiState.StandingBy)
@@ -112,7 +130,7 @@ namespace Tanji.Pages.Connection
                 {
                     Halt();
                     DisableReplacements();
-                    SetStatus(TanjiState.StandingBy);
+                    SetState(TanjiState.StandingBy);
                 }
                 else Cancel();
             }
@@ -124,10 +142,11 @@ namespace Tanji.Pages.Connection
                         "Are you sure you want to disconnect from the current session?\r\nDon't worry, all of your current options/settings will still be intact.",
                         "Tanji ~ Alert!", MessageBoxButtons.YesNo, MessageBoxIcon.Asterisk);
 
-                    if (result == DialogResult.Yes)
-                        UI.Connection.Disconnect();
-                    else return;
+                    if (result == DialogResult.No)
+                        return;
                 }
+
+                UI.Connection.Disconnect();
                 Connect();
             }
         }
@@ -201,7 +220,7 @@ namespace Tanji.Pages.Connection
             if (e.Request.RequestUri.OriginalString.EndsWith("-Tanji"))
             {
                 Eavesdropper.RequestIntercepted -= InjectClient;
-                e.Request = WebRequest.Create(new Uri(Game.Location));
+                e.Request = WebRequest.Create(new Uri(UI.Game.Location));
                 Eavesdropper.ResponseIntercepted += ReplaceClient;
             }
         }
@@ -212,31 +231,31 @@ namespace Tanji.Pages.Connection
 
             Eavesdropper.ResponseIntercepted -= ReplaceClient;
 
-            ushort[] ports = GameData.InfoPort.Split(',')
+            ushort[] ports = UI.GameData.InfoPort.Split(',')
                 .Select(s => ushort.Parse(s)).ToArray();
 
-            if (Game == null)
+            if (UI.Game == null)
             {
                 VerifyGameClientAsync(e.Payload).Wait();
-                SetStatus(TanjiState.ModifyingClient);
+                SetState(TanjiState.ModifyingClient);
 
-                Game.BypassOriginCheck();
-                Game.BypassRemoteHostCheck();
-                Game.ReplaceRSAKeys(HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
+                UI.Game.BypassOriginCheck();
+                UI.Game.BypassRemoteHostCheck();
+                UI.Game.ReplaceRSAKeys(HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
 
-                SetStatus(TanjiState.ReconstructingClient);
-                Game.Assemble();
+                SetState(TanjiState.AssemblingClient);
+                UI.Game.Assemble();
 
-                SetStatus(TanjiState.CompressingClient);
-                e.Payload = Game.Compress();
+                SetState(TanjiState.CompressingClient);
+                e.Payload = UI.Game.Compress();
 
                 string clientPath = Path.Combine(
-                    _modifiedClientsDir.FullName, Game.GetClientRevision());
+                    _modifiedClientsDir.FullName, UI.Game.GetClientRevision());
 
                 Directory.CreateDirectory(clientPath);
                 File.WriteAllBytes(clientPath + "\\Habbo.swf", e.Payload);
             }
-            else e.Payload = Game.ToByteArray();
+            else e.Payload = UI.Game.ToByteArray();
 
             if (ResourceReplacements.Count > 0)
             {
@@ -244,36 +263,42 @@ namespace Tanji.Pages.Connection
             }
             else Halt();
 
-            SetStatus(TanjiState.InterceptingConnection);
-            UI.Connection.ConnectAsync(GameData.InfoHost, ports)
+            SetState(TanjiState.InterceptingConnection);
+            UI.Connection.ConnectAsync(UI.GameData.InfoHost, ports)
                 .ContinueWith(ConnectTaskCompleted);
         }
         private void ExtractGameData(object sender, ResponseInterceptedEventArgs e)
         {
             if (e.Response.ContentType != "text/html") return;
-            if (GameData != null) return;
+            if (State != TanjiState.ExtractingGameData) return;
 
             string responseBody = Encoding.UTF8.GetString(e.Payload);
             if (responseBody.Contains("swfobject.embedSWF") &&
                 responseBody.Contains("connection.info.host"))
             {
+                byte[] replacementData = e.Payload;
                 Eavesdropper.ResponseIntercepted -= ExtractGameData;
                 try
                 {
-                    GameData = new HGameData(responseBody);
-                    Hotel = SKore.ToHotel(GameData.InfoHost);
+                    UI.GameData.Update(responseBody);
+                    UI.Hotel = SKore.ToHotel(UI.GameData.InfoHost);
 
-                    var clientUri = new Uri(GameData["flash.client.url"]);
+                    // TODO: Inform installed modules.
+                    responseBody = UI.GameData.Source;
+
+                    var clientUri = new Uri(UI.GameData["flash.client.url"]);
                     string clientPath = clientUri.Segments[2].TrimEnd('/');
 
-                    Task<bool> gameClientVerifierTask =
-                        VerifyGameClientAsync($"{_modifiedClientsDir.FullName}\\{clientPath}\\Habbo.swf");
-
-                    if (e.Response.ResponseUri.Segments.Length > 2)
+                    Task<bool> verifyGameClientTask = null;
+                    if (!string.IsNullOrWhiteSpace(CustomClientPath))
                     {
-                        // TODO: Set uniqueId somewhere.
-                        //GameData.UniqueId =
-                        //    e.Response.ResponseUri.Segments[2].TrimEnd('/');
+                        verifyGameClientTask =
+                            VerifyGameClientAsync(CustomClientPath);
+                    }
+                    if (verifyGameClientTask == null || !verifyGameClientTask.Result)
+                    {
+                        verifyGameClientTask =
+                            VerifyGameClientAsync($"{_modifiedClientsDir.FullName}\\{clientPath}\\Habbo.swf");
                     }
 
                     string embeddedSwf = responseBody.GetChild("embedSWF(", ',');
@@ -281,12 +306,14 @@ namespace Tanji.Pages.Connection
 
                     responseBody = responseBody.Replace(
                         "embedSWF(" + embeddedSwf, "embedSWF(" + nonCachedSwf);
-                    e.Payload = Encoding.UTF8.GetBytes(responseBody);
 
-                    var resourceKeys = ResourceReplacements.Keys.ToArray();
+                    responseBody = responseBody.Replace(UI.GameData.InfoHost, "127.0.0.1");
+                    replacementData = Encoding.UTF8.GetBytes(responseBody);
+
+                    string[] resourceKeys = ResourceReplacements.Keys.ToArray();
                     foreach (string resourceKey in resourceKeys)
                     {
-                        string realValue = GameData[resourceKey]
+                        string realValue = UI.GameData[resourceKey]
                             .Replace("\\/", "/");
 
                         string fakeValue =
@@ -295,22 +322,25 @@ namespace Tanji.Pages.Connection
                         ResourceReplacements.Remove(resourceKey);
                         ResourceReplacements[realValue] = fakeValue;
                     }
-                    if (gameClientVerifierTask.Result)
+                    if (verifyGameClientTask.Result)
                     {
-                        SetStatus(TanjiState.InjectingClient);
+                        SetState(TanjiState.InjectingClient);
                         Eavesdropper.RequestIntercepted += InjectClient;
                     }
                     else
                     {
-                        SetStatus(TanjiState.InterceptingClient);
+                        SetState(TanjiState.InterceptingClient);
                         Eavesdropper.ResponseIntercepted += ReplaceClient;
                     }
                 }
                 catch (Exception ex) { WriteLog(ex); }
                 finally
                 {
-                    if (GameData == null)
+                    if (State == TanjiState.ExtractingGameData)
+                    {
                         Eavesdropper.ResponseIntercepted += ExtractGameData;
+                    }
+                    else e.Payload = replacementData;
                 }
             }
         }
@@ -341,7 +371,7 @@ namespace Tanji.Pages.Connection
                 if (ResourceReplacements.Count < 1)
                 {
                     Halt();
-                    SetStatus(TanjiState.StandingBy);
+                    SetState(TanjiState.StandingBy);
                 }
             }
         }
@@ -360,26 +390,26 @@ namespace Tanji.Pages.Connection
             DisableReplacements();
             UI.Connection.Disconnect();
 
-            Game = null;
-            GameData = null;
+            UI.Game.Dispose();
+            UI.Game = null;
         }
         public void Cancel()
         {
             Reset();
-            SetStatus(TanjiState.StandingBy);
+            SetState(TanjiState.StandingBy);
         }
         public void Connect()
         {
             Eavesdropper.ResponseIntercepted += ExtractGameData;
             Eavesdropper.Initiate(ProxyPort);
 
-            SetStatus(TanjiState.ExtractingGameData);
+            SetState(TanjiState.ExtractingGameData);
         }
-        public void SetStatus(TanjiState state)
+        public void SetState(TanjiState state)
         {
             if (UI.InvokeRequired)
             {
-                UI.Invoke(_setStatus, state);
+                UI.Invoke(_setState, state);
                 return;
             }
 
@@ -422,8 +452,8 @@ namespace Tanji.Pages.Connection
                 UI.CoTStatusTxt.SetDotAnimation("Modifying Client");
                 break;
 
-                case TanjiState.ReconstructingClient:
-                UI.CoTStatusTxt.SetDotAnimation("Reconstructing Client");
+                case TanjiState.AssemblingClient:
+                UI.CoTStatusTxt.SetDotAnimation("Assembling Client");
                 break;
 
                 case TanjiState.InterceptingConnection:
@@ -443,9 +473,9 @@ namespace Tanji.Pages.Connection
             {
                 if (ResourceReplacements.Count > 0)
                 {
-                    SetStatus(TanjiState.ReplacingResources);
+                    SetState(TanjiState.ReplacingResources);
                 }
-                else SetStatus(TanjiState.StandingBy);
+                else SetState(TanjiState.StandingBy);
             }
         }
         protected override void OnTabSelecting(TabControlCancelEventArgs e)
@@ -457,7 +487,7 @@ namespace Tanji.Pages.Connection
         }
         protected override void OnTabDeselecting(TabControlCancelEventArgs e)
         {
-            UI.TopMost = false;
+            UI.TopMost = UI.PacketLoggerUI.TopMost;
             base.OnTabDeselecting(e);
         }
 
@@ -507,14 +537,14 @@ namespace Tanji.Pages.Connection
             await VerifyGameClientAsync(path, data)
                 .ConfigureAwait(false);
 
-            return (Game != null);
+            return (UI.Game != null);
         }
         public async Task<bool> VerifyGameClientAsync(byte[] data)
         {
             await VerifyGameClientAsync(null, data)
                 .ConfigureAwait(false);
 
-            return (Game != null);
+            return (UI.Game != null);
         }
         protected virtual async Task<bool> VerifyGameClientAsync(string path, byte[] data)
         {
@@ -524,17 +554,17 @@ namespace Tanji.Pages.Connection
             {
                 if (game.IsCompressed)
                 {
-                    SetStatus(TanjiState.DecompressingClient);
+                    SetState(TanjiState.DecompressingClient);
 
                     await Task.Factory.StartNew(game.Decompress)
                         .ConfigureAwait(false);
                 }
 
                 if (game.IsCompressed) return false;
-                else Game = game;
+                else UI.Game = game;
 
-                SetStatus(TanjiState.DisassemblingClient);
-                Game.Disassemble();
+                SetState(TanjiState.DisassemblingClient);
+                UI.Game.Disassemble();
                 return true;
             }
             catch (Exception ex)
@@ -544,7 +574,7 @@ namespace Tanji.Pages.Connection
             }
             finally
             {
-                if (Game != game)
+                if (UI.Game != game)
                     game.Dispose();
             }
         }

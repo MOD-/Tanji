@@ -4,10 +4,14 @@ using System.Windows.Forms;
 using Sulakore.Protocol;
 using Sulakore.Components;
 
+using Tanji.Manipulators;
+
 namespace Tanji.Pages.Injection
 {
-    public class SchedulerPage : TanjiSubPage<InjectionPage>, ITanjiService
+    public class SchedulerPage : TanjiSubPage<InjectionPage>, IHaltable
     {
+        private bool _suppressUIUpdating;
+
         private ushort _interval = 100;
         public ushort Interval
         {
@@ -52,7 +56,6 @@ namespace Tanji.Pages.Injection
             }
         }
 
-        protected bool SuppressUIUpdating { get; private set; }
         public SchedulerPage(InjectionPage parent, TabPage tab)
             : base(parent, tab)
         {
@@ -128,7 +131,7 @@ namespace Tanji.Pages.Injection
         {
             try
             {
-                SuppressUIUpdating = true;
+                _suppressUIUpdating = true;
                 foreach (ListViewItem item in UI.STSchedulerVw.Items)
                 {
                     item.Checked = false;
@@ -136,7 +139,7 @@ namespace Tanji.Pages.Injection
             }
             finally
             {
-                SuppressUIUpdating = false;
+                _suppressUIUpdating = false;
                 UpdateUI();
             }
         }
@@ -148,7 +151,7 @@ namespace Tanji.Pages.Injection
 
         private void UpdateUI()
         {
-            if (!SuppressUIUpdating)
+            if (!_suppressUIUpdating)
             {
                 UI.SchedulesTxt.Text =
                     $"Schedules: {UI.STSchedulerVw.CheckedItems.Count}/{UI.STSchedulerVw.Items.Count}";

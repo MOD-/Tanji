@@ -2,6 +2,8 @@
 using Sulakore.Communication;
 using Sulakore.Protocol.Encryption;
 
+using Tanji.Manipulators;
+
 namespace Tanji.Pages.Connection.Managers
 {
     #region Handshake Process
@@ -20,17 +22,17 @@ namespace Tanji.Pages.Connection.Managers
         Note that the "exploit" Tanji utilizes requires two handshake processes to take place.
     */
     #endregion
-    public class HandshakeManager : IDataHandler
+    public class HandshakeManager : IReceiver
     {
         private int _incomingOffset;
         private byte[] _localSharedKey, _remoteSharedKey;
 
-        public bool IsHandlingOutgoing { get; private set; } = true;
-        public bool IsHandlingIncoming { get; private set; } = true;
+        private readonly HConnection _connection;
 
-        public IDataManager DataManager { get; }
-        public HNode Local => DataManager.Connection.Local;
-        public HNode Remote => DataManager.Connection.Remote;
+        public bool IsReceiving { get; set; }
+
+        public HNode Local => _connection.Local;
+        public HNode Remote => _connection.Remote;
 
         public const int FAKE_EXPONENT = 3;
         public const string FAKE_MODULUS = "86851dd364d5c5cece3c883171cc6ddc5760779b992482bd1e20dd296888df91b33b936a7b93f06d29e8870f703a216257dec7c81de0058fea4cc5116f75e6efc4e9113513e45357dc3fd43d4efab5963ef178b78bd61e81a14c603b24c8bcce0a12230b320045498edc29282ff0603bc7b7dae8fc1b05b52b2f301a9dc783b7";
@@ -39,9 +41,58 @@ namespace Tanji.Pages.Connection.Managers
         public const int REAL_EXPONENT = 65537;
         public const string REAL_MODULUS = "e052808c1abef69a1a62c396396b85955e2ff522f5157639fa6a19a98b54e0e4d6e44f44c4c0390fee8ccf642a22b6d46d7228b10e34ae6fffb61a35c11333780af6dd1aaafa7388fa6c65b51e8225c6b57cf5fbac30856e896229512e1f9af034895937b2cb6637eb6edf768c10189df30c10d8a3ec20488a198063599ca6ad";
 
-        public HandshakeManager(IDataManager dataManager)
+        public HandshakeManager(HConnection connection)
         {
-            DataManager = dataManager;
+            _connection = connection;
+        }
+
+        public void HandleOutgoing(DataInterceptedEventArgs e)
+        {
+            try
+            {
+                switch (e.Step)
+                {
+                    case 3:
+                    {
+                        ReplaceLocalPublicKey(e);
+                        break;
+                    }
+                    case 4:
+                    {
+                        FinalizeHandshake();
+                        break;
+                    }
+                }
+            }
+            catch { CancelHandshake(e); }
+            finally { e.IsBlocked = false; }
+        }
+        public void HandleIncoming(DataInterceptedEventArgs e)
+        {
+            try
+            {
+                if (e.Step < 3 && e.Packet.Length == 2)
+                {
+                    _incomingOffset++;
+                    return;
+                }
+                switch (e.Step - _incomingOffset)
+                {
+                    case 1:
+                    {
+                        InitializeKeys();
+                        ReplaceRemoteSignedPrimes(e);
+                        break;
+                    }
+                    case 2:
+                    {
+                        ReplaceRemotePublicKey(e);
+                        break;
+                    }
+                }
+            }
+            catch { CancelHandshake(e); }
+            finally { e.IsBlocked = false; }
         }
 
         private void InitializeKeys()
@@ -51,8 +102,10 @@ namespace Tanji.Pages.Connection.Managers
         }
         private void FinalizeHandshake()
         {
-            DataManager.RemoveDataHandler(this);
+            _incomingOffset = 0;
+            IsReceiving = false;
         }
+
         private void ReplaceLocalPublicKey(DataInterceptedEventArgs e)
         {
             string localPublicKey = e.Packet.ReadString();
@@ -95,78 +148,16 @@ namespace Tanji.Pages.Connection.Managers
             e.Packet = new HMessage(e.Packet.Header, localP, localG);
         }
 
-        public void HandleOutgoing(DataInterceptedEventArgs e)
+        private void CancelHandshake(DataInterceptedEventArgs args)
         {
-            bool threwException = false;
-            try
-            {
-                switch (e.Step)
-                {
-                    case 2: _incomingOffset = 0; break;
-                    case 3:
-                    {
-                        ReplaceLocalPublicKey(e);
-                        break;
-                    }
-                    case 4:
-                    {
-                        FinalizeHandshake();
-                        break;
-                    }
-                }
-            }
-            catch { threwException = true; }
-            finally { FinalizeInterception(e, threwException); }
-        }
-        public void HandleIncoming(DataInterceptedEventArgs e)
-        {
-            bool threwException = false;
-            try
-            {
-                if (e.Step < 3 && e.Packet.Length == 2)
-                {
-                    _incomingOffset++;
-                    return;
-                }
-                switch (e.Step - _incomingOffset)
-                {
-                    case 1:
-                    {
-                        InitializeKeys();
-                        ReplaceRemoteSignedPrimes(e);
-                        break;
-                    }
-                    case 2:
-                    {
-                        ReplaceRemotePublicKey(e);
-                        break;
-                    }
-                }
-            }
-            catch { threwException = true; }
-            finally { FinalizeInterception(e, threwException); }
-        }
+            args.Restore();
+            FinalizeHandshake();
 
-        private void FinalizeInterception(DataInterceptedEventArgs e, bool threwException)
-        {
-            e.IsBlocked = false;
+            Local.Decrypter = null;
+            Remote.Encrypter = null;
 
-            bool isOutgoing =
-                (e.Packet.Destination == HDestination.Server);
-
-            if (threwException ||
-                (isOutgoing && e.Step == 2 && e.Packet.Length != 2))
-            {
-                Local.Encrypter = null;
-                Local.Decrypter = null;
-                Remote.Encrypter = null;
-                Remote.Decrypter = null;
-
-                Local.Exchange.Dispose();
-                Remote.Exchange.Dispose();
-
-                DataManager.RemoveDataHandler(this);
-            }
+            Local.Exchange.Dispose();
+            Remote.Exchange.Dispose();
         }
     }
 }

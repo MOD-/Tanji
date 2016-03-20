@@ -3,31 +3,41 @@ using System.Diagnostics;
 using System.Windows.Forms;
 using System.Collections.Generic;
 
-using Tanji.Pages;
 using Tanji.Components;
 using Tanji.Pages.About;
 using Tanji.Applications;
+using Tanji.Manipulators;
+using Tanji.Pages.Modules;
 using Tanji.Pages.Toolbox;
 using Tanji.Pages.Injection;
-using Tanji.Pages.Extensions;
 using Tanji.Pages.Connection;
 
+using Sulakore;
+using Sulakore.Protocol;
+using Sulakore.Habbo.Web;
 using Sulakore.Communication;
+
+using Eavesdrop;
+
+using Tangine.Habbo;
 
 namespace Tanji
 {
-    public partial class MainFrm : TanjiForm, IDataManager
+    public partial class MainFrm : TanjiForm
     {
-        private readonly List<ITanjiService> _services;
+        private readonly List<IHaltable> _haltables;
+        private readonly List<IReceiver> _receivers;
         private readonly EventHandler _connected, _disconnected;
-        private readonly List<IDataHandler> _dataHandlers, _toRemoveList;
 
-        public HConnection Connection { get; }
+        public HGame Game { get; set; }
+        public HHotel Hotel { get; set; }
+        public HGameData GameData { get; set; }
+        public HConnection Connection { get; set; }
 
         public AboutPage AboutPg { get; }
+        public ModulesPage ModulesPg { get; }
         public ToolboxPage ToolboxPg { get; }
         public InjectionPage InjectionPg { get; }
-        public ExtensionsPage ExtensionsPg { get; }
         public ConnectionPage ConnectionPg { get; }
 
         public PacketLoggerFrm PacketLoggerUI { get; }
@@ -38,29 +48,45 @@ namespace Tanji
 
             _connected = Connected;
             _disconnected = Disconnected;
-            _services = new List<ITanjiService>();
-            _toRemoveList = new List<IDataHandler>();
-            _dataHandlers = new List<IDataHandler>();
+            _haltables = new List<IHaltable>();
+            _receivers = new List<IReceiver>();
 
+            GameData = new HGameData();
             Connection = new HConnection();
             Connection.Connected += Connected;
             Connection.Disconnected += Disconnected;
             Connection.DataOutgoing += DataOutgoing;
             Connection.DataIncoming += DataIncoming;
 
-            AboutPg = new AboutPage(this, AboutTab);
-            ToolboxPg = new ToolboxPage(this, ToolboxTab);
-            InjectionPg = new InjectionPage(this, InjectionTab);
-            ExtensionsPg = new ExtensionsPage(this, ExtensionsTab);
             ConnectionPg = new ConnectionPage(this, ConnectionTab);
+            InjectionPg = new InjectionPage(this, InjectionTab);
+            ToolboxPg = new ToolboxPage(this, ToolboxTab);
+            ModulesPg = new ModulesPage(this, ModulesTab);
+            AboutPg = new AboutPage(this, AboutTab);
 
             PacketLoggerUI = new PacketLoggerFrm(this);
+
+            _haltables.Add(ModulesPg);
+            _haltables.Add(PacketLoggerUI);
+            _haltables.Add(InjectionPg.FiltersPg);
+            _haltables.Add(InjectionPg.SchedulerPg);
+
+            _receivers.Add(ModulesPg);
+            _receivers.Add(InjectionPg.FiltersPg);
+            _receivers.Add(ConnectionPg.HandshakeMngr);
+            _receivers.Add(PacketLoggerUI);
         }
 
         private void MainFrm_Load(object sender, EventArgs e)
         {
+            Eavesdropper.Terminate();
             ConnectionPg.CreateTrustedRootCertificate();
         }
+        private void MainFrm_FormClosed(object sender, FormClosedEventArgs e)
+        {
+            Eavesdropper.Terminate();
+        }
+
         private void TanjiInfoTxt_Click(object sender, EventArgs e)
         {
             Process.Start("https://GitHub.com/ArachisH/Tanji");
@@ -71,6 +97,22 @@ namespace Tanji
                 Process.Start(AboutPg.TanjiRepo.LatestRelease.HtmlUrl);
         }
 
+        private void Halt()
+        {
+            _haltables.ForEach(h => h.Halt());
+        }
+        private void HandleData(DataInterceptedEventArgs args)
+        {
+            bool isOutgoing = (args.Packet.Destination == HDestination.Server);
+            foreach (IReceiver receiver in _receivers)
+            {
+                if (!receiver.IsReceiving) continue;
+
+                if (isOutgoing) receiver.HandleOutgoing(args);
+                else receiver.HandleIncoming(args);
+            }
+        }
+
         private void Connected(object sender, EventArgs e)
         {
             if (InvokeRequired)
@@ -79,11 +121,14 @@ namespace Tanji
                 return;
             }
 
-            AttachServices();
-            AttachDataHandlers();
+            // Process Handshake
+            ConnectionPg.HandshakeMngr.IsReceiving = true;
 
             Text = $"Tanji ~ Connected[{Connection.Host}:{Connection.Port}]";
             TopMost = PacketLoggerUI.TopMost;
+
+            PacketLoggerUI.RevisionTxt.Text =
+                ("Revision: " + Game.GetClientRevision());
 
             PacketLoggerUI.Show();
             PacketLoggerUI.WindowState = FormWindowState.Normal;
@@ -98,91 +143,15 @@ namespace Tanji
                 return;
             }
 
-            HaltServices();
-            ConnectionPg.Game = null;
-            ConnectionPg.GameData = null;
+            Halt();
+            Game.Dispose();
+            Game = null;
 
             TopMost = true;
             Text = "Tanji ~ Disconnected";
-
-            PacketLoggerUI.Close();
-            PacketLoggerUI.Hide();
         }
 
-        private void DataOutgoing(object sender, DataInterceptedEventArgs e)
-        {
-            ProcessRemoveQueue();
-            foreach (IDataHandler dataHandler in _dataHandlers)
-            {
-                if (dataHandler.IsHandlingOutgoing)
-                    dataHandler.HandleOutgoing(e);
-            }
-        }
-        private void DataIncoming(object sender, DataInterceptedEventArgs e)
-        {
-            ProcessRemoveQueue();
-            foreach (IDataHandler dataHandler in _dataHandlers)
-            {
-                if (dataHandler.IsHandlingIncoming)
-                    dataHandler.HandleIncoming(e);
-            }
-        }
-
-        public void HaltServices()
-        {
-            foreach (ITanjiService service in _services)
-                service.Halt();
-        }
-        public void AttachServices()
-        {
-            _services.Clear();
-
-            _services.Add(InjectionPg.FiltersPg);
-            _services.Add(InjectionPg.SchedulerPg);
-        }
-        public void AttachDataHandlers()
-        {
-            _toRemoveList.Clear();
-            _dataHandlers.Clear();
-
-            _dataHandlers.Add(ExtensionsPg);
-            _dataHandlers.Add(InjectionPg.FiltersPg);
-            _dataHandlers.Add(ConnectionPg.HandshakeMngr);
-            _dataHandlers.Add(PacketLoggerUI);
-        }
-
-        public void AddDataHandler(IDataHandler dataHandler)
-        {
-            lock (_dataHandlers)
-            {
-                if (!_dataHandlers.Contains(dataHandler))
-                    _dataHandlers.Add(dataHandler);
-            }
-        }
-        public void RemoveDataHandler(IDataHandler dataHandler)
-        {
-            lock (_dataHandlers)
-            {
-                if (_dataHandlers.Contains(dataHandler) &&
-                    !_toRemoveList.Contains(dataHandler))
-                {
-                    _toRemoveList.Add(dataHandler);
-                }
-            }
-        }
-
-        private void ProcessRemoveQueue()
-        {
-            if (_toRemoveList.Count < 1) return;
-            lock (_dataHandlers)
-            {
-                foreach (IDataHandler dataHandler in _toRemoveList)
-                {
-                    if (_dataHandlers.Contains(dataHandler))
-                        _dataHandlers.Remove(dataHandler);
-                }
-                _toRemoveList.Clear();
-            }
-        }
+        private void DataOutgoing(object sender, DataInterceptedEventArgs e) => HandleData(e);
+        private void DataIncoming(object sender, DataInterceptedEventArgs e) => HandleData(e);
     }
 }
