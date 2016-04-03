@@ -55,7 +55,7 @@ namespace Tanji.Pages.Injection
             }
         }
 
-        public bool IsReceiving { get; set; } = true;
+        public bool IsReceiving { get; } = true;
 
         public FiltersPage(InjectionPage parent, TabPage tab)
             : base(parent, tab)

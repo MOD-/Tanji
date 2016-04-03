@@ -55,6 +55,8 @@ namespace Tanji.Applications
             this.ViewIncomingBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.ViewSep2 = new System.Windows.Forms.ToolStripSeparator();
             this.AlwaysOnTopBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.ToolsBtn = new System.Windows.Forms.ToolStripMenuItem();
+            this.IgnoreMessagesBtn = new System.Windows.Forms.ToolStripMenuItem();
             this.PacketLoggerStrip = new System.Windows.Forms.StatusStrip();
             this.ViewOutgoingLbl = new System.Windows.Forms.ToolStripStatusLabel();
             this.ViewIncomingLbl = new System.Windows.Forms.ToolStripStatusLabel();
@@ -101,7 +103,8 @@ namespace Tanji.Applications
             // 
             this.PacketLoggerMenu.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.FileBtn,
-            this.ViewBtn});
+            this.ViewBtn,
+            this.ToolsBtn});
             this.PacketLoggerMenu.Location = new System.Drawing.Point(0, 0);
             this.PacketLoggerMenu.Name = "PacketLoggerMenu";
             this.PacketLoggerMenu.Size = new System.Drawing.Size(710, 24);
@@ -288,6 +291,21 @@ namespace Tanji.Applications
             this.AlwaysOnTopBtn.Text = "Always On Top";
             this.AlwaysOnTopBtn.CheckedChanged += new System.EventHandler(this.Item_Checked);
             // 
+            // ToolsBtn
+            // 
+            this.ToolsBtn.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.IgnoreMessagesBtn});
+            this.ToolsBtn.Name = "ToolsBtn";
+            this.ToolsBtn.Size = new System.Drawing.Size(47, 20);
+            this.ToolsBtn.Text = "Tools";
+            // 
+            // IgnoreMessagesBtn
+            // 
+            this.IgnoreMessagesBtn.Name = "IgnoreMessagesBtn";
+            this.IgnoreMessagesBtn.Size = new System.Drawing.Size(171, 22);
+            this.IgnoreMessagesBtn.Text = "Ignore Messages...";
+            this.IgnoreMessagesBtn.Click += new System.EventHandler(this.IgnoreMessagesBtn_Click);
+            // 
             // PacketLoggerStrip
             // 
             this.PacketLoggerStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
@@ -370,5 +388,7 @@ namespace Tanji.Applications
         private System.Windows.Forms.ToolStripMenuItem ViewIncomingBtn;
         private System.Windows.Forms.ToolStripSeparator ViewSep1;
         internal System.Windows.Forms.ToolStripStatusLabel RevisionTxt;
+        private System.Windows.Forms.ToolStripMenuItem ToolsBtn;
+        private System.Windows.Forms.ToolStripMenuItem IgnoreMessagesBtn;
     }
 }

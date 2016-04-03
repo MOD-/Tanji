@@ -35,6 +35,7 @@
             this.TypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.HeaderCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ClassParserNameCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.Glow1Pnl = new System.Windows.Forms.Panel();
             this.SuspendLayout();
             // 
             // HashLbl
@@ -67,6 +68,7 @@
             // 
             // HeadersVw
             // 
+            this.HeadersVw.BorderStyle = System.Windows.Forms.BorderStyle.None;
             this.HeadersVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
             this.TypeCol,
             this.HeaderCol,
@@ -76,7 +78,7 @@
             this.HeadersVw.GridLines = true;
             this.HeadersVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             this.HeadersVw.HideSelection = false;
-            this.HeadersVw.Location = new System.Drawing.Point(0, 40);
+            this.HeadersVw.Location = new System.Drawing.Point(0, 41);
             this.HeadersVw.MultiSelect = false;
             this.HeadersVw.Name = "HeadersVw";
             this.HeadersVw.ShowItemToolTips = true;
@@ -98,12 +100,22 @@
             this.ClassParserNameCol.Text = "Class/Parser Name";
             this.ClassParserNameCol.Width = 205;
             // 
+            // Glow1Pnl
+            // 
+            this.Glow1Pnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.Glow1Pnl.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.Glow1Pnl.Location = new System.Drawing.Point(0, 40);
+            this.Glow1Pnl.Name = "Glow1Pnl";
+            this.Glow1Pnl.Size = new System.Drawing.Size(346, 1);
+            this.Glow1Pnl.TabIndex = 4;
+            // 
             // FindMessageDialog
             // 
             this.AcceptButton = this.FindBtn;
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(346, 166);
+            this.ClientSize = new System.Drawing.Size(346, 167);
+            this.Controls.Add(this.Glow1Pnl);
             this.Controls.Add(this.HashLbl);
             this.Controls.Add(this.HeadersVw);
             this.Controls.Add(this.FindBtn);
@@ -128,5 +140,6 @@
         private System.Windows.Forms.ColumnHeader HeaderCol;
         private System.Windows.Forms.ColumnHeader ClassParserNameCol;
         internal System.Windows.Forms.TextBox HashTxt;
+        private System.Windows.Forms.Panel Glow1Pnl;
     }
 }

@@ -12,7 +12,7 @@ using Tanji.Pages.Toolbox;
 using Tanji.Pages.Injection;
 using Tanji.Pages.Connection;
 
-using Sulakore;
+using Sulakore.Habbo;
 using Sulakore.Protocol;
 using Sulakore.Habbo.Web;
 using Sulakore.Communication;
@@ -101,15 +101,15 @@ namespace Tanji
         {
             _haltables.ForEach(h => h.Halt());
         }
-        private void HandleData(DataInterceptedEventArgs args)
+        private void HandleData(DataInterceptedEventArgs e)
         {
-            bool isOutgoing = (args.Packet.Destination == HDestination.Server);
+            bool isOutgoing = (e.Packet.Destination == HDestination.Server);
             foreach (IReceiver receiver in _receivers)
             {
                 if (!receiver.IsReceiving) continue;
 
-                if (isOutgoing) receiver.HandleOutgoing(args);
-                else receiver.HandleIncoming(args);
+                if (isOutgoing) receiver.HandleOutgoing(e);
+                else receiver.HandleIncoming(e);
             }
         }
 
@@ -121,8 +121,7 @@ namespace Tanji
                 return;
             }
 
-            // Process Handshake
-            ConnectionPg.HandshakeMngr.IsReceiving = true;
+            ConnectionPg.HandshakeMngr.RestartHandshake();
 
             Text = $"Tanji ~ Connected[{Connection.Host}:{Connection.Port}]";
             TopMost = PacketLoggerUI.TopMost;

@@ -1,6 +1,4 @@
-﻿using Tanji.Properties;
-
-namespace Tanji
+﻿namespace Tanji
 {
     partial class MainFrm
     {
@@ -40,14 +38,25 @@ namespace Tanji
             this.InjectionMenu = new Sulakore.Components.SKoreInjectionMenu(this.components);
             this.AboutTab = new System.Windows.Forms.TabPage();
             this.ModulesTab = new System.Windows.Forms.TabPage();
+            this.MTAuthorPctbx = new System.Windows.Forms.PictureBox();
+            this.MTDownloadsLbl = new System.Windows.Forms.Label();
+            this.MTReleasesBtn = new Sulakore.Components.SKoreButton();
+            this.MTResourceBtn = new Sulakore.Components.SKoreButton();
+            this.MTHotelTxt = new System.Windows.Forms.TextBox();
+            this.MTHotelLbl = new System.Windows.Forms.Label();
+            this.MTHabboNameTxt = new System.Windows.Forms.TextBox();
+            this.MTHabboNameLbl = new System.Windows.Forms.Label();
+            this.MTAuthorsLbl = new System.Windows.Forms.Label();
+            this.MTAuthorsTxt = new System.Windows.Forms.ComboBox();
             this.MTGlow1 = new System.Windows.Forms.Panel();
-            this.MTUpdateModuleBtn = new Sulakore.Components.SKoreButton();
+            this.MTDownloadLatestBtn = new Sulakore.Components.SKoreButton();
             this.MTUninstallModuleBtn = new Sulakore.Components.SKoreButton();
             this.MTInstallModuleBtn = new Sulakore.Components.SKoreButton();
             this.MTModulesVw = new Sulakore.Components.SKoreListView();
-            this.MNameCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.MVersion = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.MTAuthorPctbx = new System.Windows.Forms.PictureBox();
+            this.MTNameCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.MTDescriptionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.MTVersionCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.MTStateCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ToolboxTab = new System.Windows.Forms.TabPage();
             this.TT16BitInputLbl = new System.Windows.Forms.Label();
             this.TT32BitInputLbl = new System.Windows.Forms.Label();
@@ -80,9 +89,9 @@ namespace Tanji
             this.CTWriteIntegerBtn = new Sulakore.Components.SKoreButton();
             this.CTValueLbl = new System.Windows.Forms.Label();
             this.CTConstructerVw = new Sulakore.Components.SKoreConstructView();
-            this.ICSTypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ICSValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.ICSEncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CTTypeCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CTValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CTEncodedCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.CTUpdateOnEnterChckbx = new System.Windows.Forms.CheckBox();
             this.SchedulerTab = new System.Windows.Forms.TabPage();
             this.STUpdateBtn = new Sulakore.Components.SKoreButton();
@@ -128,6 +137,8 @@ namespace Tanji
             this.FTReplacementCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.ITPacketTxt = new System.Windows.Forms.ComboBox();
             this.ConnectionTab = new System.Windows.Forms.TabPage();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.CoTValueLbl = new System.Windows.Forms.Label();
             this.CoTGlow2Pnl = new System.Windows.Forms.Panel();
             this.CoTCustomClientLbl = new System.Windows.Forms.Label();
             this.CoTGlow3Pnl = new System.Windows.Forms.Panel();
@@ -137,18 +148,16 @@ namespace Tanji
             this.CoTDestroyCertificatesBtn = new Sulakore.Components.SKoreButton();
             this.CoTValueTxt = new System.Windows.Forms.TextBox();
             this.CoTCustomClientTxt = new System.Windows.Forms.TextBox();
-            this.CoTNameTxt = new System.Windows.Forms.TextBox();
-            this.CoTValueLbl = new System.Windows.Forms.Label();
             this.CoTVariableLbl = new System.Windows.Forms.Label();
-            this.CoTGlow1Pnl = new System.Windows.Forms.Panel();
             this.CoTClearVariableBtn = new Sulakore.Components.SKoreButton();
             this.CoTUpdateVariableBtn = new Sulakore.Components.SKoreButton();
             this.CoTStatusTxt = new Sulakore.Components.SKoreLabel();
             this.CoTConnectBtn = new Sulakore.Components.SKoreButton();
             this.CoTProxyPortTxt = new System.Windows.Forms.NumericUpDown();
             this.CoTVariablesVw = new Sulakore.Components.SKoreListView();
-            this.VTVariableCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.VTValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CoTVariableCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CoTValueCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.CoTNameTxt = new System.Windows.Forms.TextBox();
             this.TanjiTabs = new Sulakore.Components.SKoreTabControl();
             this.CustomClientDlg = new System.Windows.Forms.OpenFileDialog();
             this.InstallModuleDlg = new System.Windows.Forms.OpenFileDialog();
@@ -251,12 +260,21 @@ namespace Tanji
             // ModulesTab
             // 
             this.ModulesTab.AllowDrop = true;
+            this.ModulesTab.Controls.Add(this.MTAuthorPctbx);
+            this.ModulesTab.Controls.Add(this.MTDownloadsLbl);
+            this.ModulesTab.Controls.Add(this.MTReleasesBtn);
+            this.ModulesTab.Controls.Add(this.MTResourceBtn);
+            this.ModulesTab.Controls.Add(this.MTHotelTxt);
+            this.ModulesTab.Controls.Add(this.MTHotelLbl);
+            this.ModulesTab.Controls.Add(this.MTHabboNameTxt);
+            this.ModulesTab.Controls.Add(this.MTHabboNameLbl);
+            this.ModulesTab.Controls.Add(this.MTAuthorsLbl);
+            this.ModulesTab.Controls.Add(this.MTAuthorsTxt);
             this.ModulesTab.Controls.Add(this.MTGlow1);
-            this.ModulesTab.Controls.Add(this.MTUpdateModuleBtn);
+            this.ModulesTab.Controls.Add(this.MTDownloadLatestBtn);
             this.ModulesTab.Controls.Add(this.MTUninstallModuleBtn);
             this.ModulesTab.Controls.Add(this.MTInstallModuleBtn);
             this.ModulesTab.Controls.Add(this.MTModulesVw);
-            this.ModulesTab.Controls.Add(this.MTAuthorPctbx);
             this.ModulesTab.Location = new System.Drawing.Point(4, 28);
             this.ModulesTab.Name = "ModulesTab";
             this.ModulesTab.Padding = new System.Windows.Forms.Padding(3);
@@ -265,32 +283,131 @@ namespace Tanji
             this.ModulesTab.Text = "Modules";
             this.ModulesTab.UseVisualStyleBackColor = true;
             // 
+            // MTAuthorPctbx
+            // 
+            this.MTAuthorPctbx.Dock = System.Windows.Forms.DockStyle.Left;
+            this.MTAuthorPctbx.Enabled = false;
+            this.MTAuthorPctbx.ErrorImage = null;
+            this.MTAuthorPctbx.Image = global::Tanji.Properties.Resources.Avatar;
+            this.MTAuthorPctbx.InitialImage = null;
+            this.MTAuthorPctbx.Location = new System.Drawing.Point(3, 196);
+            this.MTAuthorPctbx.Name = "MTAuthorPctbx";
+            this.MTAuthorPctbx.Size = new System.Drawing.Size(68, 114);
+            this.MTAuthorPctbx.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
+            this.MTAuthorPctbx.TabIndex = 1;
+            this.MTAuthorPctbx.TabStop = false;
+            // 
+            // MTDownloadsLbl
+            // 
+            this.MTDownloadsLbl.Location = new System.Drawing.Point(345, 214);
+            this.MTDownloadsLbl.Name = "MTDownloadsLbl";
+            this.MTDownloadsLbl.Size = new System.Drawing.Size(128, 22);
+            this.MTDownloadsLbl.TabIndex = 15;
+            this.MTDownloadsLbl.Text = "Downloads: 0";
+            this.MTDownloadsLbl.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
+            // MTReleasesBtn
+            // 
+            this.MTReleasesBtn.BackColor = System.Drawing.Color.Transparent;
+            this.MTReleasesBtn.Enabled = false;
+            this.MTReleasesBtn.Location = new System.Drawing.Point(345, 253);
+            this.MTReleasesBtn.Name = "MTReleasesBtn";
+            this.MTReleasesBtn.Size = new System.Drawing.Size(128, 22);
+            this.MTReleasesBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.MTReleasesBtn.TabIndex = 14;
+            this.MTReleasesBtn.Text = "Releases";
+            // 
+            // MTResourceBtn
+            // 
+            this.MTResourceBtn.BackColor = System.Drawing.Color.Transparent;
+            this.MTResourceBtn.Enabled = false;
+            this.MTResourceBtn.Location = new System.Drawing.Point(211, 214);
+            this.MTResourceBtn.Name = "MTResourceBtn";
+            this.MTResourceBtn.Size = new System.Drawing.Size(128, 22);
+            this.MTResourceBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.MTResourceBtn.TabIndex = 13;
+            // 
+            // MTHotelTxt
+            // 
+            this.MTHotelTxt.Location = new System.Drawing.Point(211, 255);
+            this.MTHotelTxt.Name = "MTHotelTxt";
+            this.MTHotelTxt.ReadOnly = true;
+            this.MTHotelTxt.Size = new System.Drawing.Size(128, 20);
+            this.MTHotelTxt.TabIndex = 11;
+            this.MTHotelTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // MTHotelLbl
+            // 
+            this.MTHotelLbl.AutoSize = true;
+            this.MTHotelLbl.Location = new System.Drawing.Point(208, 239);
+            this.MTHotelLbl.Name = "MTHotelLbl";
+            this.MTHotelLbl.Size = new System.Drawing.Size(32, 13);
+            this.MTHotelLbl.TabIndex = 10;
+            this.MTHotelLbl.Text = "Hotel";
+            // 
+            // MTHabboNameTxt
+            // 
+            this.MTHabboNameTxt.Location = new System.Drawing.Point(77, 255);
+            this.MTHabboNameTxt.Name = "MTHabboNameTxt";
+            this.MTHabboNameTxt.ReadOnly = true;
+            this.MTHabboNameTxt.Size = new System.Drawing.Size(128, 20);
+            this.MTHabboNameTxt.TabIndex = 9;
+            this.MTHabboNameTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            // 
+            // MTHabboNameLbl
+            // 
+            this.MTHabboNameLbl.AutoSize = true;
+            this.MTHabboNameLbl.Location = new System.Drawing.Point(74, 239);
+            this.MTHabboNameLbl.Name = "MTHabboNameLbl";
+            this.MTHabboNameLbl.Size = new System.Drawing.Size(70, 13);
+            this.MTHabboNameLbl.TabIndex = 8;
+            this.MTHabboNameLbl.Text = "Habbo Name";
+            // 
+            // MTAuthorsLbl
+            // 
+            this.MTAuthorsLbl.AutoSize = true;
+            this.MTAuthorsLbl.Location = new System.Drawing.Point(74, 199);
+            this.MTAuthorsLbl.Name = "MTAuthorsLbl";
+            this.MTAuthorsLbl.Size = new System.Drawing.Size(49, 13);
+            this.MTAuthorsLbl.TabIndex = 7;
+            this.MTAuthorsLbl.Text = "Author(s)";
+            // 
+            // MTAuthorsTxt
+            // 
+            this.MTAuthorsTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.MTAuthorsTxt.Enabled = false;
+            this.MTAuthorsTxt.FormattingEnabled = true;
+            this.MTAuthorsTxt.Location = new System.Drawing.Point(77, 215);
+            this.MTAuthorsTxt.Name = "MTAuthorsTxt";
+            this.MTAuthorsTxt.Size = new System.Drawing.Size(128, 21);
+            this.MTAuthorsTxt.TabIndex = 6;
+            // 
             // MTGlow1
             // 
             this.MTGlow1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.MTGlow1.Location = new System.Drawing.Point(366, 200);
+            this.MTGlow1.Location = new System.Drawing.Point(77, 281);
             this.MTGlow1.Name = "MTGlow1";
-            this.MTGlow1.Size = new System.Drawing.Size(1, 110);
+            this.MTGlow1.Size = new System.Drawing.Size(396, 1);
             this.MTGlow1.TabIndex = 5;
             // 
-            // MTUpdateModuleBtn
+            // MTDownloadLatestBtn
             // 
-            this.MTUpdateModuleBtn.BackColor = System.Drawing.Color.Transparent;
-            this.MTUpdateModuleBtn.Enabled = false;
-            this.MTUpdateModuleBtn.Location = new System.Drawing.Point(373, 208);
-            this.MTUpdateModuleBtn.Name = "MTUpdateModuleBtn";
-            this.MTUpdateModuleBtn.Size = new System.Drawing.Size(100, 22);
-            this.MTUpdateModuleBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.MTUpdateModuleBtn.TabIndex = 4;
-            this.MTUpdateModuleBtn.Text = "Update Module";
+            this.MTDownloadLatestBtn.BackColor = System.Drawing.Color.Transparent;
+            this.MTDownloadLatestBtn.Enabled = false;
+            this.MTDownloadLatestBtn.Location = new System.Drawing.Point(77, 288);
+            this.MTDownloadLatestBtn.Name = "MTDownloadLatestBtn";
+            this.MTDownloadLatestBtn.Size = new System.Drawing.Size(128, 22);
+            this.MTDownloadLatestBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.MTDownloadLatestBtn.TabIndex = 4;
+            this.MTDownloadLatestBtn.Text = "Download Latest";
             // 
             // MTUninstallModuleBtn
             // 
             this.MTUninstallModuleBtn.BackColor = System.Drawing.Color.Transparent;
             this.MTUninstallModuleBtn.Enabled = false;
-            this.MTUninstallModuleBtn.Location = new System.Drawing.Point(373, 244);
+            this.MTUninstallModuleBtn.Location = new System.Drawing.Point(211, 288);
             this.MTUninstallModuleBtn.Name = "MTUninstallModuleBtn";
-            this.MTUninstallModuleBtn.Size = new System.Drawing.Size(100, 22);
+            this.MTUninstallModuleBtn.Size = new System.Drawing.Size(128, 22);
             this.MTUninstallModuleBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.MTUninstallModuleBtn.TabIndex = 3;
             this.MTUninstallModuleBtn.Text = "Uninstall Module";
@@ -298,9 +415,9 @@ namespace Tanji
             // MTInstallModuleBtn
             // 
             this.MTInstallModuleBtn.BackColor = System.Drawing.Color.Transparent;
-            this.MTInstallModuleBtn.Location = new System.Drawing.Point(373, 280);
+            this.MTInstallModuleBtn.Location = new System.Drawing.Point(345, 288);
             this.MTInstallModuleBtn.Name = "MTInstallModuleBtn";
-            this.MTInstallModuleBtn.Size = new System.Drawing.Size(100, 22);
+            this.MTInstallModuleBtn.Size = new System.Drawing.Size(128, 22);
             this.MTInstallModuleBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.MTInstallModuleBtn.TabIndex = 2;
             this.MTInstallModuleBtn.Text = "Install Module";
@@ -308,8 +425,10 @@ namespace Tanji
             // MTModulesVw
             // 
             this.MTModulesVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.MNameCol,
-            this.MVersion});
+            this.MTNameCol,
+            this.MTDescriptionCol,
+            this.MTVersionCol,
+            this.MTStateCol});
             this.MTModulesVw.Dock = System.Windows.Forms.DockStyle.Top;
             this.MTModulesVw.FullRowSelect = true;
             this.MTModulesVw.GridLines = true;
@@ -319,31 +438,30 @@ namespace Tanji
             this.MTModulesVw.MultiSelect = false;
             this.MTModulesVw.Name = "MTModulesVw";
             this.MTModulesVw.ShowItemToolTips = true;
-            this.MTModulesVw.Size = new System.Drawing.Size(470, 191);
+            this.MTModulesVw.Size = new System.Drawing.Size(470, 193);
             this.MTModulesVw.TabIndex = 0;
             this.MTModulesVw.UseCompatibleStateImageBehavior = false;
             this.MTModulesVw.View = System.Windows.Forms.View.Details;
             // 
-            // MNameCol
+            // MTNameCol
             // 
-            this.MNameCol.Text = "Name";
-            this.MNameCol.Width = 102;
+            this.MTNameCol.Text = "Name";
+            this.MTNameCol.Width = 98;
             // 
-            // MVersion
+            // MTDescriptionCol
             // 
-            this.MVersion.Text = "Version";
+            this.MTDescriptionCol.Text = "Description";
+            this.MTDescriptionCol.Width = 215;
             // 
-            // MTAuthorPctbx
+            // MTVersionCol
             // 
-            this.MTAuthorPctbx.ErrorImage = null;
-            this.MTAuthorPctbx.Image = global::Tanji.Properties.Resources.Avatar;
-            this.MTAuthorPctbx.InitialImage = null;
-            this.MTAuthorPctbx.Location = new System.Drawing.Point(3, 200);
-            this.MTAuthorPctbx.Name = "MTAuthorPctbx";
-            this.MTAuthorPctbx.Size = new System.Drawing.Size(64, 110);
-            this.MTAuthorPctbx.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
-            this.MTAuthorPctbx.TabIndex = 1;
-            this.MTAuthorPctbx.TabStop = false;
+            this.MTVersionCol.Text = "Version";
+            this.MTVersionCol.Width = 68;
+            // 
+            // MTStateCol
+            // 
+            this.MTStateCol.Text = "State";
+            this.MTStateCol.Width = 68;
             // 
             // ToolboxTab
             // 
@@ -516,7 +634,7 @@ namespace Tanji
             this.InjectionTabs.DisplayBoundary = true;
             this.InjectionTabs.Dock = System.Windows.Forms.DockStyle.Top;
             this.InjectionTabs.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            this.InjectionTabs.ItemSize = new System.Drawing.Size(65, 24);
+            this.InjectionTabs.ItemSize = new System.Drawing.Size(24, 65);
             this.InjectionTabs.Location = new System.Drawing.Point(3, 3);
             this.InjectionTabs.Multiline = true;
             this.InjectionTabs.Name = "InjectionTabs";
@@ -746,9 +864,9 @@ namespace Tanji
             this.CTConstructerVw.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.CTConstructerVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ICSTypeCol,
-            this.ICSValueCol,
-            this.ICSEncodedCol});
+            this.CTTypeCol,
+            this.CTValueCol,
+            this.CTEncodedCol});
             this.CTConstructerVw.FullRowSelect = true;
             this.CTConstructerVw.GridLines = true;
             this.CTConstructerVw.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
@@ -762,20 +880,20 @@ namespace Tanji
             this.CTConstructerVw.UseCompatibleStateImageBehavior = false;
             this.CTConstructerVw.View = System.Windows.Forms.View.Details;
             // 
-            // ICSTypeCol
+            // CTTypeCol
             // 
-            this.ICSTypeCol.Text = "Type";
-            this.ICSTypeCol.Width = 72;
+            this.CTTypeCol.Text = "Type";
+            this.CTTypeCol.Width = 72;
             // 
-            // ICSValueCol
+            // CTValueCol
             // 
-            this.ICSValueCol.Text = "Value";
-            this.ICSValueCol.Width = 149;
+            this.CTValueCol.Text = "Value";
+            this.CTValueCol.Width = 149;
             // 
-            // ICSEncodedCol
+            // CTEncodedCol
             // 
-            this.ICSEncodedCol.Text = "Encoded";
-            this.ICSEncodedCol.Width = 149;
+            this.CTEncodedCol.Text = "Encoded";
+            this.CTEncodedCol.Width = 149;
             // 
             // CTUpdateOnEnterChckbx
             // 
@@ -785,9 +903,9 @@ namespace Tanji
             this.CTUpdateOnEnterChckbx.Enabled = false;
             this.CTUpdateOnEnterChckbx.Location = new System.Drawing.Point(209, -1);
             this.CTUpdateOnEnterChckbx.Name = "CTUpdateOnEnterChckbx";
-            this.CTUpdateOnEnterChckbx.Size = new System.Drawing.Size(126, 17);
+            this.CTUpdateOnEnterChckbx.Size = new System.Drawing.Size(114, 17);
             this.CTUpdateOnEnterChckbx.TabIndex = 50;
-            this.CTUpdateOnEnterChckbx.Text = "Update On {ENTER}";
+            this.CTUpdateOnEnterChckbx.Text = "Update On {Enter}";
             this.CTUpdateOnEnterChckbx.UseVisualStyleBackColor = true;
             // 
             // SchedulerTab
@@ -838,20 +956,20 @@ namespace Tanji
             // 
             // STAutoStartChckbx
             // 
-            this.STAutoStartChckbx.AutoSize = true;
             this.STAutoStartChckbx.Checked = true;
             this.STAutoStartChckbx.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.STAutoStartChckbx.Location = new System.Drawing.Point(168, 192);
+            this.STAutoStartChckbx.Location = new System.Drawing.Point(319, 246);
             this.STAutoStartChckbx.Name = "STAutoStartChckbx";
-            this.STAutoStartChckbx.Size = new System.Drawing.Size(73, 17);
+            this.STAutoStartChckbx.Size = new System.Drawing.Size(75, 22);
             this.STAutoStartChckbx.TabIndex = 53;
             this.STAutoStartChckbx.Text = "Auto Start";
+            this.STAutoStartChckbx.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             this.STAutoStartChckbx.UseVisualStyleBackColor = true;
             // 
             // STDestinationLbl
             // 
             this.STDestinationLbl.AutoSize = true;
-            this.STDestinationLbl.Location = new System.Drawing.Point(237, 193);
+            this.STDestinationLbl.Location = new System.Drawing.Point(191, 204);
             this.STDestinationLbl.Name = "STDestinationLbl";
             this.STDestinationLbl.Size = new System.Drawing.Size(60, 13);
             this.STDestinationLbl.TabIndex = 48;
@@ -860,7 +978,7 @@ namespace Tanji
             // STCyclesLbl
             // 
             this.STCyclesLbl.AutoSize = true;
-            this.STCyclesLbl.Location = new System.Drawing.Point(316, 232);
+            this.STCyclesLbl.Location = new System.Drawing.Point(329, 204);
             this.STCyclesLbl.Name = "STCyclesLbl";
             this.STCyclesLbl.Size = new System.Drawing.Size(38, 13);
             this.STCyclesLbl.TabIndex = 60;
@@ -868,21 +986,21 @@ namespace Tanji
             // 
             // STCyclesTxt
             // 
-            this.STCyclesTxt.Location = new System.Drawing.Point(319, 248);
+            this.STCyclesTxt.Location = new System.Drawing.Point(332, 220);
             this.STCyclesTxt.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
             this.STCyclesTxt.Name = "STCyclesTxt";
-            this.STCyclesTxt.Size = new System.Drawing.Size(75, 20);
+            this.STCyclesTxt.Size = new System.Drawing.Size(62, 20);
             this.STCyclesTxt.TabIndex = 59;
             this.STCyclesTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // STIntervalLbl
             // 
             this.STIntervalLbl.AutoSize = true;
-            this.STIntervalLbl.Location = new System.Drawing.Point(316, 193);
+            this.STIntervalLbl.Location = new System.Drawing.Point(261, 204);
             this.STIntervalLbl.Name = "STIntervalLbl";
             this.STIntervalLbl.Size = new System.Drawing.Size(61, 13);
             this.STIntervalLbl.TabIndex = 50;
@@ -910,7 +1028,7 @@ namespace Tanji
             // 
             // STIntervalTxt
             // 
-            this.STIntervalTxt.Location = new System.Drawing.Point(319, 209);
+            this.STIntervalTxt.Location = new System.Drawing.Point(264, 220);
             this.STIntervalTxt.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -922,7 +1040,7 @@ namespace Tanji
             0,
             0});
             this.STIntervalTxt.Name = "STIntervalTxt";
-            this.STIntervalTxt.Size = new System.Drawing.Size(75, 20);
+            this.STIntervalTxt.Size = new System.Drawing.Size(62, 20);
             this.STIntervalTxt.TabIndex = 49;
             this.STIntervalTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.STIntervalTxt.Value = new decimal(new int[] {
@@ -935,15 +1053,15 @@ namespace Tanji
             // 
             this.STDestinationTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.STDestinationTxt.FormattingEnabled = true;
-            this.STDestinationTxt.Location = new System.Drawing.Point(240, 208);
+            this.STDestinationTxt.Location = new System.Drawing.Point(194, 219);
             this.STDestinationTxt.Name = "STDestinationTxt";
-            this.STDestinationTxt.Size = new System.Drawing.Size(73, 21);
+            this.STDestinationTxt.Size = new System.Drawing.Size(64, 21);
             this.STDestinationTxt.TabIndex = 47;
             // 
             // STPacketLbl
             // 
             this.STPacketLbl.AutoSize = true;
-            this.STPacketLbl.Location = new System.Drawing.Point(0, 193);
+            this.STPacketLbl.Location = new System.Drawing.Point(0, 204);
             this.STPacketLbl.Name = "STPacketLbl";
             this.STPacketLbl.Size = new System.Drawing.Size(41, 13);
             this.STPacketLbl.TabIndex = 46;
@@ -951,10 +1069,10 @@ namespace Tanji
             // 
             // STPacketTxt
             // 
-            this.STPacketTxt.Location = new System.Drawing.Point(3, 209);
+            this.STPacketTxt.Location = new System.Drawing.Point(3, 220);
             this.STPacketTxt.MaxLength = 2147483647;
             this.STPacketTxt.Name = "STPacketTxt";
-            this.STPacketTxt.Size = new System.Drawing.Size(231, 20);
+            this.STPacketTxt.Size = new System.Drawing.Size(185, 20);
             this.STPacketTxt.TabIndex = 45;
             // 
             // STSchedulerVw
@@ -979,7 +1097,7 @@ namespace Tanji
             this.STSchedulerVw.SelectedInterval = -1;
             this.STSchedulerVw.SelectedPacket = null;
             this.STSchedulerVw.ShowItemToolTips = true;
-            this.STSchedulerVw.Size = new System.Drawing.Size(391, 183);
+            this.STSchedulerVw.Size = new System.Drawing.Size(391, 198);
             this.STSchedulerVw.TabIndex = 0;
             this.STSchedulerVw.UseCompatibleStateImageBehavior = false;
             this.STSchedulerVw.View = System.Windows.Forms.View.Details;
@@ -1246,6 +1364,8 @@ namespace Tanji
             // 
             // ConnectionTab
             // 
+            this.ConnectionTab.Controls.Add(this.panel1);
+            this.ConnectionTab.Controls.Add(this.CoTValueLbl);
             this.ConnectionTab.Controls.Add(this.CoTGlow2Pnl);
             this.ConnectionTab.Controls.Add(this.CoTCustomClientLbl);
             this.ConnectionTab.Controls.Add(this.CoTGlow3Pnl);
@@ -1255,16 +1375,14 @@ namespace Tanji
             this.ConnectionTab.Controls.Add(this.CoTDestroyCertificatesBtn);
             this.ConnectionTab.Controls.Add(this.CoTValueTxt);
             this.ConnectionTab.Controls.Add(this.CoTCustomClientTxt);
-            this.ConnectionTab.Controls.Add(this.CoTNameTxt);
-            this.ConnectionTab.Controls.Add(this.CoTValueLbl);
             this.ConnectionTab.Controls.Add(this.CoTVariableLbl);
-            this.ConnectionTab.Controls.Add(this.CoTGlow1Pnl);
             this.ConnectionTab.Controls.Add(this.CoTClearVariableBtn);
             this.ConnectionTab.Controls.Add(this.CoTUpdateVariableBtn);
             this.ConnectionTab.Controls.Add(this.CoTStatusTxt);
             this.ConnectionTab.Controls.Add(this.CoTConnectBtn);
             this.ConnectionTab.Controls.Add(this.CoTProxyPortTxt);
             this.ConnectionTab.Controls.Add(this.CoTVariablesVw);
+            this.ConnectionTab.Controls.Add(this.CoTNameTxt);
             this.ConnectionTab.Location = new System.Drawing.Point(4, 28);
             this.ConnectionTab.Name = "ConnectionTab";
             this.ConnectionTab.Padding = new System.Windows.Forms.Padding(3);
@@ -1272,6 +1390,23 @@ namespace Tanji
             this.ConnectionTab.TabIndex = 4;
             this.ConnectionTab.Text = "Connection";
             this.ConnectionTab.UseVisualStyleBackColor = true;
+            // 
+            // panel1
+            // 
+            this.panel1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.panel1.Location = new System.Drawing.Point(322, 153);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(1, 59);
+            this.panel1.TabIndex = 104;
+            // 
+            // CoTValueLbl
+            // 
+            this.CoTValueLbl.AutoSize = true;
+            this.CoTValueLbl.Location = new System.Drawing.Point(0, 137);
+            this.CoTValueLbl.Name = "CoTValueLbl";
+            this.CoTValueLbl.Size = new System.Drawing.Size(34, 13);
+            this.CoTValueLbl.TabIndex = 99;
+            this.CoTValueLbl.Text = "Value";
             // 
             // CoTGlow2Pnl
             // 
@@ -1341,9 +1476,9 @@ namespace Tanji
             // 
             // CoTValueTxt
             // 
-            this.CoTValueTxt.Location = new System.Drawing.Point(3, 192);
+            this.CoTValueTxt.Location = new System.Drawing.Point(3, 153);
             this.CoTValueTxt.Name = "CoTValueTxt";
-            this.CoTValueTxt.Size = new System.Drawing.Size(312, 20);
+            this.CoTValueTxt.Size = new System.Drawing.Size(313, 20);
             this.CoTValueTxt.TabIndex = 100;
             this.CoTValueTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
@@ -1355,48 +1490,22 @@ namespace Tanji
             this.CoTCustomClientTxt.TabIndex = 0;
             this.CoTCustomClientTxt.TabStop = false;
             // 
-            // CoTNameTxt
-            // 
-            this.CoTNameTxt.Location = new System.Drawing.Point(3, 153);
-            this.CoTNameTxt.Name = "CoTNameTxt";
-            this.CoTNameTxt.ReadOnly = true;
-            this.CoTNameTxt.Size = new System.Drawing.Size(312, 20);
-            this.CoTNameTxt.TabIndex = 98;
-            this.CoTNameTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // CoTValueLbl
-            // 
-            this.CoTValueLbl.AutoSize = true;
-            this.CoTValueLbl.Location = new System.Drawing.Point(0, 176);
-            this.CoTValueLbl.Name = "CoTValueLbl";
-            this.CoTValueLbl.Size = new System.Drawing.Size(34, 13);
-            this.CoTValueLbl.TabIndex = 99;
-            this.CoTValueLbl.Text = "Value";
-            // 
             // CoTVariableLbl
             // 
             this.CoTVariableLbl.AutoSize = true;
-            this.CoTVariableLbl.Location = new System.Drawing.Point(0, 137);
+            this.CoTVariableLbl.Location = new System.Drawing.Point(0, 176);
             this.CoTVariableLbl.Name = "CoTVariableLbl";
             this.CoTVariableLbl.Size = new System.Drawing.Size(45, 13);
             this.CoTVariableLbl.TabIndex = 97;
             this.CoTVariableLbl.Text = "Variable";
             // 
-            // CoTGlow1Pnl
-            // 
-            this.CoTGlow1Pnl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.CoTGlow1Pnl.Location = new System.Drawing.Point(321, 153);
-            this.CoTGlow1Pnl.Name = "CoTGlow1Pnl";
-            this.CoTGlow1Pnl.Size = new System.Drawing.Size(1, 59);
-            this.CoTGlow1Pnl.TabIndex = 96;
-            // 
             // CoTClearVariableBtn
             // 
             this.CoTClearVariableBtn.BackColor = System.Drawing.Color.Transparent;
             this.CoTClearVariableBtn.Enabled = false;
-            this.CoTClearVariableBtn.Location = new System.Drawing.Point(328, 187);
+            this.CoTClearVariableBtn.Location = new System.Drawing.Point(329, 186);
             this.CoTClearVariableBtn.Name = "CoTClearVariableBtn";
-            this.CoTClearVariableBtn.Size = new System.Drawing.Size(145, 22);
+            this.CoTClearVariableBtn.Size = new System.Drawing.Size(144, 22);
             this.CoTClearVariableBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.CoTClearVariableBtn.TabIndex = 95;
             this.CoTClearVariableBtn.Text = "Clear Variable";
@@ -1404,9 +1513,9 @@ namespace Tanji
             // CoTUpdateVariableBtn
             // 
             this.CoTUpdateVariableBtn.BackColor = System.Drawing.Color.Transparent;
-            this.CoTUpdateVariableBtn.Location = new System.Drawing.Point(328, 156);
+            this.CoTUpdateVariableBtn.Location = new System.Drawing.Point(329, 157);
             this.CoTUpdateVariableBtn.Name = "CoTUpdateVariableBtn";
-            this.CoTUpdateVariableBtn.Size = new System.Drawing.Size(145, 22);
+            this.CoTUpdateVariableBtn.Size = new System.Drawing.Size(144, 22);
             this.CoTUpdateVariableBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.CoTUpdateVariableBtn.TabIndex = 94;
             this.CoTUpdateVariableBtn.Text = "Update Variable";
@@ -1450,8 +1559,8 @@ namespace Tanji
             // 
             this.CoTVariablesVw.CheckBoxes = true;
             this.CoTVariablesVw.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.VTVariableCol,
-            this.VTValueCol});
+            this.CoTVariableCol,
+            this.CoTValueCol});
             this.CoTVariablesVw.Dock = System.Windows.Forms.DockStyle.Top;
             this.CoTVariablesVw.FullRowSelect = true;
             this.CoTVariablesVw.GridLines = true;
@@ -1466,15 +1575,24 @@ namespace Tanji
             this.CoTVariablesVw.UseCompatibleStateImageBehavior = false;
             this.CoTVariablesVw.View = System.Windows.Forms.View.Details;
             // 
-            // VTVariableCol
+            // CoTVariableCol
             // 
-            this.VTVariableCol.Text = "Variable";
-            this.VTVariableCol.Width = 224;
+            this.CoTVariableCol.Text = "Variable";
+            this.CoTVariableCol.Width = 224;
             // 
-            // VTValueCol
+            // CoTValueCol
             // 
-            this.VTValueCol.Text = "Value";
-            this.VTValueCol.Width = 225;
+            this.CoTValueCol.Text = "Value";
+            this.CoTValueCol.Width = 225;
+            // 
+            // CoTNameTxt
+            // 
+            this.CoTNameTxt.Location = new System.Drawing.Point(3, 192);
+            this.CoTNameTxt.Name = "CoTNameTxt";
+            this.CoTNameTxt.ReadOnly = true;
+            this.CoTNameTxt.Size = new System.Drawing.Size(313, 20);
+            this.CoTNameTxt.TabIndex = 98;
+            this.CoTNameTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // TanjiTabs
             // 
@@ -1522,11 +1640,13 @@ namespace Tanji
             this.Name = "MainFrm";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Tanji ~ Disconnected";
+            this.TopMost = true;
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.MainFrm_FormClosed);
             this.Load += new System.EventHandler(this.MainFrm_Load);
             this.TanjiStrip.ResumeLayout(false);
             this.TanjiStrip.PerformLayout();
             this.ModulesTab.ResumeLayout(false);
+            this.ModulesTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MTAuthorPctbx)).EndInit();
             this.ToolboxTab.ResumeLayout(false);
             this.ToolboxTab.PerformLayout();
@@ -1599,9 +1719,9 @@ namespace Tanji
         internal Sulakore.Components.SKoreButton CTWriteIntegerBtn;
         private System.Windows.Forms.Label CTValueLbl;
         internal Sulakore.Components.SKoreConstructView CTConstructerVw;
-        private System.Windows.Forms.ColumnHeader ICSTypeCol;
-        private System.Windows.Forms.ColumnHeader ICSValueCol;
-        private System.Windows.Forms.ColumnHeader ICSEncodedCol;
+        private System.Windows.Forms.ColumnHeader CTTypeCol;
+        private System.Windows.Forms.ColumnHeader CTValueCol;
+        private System.Windows.Forms.ColumnHeader CTEncodedCol;
         private System.Windows.Forms.CheckBox CTUpdateOnEnterChckbx;
         internal System.Windows.Forms.TabPage SchedulerTab;
         internal Sulakore.Components.SKoreButton STUpdateBtn;
@@ -1659,25 +1779,36 @@ namespace Tanji
         internal System.Windows.Forms.TextBox CoTNameTxt;
         private System.Windows.Forms.Label CoTValueLbl;
         private System.Windows.Forms.Label CoTVariableLbl;
-        private System.Windows.Forms.Panel CoTGlow1Pnl;
         internal Sulakore.Components.SKoreButton CoTClearVariableBtn;
         internal Sulakore.Components.SKoreButton CoTUpdateVariableBtn;
         internal Sulakore.Components.SKoreLabel CoTStatusTxt;
         internal Sulakore.Components.SKoreButton CoTConnectBtn;
         internal System.Windows.Forms.NumericUpDown CoTProxyPortTxt;
         internal Sulakore.Components.SKoreListView CoTVariablesVw;
-        private System.Windows.Forms.ColumnHeader VTVariableCol;
-        private System.Windows.Forms.ColumnHeader VTValueCol;
+        private System.Windows.Forms.ColumnHeader CoTVariableCol;
+        private System.Windows.Forms.ColumnHeader CoTValueCol;
         internal Sulakore.Components.SKoreTabControl TanjiTabs;
         internal System.Windows.Forms.OpenFileDialog CustomClientDlg;
         internal System.Windows.Forms.OpenFileDialog InstallModuleDlg;
         internal Sulakore.Components.SKoreListView MTModulesVw;
-        private System.Windows.Forms.ColumnHeader MNameCol;
-        private System.Windows.Forms.ColumnHeader MVersion;
+        private System.Windows.Forms.ColumnHeader MTNameCol;
+        private System.Windows.Forms.ColumnHeader MTVersionCol;
         private System.Windows.Forms.Panel MTGlow1;
         internal System.Windows.Forms.PictureBox MTAuthorPctbx;
-        internal Sulakore.Components.SKoreButton MTUpdateModuleBtn;
+        internal Sulakore.Components.SKoreButton MTDownloadLatestBtn;
         internal Sulakore.Components.SKoreButton MTUninstallModuleBtn;
         internal Sulakore.Components.SKoreButton MTInstallModuleBtn;
+        private System.Windows.Forms.ColumnHeader MTDescriptionCol;
+        private System.Windows.Forms.ColumnHeader MTStateCol;
+        private System.Windows.Forms.Label MTAuthorsLbl;
+        internal System.Windows.Forms.ComboBox MTAuthorsTxt;
+        private System.Windows.Forms.Label MTHabboNameLbl;
+        private System.Windows.Forms.Label MTHotelLbl;
+        internal Sulakore.Components.SKoreButton MTResourceBtn;
+        internal Sulakore.Components.SKoreButton MTReleasesBtn;
+        internal System.Windows.Forms.TextBox MTHabboNameTxt;
+        internal System.Windows.Forms.TextBox MTHotelTxt;
+        internal System.Windows.Forms.Label MTDownloadsLbl;
+        private System.Windows.Forms.Panel panel1;
     }
 }

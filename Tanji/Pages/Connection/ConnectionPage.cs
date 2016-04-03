@@ -7,7 +7,7 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
-using Tanji.Pages.Connection.Managers;
+using Tanji.Pages.Connection.Handlers;
 
 using Sulakore;
 
@@ -29,7 +29,8 @@ namespace Tanji.Pages.Connection
         ModifyingClient = 7,
         AssemblingClient = 8,
         InterceptingConnection = 9,
-        ReplacingResources = 10
+        ReplacingResources = 10,
+        GeneratingMessageHashes = 11
     }
 
     public class ConnectionPage : TanjiPage
@@ -230,9 +231,7 @@ namespace Tanji.Pages.Connection
                 !File.Exists(e.Response.ResponseUri.LocalPath)) return;
 
             Eavesdropper.ResponseIntercepted -= ReplaceClient;
-
-            ushort[] ports = UI.GameData.InfoPort.Split(',')
-                .Select(s => ushort.Parse(s)).ToArray();
+            ushort infoPort = ushort.Parse(UI.GameData.InfoPort.Split(',')[0]);
 
             if (UI.Game == null)
             {
@@ -242,6 +241,7 @@ namespace Tanji.Pages.Connection
                 UI.Game.BypassOriginCheck();
                 UI.Game.BypassRemoteHostCheck();
                 UI.Game.ReplaceRSAKeys(HandshakeManager.FAKE_EXPONENT, HandshakeManager.FAKE_MODULUS);
+                UI.ModulesPg.ModifyGame(UI.Game);
 
                 SetState(TanjiState.AssemblingClient);
                 UI.Game.Assemble();
@@ -255,7 +255,13 @@ namespace Tanji.Pages.Connection
                 Directory.CreateDirectory(clientPath);
                 File.WriteAllBytes(clientPath + "\\Habbo.swf", e.Payload);
             }
-            else e.Payload = UI.Game.ToByteArray();
+            else
+            {
+                if (UI.ModulesPg.ModifyGame(UI.Game))
+                    UI.Game.Assemble();
+
+                e.Payload = UI.Game.ToByteArray();
+            }
 
             if (ResourceReplacements.Count > 0)
             {
@@ -264,8 +270,8 @@ namespace Tanji.Pages.Connection
             else Halt();
 
             SetState(TanjiState.InterceptingConnection);
-            UI.Connection.ConnectAsync(UI.GameData.InfoHost, ports)
-                .ContinueWith(ConnectTaskCompleted);
+            UI.Connection.ConnectAsync(UI.GameData.InfoHost,
+                infoPort).ContinueWith(ConnectTaskCompleted);
         }
         private void ExtractGameData(object sender, ResponseInterceptedEventArgs e)
         {
@@ -283,7 +289,7 @@ namespace Tanji.Pages.Connection
                     UI.GameData.Update(responseBody);
                     UI.Hotel = SKore.ToHotel(UI.GameData.InfoHost);
 
-                    // TODO: Inform installed modules.
+                    UI.ModulesPg.ModifyGameData(UI.GameData);
                     responseBody = UI.GameData.Source;
 
                     var clientUri = new Uri(UI.GameData["flash.client.url"]);
@@ -333,7 +339,13 @@ namespace Tanji.Pages.Connection
                         Eavesdropper.ResponseIntercepted += ReplaceClient;
                     }
                 }
-                catch (Exception ex) { WriteLog(ex); }
+                catch (Exception ex)
+                {
+                    MessageBox.Show("Intercepted game data is not recognized as coming from a valid Habbo Hotel site.",
+                        "Tanji ~ Alert!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+
+                    WriteLog(ex);
+                }
                 finally
                 {
                     if (State == TanjiState.ExtractingGameData)
@@ -390,8 +402,11 @@ namespace Tanji.Pages.Connection
             DisableReplacements();
             UI.Connection.Disconnect();
 
-            UI.Game.Dispose();
-            UI.Game = null;
+            if (UI.Game != null)
+            {
+                UI.Game.Dispose();
+                UI.Game = null;
+            }
         }
         public void Cancel()
         {
@@ -462,6 +477,10 @@ namespace Tanji.Pages.Connection
 
                 case TanjiState.ReplacingResources:
                 UI.CoTStatusTxt.SetDotAnimation("Replacing Resources");
+                break;
+
+                case TanjiState.GeneratingMessageHashes:
+                UI.CoTStatusTxt.SetDotAnimation("Generating Message Hashes");
                 break;
             }
             #endregion
@@ -565,6 +584,10 @@ namespace Tanji.Pages.Connection
 
                 SetState(TanjiState.DisassemblingClient);
                 UI.Game.Disassemble();
+
+                SetState(TanjiState.GeneratingMessageHashes);
+                UI.Game.GenerateMessageHashes();
+
                 return true;
             }
             catch (Exception ex)

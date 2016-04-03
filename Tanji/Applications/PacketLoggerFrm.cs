@@ -22,10 +22,12 @@ namespace Tanji.Applications
         private Task _readQueueTask;
         private FindDialog _currentFindUI;
         private FindMessageDialog _currentFindMessageUI;
+        private IgnoreMessagesDialog _currentIgnoreMessagesUI;
 
         private readonly object _pushToQueueLock;
         private readonly Action<string, Color> _writeHighlight;
         private readonly List<ushort> _invalidParsers, _invalidStructures;
+        private readonly Dictionary<ushort, bool> _ignoredOutgoing, _ignoredIncoming;
 
         public MainFrm MainUI { get; }
         public Queue<DataInterceptedEventArgs> Intercepted { get; }
@@ -51,8 +53,16 @@ namespace Tanji.Applications
                     !_currentFindMessageUI.IsDisposed);
             }
         }
+        public bool IsIgnoreMessagesDialogOpened
+        {
+            get
+            {
+                return (_currentIgnoreMessagesUI != null &&
+                    !_currentIgnoreMessagesUI.IsDisposed);
+            }
+        }
 
-        public bool IsReceiving { get; set; } = true;
+        public bool IsReceiving { get; private set; } = true;
         public bool IsViewingOutgoing { get; private set; } = true;
         public bool IsViewingIncoming { get; private set; } = true;
 
@@ -73,6 +83,8 @@ namespace Tanji.Applications
             _pushToQueueLock = new object();
             _invalidParsers = new List<ushort>();
             _invalidStructures = new List<ushort>();
+            _ignoredOutgoing = new Dictionary<ushort, bool>();
+            _ignoredIncoming = new Dictionary<ushort, bool>();
 
             MainUI = mainUI;
             Intercepted = new Queue<DataInterceptedEventArgs>();
@@ -177,6 +189,20 @@ namespace Tanji.Applications
             }
             _currentFindMessageUI.Hash = LoggerTxt.SelectedText;
             _currentFindMessageUI.HashTxt.SelectAll();
+        }
+        private void IgnoreMessagesBtn_Click(object sender, EventArgs e)
+        {
+            if (IsIgnoreMessagesDialogOpened)
+            {
+                _currentIgnoreMessagesUI.BringToFront();
+            }
+            else
+            {
+                _currentIgnoreMessagesUI = new IgnoreMessagesDialog(
+                    _ignoredOutgoing, _ignoredIncoming);
+
+                _currentIgnoreMessagesUI.Show(this);
+            }
         }
 
         public void Halt()
@@ -340,22 +366,44 @@ namespace Tanji.Applications
                 }
             }
         }
-        private bool IsLoggingAuthorized(DataInterceptedEventArgs args)
+
+        private bool IsLoggingAuthorized(DataInterceptedEventArgs e)
         {
             bool isOutgoing =
-                (args.Packet.Destination == HDestination.Server);
+                (e.Packet.Destination == HDestination.Server);
 
             if (IsFindDialogOpened) return false;
             if (IsFindMessageDialogOpened) return false;
-            if (!IsDisplayingBlocked && args.IsBlocked) return false;
-            if (!IsDisplayingReplaced && !args.IsOriginal) return false;
 
-            if (!IsViewingOutgoing && isOutgoing) return false;
-            if (!IsViewingIncoming && !isOutgoing) return false;
+            if (!IsDisplayingBlocked && e.IsBlocked) return false;
+            if (!IsDisplayingReplaced && !e.IsOriginal) return false;
 
+            ushort header = e.Packet.Header;
+            if (isOutgoing)
+            {
+                if (!IsViewingOutgoing ||
+                    IsIgnoring(header, _ignoredOutgoing))
+                {
+                    return false;
+                }
+            }
+            else
+            {
+                if (!IsViewingIncoming ||
+                    IsIgnoring(header, _ignoredIncoming))
+                {
+                    return false;
+                }
+            }
             return true;
         }
-        
+        private bool IsIgnoring(ushort header, IDictionary<ushort, bool> ignored)
+        {
+            bool isIgnoring = false;
+            ignored.TryGetValue(header, out isIgnoring);
+            return isIgnoring;
+        }
+
         protected override void OnActivated(EventArgs e)
         {
             if (!IsReceiving)
