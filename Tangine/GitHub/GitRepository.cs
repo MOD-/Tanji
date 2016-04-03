@@ -13,8 +13,8 @@ namespace Tangine.GitHub
         private static readonly DataContractJsonSerializer _singleReleaseDeserializer;
         private static readonly DataContractJsonSerializer _multipleReleaseDeserializer;
 
-        public string Owner { get; }
-        public string Repository { get; }
+        public string RepoName { get; }
+        public string OwnerName { get; }
 
         public GitRelease LatestRelease { get; private set; }
         public List<GitRelease> Releases { get; private set; }
@@ -24,16 +24,16 @@ namespace Tangine.GitHub
             _singleReleaseDeserializer = new DataContractJsonSerializer(typeof(GitRelease));
             _multipleReleaseDeserializer = new DataContractJsonSerializer(typeof(List<GitRelease>));
         }
-        public GitRepository(string owner, string repository)
+        public GitRepository(string ownerName, string repoName)
         {
-            Owner = owner;
-            Repository = repository;
+            RepoName = repoName;
+            OwnerName = ownerName;
         }
 
         public async Task<GitRelease> GetLatestReleaseAsync()
         {
             LatestRelease = await DownloadJsonObjectAsync<GitRelease>(
-                $"https://api.github.com/repos/{Owner}/{Repository}/releases/latest",
+                $"https://api.github.com/repos/{OwnerName}/{RepoName}/releases/latest",
                 _singleReleaseDeserializer).ConfigureAwait(false);
 
             return LatestRelease;
@@ -41,7 +41,7 @@ namespace Tangine.GitHub
         public async Task<List<GitRelease>> GetReleasesAsync()
         {
             Releases = await DownloadJsonObjectAsync<List<GitRelease>>(
-                $"https://api.github.com/repos/{Owner}/{Repository}/releases",
+                $"https://api.github.com/repos/{OwnerName}/{RepoName}/releases",
                 _multipleReleaseDeserializer).ConfigureAwait(false);
 
             return Releases;
@@ -53,6 +53,7 @@ namespace Tangine.GitHub
             {
                 using (var webClient = new WebClient())
                 {
+                    webClient.Proxy = null;
                     webClient.Headers[HttpRequestHeader.UserAgent] = SKore.ChromeAgent;
 
                     byte[] jsonData = await webClient

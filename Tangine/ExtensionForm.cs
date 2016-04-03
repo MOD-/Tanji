@@ -4,7 +4,7 @@ using System.Windows.Forms;
 
 using Tangine.Habbo;
 
-using Sulakore;
+using Sulakore.Habbo;
 using Sulakore.Modules;
 using Sulakore.Habbo.Web;
 using Sulakore.Communication;
@@ -22,31 +22,39 @@ namespace Tangine
         HTriggers ITExtension.Triggers => Triggers;
 
         [Browsable(false)]
+        public ITContext Context { get; }
+
+        [Browsable(false)]
         public IContractor Installer { get; }
 
         [Browsable(false)]
-        public HHotel Hotel => Installer.Hotel;
+        public HGame Game => Context?.Game;
 
         [Browsable(false)]
         public HGameData GameData => Installer?.GameData;
 
         [Browsable(false)]
-        public IHConnection Connection => Installer?.Connection;
+        public HHotel Hotel => (Installer?.Hotel ?? HHotel.Com);
 
+        [Browsable(false)]
+        public IHConnection Connection => Installer?.Connection;
+        
         public ExtensionForm()
         {
             Triggers = Activator.CreateInstance<T>();
-            Installer = Contractor.GetInstaller(Assembly.GetCallingAssembly());
+            Installer = Contractor.GetInstaller(GetType());
+
+            Context = (Installer as ITContext);
         }
+
+        public virtual void ModifyGame(HGame game)
+        { }
+        public virtual void ModifyGameData(HGameData gameData)
+        { }
 
         public virtual void HandleOutgoing(DataInterceptedEventArgs e)
         { }
         public virtual void HandleIncoming(DataInterceptedEventArgs e)
-        { }
-
-        public virtual void ModifyClient(HGame game)
-        { }
-        public virtual void ModifyGameData(HGameData gameData)
         { }
 
         protected override void Dispose(bool disposing)

@@ -424,18 +424,6 @@ namespace Tangine.Habbo
             }
         }
         /// <summary>
-        /// Returns an enumerable containing message classes associated with the specified unique MD5 hash.
-        /// </summary>
-        /// <param name="hash">The unique MD5 hash of message classes.</param>
-        /// <returns></returns>
-        public IReadOnlyList<ASClass> GetMessages(string hash)
-        {
-            if (_messages.ContainsKey(hash))
-                return _messages[hash].AsReadOnly();
-
-            return null;
-        }
-        /// <summary>
         /// Returns the header associated with the specified Outgoing/Incoming message class.
         /// </summary>
         /// <param name="messageClass">The Outgoing/Incoming message class to grab the associated header from.</param>
@@ -449,6 +437,34 @@ namespace Tangine.Habbo
                 return _outgoingHeaders[messageClass];
             else
                 return _incomingHeaders[messageClass];
+        }
+        /// <summary>
+        /// Returns a read-only list of message classes associated with the specified unique MD5 hash.
+        /// </summary>
+        /// <param name="hash">The unique MD5 hash associated with the message(s).</param>
+        /// <returns></returns>
+        public IReadOnlyList<ASClass> GetMessages(string hash)
+        {
+            if (_messages.ContainsKey(hash))
+                return _messages[hash].AsReadOnly();
+
+            return null;
+        }
+        /// <summary>
+        /// Returns a read-only list of headers associated with the specified unique MD5 hash.
+        /// </summary>
+        /// <param name="hash">The unique MD5 hash associated with the header(s).</param>
+        /// <returns></returns>
+        public IReadOnlyList<ushort> GetMessageHeaders(string hash)
+        {
+            IReadOnlyList<ASClass> messages = GetMessages(hash);
+            if (messages == null) return null;
+
+            var headers = new List<ushort>(messages.Count);
+            foreach (ASClass message in messages)
+                headers.Add(GetMessageHeader(message));
+
+            return headers.AsReadOnly();
         }
         /// <summary>
         /// Returns the Incoming message's parser class.
@@ -516,7 +532,7 @@ namespace Tangine.Habbo
             return incomingMsgParserClass;
         }
         /// <summary>
-        /// Returns a read-only list of references for the specified message class.
+        /// Returns an enumerable containing references for the specified message class.
         /// </summary>
         /// <param name="messageClass">The message class being referenced.</param>
         /// <returns></returns>
@@ -1008,23 +1024,14 @@ Unused Incoming messages: {unusedInMsgs}/{IncomingMessages.Count}");
             WriteLog("Disassembling...");
             base.Disassemble();
 
-            for (int i = 0; i < ABCFiles.Count; i++)
+            ABCFile abc = ABCFiles[2];
+            ASClass habboMessagesClass = abc.FindFirstClassByName("HabboMessages");
+            if (habboMessagesClass != null)
             {
-                ABCFile abc = ABCFiles[i];
-                //WriteLog($"Fixing local registers in {abc.Methods.Count:n0} methods.");
-                //FixLocalRegisters(abc);
+                FindHabboMessageClasses(habboMessagesClass);
 
-                if (i == 2)
-                {
-                    ASClass habboMessagesClass = abc.FindFirstClassByName("HabboMessages");
-                    if (habboMessagesClass != null)
-                    {
-                        FindHabboMessageClasses(habboMessagesClass);
-
-                        WriteLog(string.Format("Outgoing({0})/Incoming({1}) messages extracted.",
-                            OutgoingMessages.Count, IncomingMessages.Count));
-                    }
-                }
+                WriteLog(string.Format("Outgoing({0})/Incoming({1}) messages extracted.",
+                    OutgoingMessages.Count, IncomingMessages.Count));
             }
         }
     }

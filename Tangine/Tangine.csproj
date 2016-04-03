@@ -11,6 +11,12 @@
     <AssemblyName>Tangine</AssemblyName>
     <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
+    <UpdateAssemblyVersion>True</UpdateAssemblyVersion>
+    <UpdateAssemblyFileVersion>False</UpdateAssemblyFileVersion>
+    <UpdateAssemblyInfoVersion>False</UpdateAssemblyInfoVersion>
+    <AssemblyVersionSettings>None.IncrementOnDemand.None.None</AssemblyVersionSettings>
+    <AssemblyVersion>1.1.0.0</AssemblyVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Attributes\GitHubAttribute.cs" />
     <Compile Include="GitHub\GitAsset.cs" />
     <Compile Include="GitHub\GitProfile.cs" />
     <Compile Include="GitHub\GitRelease.cs" />
@@ -52,8 +59,8 @@
     <Compile Include="ExtensionForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ITContext.cs" />
     <Compile Include="ITExtension.cs" />
-    <Compile Include="ITService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>

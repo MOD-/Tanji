@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 
 namespace Tangine.GitHub
@@ -6,6 +7,8 @@ namespace Tangine.GitHub
     [DataContract]
     public sealed class GitRelease
     {
+        private Version _version;
+
         [DataMember(Name = "url")]
         public string Url { get; set; }
 
@@ -56,6 +59,18 @@ namespace Tangine.GitHub
 
         [DataMember(Name = "body")]
         public string Body { get; set; }
+
+        public Version GetVersion()
+        {
+            if (_version != null)
+                return _version;
+
+            string version = TagName;
+            if (version.StartsWith("v"))
+                version = version.Substring(1);
+
+            return (_version = Version.Parse(version));
+        }
 
         public override string ToString()
         {
