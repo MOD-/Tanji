@@ -30,6 +30,7 @@ namespace Tanji.Pages.Modules
         private readonly Dictionary<string, bool> _isValidUrl;
         private readonly Dictionary<string, Bitmap> _avatarCache;
         private readonly Dictionary<HHotel, Dictionary<string, HProfile>> _profileCache;
+        private readonly Action<ModuleItem, DataInterceptedEventArgs, Exception> _displayModuleException;
 
         public ModulesManager Contractor { get; }
         public bool IsReceiving => (Contractor.GetInitializedCount() > 0);
@@ -56,6 +57,7 @@ namespace Tanji.Pages.Modules
         {
             _isValidUrl = new Dictionary<string, bool>();
             _avatarCache = new Dictionary<string, Bitmap>();
+            _displayModuleException = DisplayModuleException;
             _profileCache = new Dictionary<HHotel, Dictionary<string, HProfile>>();
 
             Contractor = new ModulesManager(UI);
@@ -153,9 +155,10 @@ namespace Tanji.Pages.Modules
                 GitRelease currentRelease = (repository.LatestRelease ??
                     await repository.GetLatestReleaseAsync());
 
-                bool hasReleaseMatch = false;
-                if (currentRelease != null &&
-                    currentRelease.GetVersion() != moduleItem.Version)
+                bool hasReleaseMatch =
+                    (currentRelease.GetVersion() == moduleItem.Version);
+
+                if (currentRelease != null && !hasReleaseMatch)
                 {
                     List<GitRelease> releases = (repository.Releases ??
                         await repository.GetReleasesAsync());
@@ -369,6 +372,49 @@ namespace Tanji.Pages.Modules
             UI.MTDownloadsLbl.Text =
                 $"Downloads: {release.Assets[0].DownloadCount:n0}";
         }
+        private void DisplayModuleException(ModuleItem moduleItem, DataInterceptedEventArgs args, Exception exception)
+        {
+            if (UI.InvokeRequired)
+            {
+                UI.Invoke(_displayModuleException, moduleItem, args, exception);
+                return;
+            }
+            UI.BringToFront();
+
+            string packetType = (args.Packet.Destination ==
+                HDestination.Server ? "Outgoing" : "Incoming");
+
+            string readPacketValues = string.Empty;
+            if (args.Packet.ValuesRead.Count > 0)
+            {
+                foreach (object value in args.Packet.ValuesRead)
+                {
+                    Type valueType = value.GetType();
+                    switch (Type.GetTypeCode(valueType))
+                    {
+                        default:
+                        {
+                            readPacketValues +=
+                                (valueType.FullName + ": " + value);
+
+                            break;
+                        }
+                        case TypeCode.Int32: readPacketValues += "Integer: " + value; break;
+                        case TypeCode.String: readPacketValues += "String: " + value; break;
+                        case TypeCode.Boolean: readPacketValues += "Boolean: " + value; break;
+                    }
+                    readPacketValues += "\r\n";
+                }
+                readPacketValues = ("\r\n" + readPacketValues.Trim());
+            }
+
+            string moduleData = $"Module: {moduleItem.Name}(v{moduleItem.Version})";
+            string packetData = $"{packetType} Packet[{args.Packet.Header}]: {args.Packet}{readPacketValues}";
+
+            MessageBox.Show($"{moduleData}\r\n\r\n{packetData}\r\n\r\nMessage: {exception.Message}",
+                "Tanji ~ Unhandled Module Exception!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        }
+
         private void HandleData(DataInterceptedEventArgs e)
         {
             ModuleItem[] moduleItems = Contractor.GetModuleItems();
@@ -381,15 +427,25 @@ namespace Tanji.Pages.Modules
                 ITExtension extension = moduleItem.Extension;
                 if (extension == null) continue;
 
-                if (isOutgoing)
+                try
                 {
-                    extension.HandleOutgoing(e);
-                    extension.Triggers?.HandleOutgoing(e);
+                    if (isOutgoing)
+                    {
+                        extension.HandleOutgoing(e);
+                        extension.Triggers?.HandleOutgoing(e);
+                    }
+                    else
+                    {
+                        extension.HandleIncoming(e);
+                        extension.Triggers?.HandleIncoming(e);
+                    }
                 }
-                else
+                catch (Exception ex)
                 {
-                    extension.HandleIncoming(e);
-                    extension.Triggers?.HandleIncoming(e);
+                    if (!e.HasContinued) e.Continue();
+
+                    WriteLog(ex);
+                    DisplayModuleException(moduleItem, e, ex);
                 }
             }
         }

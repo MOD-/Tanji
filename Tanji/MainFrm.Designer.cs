@@ -29,6 +29,7 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainFrm));
             this.TanjiStrip = new System.Windows.Forms.StatusStrip();
             this.TanjiVersionTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.SchedulesTxt = new System.Windows.Forms.ToolStripStatusLabel();
@@ -37,6 +38,8 @@
             this.TanjiInfoTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.InjectionMenu = new Sulakore.Components.SKoreInjectionMenu(this.components);
             this.AboutTab = new System.Windows.Forms.TabPage();
+            this.DonateBtn = new Sulakore.Components.SKoreButton();
+            this.AboutTxt = new System.Windows.Forms.Label();
             this.ModulesTab = new System.Windows.Forms.TabPage();
             this.MTAuthorPctbx = new System.Windows.Forms.PictureBox();
             this.MTDownloadsLbl = new System.Windows.Forms.Label();
@@ -61,7 +64,6 @@
             this.TT16BitInputLbl = new System.Windows.Forms.Label();
             this.TT32BitInputLbl = new System.Windows.Forms.Label();
             this.TTIntInputTxt = new System.Windows.Forms.NumericUpDown();
-            this.ToolboxTabs = new Sulakore.Components.SKoreTabControl();
             this.TTIntOutputTxt = new System.Windows.Forms.TextBox();
             this.TTUShortOutputTxt = new System.Windows.Forms.TextBox();
             this.TTDecodeIntBtn = new Sulakore.Components.SKoreButton();
@@ -162,6 +164,7 @@
             this.CustomClientDlg = new System.Windows.Forms.OpenFileDialog();
             this.InstallModuleDlg = new System.Windows.Forms.OpenFileDialog();
             this.TanjiStrip.SuspendLayout();
+            this.AboutTab.SuspendLayout();
             this.ModulesTab.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MTAuthorPctbx)).BeginInit();
             this.ToolboxTab.SuspendLayout();
@@ -249,6 +252,8 @@
             // 
             // AboutTab
             // 
+            this.AboutTab.Controls.Add(this.DonateBtn);
+            this.AboutTab.Controls.Add(this.AboutTxt);
             this.AboutTab.Location = new System.Drawing.Point(4, 28);
             this.AboutTab.Name = "AboutTab";
             this.AboutTab.Padding = new System.Windows.Forms.Padding(3);
@@ -256,6 +261,26 @@
             this.AboutTab.TabIndex = 5;
             this.AboutTab.Text = "About";
             this.AboutTab.UseVisualStyleBackColor = true;
+            // 
+            // DonateBtn
+            // 
+            this.DonateBtn.BackColor = System.Drawing.Color.Transparent;
+            this.DonateBtn.Location = new System.Drawing.Point(173, 243);
+            this.DonateBtn.Name = "DonateBtn";
+            this.DonateBtn.Size = new System.Drawing.Size(131, 22);
+            this.DonateBtn.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
+            this.DonateBtn.TabIndex = 1;
+            this.DonateBtn.Text = "Donate to Clyde";
+            // 
+            // AboutTxt
+            // 
+            this.AboutTxt.Dock = System.Windows.Forms.DockStyle.Top;
+            this.AboutTxt.Location = new System.Drawing.Point(3, 3);
+            this.AboutTxt.Name = "AboutTxt";
+            this.AboutTxt.Size = new System.Drawing.Size(470, 194);
+            this.AboutTxt.TabIndex = 0;
+            this.AboutTxt.Text = resources.GetString("AboutTxt.Text");
+            this.AboutTxt.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // ModulesTab
             // 
@@ -468,7 +493,6 @@
             this.ToolboxTab.Controls.Add(this.TT16BitInputLbl);
             this.ToolboxTab.Controls.Add(this.TT32BitInputLbl);
             this.ToolboxTab.Controls.Add(this.TTIntInputTxt);
-            this.ToolboxTab.Controls.Add(this.ToolboxTabs);
             this.ToolboxTab.Controls.Add(this.TTIntOutputTxt);
             this.ToolboxTab.Controls.Add(this.TTUShortOutputTxt);
             this.ToolboxTab.Controls.Add(this.TTDecodeIntBtn);
@@ -517,22 +541,6 @@
             this.TTIntInputTxt.Size = new System.Drawing.Size(126, 22);
             this.TTIntInputTxt.TabIndex = 0;
             this.TTIntInputTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
-            // 
-            // ToolboxTabs
-            // 
-            this.ToolboxTabs.Alignment = System.Windows.Forms.TabAlignment.Right;
-            this.ToolboxTabs.DisplayBoundary = true;
-            this.ToolboxTabs.Dock = System.Windows.Forms.DockStyle.Top;
-            this.ToolboxTabs.DrawMode = System.Windows.Forms.TabDrawMode.OwnerDrawFixed;
-            this.ToolboxTabs.ItemSize = new System.Drawing.Size(50, 24);
-            this.ToolboxTabs.Location = new System.Drawing.Point(0, 0);
-            this.ToolboxTabs.Multiline = true;
-            this.ToolboxTabs.Name = "ToolboxTabs";
-            this.ToolboxTabs.SelectedIndex = 0;
-            this.ToolboxTabs.Size = new System.Drawing.Size(476, 254);
-            this.ToolboxTabs.SizeMode = System.Windows.Forms.TabSizeMode.Fixed;
-            this.ToolboxTabs.Skin = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
-            this.ToolboxTabs.TabIndex = 48;
             // 
             // TTIntOutputTxt
             // 
@@ -1645,6 +1653,7 @@
             this.Load += new System.EventHandler(this.MainFrm_Load);
             this.TanjiStrip.ResumeLayout(false);
             this.TanjiStrip.PerformLayout();
+            this.AboutTab.ResumeLayout(false);
             this.ModulesTab.ResumeLayout(false);
             this.ModulesTab.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.MTAuthorPctbx)).EndInit();
@@ -1691,7 +1700,6 @@
         private System.Windows.Forms.Label TT16BitInputLbl;
         private System.Windows.Forms.Label TT32BitInputLbl;
         internal System.Windows.Forms.NumericUpDown TTIntInputTxt;
-        private Sulakore.Components.SKoreTabControl ToolboxTabs;
         internal System.Windows.Forms.TextBox TTIntOutputTxt;
         internal System.Windows.Forms.TextBox TTUShortOutputTxt;
         internal Sulakore.Components.SKoreButton TTDecodeIntBtn;
@@ -1810,5 +1818,7 @@
         internal System.Windows.Forms.TextBox MTHotelTxt;
         internal System.Windows.Forms.Label MTDownloadsLbl;
         private System.Windows.Forms.Panel panel1;
+        private System.Windows.Forms.Label AboutTxt;
+        internal Sulakore.Components.SKoreButton DonateBtn;
     }
 }

@@ -122,7 +122,6 @@ namespace Tanji
             }
 
             ConnectionPg.HandshakeMngr.RestartHandshake();
-
             Text = $"Tanji ~ Connected[{Connection.Host}:{Connection.Port}]";
             TopMost = PacketLoggerUI.TopMost;
 

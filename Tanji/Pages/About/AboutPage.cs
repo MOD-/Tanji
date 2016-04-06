@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 
 using Tangine.GitHub;
+using System.Diagnostics;
 
 namespace Tanji.Pages.About
 {
@@ -18,6 +19,8 @@ namespace Tanji.Pages.About
         {
             TanjiRepo = new GitRepository("ArachisH", "Tanji");
             LocalVersion = new Version(Application.ProductVersion);
+
+            UI.DonateBtn.Click += DonateBtn_Click;
 
             UI.Shown += UI_Shown;
             UI.TanjiVersionTxt.Text = ("v" + LocalVersion);
@@ -36,14 +39,31 @@ namespace Tanji.Pages.About
                     latestRelease.TagName.Substring(1));
 
                 UI.TanjiVersionTxt.IsLink = true;
-                IsNotifying = (LatestVersion > LocalVersion);
+
+                if (LatestVersion > LocalVersion &&
+                    !latestRelease.IsPrerelease)
+                {
+                    UI.TanjiVersionTxt.Text = "Update Found!";
+                }
             }
         }
 
-        protected override void OnTabSelecting(TabControlCancelEventArgs e)
+        private void DonateBtn_Click(object sender, EventArgs e)
         {
-            e.Cancel = true;
-            base.OnTabSelecting(e);
+            string business = "theoldnutman@gmail.com";
+            string description = "Donation";
+            string country = "US";
+            string currency = "USD";
+
+            string url = "https://www.paypal.com/cgi-bin/webscr" +
+                "?cmd=" + "_donations" +
+                "&business=" + business +
+                "&lc=" + country +
+                "&item_name=" + description +
+                "&currency_code=" + currency +
+                "&bn=" + "PP%2dDonationsBF";
+
+            Process.Start(url);
         }
     }
 }

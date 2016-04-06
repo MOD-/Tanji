@@ -21,18 +21,7 @@ namespace Tanji.Pages
             {
                 UI.Invoke(_onPropertyChanged, e);
             }
-            else
-            {
-                if (e.PropertyName == nameof(IsNotifying))
-                {
-                    string alertString =
-                        (IsNotifying ? " (!)" : string.Empty);
-
-                    Tab.Text =
-                        $"{Title}{alertString}";
-                }
-                PropertyChanged?.Invoke(this, e);
-            }
+            else PropertyChanged?.Invoke(this, e);
         }
 
         public MainFrm UI { get; }
@@ -40,17 +29,6 @@ namespace Tanji.Pages
         public string Title { get; }
         protected TabControl TabControl { get; }
         protected bool IsSelectedTab => (TabControl.SelectedTab == Tab);
-
-        private bool _isNotifying;
-        public bool IsNotifying
-        {
-            get { return _isNotifying; }
-            set
-            {
-                _isNotifying = value;
-                RaiseOnPropertyChanged(nameof(IsNotifying));
-            }
-        }
 
         public TanjiPage(MainFrm ui, TabPage tab)
         {
@@ -71,10 +49,7 @@ namespace Tanji.Pages
         }
 
         protected virtual void OnTabSelecting(TabControlCancelEventArgs e)
-        {
-            if (IsNotifying)
-                IsNotifying = false;
-        }
+        { }
         private void TabControl_Selecting(object sender, TabControlCancelEventArgs e)
         {
             if (e.TabPage == Tab)

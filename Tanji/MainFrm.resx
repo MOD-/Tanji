@@ -123,6 +123,12 @@
   <metadata name="InjectionMenu.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>118, 16</value>
   </metadata>
+  <data name="AboutTxt.Text" xml:space="preserve">
+    <value>I'm not that great at creating about pages, so the best you're going to get is this. I want to thank my sla..-companion Clyde, who wrote 98% of the Tanji source code, everyone loves you pal.
+
+
+Want to thank Clyde for this free open-source project? Send Clyde your lunch money, otherwise Clyde will have to do with my left-overs, sorry buddy.</value>
+  </data>
   <metadata name="CustomClientDlg.TrayLocation" type="System.Drawing.Point, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
     <value>248, 16</value>
   </metadata>
