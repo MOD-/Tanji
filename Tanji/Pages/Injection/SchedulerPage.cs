@@ -56,6 +56,17 @@ namespace Tanji.Pages.Injection
             }
         }
 
+        private SKoreHotkey.KeyCombination _hotkey = null;
+        public SKoreHotkey.KeyCombination Hotkey
+        {
+            get { return _hotkey; }
+            set
+            {
+                _hotkey = value;
+                RaiseOnPropertyChanged(nameof(Hotkey));
+            }
+        }
+
         public SchedulerPage(InjectionPage parent, TabPage tab)
             : base(parent, tab)
         {
@@ -71,6 +82,9 @@ namespace Tanji.Pages.Injection
 
             UI.STAutoStartChckbx.DataBindings.Add("Checked", this,
                 nameof(AutoStart), false, DataSourceUpdateMode.OnPropertyChanged);
+
+            UI.STHotkeyTxt.DataBindings.Add("Value", this,
+                nameof(Hotkey), true, DataSourceUpdateMode.OnPropertyChanged);
 
             UI.STClearBtn.Click += STClearBtn_Click;
             UI.STRemoveBtn.Click += STRemoveBtn_Click;
@@ -95,6 +109,7 @@ namespace Tanji.Pages.Injection
                 UI.STSchedulerVw.SelectedCycles = Cycles;
                 UI.STSchedulerVw.SelectedInterval = Interval;
                 UI.STSchedulerVw.SelectedDestination = Destination;
+                UI.STSchedulerVw.SelectedHotkey = Hotkey;
                 UI.STSchedulerVw.SelectedPacket = GetPacket().ToString();
             }
         }
@@ -109,7 +124,7 @@ namespace Tanji.Pages.Injection
             if (!Parent.IsInjectionAuthorized(packet)) return;
 
             packet.Destination = Destination;
-            UI.STSchedulerVw.AddSchedule(packet, Interval, Cycles, AutoStart);
+            UI.STSchedulerVw.AddSchedule(packet, Interval, Cycles, Hotkey, AutoStart);
         }
 
         private void STSchedulerVw_ItemChecked(object sender, ItemCheckedEventArgs e)

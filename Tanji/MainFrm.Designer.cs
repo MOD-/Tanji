@@ -114,6 +114,7 @@
             this.STDestinationCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STIntervalCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STCyclesCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
+            this.STHotkeyCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.STStatusCol = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.PrimitiveTab = new System.Windows.Forms.TabPage();
             this.PTPacketInfoLbl = new System.Windows.Forms.Label();
@@ -163,6 +164,8 @@
             this.TanjiTabs = new Sulakore.Components.SKoreTabControl();
             this.CustomClientDlg = new System.Windows.Forms.OpenFileDialog();
             this.InstallModuleDlg = new System.Windows.Forms.OpenFileDialog();
+            this.STHotkeyLbl = new System.Windows.Forms.Label();
+            this.STHotkeyTxt = new Sulakore.Components.SKoreKeyBox();
             this.TanjiStrip.SuspendLayout();
             this.AboutTab.SuspendLayout();
             this.ModulesTab.SuspendLayout();
@@ -918,6 +921,8 @@
             // 
             // SchedulerTab
             // 
+            this.SchedulerTab.Controls.Add(this.STHotkeyTxt);
+            this.SchedulerTab.Controls.Add(this.STHotkeyLbl);
             this.SchedulerTab.Controls.Add(this.STUpdateBtn);
             this.SchedulerTab.Controls.Add(this.STRemoveBtn);
             this.SchedulerTab.Controls.Add(this.STAutoStartChckbx);
@@ -977,7 +982,7 @@
             // STDestinationLbl
             // 
             this.STDestinationLbl.AutoSize = true;
-            this.STDestinationLbl.Location = new System.Drawing.Point(191, 204);
+            this.STDestinationLbl.Location = new System.Drawing.Point(173, 204);
             this.STDestinationLbl.Name = "STDestinationLbl";
             this.STDestinationLbl.Size = new System.Drawing.Size(60, 13);
             this.STDestinationLbl.TabIndex = 48;
@@ -986,7 +991,7 @@
             // STCyclesLbl
             // 
             this.STCyclesLbl.AutoSize = true;
-            this.STCyclesLbl.Location = new System.Drawing.Point(329, 204);
+            this.STCyclesLbl.Location = new System.Drawing.Point(306, 204);
             this.STCyclesLbl.Name = "STCyclesLbl";
             this.STCyclesLbl.Size = new System.Drawing.Size(38, 13);
             this.STCyclesLbl.TabIndex = 60;
@@ -994,21 +999,21 @@
             // 
             // STCyclesTxt
             // 
-            this.STCyclesTxt.Location = new System.Drawing.Point(332, 220);
+            this.STCyclesTxt.Location = new System.Drawing.Point(309, 220);
             this.STCyclesTxt.Maximum = new decimal(new int[] {
             65535,
             0,
             0,
             0});
             this.STCyclesTxt.Name = "STCyclesTxt";
-            this.STCyclesTxt.Size = new System.Drawing.Size(62, 20);
+            this.STCyclesTxt.Size = new System.Drawing.Size(35, 20);
             this.STCyclesTxt.TabIndex = 59;
             this.STCyclesTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
             // STIntervalLbl
             // 
             this.STIntervalLbl.AutoSize = true;
-            this.STIntervalLbl.Location = new System.Drawing.Point(261, 204);
+            this.STIntervalLbl.Location = new System.Drawing.Point(239, 204);
             this.STIntervalLbl.Name = "STIntervalLbl";
             this.STIntervalLbl.Size = new System.Drawing.Size(61, 13);
             this.STIntervalLbl.TabIndex = 50;
@@ -1036,7 +1041,7 @@
             // 
             // STIntervalTxt
             // 
-            this.STIntervalTxt.Location = new System.Drawing.Point(264, 220);
+            this.STIntervalTxt.Location = new System.Drawing.Point(242, 221);
             this.STIntervalTxt.Maximum = new decimal(new int[] {
             65535,
             0,
@@ -1048,7 +1053,7 @@
             0,
             0});
             this.STIntervalTxt.Name = "STIntervalTxt";
-            this.STIntervalTxt.Size = new System.Drawing.Size(62, 20);
+            this.STIntervalTxt.Size = new System.Drawing.Size(58, 20);
             this.STIntervalTxt.TabIndex = 49;
             this.STIntervalTxt.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.STIntervalTxt.Value = new decimal(new int[] {
@@ -1061,9 +1066,9 @@
             // 
             this.STDestinationTxt.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.STDestinationTxt.FormattingEnabled = true;
-            this.STDestinationTxt.Location = new System.Drawing.Point(194, 219);
+            this.STDestinationTxt.Location = new System.Drawing.Point(176, 220);
             this.STDestinationTxt.Name = "STDestinationTxt";
-            this.STDestinationTxt.Size = new System.Drawing.Size(64, 21);
+            this.STDestinationTxt.Size = new System.Drawing.Size(57, 21);
             this.STDestinationTxt.TabIndex = 47;
             // 
             // STPacketLbl
@@ -1080,7 +1085,7 @@
             this.STPacketTxt.Location = new System.Drawing.Point(3, 220);
             this.STPacketTxt.MaxLength = 2147483647;
             this.STPacketTxt.Name = "STPacketTxt";
-            this.STPacketTxt.Size = new System.Drawing.Size(185, 20);
+            this.STPacketTxt.Size = new System.Drawing.Size(167, 20);
             this.STPacketTxt.TabIndex = 45;
             // 
             // STSchedulerVw
@@ -1091,6 +1096,7 @@
             this.STDestinationCol,
             this.STIntervalCol,
             this.STCyclesCol,
+            this.STHotkeyCol,
             this.STStatusCol});
             this.STSchedulerVw.Dock = System.Windows.Forms.DockStyle.Top;
             this.STSchedulerVw.FullRowSelect = true;
@@ -1102,6 +1108,7 @@
             this.STSchedulerVw.Name = "STSchedulerVw";
             this.STSchedulerVw.SelectedCycles = -1;
             this.STSchedulerVw.SelectedDestination = Sulakore.Protocol.HDestination.Client;
+            this.STSchedulerVw.SelectedHotkey = null;
             this.STSchedulerVw.SelectedInterval = -1;
             this.STSchedulerVw.SelectedPacket = null;
             this.STSchedulerVw.ShowItemToolTips = true;
@@ -1113,7 +1120,7 @@
             // STPacketCol
             // 
             this.STPacketCol.Text = "Packet";
-            this.STPacketCol.Width = 155;
+            this.STPacketCol.Width = 109;
             // 
             // STDestinationCol
             // 
@@ -1129,6 +1136,11 @@
             // 
             this.STCyclesCol.Text = "Cycles";
             this.STCyclesCol.Width = 45;
+            // 
+            // STHotkeyCol
+            // 
+            this.STHotkeyCol.Text = "Hotkey";
+            this.STHotkeyCol.Width = 46;
             // 
             // STStatusCol
             // 
@@ -1635,6 +1647,22 @@
     "utable (*.exe)|*.exe";
             this.InstallModuleDlg.Title = "Tanji ~ Install Module";
             // 
+            // STHotkeyLbl
+            // 
+            this.STHotkeyLbl.AutoSize = true;
+            this.STHotkeyLbl.Location = new System.Drawing.Point(350, 204);
+            this.STHotkeyLbl.Name = "STHotkeyLbl";
+            this.STHotkeyLbl.Size = new System.Drawing.Size(41, 13);
+            this.STHotkeyLbl.TabIndex = 63;
+            this.STHotkeyLbl.Text = "Hotkey";
+            // 
+            // STHotkeyTxt
+            // 
+            this.STHotkeyTxt.Location = new System.Drawing.Point(353, 220);
+            this.STHotkeyTxt.Name = "STHotkeyTxt";
+            this.STHotkeyTxt.Size = new System.Drawing.Size(41, 20);
+            this.STHotkeyTxt.TabIndex = 64;
+            // 
             // MainFrm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -1750,6 +1778,7 @@
         private System.Windows.Forms.ColumnHeader STDestinationCol;
         private System.Windows.Forms.ColumnHeader STIntervalCol;
         private System.Windows.Forms.ColumnHeader STCyclesCol;
+        private System.Windows.Forms.ColumnHeader STHotkeyCol;
         private System.Windows.Forms.ColumnHeader STStatusCol;
         internal System.Windows.Forms.TabPage PrimitiveTab;
         internal System.Windows.Forms.Label PTPacketInfoLbl;
@@ -1820,5 +1849,7 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.Label AboutTxt;
         internal Sulakore.Components.SKoreButton DonateBtn;
+        internal Sulakore.Components.SKoreKeyBox STHotkeyTxt;
+        private System.Windows.Forms.Label STHotkeyLbl;
     }
 }
