@@ -26,7 +26,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>1.4.0.0</AssemblyVersion>
+    <AssemblyVersion>1.4.80.0</AssemblyVersion>
     <TargetFrameworkProfile />
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
     <AssemblyInfoFilePath>
@@ -117,6 +117,8 @@
     <Compile Include="Components\TanjiForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Utilities\Event Args\KeyPressedEventArgs.cs" />
+    <Compile Include="Utilities\Internals\NativeMethods.cs" />
     <Compile Include="Manipulators\IReceiver.cs" />
     <Compile Include="MainFrm.cs">
       <SubType>Form</SubType>
@@ -147,6 +149,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Utilities\KeyboardHook.cs" />
     <EmbeddedResource Include="Applications\Dialogs\FindDialog.resx">
       <DependentUpon>FindDialog.cs</DependentUpon>
     </EmbeddedResource>
@@ -221,6 +224,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\Avatar.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Pages\Toolbox\Handlers\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
