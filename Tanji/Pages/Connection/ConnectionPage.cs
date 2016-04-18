@@ -47,6 +47,13 @@ namespace Tanji.Pages.Connection
             get { return _proxyPort; }
             set
             {
+                if (value == 8055)
+                {
+                    // Reserved for remote module.
+                    int difference = (value - _proxyPort);
+                    value = (ushort)(8055 + difference);
+                }
+
                 _proxyPort = value;
                 RaiseOnPropertyChanged(nameof(ProxyPort));
             }
