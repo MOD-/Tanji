@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using System.Threading.Tasks;
 
 using Tangine.GitHub;
 using System.Diagnostics;
