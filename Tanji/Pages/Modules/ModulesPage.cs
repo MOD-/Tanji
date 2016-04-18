@@ -28,12 +28,17 @@ namespace Tanji.Pages.Modules
         private bool _suppressUIUpdating;
 
         private readonly Dictionary<string, bool> _isValidUrl;
-        private readonly Dictionary<string, Bitmap> _avatarCache;
-        private readonly Dictionary<HHotel, Dictionary<string, HProfile>> _profileCache;
         private readonly Action<ModuleItem, DataInterceptedEventArgs, Exception> _displayModuleException;
 
+        public bool IsReceiving
+        {
+            get
+            {
+                return (Contractor.GetInitializedCount() > 0 ||
+                    Contractor.RemoteModule != null); ;
+            }
+        }
         public ModulesManager Contractor { get; }
-        public bool IsReceiving => (Contractor.GetInitializedCount() > 0);
 
         public ModuleItem SelectedModuleItem
         {
@@ -56,9 +61,7 @@ namespace Tanji.Pages.Modules
             : base(ui, tab)
         {
             _isValidUrl = new Dictionary<string, bool>();
-            _avatarCache = new Dictionary<string, Bitmap>();
             _displayModuleException = DisplayModuleException;
-            _profileCache = new Dictionary<HHotel, Dictionary<string, HProfile>>();
 
             Contractor = new ModulesManager(UI);
             Contractor.OnModuleAction = OnModuleAction;
@@ -110,11 +113,11 @@ namespace Tanji.Pages.Modules
             UI.MTHabboNameTxt.Text = author.HabboName;
             UI.MTHotelTxt.Text = ("Habbo." + author.Hotel.ToDomain());
 
-            Bitmap avatar = await GetAvatarAsync(author);
+            Bitmap avatar = await UI.GetAvatarAsync(
+                author.HabboName, author.Hotel);
+
             if (author == SelectedAuthor)
-            {
                 UI.MTAuthorPctbx.Image = avatar;
-            }
         }
 
         private void MTModulesVw_ItemActivate(object sender, EventArgs e)
@@ -260,41 +263,6 @@ namespace Tanji.Pages.Modules
             }
         }
 
-        public async Task<Bitmap> GetAvatarAsync(AuthorAttribute authorAtt)
-        {
-            HProfile profile = await GetProfileAsync(
-                authorAtt).ConfigureAwait(false);
-
-            if (profile == null)
-                return Resources.Avatar;
-
-            if (_avatarCache.ContainsKey(profile.User.FigureId))
-                return _avatarCache[profile.User.FigureId];
-
-            Bitmap avatar = await SKore.GetAvatarAsync(
-                profile.User.FigureId, HSize.Medium).ConfigureAwait(false);
-
-            _avatarCache[profile.User.FigureId] = avatar;
-            return avatar;
-        }
-        public async Task<HProfile> GetProfileAsync(AuthorAttribute authorAtt)
-        {
-            if (!_profileCache.ContainsKey(authorAtt.Hotel))
-                _profileCache[authorAtt.Hotel] = new Dictionary<string, HProfile>();
-
-            if (_profileCache[authorAtt.Hotel]
-                .ContainsKey(authorAtt.HabboName))
-            {
-                return _profileCache[authorAtt.Hotel][authorAtt.HabboName];
-            }
-
-            HProfile profile = await SKore.GetProfileAsync(
-                authorAtt.HabboName, authorAtt.Hotel).ConfigureAwait(false);
-
-            _profileCache[authorAtt.Hotel][authorAtt.HabboName] = profile;
-            return profile;
-        }
-
         public void Halt() => DisposeModules();
         public void HandleOutgoing(DataInterceptedEventArgs e) => HandleData(e);
         public void HandleIncoming(DataInterceptedEventArgs e) => HandleData(e);
@@ -303,6 +271,12 @@ namespace Tanji.Pages.Modules
         {
             bool possiblyModified = false;
             ModuleItem[] moduleItems = Contractor.GetModuleItems();
+
+            if (Contractor.RemoteModule != null)
+            {
+                Contractor.RemoteModule
+                    .SendAsync(1, game.Location);
+            }
 
             foreach (ModuleItem moduleItem in moduleItems)
             {
@@ -318,6 +292,12 @@ namespace Tanji.Pages.Modules
         {
             bool possiblyModified = false;
             ModuleItem[] moduleItems = Contractor.GetModuleItems();
+
+            if (Contractor.RemoteModule != null)
+            {
+                Contractor.RemoteModule
+                    .SendAsync(2, gameData.Source);
+            }
 
             foreach (ModuleItem moduleItem in moduleItems)
             {
@@ -419,6 +399,34 @@ namespace Tanji.Pages.Modules
         {
             ModuleItem[] moduleItems = Contractor.GetModuleItems();
             bool isOutgoing = (e.Packet.Destination == HDestination.Server);
+
+            if (Contractor.RemoteModule != null)
+            {
+                string stamp = DateTime.Now.Ticks.ToString();
+                stamp += isOutgoing;
+                stamp += e.Step;
+
+                Contractor.DataAwaiters[stamp] =
+                    new TaskCompletionSource<DataInterceptedEventArgs>();
+
+                var interceptedData = new HMessage((ushort)(e.Packet.Destination + 4));
+                interceptedData.WriteString(stamp);
+                interceptedData.WriteInteger(e.Step);
+                interceptedData.WriteBoolean(e.IsBlocked);
+                interceptedData.WriteInteger(e.Packet.Length + 4);
+                interceptedData.WriteBytes(e.Packet.ToBytes());
+                Contractor.RemoteModule.SendAsync(interceptedData);
+
+                DataInterceptedEventArgs args = Contractor
+                    .DataAwaiters[stamp].Task.Result;
+
+                if (args != null)
+                {
+                    e.Packet = args.Packet;
+                    e.IsBlocked = args.IsBlocked;
+                }
+                Contractor.DataAwaiters.Remove(stamp);
+            }
 
             foreach (ModuleItem moduleItem in moduleItems)
             {
