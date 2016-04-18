@@ -1,8 +1,11 @@
 ﻿using System;
+using System.Drawing;
 using System.Diagnostics;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 using System.Collections.Generic;
 
+using Tanji.Properties;
 using Tanji.Components;
 using Tanji.Pages.About;
 using Tanji.Applications;
@@ -12,6 +15,7 @@ using Tanji.Pages.Toolbox;
 using Tanji.Pages.Injection;
 using Tanji.Pages.Connection;
 
+using Sulakore;
 using Sulakore.Habbo;
 using Sulakore.Protocol;
 using Sulakore.Habbo.Web;
@@ -28,6 +32,8 @@ namespace Tanji
         private readonly List<IHaltable> _haltables;
         private readonly List<IReceiver> _receivers;
         private readonly EventHandler _connected, _disconnected;
+        private readonly Dictionary<string, Bitmap> _avatarCache;
+        private readonly Dictionary<HHotel, Dictionary<string, HProfile>> _profileCache;
 
         public HGame Game { get; set; }
         public HHotel Hotel { get; set; }
@@ -50,6 +56,8 @@ namespace Tanji
             _disconnected = Disconnected;
             _haltables = new List<IHaltable>();
             _receivers = new List<IReceiver>();
+            _avatarCache = new Dictionary<string, Bitmap>();
+            _profileCache = new Dictionary<HHotel, Dictionary<string, HProfile>>();
 
             GameData = new HGameData();
             Connection = new HConnection();
@@ -95,6 +103,38 @@ namespace Tanji
         {
             if (AboutPg.TanjiRepo.LatestRelease != null)
                 Process.Start(AboutPg.TanjiRepo.LatestRelease.HtmlUrl);
+        }
+
+        public async Task<Bitmap> GetAvatarAsync(string name, HHotel hotel)
+        {
+            HProfile profile = await GetProfileAsync(
+                name, hotel).ConfigureAwait(false);
+
+            if (profile == null)
+                return Resources.Avatar;
+
+            if (!_avatarCache.ContainsKey(profile.User.FigureId))
+            {
+                Bitmap avatar = await SKore.GetAvatarAsync(
+                    profile.User.FigureId, HSize.Medium).ConfigureAwait(false);
+
+                _avatarCache[profile.User.FigureId] = avatar;
+            }
+            return _avatarCache[profile.User.FigureId];
+        }
+        public async Task<HProfile> GetProfileAsync(string name, HHotel hotel)
+        {
+            if (!_profileCache.ContainsKey(hotel))
+                _profileCache[hotel] = new Dictionary<string, HProfile>();
+
+            if (!_profileCache[hotel].ContainsKey(name))
+            {
+                HProfile profile = await SKore.GetProfileAsync(
+                    name, hotel).ConfigureAwait(false);
+
+                _profileCache[hotel][name] = profile;
+            }
+            return _profileCache[hotel][name];
         }
 
         private void Halt()
