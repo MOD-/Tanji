@@ -6,8 +6,8 @@ As of [Tanji v1.4](https://github.com/ArachisH/Tanji/releases/tag/v1.4.0.0), ret
 
 ## Capabilities
 * Outgoing/Incoming data logging.
-* Inject data to the client/server.
-* Block/Replace data being received, or sent.
+* Inject data to the client, or server.
+* Block/Replace data being sent, or recieved.
 
 ## Initial Interface
 ![TanjiUI](http://i.imgur.com/3KkuDcH.png)
