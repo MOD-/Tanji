@@ -2,12 +2,14 @@
 using System.Windows.Forms;
 using System.Threading.Tasks;
 
+using Tanji.Manipulators;
+
 using Sulakore.Protocol;
 using Sulakore.Communication;
 
 namespace Tanji.Pages.Injection
 {
-    public class InjectionPage : TanjiPage
+    public class InjectionPage : TanjiPage, IRetrievable
     {
         private const string INJECTION_UNAUTHORIZED =
             "Injection functionality is currently disabled, consider connecting before attempting to utilize any of these services.";
@@ -23,6 +25,9 @@ namespace Tanji.Pages.Injection
         public InjectionPage(MainFrm ui, TabPage tab)
             : base(ui, tab)
         {
+            UI.AddQuickAction(Keys.F1, UI.ITSendToClientBtn.PerformClick);
+            UI.AddQuickAction(Keys.F2, UI.ITSendToServerBtn.PerformClick);
+
             UI.ITSendToClientBtn.Click += ITSendToClientBtn_Click;
             UI.ITSendToServerBtn.Click += ITSendToServerBtn_Click;
 
@@ -34,24 +39,12 @@ namespace Tanji.Pages.Injection
 
         private async void ITSendToClientBtn_Click(object sender, EventArgs e)
         {
-            HMessage packet = GetPacket();
-            if (!IsInjectionAuthorized(packet)) return;
-
-            AddAutocompleteValue(packet);
-            packet.Destination = HDestination.Client;
-
-            await SendAsync(packet)
+            await InjectInputAsync(HDestination.Client)
                 .ConfigureAwait(false);
         }
         private async void ITSendToServerBtn_Click(object sender, EventArgs e)
         {
-            HMessage packet = GetPacket();
-            if (!IsInjectionAuthorized(packet)) return;
-
-            AddAutocompleteValue(packet);
-            packet.Destination = HDestination.Server;
-
-            await SendAsync(packet)
+            await InjectInputAsync(HDestination.Server)
                 .ConfigureAwait(false);
         }
 
@@ -61,8 +54,7 @@ namespace Tanji.Pages.Injection
         }
         public async Task<int> SendAsync(HMessage packet)
         {
-            if (packet.IsCorrupted)
-                return 0;
+            if (packet.IsCorrupted) return 0;
 
             bool toServer =
                 (packet.Destination == HDestination.Server);
@@ -75,23 +67,35 @@ namespace Tanji.Pages.Injection
 
             return sent;
         }
-
-        public bool IsInjectionAuthorized()
+        public async Task<int> InjectInputAsync(HDestination destination)
         {
-            if (UI.Connection.IsConnected) return true;
-            else
-            {
-                MessageBox.Show(INJECTION_UNAUTHORIZED,
-                    "Tanji ~ Alert!", MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            HMessage packet = GetPacket();
+            if (!AuthorizeInjection(packet)) return 0;
+            packet.Destination = destination;
 
-                return false;
-            }
+            int length = await SendAsync(
+                packet).ConfigureAwait(false);
+
+            if (length == (packet.Length + 4))
+                AddAutocomplete(packet.ToString());
+
+            return length;
         }
-        public bool IsInjectionAuthorized(HMessage packet)
+
+        public bool AuthorizeInjection()
         {
-            if (!IsInjectionAuthorized()) return false;
-            if (!packet.IsCorrupted) return true;
-            else
+            bool isConnected = UI.Connection.IsConnected;
+            if (!isConnected)
+            {
+                MessageBox.Show(INJECTION_UNAUTHORIZED, "Tanji ~ Alert!",
+                    MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
+            }
+            return isConnected;
+        }
+        public bool ValidatePacket(HMessage packet)
+        {
+            bool isCorrupted = packet.IsCorrupted;
+            if (isCorrupted)
             {
                 byte[] data = packet.ToBytes();
                 string alertMsg = PACKET_LENGTH_INVALID;
@@ -115,16 +119,19 @@ namespace Tanji.Pages.Injection
                 }
                 MessageBox.Show(alertMsg, "Tanji ~ Alert!",
                     MessageBoxButtons.OK, MessageBoxIcon.Asterisk);
-
-                return false;
             }
+            return !isCorrupted;
+        }
+        public bool AuthorizeInjection(HMessage packet)
+        {
+            return (AuthorizeInjection() &&
+                ValidatePacket(packet));
         }
 
-        private void AddAutocompleteValue(object value)
+        private void AddAutocomplete(string value)
         {
-            string sValue = value.ToString();
-            if (!UI.ITPacketTxt.Items.Contains(sValue))
-                UI.ITPacketTxt.Items.Add(sValue);
+            if (!UI.ITPacketTxt.Items.Contains(value))
+                UI.ITPacketTxt.Items.Add(value);
         }
     }
 }
