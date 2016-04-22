@@ -10,14 +10,14 @@ Powered by [Sulakore](https://github.com/ArachisH/Sulakore), [FlashInspect](http
 * Block/Replace data being sent, or recieved.
 * Create extensions that can extend the functionality of the application.
 
-## Initial Interface
-![TanjiUI](http://i.imgur.com/i8vao3r.png)
-
 ## Tutorials
 * [Connection](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Connection.md)
 * [Injection](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Injection.md)
 * [Toolbox](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Toolbox.md)
 * [Modules](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Modules.md)
+
+## Initial Interface
+![TanjiUI](http://i.imgur.com/i8vao3r.png)
 
 -
 Want to keep this project alive, and healthy?
