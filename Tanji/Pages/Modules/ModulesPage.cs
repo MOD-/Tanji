@@ -67,6 +67,7 @@ namespace Tanji.Pages.Modules
             Contractor.OnModuleAction = OnModuleAction;
             LoadModules();
 
+            Tab.Paint += Tab_Paint;
             Tab.DragDrop += Tab_DragDrop;
             Tab.DragEnter += Tab_DragEnter;
 
@@ -104,14 +105,14 @@ namespace Tanji.Pages.Modules
 
             if (string.IsNullOrWhiteSpace(author?.HabboName))
             {
-                UI.MTHotelTxt.Text = string.Empty;
+                UI.MTHabboNameLbl.Text = "Habbo Name";
                 UI.MTHabboNameTxt.Text = string.Empty;
                 UI.MTAuthorPctbx.Image = Resources.Avatar;
                 return;
             }
 
             UI.MTHabboNameTxt.Text = author.HabboName;
-            UI.MTHotelTxt.Text = ("Habbo." + author.Hotel.ToDomain());
+            UI.MTHabboNameLbl.Text = $"Habbo Name({author.Hotel})";
 
             Bitmap avatar = await UI.GetAvatarAsync(
                 author.HabboName, author.Hotel);
@@ -212,6 +213,11 @@ namespace Tanji.Pages.Modules
             }
         }
 
+        private void Tab_Paint(object sender, PaintEventArgs e)
+        {
+            using (var skin = new Pen(Color.FromArgb(243, 63, 63)))
+                e.Graphics.DrawLine(skin, 77, 280, 469, 280);
+        }
         private void Tab_DragDrop(object sender, DragEventArgs e)
         {
             Contractor.InstallModule(
