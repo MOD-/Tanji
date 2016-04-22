@@ -1,4 +1,4 @@
 # Connection
 
 ## Interface
-![ConnectionUI](http://i.imgur.com/si7SFKR.png)
+![ConnectionUI](http://i.imgur.com/xW346pu.png)
