@@ -1365,7 +1365,7 @@
             this.sKoreLabelBox1.Size = new System.Drawing.Size(127, 20);
             this.sKoreLabelBox1.TabIndex = 16;
             this.sKoreLabelBox1.Text = "Install Port";
-            this.sKoreLabelBox1.Value = "8085";
+            this.sKoreLabelBox1.Value = "8055";
             this.sKoreLabelBox1.ValueAlign = System.Windows.Forms.HorizontalAlignment.Center;
             this.sKoreLabelBox1.ValueReadOnly = true;
             // 
