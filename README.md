@@ -1,6 +1,6 @@
 # Tanji
 Application for intercepting, and manipulating Outgoing/Incoming data relative to the Habbo Hotel client.
-As of [Tanji v1.4](https://github.com/ArachisH/Tanji/releases/tag/v1.4.0.0), retro hotel support has been completely removed.
+Powered by [Sulakore](https://github.com/ArachisH/Sulakore), [FlashInspect](https://github.com/ArachisH/FlashInspect), and [Eavesdrop](https://github.com/ArachisH/Eavesdrop).
 ## Requirements
 * [.NET Framework 4.5](https://www.microsoft.com/en-us/download/details.aspx?id=30653)+
 
