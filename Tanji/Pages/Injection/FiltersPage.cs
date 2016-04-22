@@ -15,7 +15,7 @@ namespace Tanji.Pages.Injection
         Replace = 1
     }
 
-    public class FiltersPage : TanjiSubPage<InjectionPage>, IReceiver, IHaltable
+    public class FiltersPage : TanjiSubPage<InjectionPage>, IReceiver, IHaltable, IRetrievable, IRefreshable
     {
         private bool _suppressUIUpdating;
 
@@ -84,6 +84,8 @@ namespace Tanji.Pages.Injection
             UI.FTDestinationTxt.DataBindings.Add("SelectedItem", this,
                 nameof(Destination), false, DataSourceUpdateMode.OnPropertyChanged);
 
+            UI.FTActionTxt.SelectedValueChanged += FTActionTxt_SelectedValueChanged;
+
             UI.FTCreateBtn.Click += FTCreateBtn_Click;
             UI.FTRemoveBtn.Click += FTRemoveBtn_Click;
 
@@ -93,14 +95,14 @@ namespace Tanji.Pages.Injection
 
         private void FTCreateBtn_Click(object sender, EventArgs e)
         {
-            if (!IsFilterAuthorized(Header, Destination, Action))
+            if (!AuthorizeFilter(Header, Destination, Action))
                 return;
 
             HMessage packet = null;
             if (Action == FilterAction.Replace)
             {
                 packet = GetPacket();
-                if (!Parent.IsInjectionAuthorized(packet)) return;
+                if (!Parent.ValidatePacket(packet)) return;
                 _replacements[Destination][Header] = packet;
             }
             else _blocked[Destination].Add(Header);
@@ -112,7 +114,7 @@ namespace Tanji.Pages.Injection
             item.Checked = true;
             item.Tag = filter;
 
-            UpdateUI();
+            Refresh();
         }
         private void FTRemoveBtn_Click(object sender, EventArgs e)
         {
@@ -133,7 +135,13 @@ namespace Tanji.Pages.Injection
                 _disabled[destination].Remove(header);
 
             UI.FTFiltersVw.RemoveSelectedItem();
-            UpdateUI();
+            Refresh();
+        }
+
+        private void FTActionTxt_SelectedValueChanged(object sender, EventArgs e)
+        {
+            UI.FTReplacementTxt.ValueReadOnly =
+                ((FilterAction)UI.FTActionTxt.SelectedValue == FilterAction.Block);
         }
 
         private void FTFiltersVw_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -150,7 +158,7 @@ namespace Tanji.Pages.Injection
             else if (!disabled.Contains(filter.Item2))
                 disabled.Add(filter.Item2);
 
-            UpdateUI();
+            Refresh();
         }
         private void FTFiltersVw_ItemSelectionStateChanged(object sender, EventArgs e)
         {
@@ -169,15 +177,23 @@ namespace Tanji.Pages.Injection
             finally
             {
                 _suppressUIUpdating = false;
-                UpdateUI();
+                Refresh();
+            }
+        }
+        public void Refresh()
+        {
+            if (!_suppressUIUpdating)
+            {
+                UI.FiltersTxt.Text =
+                    $"Filters: {UI.FTFiltersVw.CheckedItems.Count}/{UI.FTFiltersVw.Items.Count}";
             }
         }
         public HMessage GetPacket()
         {
             return new HMessage(
-                UI.FTReplacementTxt.Text, Destination);
+                UI.FTReplacementTxt.Value, Destination);
         }
-        public bool IsFilterAuthorized(ushort key, HDestination destination, FilterAction action)
+        public bool AuthorizeFilter(ushort key, HDestination destination, FilterAction action)
         {
             return !_blocked[destination].Contains(key) &&
                 !_replacements[destination].ContainsKey(key);
@@ -186,14 +202,6 @@ namespace Tanji.Pages.Injection
         public void HandleOutgoing(DataInterceptedEventArgs e) => HandleFilter(e);
         public void HandleIncoming(DataInterceptedEventArgs e) => HandleFilter(e);
 
-        private void UpdateUI()
-        {
-            if (!_suppressUIUpdating)
-            {
-                UI.FiltersTxt.Text =
-                    $"Filters: {UI.FTFiltersVw.CheckedItems.Count}/{UI.FTFiltersVw.Items.Count}";
-            }
-        }
         private void HandleFilter(DataInterceptedEventArgs e)
         {
             HMessage packet = e.Packet;
@@ -211,7 +219,7 @@ namespace Tanji.Pages.Injection
 
         protected override void OnTabSelecting(TabControlCancelEventArgs e)
         {
-            UI.InjectionMenu.InputBox = UI.FTReplacementTxt;
+            UI.InjectionMenu.InputBox = UI.FTReplacementTxt.Box;
             base.OnTabSelecting(e);
         }
     }
