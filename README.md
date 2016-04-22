@@ -13,6 +13,10 @@ Powered by [Sulakore](https://github.com/ArachisH/Sulakore), [FlashInspect](http
 ## Tutorials
 * [Connection](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Connection.md)
 * [Injection](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Injection.md)
+ * [Constructer](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Injection.md#constructer)
+ * [Scheduler](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Injection.md#scheduler)
+ * [Primitive](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Injection.md#primitive)
+ * [Filters](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Injection.md#filters)
 * [Toolbox](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Toolbox.md)
 * [Modules](https://github.com/ArachisH/Tanji/blob/master/Tutorials/Modules.md)
 
