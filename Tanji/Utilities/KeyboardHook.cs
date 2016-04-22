@@ -6,113 +6,134 @@ namespace Tanji.Utilities
 {
     public class KeyboardHook : NativeWindow, IDisposable
     {
-        private readonly Dictionary<uint, Dictionary<Keys, int>> _registeredKeys;
+        private const int WM_HOTKEY = 0x312;
 
-        private const int WM_HOTKEY = 0x0312;
+        private readonly Keys[] _keyModifiers;
+        private readonly Modifiers[] _modifiers;
+        private readonly Dictionary<Modifiers, Dictionary<Keys, int>> _registeredKeys;
 
-        public event EventHandler<KeyPressedEventArgs> KeyPressed;
-        public virtual void OnKeyPressed(KeyPressedEventArgs e)
+        public event EventHandler<KeyEventArgs> HotkeyActivated;
+        protected virtual void OnKeyPressed(KeyEventArgs e)
         {
-            KeyPressed?.Invoke(this, e);
+            HotkeyActivated?.Invoke(this, e);
         }
 
         public bool IsDisposed { get; private set; }
 
         public KeyboardHook()
         {
-            _registeredKeys = new Dictionary<uint, Dictionary<Keys, int>>();
+            _keyModifiers = new Keys[3] { Keys.Alt, Keys.Shift, Keys.Control };
+            _modifiers = new Modifiers[3] { Modifiers.Alt, Modifiers.Shift, Modifiers.Control };
+            _registeredKeys = new Dictionary<Modifiers, Dictionary<Keys, int>>();
 
             CreateHandle(new CreateParams());
         }
 
-        public void RegisterHotkey(Keys hotkey)
+        public void RegisterHotkey(Keys keyData)
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(nameof(Handle));
-
             lock (_registeredKeys)
             {
-                uint modifier = GetModifier(ref hotkey);
+                Keys keyCode = Keys.None;
+                Modifiers modifiers = GetModifiers(keyData, out keyCode);
 
-                if (!_registeredKeys.ContainsKey(modifier))
-                    _registeredKeys[modifier] = new Dictionary<Keys, int>();
+                if (!_registeredKeys.ContainsKey(modifiers))
+                    _registeredKeys[modifiers] = new Dictionary<Keys, int>();
 
                 var id = (int)DateTime.Now.Ticks;
-                if (!_registeredKeys[modifier].ContainsKey(hotkey))
+                if (!_registeredKeys[modifiers].ContainsKey(keyCode))
                 {
-                    _registeredKeys[modifier][hotkey] = id;
-
+                    _registeredKeys[modifiers][keyCode] = id;
                     NativeMethods.RegisterHotKey(Handle,
-                        id, modifier, (uint)hotkey);
+                        id, (uint)modifiers, (uint)keyCode);
                 }
             }
         }
-        public void UnregisterHotkey(Keys hotkey)
+        public void UnregisterHotkey(Keys keyData)
         {
-            if (IsDisposed)
-                throw new ObjectDisposedException(nameof(Handle));
-
             lock (_registeredKeys)
             {
-                uint modifier = GetModifier(ref hotkey);
-                if (!_registeredKeys.ContainsKey(modifier)) return;
-                if (!_registeredKeys[modifier].ContainsKey(hotkey)) return;
+                Keys keyCode = Keys.None;
+                Modifiers modifiers = GetModifiers(keyData, out keyCode);
+
+                if (!_registeredKeys.ContainsKey(modifiers)) return;
+                if (!_registeredKeys[modifiers].ContainsKey(keyCode)) return;
 
                 NativeMethods.UnregisterHotKey(Handle,
-                    _registeredKeys[modifier][hotkey]);
+                    _registeredKeys[modifiers][keyCode]);
 
-                _registeredKeys[modifier].Remove(hotkey);
+                _registeredKeys[modifiers].Remove(keyCode);
             }
         }
 
-        private Keys GetModifier(uint modifierCode)
+        private Keys GetModifierKeys(Modifiers modifiers)
         {
-            switch (modifierCode)
+            var modifierKeys = Keys.None;
+            foreach (Modifiers modifier in _modifiers)
             {
-                case 1: return Keys.Alt;
-                case 2: return Keys.Control;
-                case 4: return Keys.Shift;
+                if (!modifiers.HasFlag(modifier)) continue;
+                switch (modifier)
+                {
+                    case Modifiers.Alt:
+                    modifierKeys |= Keys.Alt;
+                    break;
 
-                default:
-                throw new ArgumentException("Invalid modifier code: " + modifierCode);
+                    case Modifiers.Shift:
+                    modifierKeys |= Keys.Shift;
+                    break;
+
+                    case Modifiers.Control:
+                    modifierKeys |= Keys.Control;
+                    break;
+
+                    default:
+                    throw new ArgumentException("Invalid Modifier(s): " + modifiers);
+                }
             }
+            return modifierKeys;
         }
-        private uint GetModifier(ref Keys hotkey)
+        private Modifiers GetModifiers(Keys keyData, out Keys keyCode)
         {
-            Keys modifier = (hotkey & Keys.Modifiers);
-            hotkey &= ~modifier;
+            Keys keyModifiers = (keyData & Keys.Modifiers);
+            keyCode = (keyData & ~keyModifiers);
 
-            switch (modifier)
+            var modifiers = Modifiers.None;
+            foreach (Keys modifier in _keyModifiers)
             {
-                case Keys.Alt: return 1;
+                if (!keyModifiers.HasFlag(modifier)) continue;
+                switch (modifier)
+                {
+                    case Keys.Alt:
+                    modifiers |= Modifiers.Alt;
+                    break;
 
-                case Keys.Control:
-                case Keys.ControlKey:
-                case Keys.LControlKey:
-                case Keys.RControlKey: return 2;
+                    case Keys.Shift:
+                    modifiers |= Modifiers.Shift;
+                    break;
 
-                case Keys.Shift:
-                case Keys.ShiftKey:
-                case Keys.LShiftKey:
-                case Keys.RShiftKey: return 4;
+                    case Keys.Control:
+                    modifiers |= Modifiers.Control;
+                    break;
 
-                default:
-                throw new ArgumentException("Invalid modifier key: " + modifier);
+                    default:
+                    throw new ArgumentException("Invalid Modifier(s): " + keyModifiers);
+                }
             }
+            return modifiers;
         }
 
         protected override void WndProc(ref Message m)
         {
-            base.WndProc(ref m);
             if (m.Msg == WM_HOTKEY)
             {
                 var param = (int)m.LParam;
-                var key = (Keys)(param >> 16 & 0xFFFF);
-                var modifierCode = (uint)(param & 0xFFFF);
+                var modifier = (Modifiers)(param & 0xFFFF);
 
-                key |= GetModifier(modifierCode);
-                OnKeyPressed(new KeyPressedEventArgs(key));
+                Keys keyData = (GetModifierKeys(modifier) |
+                    (Keys)((param >> 16) & 0xFFFF));
+
+                OnKeyPressed(new KeyEventArgs(keyData));
             }
+            base.WndProc(ref m);
         }
 
         public void Dispose()
@@ -132,11 +153,19 @@ namespace Tanji.Utilities
                             Handle, identifier);
                     }
                 }
-
                 _registeredKeys.Clear();
                 DestroyHandle();
             }
             IsDisposed = true;
+        }
+
+        [Flags]
+        private enum Modifiers : uint
+        {
+            None = 0x0,
+            Alt = 0x1,
+            Control = 0x2,
+            Shift = 0x4
         }
     }
 }
