@@ -41,7 +41,9 @@ namespace Tanji.Pages.About
                 if (LatestVersion > LocalVersion &&
                     !latestRelease.IsPrerelease)
                 {
-                    UI.TanjiVersionTxt.Text = "Update Found!";
+                    UI.TanjiInfoTxt.Spring = true;
+                    UI.TanjiInfoTxt.Text = "Source Code";
+                    UI.TanjiVersionTxt.Text = "Update Available!";
                 }
             }
         }

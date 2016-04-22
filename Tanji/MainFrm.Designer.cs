@@ -31,8 +31,8 @@
             this.components = new System.ComponentModel.Container();
             this.TanjiStrip = new System.Windows.Forms.StatusStrip();
             this.TanjiVersionTxt = new System.Windows.Forms.ToolStripStatusLabel();
-            this.SchedulesTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.FiltersTxt = new System.Windows.Forms.ToolStripStatusLabel();
+            this.SchedulesTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.ModulesTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.TanjiDonateTxt = new System.Windows.Forms.ToolStripStatusLabel();
             this.TanjiInfoTxt = new System.Windows.Forms.ToolStripStatusLabel();
@@ -176,10 +176,11 @@
             // 
             this.TanjiStrip.AllowMerge = false;
             this.TanjiStrip.BackColor = System.Drawing.Color.White;
+            this.TanjiStrip.GripMargin = new System.Windows.Forms.Padding(0);
             this.TanjiStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.TanjiVersionTxt,
-            this.SchedulesTxt,
             this.FiltersTxt,
+            this.SchedulesTxt,
             this.ModulesTxt,
             this.TanjiDonateTxt,
             this.TanjiInfoTxt});
@@ -188,11 +189,12 @@
             this.TanjiStrip.Size = new System.Drawing.Size(484, 24);
             this.TanjiStrip.SizingGrip = false;
             this.TanjiStrip.TabIndex = 5;
-            this.TanjiStrip.Text = "TanjiStrip";
             // 
             // TanjiVersionTxt
             // 
+            this.TanjiVersionTxt.ActiveLinkColor = System.Drawing.Color.Firebrick;
             this.TanjiVersionTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.TanjiVersionTxt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.TanjiVersionTxt.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.TanjiVersionTxt.Name = "TanjiVersionTxt";
             this.TanjiVersionTxt.Size = new System.Drawing.Size(50, 19);
@@ -200,44 +202,53 @@
             this.TanjiVersionTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TanjiVersionTxt.Click += new System.EventHandler(this.TanjiVersionTxt_Click);
             // 
-            // SchedulesTxt
-            // 
-            this.SchedulesTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
-            this.SchedulesTxt.Name = "SchedulesTxt";
-            this.SchedulesTxt.Size = new System.Drawing.Size(87, 19);
-            this.SchedulesTxt.Text = "Schedules: 0/0";
-            // 
             // FiltersTxt
             // 
             this.FiltersTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.FiltersTxt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.FiltersTxt.Name = "FiltersTxt";
             this.FiltersTxt.Size = new System.Drawing.Size(65, 19);
             this.FiltersTxt.Text = "Filters: 0/0";
             // 
+            // SchedulesTxt
+            // 
+            this.SchedulesTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.SchedulesTxt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            this.SchedulesTxt.Name = "SchedulesTxt";
+            this.SchedulesTxt.Size = new System.Drawing.Size(87, 19);
+            this.SchedulesTxt.Text = "Schedules: 0/0";
+            // 
             // ModulesTxt
             // 
             this.ModulesTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.ModulesTxt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.ModulesTxt.Name = "ModulesTxt";
             this.ModulesTxt.Size = new System.Drawing.Size(80, 19);
             this.ModulesTxt.Text = "Modules: 0/0";
             // 
             // TanjiDonateTxt
             // 
+            this.TanjiDonateTxt.ActiveLinkColor = System.Drawing.Color.Firebrick;
             this.TanjiDonateTxt.BorderSides = System.Windows.Forms.ToolStripStatusLabelBorderSides.Right;
+            this.TanjiDonateTxt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.TanjiDonateTxt.IsLink = true;
             this.TanjiDonateTxt.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.TanjiDonateTxt.Name = "TanjiDonateTxt";
             this.TanjiDonateTxt.Size = new System.Drawing.Size(49, 19);
             this.TanjiDonateTxt.Text = "Donate";
+            this.TanjiDonateTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TanjiDonateTxt.Click += new System.EventHandler(this.TanjiDonateTxt_Click);
             // 
             // TanjiInfoTxt
             // 
+            this.TanjiInfoTxt.ActiveLinkColor = System.Drawing.Color.Firebrick;
+            this.TanjiInfoTxt.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
             this.TanjiInfoTxt.IsLink = true;
             this.TanjiInfoTxt.LinkColor = System.Drawing.SystemColors.HotTrack;
             this.TanjiInfoTxt.Name = "TanjiInfoTxt";
-            this.TanjiInfoTxt.Size = new System.Drawing.Size(134, 19);
-            this.TanjiInfoTxt.Text = "GitHub - ArachisH/Tanji";
+            this.TanjiInfoTxt.Overflow = System.Windows.Forms.ToolStripItemOverflow.Never;
+            this.TanjiInfoTxt.Size = new System.Drawing.Size(132, 19);
+            this.TanjiInfoTxt.Text = "GitHub | ArachisH/Tanji";
             this.TanjiInfoTxt.VisitedLinkColor = System.Drawing.Color.FromArgb(((int)(((byte)(243)))), ((int)(((byte)(63)))), ((int)(((byte)(63)))));
             this.TanjiInfoTxt.Click += new System.EventHandler(this.TanjiInfoTxt_Click);
             // 
@@ -1604,7 +1615,6 @@
         #endregion
 
         private System.Windows.Forms.StatusStrip TanjiStrip;
-        private System.Windows.Forms.ToolStripStatusLabel TanjiInfoTxt;
         internal System.Windows.Forms.ToolStripStatusLabel ModulesTxt;
         internal System.Windows.Forms.ToolStripStatusLabel SchedulesTxt;
         internal System.Windows.Forms.ToolStripStatusLabel TanjiVersionTxt;
@@ -1725,5 +1735,6 @@
         internal System.Windows.Forms.ToolStripStatusLabel TanjiDonateTxt;
         private Sulakore.Components.SKoreLabelBox sKoreLabelBox1;
         internal System.Windows.Forms.Label MTHabboNameLbl;
+        internal System.Windows.Forms.ToolStripStatusLabel TanjiInfoTxt;
     }
 }
