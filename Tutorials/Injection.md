@@ -19,4 +19,4 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis aliquam mauri
 Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis aliquam mauris, at consequat libero.
 
 ### Interface
-![PrimitiveUI](http://i.imgur.com/IUz1coW.png)
+![PrimitiveUI](http://i.imgur.com/1EZID5b.png)
