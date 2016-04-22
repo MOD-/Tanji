@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
 
+using Tanji.Utilities;
 using Tanji.Properties;
 using Tanji.Components;
 using Tanji.Pages.About;
@@ -31,9 +32,12 @@ namespace Tanji
     {
         private readonly List<IHaltable> _haltables;
         private readonly List<IReceiver> _receivers;
+        private readonly Dictionary<Keys, Action> _actions;
         private readonly EventHandler _connected, _disconnected;
         private readonly Dictionary<string, Bitmap> _avatarCache;
         private readonly Dictionary<HHotel, Dictionary<string, HProfile>> _profileCache;
+
+        public KeyboardHook Hook { get; }
 
         public HGame Game { get; set; }
         public HHotel Hotel { get; set; }
@@ -56,6 +60,7 @@ namespace Tanji
             _disconnected = Disconnected;
             _haltables = new List<IHaltable>();
             _receivers = new List<IReceiver>();
+            _actions = new Dictionary<Keys, Action>();
             _avatarCache = new Dictionary<string, Bitmap>();
             _profileCache = new Dictionary<HHotel, Dictionary<string, HProfile>>();
 
@@ -65,6 +70,9 @@ namespace Tanji
             Connection.Disconnected += Disconnected;
             Connection.DataOutgoing += DataOutgoing;
             Connection.DataIncoming += DataIncoming;
+
+            Hook = new KeyboardHook();
+            Hook.HotkeyActivated += Hook_HotkeyActivated;
 
             ConnectionPg = new ConnectionPage(this, ConnectionTab);
             InjectionPg = new InjectionPage(this, InjectionTab);
@@ -99,12 +107,30 @@ namespace Tanji
         {
             Process.Start("https://GitHub.com/ArachisH/Tanji");
         }
+        private void TanjiDonateTxt_Click(object sender, EventArgs e)
+        {
+            Process.Start("https://www.PayPal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=KKT8YD2Z8K5WU");
+        }
         private void TanjiVersionTxt_Click(object sender, EventArgs e)
         {
             if (AboutPg.TanjiRepo.LatestRelease != null)
                 Process.Start(AboutPg.TanjiRepo.LatestRelease.HtmlUrl);
         }
 
+        private void Hook_HotkeyActivated(object sender, KeyEventArgs e)
+        {
+            if (_actions.ContainsKey(e.KeyData))
+                _actions[e.KeyData]();
+        }
+
+        public void AddQuickAction(Keys keyData, Action action)
+        {
+            if (!_actions.ContainsKey(keyData))
+            {
+                _actions[keyData] = action;
+                Hook.RegisterHotkey(keyData);
+            }
+        }
         public async Task<Bitmap> GetAvatarAsync(string name, HHotel hotel)
         {
             HProfile profile = await GetProfileAsync(
@@ -188,7 +214,6 @@ namespace Tanji
             TopMost = true;
             Text = "Tanji ~ Disconnected";
         }
-
         private void DataOutgoing(object sender, DataInterceptedEventArgs e) => HandleData(e);
         private void DataIncoming(object sender, DataInterceptedEventArgs e) => HandleData(e);
     }
