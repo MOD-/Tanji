@@ -9,6 +9,9 @@ As of [Tanji v1.4](https://github.com/ArachisH/Tanji/releases/tag/v1.4.0.0), ret
 * Inject data to the client/server.
 * Block/Replace data being received, or sent.
 
+## Initial Interface
+![TanjiUI](http://i.imgur.com/3KkuDcH.png)
+
 -
 Want to keep this project alive, and healthy?
 
