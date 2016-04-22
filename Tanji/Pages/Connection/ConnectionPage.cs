@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Text;
 using System.Linq;
+using System.Drawing;
 using System.Windows.Forms;
 using System.Threading.Tasks;
 using System.Collections.Generic;
@@ -35,29 +36,12 @@ namespace Tanji.Pages.Connection
 
     public class ConnectionPage : TanjiPage
     {
+        private const ushort EAVESDROP_PROXY_PORT = 8081;
         private const string EAVESDROP_ROOT_CERTIFICATE_NAME = "EavesdropRoot.cer";
 
         private readonly Action<TanjiState> _setState;
         private readonly DirectoryInfo _modifiedClientsDir;
         private readonly Action<Task> _connectTaskCompleted;
-
-        private ushort _proxyPort = 8081;
-        public ushort ProxyPort
-        {
-            get { return _proxyPort; }
-            set
-            {
-                if (value == 8055)
-                {
-                    // Reserved for remote module.
-                    int difference = (value - _proxyPort);
-                    value = (ushort)(8055 + difference);
-                }
-
-                _proxyPort = value;
-                RaiseOnPropertyChanged(nameof(ProxyPort));
-            }
-        }
 
         private TanjiState _state;
         public TanjiState State
@@ -82,7 +66,7 @@ namespace Tanji.Pages.Connection
         }
 
         public HandshakeManager HandshakeMngr { get; }
-        public Dictionary<string, string> ResourceReplacements { get; }
+        public Dictionary<string, string> VariableReplacements { get; }
 
         public ConnectionPage(MainFrm ui, TabPage tab)
             : base(ui, tab)
@@ -91,22 +75,20 @@ namespace Tanji.Pages.Connection
             _connectTaskCompleted = ConnectTaskCompleted;
             _modifiedClientsDir = Directory.CreateDirectory("Modified Clients");
 
+            Tab.Paint += Tab_Paint;
             HandshakeMngr = new HandshakeManager(ui.Connection);
 
-            UI.CoTVariablesVw.AddItem("productdata.load.url", "");
-            UI.CoTVariablesVw.AddItem("external.texts.txt", "");
-            UI.CoTVariablesVw.AddItem("external.variables.txt", "");
-            UI.CoTVariablesVw.AddItem("external.override.texts.txt", "");
-            UI.CoTVariablesVw.AddItem("external.figurepartlist.txt", "");
-            UI.CoTVariablesVw.AddItem("external.override.variables.txt", "");
+            UI.CoTVariablesVw.AddItem("productdata.load.url", string.Empty);
+            UI.CoTVariablesVw.AddItem("external.texts.txt", string.Empty);
+            UI.CoTVariablesVw.AddItem("external.variables.txt", string.Empty);
+            UI.CoTVariablesVw.AddItem("external.override.texts.txt", string.Empty);
+            UI.CoTVariablesVw.AddItem("external.figurepartlist.txt", string.Empty);
+            UI.CoTVariablesVw.AddItem("external.override.variables.txt", string.Empty);
 
-            ResourceReplacements = new Dictionary<string, string>(
+            VariableReplacements = new Dictionary<string, string>(
                 UI.CoTVariablesVw.Items.Count);
 
-            UI.CoTProxyPortTxt.DataBindings.Add("Value", this,
-                nameof(ProxyPort), false, DataSourceUpdateMode.OnPropertyChanged);
-
-            UI.CoTCustomClientTxt.DataBindings.Add("Text", this,
+            UI.CoTCustomClientTxt.DataBindings.Add("Value", this,
                 nameof(CustomClientPath), false, DataSourceUpdateMode.OnPropertyChanged);
 
             UI.CoTBrowseBtn.Click += CoTBrowseBtn_Click;
@@ -120,6 +102,16 @@ namespace Tanji.Pages.Connection
 
             UI.CoTVariablesVw.ItemChecked += CoTVariablesVw_ItemChecked;
             UI.CoTVariablesVw.ItemSelected += CoTVariablesVw_ItemSelected;
+            UI.CoTVariablesVw.ItemSelectionStateChanged += CoTVariablesVw_ItemSelectionStateChanged;
+        }
+
+        private void Tab_Paint(object sender, PaintEventArgs e)
+        {
+            using (var skin = new Pen(Color.FromArgb(243, 63, 63)))
+            {
+                e.Graphics.DrawLine(skin, 6, 218, 469, 218);
+                e.Graphics.DrawLine(skin, 6, 277, 469, 277);
+            }
         }
 
         private void CoTBrowseBtn_Click(object sender, EventArgs e)
@@ -166,7 +158,7 @@ namespace Tanji.Pages.Connection
 
             item.SubItems[1].Text = string.Empty;
             UI.CoTClearVariableBtn.Enabled = false;
-            UI.CoTValueTxt.Text = string.Empty;
+            UI.CoTValueTxt.Value = string.Empty;
             item.Checked = false;
         }
         private void CoTUpdateVariableBtn_Click(object sender, EventArgs e)
@@ -175,7 +167,7 @@ namespace Tanji.Pages.Connection
                 UI.CoTVariablesVw.SelectedItem;
 
             item.SubItems[1].Text =
-                UI.CoTValueTxt.Text;
+                UI.CoTValueTxt.Value;
 
             ToggleClearVariableButton(item);
 
@@ -194,24 +186,13 @@ namespace Tanji.Pages.Connection
 
         private void CoTVariablesVw_ItemSelected(object sender, EventArgs e)
         {
-            if (UI.CoTVariablesVw.HasSelectedItem)
-            {
-                ListViewItem item = UI.CoTVariablesVw.SelectedItem;
+            ListViewItem item = UI.CoTVariablesVw.SelectedItem;
 
-                ToggleClearVariableButton(item);
-                UI.CoTUpdateVariableBtn.Enabled = true;
+            ToggleClearVariableButton(item);
+            UI.CoTUpdateVariableBtn.Enabled = true;
 
-                UI.CoTNameTxt.Text = item.Text;
-                UI.CoTValueTxt.Text = item.SubItems[1].Text;
-            }
-            else
-            {
-                UI.CoTUpdateVariableBtn.Enabled =
-                    (UI.CoTClearVariableBtn.Enabled = false);
-
-                UI.CoTNameTxt.Text =
-                   (UI.CoTValueTxt.Text = string.Empty);
-            }
+            UI.CoTVariableTxt.Value = item.Text;
+            UI.CoTValueTxt.Value = item.SubItems[1].Text;
         }
         private void CoTVariablesVw_ItemChecked(object sender, ItemCheckedEventArgs e)
         {
@@ -219,8 +200,19 @@ namespace Tanji.Pages.Connection
             string value = e.Item.SubItems[1].Text;
             bool updateValue = (e.Item.Checked && !string.IsNullOrWhiteSpace(value));
 
-            if (updateValue) ResourceReplacements[name] = value;
-            else if (ResourceReplacements.ContainsKey(name)) ResourceReplacements.Remove(name);
+            if (updateValue) VariableReplacements[name] = value;
+            else if (VariableReplacements.ContainsKey(name)) VariableReplacements.Remove(name);
+        }
+        private void CoTVariablesVw_ItemSelectionStateChanged(object sender, EventArgs e)
+        {
+            if (!UI.CoTVariablesVw.HasSelectedItem)
+            {
+                UI.CoTUpdateVariableBtn.Enabled =
+                    (UI.CoTClearVariableBtn.Enabled = false);
+
+                UI.CoTVariableTxt.Value =
+                   (UI.CoTValueTxt.Value = string.Empty);
+            }
         }
 
         private void InjectClient(object sender, RequestInterceptedEventArgs e)
@@ -270,7 +262,7 @@ namespace Tanji.Pages.Connection
                 e.Payload = UI.Game.ToByteArray();
             }
 
-            if (ResourceReplacements.Count > 0)
+            if (VariableReplacements.Count > 0)
             {
                 Eavesdropper.ResponseIntercepted += ReplaceResources;
             }
@@ -323,18 +315,16 @@ namespace Tanji.Pages.Connection
                     responseBody = responseBody.Replace(UI.GameData.InfoHost, "127.0.0.1");
                     replacementData = Encoding.UTF8.GetBytes(responseBody);
 
-                    string[] resourceKeys = ResourceReplacements.Keys.ToArray();
-                    foreach (string resourceKey in resourceKeys)
+                    string[] resourceKeys = VariableReplacements.Keys.ToArray();
+                    foreach (string variable in resourceKeys)
                     {
-                        string realValue = UI.GameData[resourceKey]
-                            .Replace("\\/", "/");
+                        string fakeValue = VariableReplacements[variable];
+                        string realValue = UI.GameData[variable].Replace("\\/", "/");
 
-                        string fakeValue =
-                            ResourceReplacements[resourceKey];
-
-                        ResourceReplacements.Remove(resourceKey);
-                        ResourceReplacements[realValue] = fakeValue;
+                        VariableReplacements.Remove(variable);
+                        VariableReplacements[realValue] = fakeValue;
                     }
+
                     if (verifyGameClientTask.Result)
                     {
                         SetState(TanjiState.InjectingClient);
@@ -366,16 +356,16 @@ namespace Tanji.Pages.Connection
         private void ReplaceResources(object sender, ResponseInterceptedEventArgs e)
         {
             string absoluteUri = e.Response.ResponseUri.AbsoluteUri;
-            if (ResourceReplacements.ContainsKey(absoluteUri))
+            if (VariableReplacements.ContainsKey(absoluteUri))
             {
                 var httpResponse = (HttpWebResponse)e.Response;
-                string replacementUrl = ResourceReplacements[absoluteUri];
+                string replacementUrl = VariableReplacements[absoluteUri];
 
                 if (httpResponse.StatusCode == HttpStatusCode.TemporaryRedirect)
                 {
-                    ResourceReplacements.Remove(absoluteUri);
+                    VariableReplacements.Remove(absoluteUri);
                     absoluteUri = httpResponse.Headers[HttpResponseHeader.Location];
-                    ResourceReplacements[absoluteUri] = replacementUrl;
+                    VariableReplacements[absoluteUri] = replacementUrl;
                     return;
                 }
 
@@ -386,8 +376,8 @@ namespace Tanji.Pages.Connection
                 }
                 else e.Payload = File.ReadAllBytes(replacementUrl);
 
-                ResourceReplacements.Remove(absoluteUri);
-                if (ResourceReplacements.Count < 1)
+                VariableReplacements.Remove(absoluteUri);
+                if (VariableReplacements.Count < 1)
                 {
                     Halt();
                     SetState(TanjiState.StandingBy);
@@ -423,7 +413,7 @@ namespace Tanji.Pages.Connection
         public void Connect()
         {
             Eavesdropper.ResponseIntercepted += ExtractGameData;
-            Eavesdropper.Initiate(ProxyPort);
+            Eavesdropper.Initiate(EAVESDROP_PROXY_PORT);
 
             SetState(TanjiState.ExtractingGameData);
         }
@@ -491,30 +481,6 @@ namespace Tanji.Pages.Connection
                 break;
             }
             #endregion
-        }
-
-        protected virtual void ConnectTaskCompleted(Task connectTask)
-        {
-            if (UI.Connection.IsConnected)
-            {
-                if (ResourceReplacements.Count > 0)
-                {
-                    SetState(TanjiState.ReplacingResources);
-                }
-                else SetState(TanjiState.StandingBy);
-            }
-        }
-        protected override void OnTabSelecting(TabControlCancelEventArgs e)
-        {
-            if (!UI.Connection.IsConnected)
-                UI.TopMost = true;
-
-            base.OnTabSelecting(e);
-        }
-        protected override void OnTabDeselecting(TabControlCancelEventArgs e)
-        {
-            UI.TopMost = UI.PacketLoggerUI.TopMost;
-            base.OnTabDeselecting(e);
         }
 
         public void DestroySignedCertificates()
@@ -618,6 +584,30 @@ namespace Tanji.Pages.Connection
         {
             UI.CoTClearVariableBtn.Enabled =
                 (!string.IsNullOrWhiteSpace(item.SubItems[1].Text));
+        }
+        protected virtual void ConnectTaskCompleted(Task connectTask)
+        {
+            if (UI.Connection.IsConnected)
+            {
+                if (VariableReplacements.Count > 0)
+                {
+                    SetState(TanjiState.ReplacingResources);
+                }
+                else SetState(TanjiState.StandingBy);
+            }
+        }
+
+        protected override void OnTabSelecting(TabControlCancelEventArgs e)
+        {
+            if (!UI.Connection.IsConnected)
+                UI.TopMost = true;
+
+            base.OnTabSelecting(e);
+        }
+        protected override void OnTabDeselecting(TabControlCancelEventArgs e)
+        {
+            UI.TopMost = UI.PacketLoggerUI.TopMost;
+            base.OnTabDeselecting(e);
         }
     }
 }
