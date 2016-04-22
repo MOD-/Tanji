@@ -1,16 +1,19 @@
 ﻿using System;
 using System.Windows.Forms;
+using System.Collections.Generic;
+
+using Tanji.Manipulators;
 
 using Sulakore.Protocol;
 using Sulakore.Components;
-
-using Tanji.Manipulators;
 
 namespace Tanji.Pages.Injection
 {
     public class SchedulerPage : TanjiSubPage<InjectionPage>, IHaltable
     {
         private bool _suppressUIUpdating;
+        private readonly Dictionary<Keys, ListViewItem> _items;
+        private readonly Dictionary<ListViewItem, Keys> _hotkeys;
 
         private ushort _interval = 100;
         public ushort Interval
@@ -56,20 +59,17 @@ namespace Tanji.Pages.Injection
             }
         }
 
-        private SKoreHotkey.KeyCombination _hotkey = null;
-        public SKoreHotkey.KeyCombination Hotkey
-        {
-            get { return _hotkey; }
-            set
-            {
-                _hotkey = value;
-                RaiseOnPropertyChanged(nameof(Hotkey));
-            }
-        }
+        public Keys Hotkey { get; private set; }
+        public string HotkeyValue { get; private set; }
 
         public SchedulerPage(InjectionPage parent, TabPage tab)
             : base(parent, tab)
         {
+            _items = new Dictionary<Keys, ListViewItem>();
+            _hotkeys = new Dictionary<ListViewItem, Keys>();
+
+            UI.Hook.HotkeyActivated += Hook_HotkeyActivated;
+
             UI.STDestinationTxt.DataSource = Enum.GetValues(typeof(HDestination));
             UI.STDestinationTxt.DataBindings.Add("SelectedItem", this,
                 nameof(Destination), false, DataSourceUpdateMode.OnPropertyChanged);
@@ -83,13 +83,11 @@ namespace Tanji.Pages.Injection
             UI.STAutoStartChckbx.DataBindings.Add("Checked", this,
                 nameof(AutoStart), false, DataSourceUpdateMode.OnPropertyChanged);
 
-            UI.STHotkeyTxt.DataBindings.Add("Value", this,
-                nameof(Hotkey), true, DataSourceUpdateMode.OnPropertyChanged);
-
             UI.STClearBtn.Click += STClearBtn_Click;
             UI.STRemoveBtn.Click += STRemoveBtn_Click;
             UI.STCreateBtn.Click += STCreateBtn_Click;
-            UI.STUpdateBtn.Click += STUpdateBtn_Click;
+
+            UI.STHotkeyTxt.Box.KeyDown += STHotkeyTxt_KeyDown;
 
             UI.STSchedulerVw.ItemChecked += STSchedulerVw_ItemChecked;
             UI.STSchedulerVw.ScheduleTick += STSchedulerVw_ScheduleTick;
@@ -98,33 +96,69 @@ namespace Tanji.Pages.Injection
 
         private void STClearBtn_Click(object sender, EventArgs e)
         {
+            foreach (Keys hotkey in _hotkeys.Values)
+                UI.Hook.UnregisterHotkey(hotkey);
+
+            _items.Clear();
+            _hotkeys.Clear();
+
             UI.STSchedulerVw.ClearItems();
             UpdateUI();
         }
-        private void STUpdateBtn_Click(object sender, EventArgs e)
-        {
-            HMessage packet = GetPacket();
-            if (Parent.IsInjectionAuthorized(packet))
-            {
-                UI.STSchedulerVw.SelectedCycles = Cycles;
-                UI.STSchedulerVw.SelectedInterval = Interval;
-                UI.STSchedulerVw.SelectedDestination = Destination;
-                UI.STSchedulerVw.SelectedHotkey = Hotkey;
-                UI.STSchedulerVw.SelectedPacket = GetPacket().ToString();
-            }
-        }
         private void STRemoveBtn_Click(object sender, EventArgs e)
         {
+            ListViewItem item = UI.STSchedulerVw.SelectedItem;
+            if (_hotkeys.ContainsKey(item))
+            {
+                Keys hotkey = _hotkeys[item];
+
+                _hotkeys.Remove(item);
+                _items.Remove(hotkey);
+                UI.Hook.UnregisterHotkey(hotkey);
+            }
             UI.STSchedulerVw.RemoveSelectedItem();
             UpdateUI();
         }
         private void STCreateBtn_Click(object sender, EventArgs e)
         {
             HMessage packet = GetPacket();
-            if (!Parent.IsInjectionAuthorized(packet)) return;
+            if (Parent.AuthorizeInjection(packet))
+            {
+                ListViewItem item = UI.STSchedulerVw
+                    .AddSchedule(packet, Interval, Cycles, AutoStart);
 
-            packet.Destination = Destination;
-            UI.STSchedulerVw.AddSchedule(packet, Interval, Cycles, Hotkey, AutoStart);
+                item.SubItems.Add(HotkeyValue);
+                if (Hotkey != Keys.None)
+                {
+                    UI.Hook.RegisterHotkey(Hotkey);
+                    _hotkeys[item] = Hotkey;
+                    _items[Hotkey] = item;
+                }
+
+                Hotkey = Keys.NoName;
+                UI.STHotkeyTxt.Value = string.Empty;
+            }
+        }
+
+        private void Hook_HotkeyActivated(object sender, KeyEventArgs e)
+        {
+            if (_items.ContainsKey(e.KeyData))
+            {
+                ListViewItem item = _items[e.KeyData];
+                item.Checked = !item.Checked;
+            }
+        }
+        private void STHotkeyTxt_KeyDown(object sender, KeyEventArgs e)
+        {
+            HotkeyValue = string.Empty;
+            if (e.Modifiers != Keys.None)
+                HotkeyValue = (e.Modifiers + " + ");
+
+            Hotkey = e.KeyData;
+            UI.STHotkeyTxt.Value = (HotkeyValue += e.KeyCode);
+
+            e.Handled = true;
+            e.SuppressKeyPress = true;
         }
 
         private void STSchedulerVw_ItemChecked(object sender, ItemCheckedEventArgs e)
@@ -138,8 +172,8 @@ namespace Tanji.Pages.Injection
         }
         private void STSchedulerVw_ItemSelectionStateChanged(object sender, EventArgs e)
         {
-            UI.STUpdateBtn.Enabled =
-                UI.STRemoveBtn.Enabled = UI.STSchedulerVw.HasSelectedItem;
+            UI.STRemoveBtn.Enabled =
+                UI.STSchedulerVw.HasSelectedItem;
         }
 
         public void Halt()
