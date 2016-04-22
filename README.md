@@ -11,7 +11,7 @@ Powered by [Sulakore](https://github.com/ArachisH/Sulakore), [FlashInspect](http
 * Create extensions that can extend the functionality of the application.
 
 ## Initial Interface
-![TanjiUI](http://i.imgur.com/3KkuDcH.png)
+![TanjiUI](http://i.imgur.com/i8vao3r.png)
 
 -
 Want to keep this project alive, and healthy?
