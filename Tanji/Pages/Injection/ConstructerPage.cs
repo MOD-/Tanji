@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Windows.Forms;
 
+using Tanji.Manipulators;
+
+using Sulakore.Protocol;
+
 namespace Tanji.Pages.Injection
 {
-    public class ConstructerPage : TanjiSubPage<InjectionPage>
+    public class ConstructerPage : TanjiSubPage<InjectionPage>, IRefreshable, IRetrievable
     {
         private const string INVALID_SINT32_VALUE =
             "The given value is not a valid 32-bit signed integer.";
@@ -17,7 +21,7 @@ namespace Tanji.Pages.Injection
                 _header = value;
                 RaiseOnPropertyChanged(nameof(Header));
 
-                UpdateUI();
+                Refresh();
             }
         }
 
@@ -30,16 +34,13 @@ namespace Tanji.Pages.Injection
                 _amount = value;
                 RaiseOnPropertyChanged(nameof(Amount));
 
-                UpdateUI();
+                Refresh();
             }
         }
 
         public ConstructerPage(InjectionPage parent, TabPage tab)
             : base(parent, tab)
         {
-
-            UpdateUI();
-
             UI.CTHeaderTxt.DataBindings.Add("Value", this,
                 nameof(Header), false, DataSourceUpdateMode.OnPropertyChanged);
 
@@ -70,8 +71,8 @@ namespace Tanji.Pages.Injection
         public virtual void WriteInteger(int value, int amount)
         {
             UI.CTConstructerVw.WriteInteger(value, amount);
-            AddAutoCompleteValue(value);
-            UpdateUI();
+            AddAutocomplete(value.ToString());
+            Refresh();
         }
 
         public void WriteBoolean(bool value)
@@ -81,8 +82,8 @@ namespace Tanji.Pages.Injection
         public virtual void WriteBoolean(bool value, int amount)
         {
             UI.CTConstructerVw.WriteBoolean(value, amount);
-            AddAutoCompleteValue(value);
-            UpdateUI();
+            AddAutocomplete(value.ToString());
+            Refresh();
         }
 
         public void WriteString(string value)
@@ -92,23 +93,27 @@ namespace Tanji.Pages.Injection
         public void WriteString(string value, int amount)
         {
             UI.CTConstructerVw.WriteString(value, amount);
-            AddAutoCompleteValue(value);
-            UpdateUI();
+            AddAutocomplete(value);
+            Refresh();
         }
 
-        private void UpdateUI()
+        public void Refresh()
         {
-            UI.CTChunkCountLbl.Text =
-                ("Chunk Count: " + UI.CTConstructerVw.Values.Count);
+            UI.CTValueCountLbl.Text =
+                ($"Value Count: {UI.CTConstructerVw.Values.Count:n0}");
 
             UI.CTStructureTxt.Text =
                 UI.CTConstructerVw.GetStructure(Header);
         }
-        private void AddAutoCompleteValue(object value)
+        public HMessage GetPacket()
         {
-            string sValue = value.ToString();
-            if (!UI.CTValueTxt.Items.Contains(sValue))
-                UI.CTValueTxt.Items.Add(sValue);
+            return UI.CTConstructerVw.GetPacket(Header);
+        }
+        
+        private void AddAutocomplete(string value)
+        {
+            if (!UI.CTValueTxt.Items.Contains(value))
+                UI.CTValueTxt.Items.Add(value);
         }
         private object TryParseObject(string type, string value)
         {
@@ -136,7 +141,7 @@ namespace Tanji.Pages.Injection
 
             ListViewItem item = UI.CTConstructerVw.SelectedItem;
             if (item == null) return;
-            
+
             string sValue = UI.CTValueTxt.Text;
             string type = item.SubItems[0].Text;
             object value = TryParseObject(type, sValue);
@@ -144,34 +149,33 @@ namespace Tanji.Pages.Injection
             UI.CTConstructerVw.UpdateSelectedValue(value);
             UI.CTValueTxt.Text = value.ToString();
 
-            AddAutoCompleteValue(value);
-            UpdateUI();
+            AddAutocomplete(value.ToString());
+            Refresh();
         }
 
         private void CTClearBtn_Click(object sender, EventArgs e)
         {
             UI.CTConstructerVw.ClearItems();
-            UpdateUI();
+            Refresh();
         }
         private void CTRemoveBtn_Click(object sender, EventArgs e)
         {
             UI.CTConstructerVw.RemoveSelectedItem();
-            UpdateUI();
+            Refresh();
         }
         private void CTMoveUpBtn_Click(object sender, EventArgs e)
         {
             UI.CTConstructerVw.MoveSelectedItemUp();
-            UpdateUI();
+            Refresh();
         }
         private void CTMoveDownBtn_Click(object sender, EventArgs e)
         {
             UI.CTConstructerVw.MoveSelectedItemDown();
-            UpdateUI();
+            Refresh();
         }
         private void CTTransferBelowBtn_Click(object sender, EventArgs e)
         {
-            UI.ITPacketTxt.Text =
-                UI.CTConstructerVw.GetPacket(Header).ToString();
+            UI.ITPacketTxt.Text = GetPacket().ToString();
         }
 
         private void CTWriteStringBtn_Click(object sender, EventArgs e)
