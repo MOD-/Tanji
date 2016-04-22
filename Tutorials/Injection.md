@@ -20,3 +20,10 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis aliquam mauri
 
 ### Interface
 ![PrimitiveUI](http://i.imgur.com/1EZID5b.png)
+
+---
+## Filters
+Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc quis aliquam mauris, at consequat libero.
+
+### Interface
+![FiltersUI](http://i.imgur.com/CCPkhnl.png)
