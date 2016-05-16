@@ -6,7 +6,7 @@ using Tanji.Components;
 
 namespace Tanji.Applications.Dialogs
 {
-    public partial class IgnoreMessagesDialog : TanjiForm
+    public partial class IgnoreMessagesDialog : TForm
     {
         private readonly IDictionary<ushort, bool> _ignoredOutgoing, _ignoredIncoming;
 

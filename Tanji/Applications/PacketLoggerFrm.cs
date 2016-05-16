@@ -17,7 +17,7 @@ using FlashInspect.ActionScript;
 
 namespace Tanji.Applications
 {
-    public partial class PacketLoggerFrm : TanjiForm, IReceiver, IHaltable
+    public partial class PacketLoggerFrm : TForm, IReceiver, IHaltable
     {
         private Task _readQueueTask;
         private FindDialog _currentFindUI;

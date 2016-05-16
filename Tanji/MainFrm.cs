@@ -28,7 +28,7 @@ using Tangine.Habbo;
 
 namespace Tanji
 {
-    public partial class MainFrm : TanjiForm
+    public partial class MainFrm : TForm, IMaster
     {
         private readonly List<IHaltable> _haltables;
         private readonly List<IReceiver> _receivers;
@@ -37,18 +37,16 @@ namespace Tanji
         private readonly Dictionary<string, Bitmap> _avatarCache;
         private readonly Dictionary<HHotel, Dictionary<string, HProfile>> _profileCache;
 
-        public KeyboardHook Hook { get; }
-
         public HGame Game { get; set; }
         public HHotel Hotel { get; set; }
-        public HGameData GameData { get; set; }
-        public HConnection Connection { get; set; }
+        public KeyboardHook Hook { get; }
+        public HGameData GameData { get; }
+        public HConnection Connection { get; }
 
         public AboutPage AboutPg { get; }
         public ModulesPage ModulesPg { get; }
         public ToolboxPage ToolboxPg { get; }
         public InjectionPage InjectionPg { get; }
-        public ConnectionPage ConnectionPg { get; }
 
         public PacketLoggerFrm PacketLoggerUI { get; }
 
@@ -67,14 +65,13 @@ namespace Tanji
             GameData = new HGameData();
             Connection = new HConnection();
             Connection.Connected += Connected;
+            Connection.DataOutgoing += HandleData;
+            Connection.DataIncoming += HandleData;
             Connection.Disconnected += Disconnected;
-            Connection.DataOutgoing += DataOutgoing;
-            Connection.DataIncoming += DataIncoming;
 
             Hook = new KeyboardHook();
             Hook.HotkeyActivated += Hook_HotkeyActivated;
 
-            ConnectionPg = new ConnectionPage(this, ConnectionTab);
             InjectionPg = new InjectionPage(this, InjectionTab);
             ToolboxPg = new ToolboxPage(this, ToolboxTab);
             ModulesPg = new ModulesPage(this, ModulesTab);
@@ -82,25 +79,25 @@ namespace Tanji
 
             PacketLoggerUI = new PacketLoggerFrm(this);
 
-            _haltables.Add(ModulesPg);
-            _haltables.Add(PacketLoggerUI);
-            _haltables.Add(InjectionPg.FiltersPg);
-            _haltables.Add(InjectionPg.SchedulerPg);
-
-            _receivers.Add(ModulesPg);
-            _receivers.Add(InjectionPg.FiltersPg);
-            _receivers.Add(ConnectionPg.HandshakeMngr);
-            _receivers.Add(PacketLoggerUI);
+            LoadHaltables();
+            LoadReceivers();
+            AssignMasters();
         }
 
         private void MainFrm_Load(object sender, EventArgs e)
         {
             Eavesdropper.Terminate();
-            ConnectionPg.CreateTrustedRootCertificate();
         }
         private void MainFrm_FormClosed(object sender, FormClosedEventArgs e)
         {
             Eavesdropper.Terminate();
+        }
+
+        private void Hook_HotkeyActivated(object sender, KeyEventArgs e)
+        {
+            Focus();
+            if (_actions.ContainsKey(e.KeyData))
+                _actions[e.KeyData]();
         }
 
         private void TanjiInfoTxt_Click(object sender, EventArgs e)
@@ -117,13 +114,62 @@ namespace Tanji
                 Process.Start(AboutPg.TanjiRepo.LatestRelease.HtmlUrl);
         }
 
-        private void Hook_HotkeyActivated(object sender, KeyEventArgs e)
+        private void Connected(object sender, EventArgs e)
         {
-            if (_actions.ContainsKey(e.KeyData))
-                _actions[e.KeyData]();
+            if (InvokeRequired)
+            {
+                Invoke(_connected, sender, e);
+                return;
+            }
+
+            ConnectionPg.RestartHandshake();
+            Text = $"Tanji ~ Connected[{Connection.Host}:{Connection.Port}]";
+            TopMost = PacketLoggerUI.TopMost;
+
+            PacketLoggerUI.RevisionTxt.Text =
+                ("Revision: " + Game.GetClientRevision());
+
+            PacketLoggerUI.Show();
+            PacketLoggerUI.WindowState = FormWindowState.Normal;
+
+            BringToFront();
+        }
+        private void Disconnected(object sender, EventArgs e)
+        {
+            if (InvokeRequired)
+            {
+                Invoke(_disconnected, sender, e);
+                return;
+            }
+
+            Halt();
+            Game.Dispose();
+            Game = null;
+
+            TopMost = true;
+            Text = "Tanji ~ Disconnected";
+        }
+        private void HandleData(object sender, DataInterceptedEventArgs e)
+        {
+            bool isOutgoing = (e.Packet.Destination == HDestination.Server);
+            foreach (IReceiver receiver in _receivers)
+            {
+                if (!receiver.IsReceiving) continue;
+
+                if (isOutgoing) receiver.HandleOutgoing(e);
+                else receiver.HandleIncoming(e);
+            }
         }
 
-        public void AddQuickAction(Keys keyData, Action action)
+        public void Log(string message)
+        {
+            // TODO: Implement status logging.
+        }
+        public void Log(Exception exception)
+        {
+            // TODO: Implement status logging.
+        }
+        public void AssignQuickAction(Keys keyData, Action action)
         {
             if (!_actions.ContainsKey(keyData))
             {
@@ -131,6 +177,7 @@ namespace Tanji
                 Hook.RegisterHotkey(keyData);
             }
         }
+
         public async Task<Bitmap> GetAvatarAsync(string name, HHotel hotel)
         {
             HProfile profile = await GetProfileAsync(
@@ -167,54 +214,25 @@ namespace Tanji
         {
             _haltables.ForEach(h => h.Halt());
         }
-        private void HandleData(DataInterceptedEventArgs e)
+        private void LoadHaltables()
         {
-            bool isOutgoing = (e.Packet.Destination == HDestination.Server);
-            foreach (IReceiver receiver in _receivers)
-            {
-                if (!receiver.IsReceiving) continue;
-
-                if (isOutgoing) receiver.HandleOutgoing(e);
-                else receiver.HandleIncoming(e);
-            }
+            _haltables.Clear();
+            _haltables.Add(ModulesPg);
+            _haltables.Add(PacketLoggerUI);
+            _haltables.Add(InjectionPg.FiltersPg);
+            _haltables.Add(InjectionPg.SchedulerPg);
         }
-
-        private void Connected(object sender, EventArgs e)
+        private void LoadReceivers()
         {
-            if (InvokeRequired)
-            {
-                Invoke(_connected, sender, e);
-                return;
-            }
-
-            ConnectionPg.HandshakeMngr.RestartHandshake();
-            Text = $"Tanji ~ Connected[{Connection.Host}:{Connection.Port}]";
-            TopMost = PacketLoggerUI.TopMost;
-
-            PacketLoggerUI.RevisionTxt.Text =
-                ("Revision: " + Game.GetClientRevision());
-
-            PacketLoggerUI.Show();
-            PacketLoggerUI.WindowState = FormWindowState.Normal;
-
-            BringToFront();
+            _receivers.Clear();
+            _receivers.Add(ModulesPg);
+            _receivers.Add(InjectionPg.FiltersPg);
+            _receivers.Add(ConnectionPg);
+            _receivers.Add(PacketLoggerUI);
         }
-        private void Disconnected(object sender, EventArgs e)
+        private void AssignMasters()
         {
-            if (InvokeRequired)
-            {
-                Invoke(_disconnected, sender, e);
-                return;
-            }
-
-            Halt();
-            Game.Dispose();
-            Game = null;
-
-            TopMost = true;
-            Text = "Tanji ~ Disconnected";
+            ConnectionPg.AssignMaster(this);
         }
-        private void DataOutgoing(object sender, DataInterceptedEventArgs e) => HandleData(e);
-        private void DataIncoming(object sender, DataInterceptedEventArgs e) => HandleData(e);
     }
 }

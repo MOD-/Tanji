@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Windows.Forms;
 
 using Eavesdrop;
@@ -15,7 +16,15 @@ namespace Tanji
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new MainFrm());
+
+            var watch = new Stopwatch();
+            watch.Start();
+
+            var ui = new MainFrm();
+            watch.Stop();
+
+            Console.WriteLine("Startup Time: " + watch.Elapsed);
+            Application.Run(ui);
         }
         private static void UnhandledException(object sender, UnhandledExceptionEventArgs e)
         {

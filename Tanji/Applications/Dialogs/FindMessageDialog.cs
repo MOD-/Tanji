@@ -10,7 +10,7 @@ using FlashInspect.ActionScript;
 
 namespace Tanji.Applications.Dialogs
 {
-    public partial class FindMessageDialog : TanjiForm
+    public partial class FindMessageDialog : TForm
     {
         private readonly HGame _game;
 

@@ -25,8 +25,8 @@ namespace Tanji.Pages.Injection
         public InjectionPage(MainFrm ui, TabPage tab)
             : base(ui, tab)
         {
-            UI.AddQuickAction(Keys.F1, UI.ITSendToClientBtn.PerformClick);
-            UI.AddQuickAction(Keys.F2, UI.ITSendToServerBtn.PerformClick);
+            UI.AssignQuickAction(Keys.F1, UI.ITSendToClientBtn.PerformClick);
+            UI.AssignQuickAction(Keys.F2, UI.ITSendToServerBtn.PerformClick);
 
             UI.ITSendToClientBtn.Click += ITSendToClientBtn_Click;
             UI.ITSendToServerBtn.Click += ITSendToServerBtn_Click;

@@ -186,14 +186,13 @@
             this.Controls.Add(this.MatchCaseChckbx);
             this.Controls.Add(this.FindNextBtn);
             this.Controls.Add(this.FindWhatTxt);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.Fixed3D;
             this.KeyPreview = true;
             this.MaximizeBox = false;
             this.MinimizeBox = false;
             this.Name = "FindDialog";
             this.ShowInTaskbar = false;
             this.Text = "Tanji ~ Find";
-            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FindTxt_KeyDown);
+            this.KeyDown += new System.Windows.Forms.KeyEventHandler(this.FindDialog_KeyDown);
             this.DirectionGrpbx.ResumeLayout(false);
             this.DirectionGrpbx.PerformLayout();
             this.ModeGrpbx.ResumeLayout(false);

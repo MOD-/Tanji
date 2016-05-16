@@ -7,7 +7,7 @@ using Tanji.Components;
 
 namespace Tanji.Applications.Dialogs
 {
-    public partial class FindDialog : TanjiForm
+    public partial class FindDialog : TForm
     {
         private RichTextBoxFinds _findOptions;
 
@@ -133,7 +133,7 @@ namespace Tanji.Applications.Dialogs
                 nameof(IsDirectionUp), false, DataSourceUpdateMode.OnPropertyChanged);
         }
 
-        private void FindTxt_KeyDown(object sender, KeyEventArgs e)
+        private void FindDialog_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.KeyCode == Keys.Enter)
             {

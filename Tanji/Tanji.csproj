@@ -26,7 +26,7 @@
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
-    <AssemblyVersion>1.4.380.0</AssemblyVersion>
+    <AssemblyVersion>1.4.644.0</AssemblyVersion>
     <TargetFrameworkProfile />
     <PrimaryVersionType>AssemblyVersionAttribute</PrimaryVersionType>
     <AssemblyInfoFilePath>
@@ -114,9 +114,53 @@
     <Compile Include="Applications\PacketLoggerFrm.Designer.cs">
       <DependentUpon>PacketLoggerFrm.cs</DependentUpon>
     </Compile>
-    <Compile Include="Components\TanjiForm.cs">
+    <Compile Include="Components\Pages\ConstructerPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Pages\ConstructerPage.Designer.cs">
+      <DependentUpon>ConstructerPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Pages\FilterPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Pages\FilterPage.Designer.cs">
+      <DependentUpon>FilterPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Pages\ModulesPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Pages\ModulesPage.Designer.cs">
+      <DependentUpon>ModulesPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Pages\PageControl.cs" />
+    <Compile Include="Components\Pages\ConnectionPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Pages\ConnectionPage.Designer.cs">
+      <DependentUpon>ConnectionPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Pages\PrimitivePage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Pages\PrimitivePage.Designer.cs">
+      <DependentUpon>PrimitivePage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Pages\SchedulerPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Pages\SchedulerPage.Designer.cs">
+      <DependentUpon>SchedulerPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\Pages\ToolboxPage.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Components\Pages\ToolboxPage.Designer.cs">
+      <DependentUpon>ToolboxPage.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Components\TForm.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Manipulators\IMaster.cs" />
     <Compile Include="Manipulators\IRetrievable.cs" />
     <Compile Include="Manipulators\IRefreshable.cs" />
     <Compile Include="Utilities\Event Args\KeyPressedEventArgs.cs" />
@@ -132,7 +176,6 @@
     <Compile Include="Pages\Modules\Handlers\ModuleItem.cs" />
     <Compile Include="Pages\Modules\Handlers\ModulesManager.cs" />
     <Compile Include="Pages\About\AboutPage.cs" />
-    <Compile Include="Pages\Connection\ConnectionPage.cs" />
     <Compile Include="Pages\Connection\Handlers\HandshakeManager.cs" />
     <Compile Include="Pages\Modules\ModulesPage.cs" />
     <Compile Include="Pages\Injection\ConstructerPage.cs" />
@@ -164,6 +207,24 @@
     <EmbeddedResource Include="Applications\PacketLoggerFrm.resx">
       <DependentUpon>PacketLoggerFrm.cs</DependentUpon>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Pages\ConnectionPage.resx">
+      <DependentUpon>ConnectionPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Pages\ConstructerPage.resx">
+      <DependentUpon>ConstructerPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Pages\FilterPage.resx">
+      <DependentUpon>FilterPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Pages\PrimitivePage.resx">
+      <DependentUpon>PrimitivePage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\Pages\SchedulerPage.resx">
+      <DependentUpon>SchedulerPage.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Components\TForm.resx">
+      <DependentUpon>TForm.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="MainFrm.resx">
       <DependentUpon>MainFrm.cs</DependentUpon>

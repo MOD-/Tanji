@@ -51,7 +51,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Attributes\GitHubAttribute.cs" />
-    <Compile Include="ContractorProxy.cs" />
+    <Compile Include="Internals\ContractorProxy.cs" />
     <Compile Include="GitHub\GitAsset.cs" />
     <Compile Include="GitHub\GitProfile.cs" />
     <Compile Include="GitHub\GitRelease.cs" />
