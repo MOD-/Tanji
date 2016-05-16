@@ -14,7 +14,6 @@ using Tanji.Manipulators;
 using Tanji.Pages.Modules;
 using Tanji.Pages.Toolbox;
 using Tanji.Pages.Injection;
-using Tanji.Pages.Connection;
 
 using Sulakore;
 using Sulakore.Habbo;
